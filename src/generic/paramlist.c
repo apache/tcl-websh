@@ -33,12 +33,15 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
 {
 
     /* fixme-later: fixed allocation */
-    /* quick fix: make sure 'i' doesn't go over 20. */
+    /* We need to get rid of the '20' below, as it's a "magic
+     * number" */
     char *allopts[20];
     int i = 0, numprivateopts, po;
     Tcl_Obj *objCopy = Tcl_DuplicateObj(obj);
 
     while (tablePtr[i]) {
+	if (i > 19)
+	    break;
 	allopts[i] = tablePtr[i];
 	i++;
     }
@@ -46,6 +49,8 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
     po = i;
     i = 0;
     while (paramsubcmd[i]) {
+	if (i > 19)
+	    break;
 	allopts[po] = paramsubcmd[i];
 	po++;
 	i++;
@@ -375,14 +380,16 @@ int paramGet(ParamList * paramList,
     if (arg[0] == '-') {
 	if (Tcl_GetIndexFromObj(interp, objv[1],
 				paramsubcmd, "subcommand", 0,
-				&opt) == TCL_ERROR)
+				&opt) == TCL_ERROR) {
 	    if (hasPrivate) {
 		/* we ignore the error here cause we might have private commands */
 		Tcl_ResetResult(interp);
 		return TCL_CONTINUE;
 	    }
-	    else
+	    else {
 		return TCL_ERROR;
+	    }
+	}
 
 	/* it's one of our's */
 	switch (opt) {
@@ -431,9 +438,7 @@ int paramGet(ParamList * paramList,
 		return TCL_OK;
 	    }
 	default:
-	    /* fixme: error message */
-	    /* "unknown command" - print available commands */
-	    return TCL_ERROR;
+	    return TCL_ERROR; /* should never be reached. */
 	}
     }
     else {
