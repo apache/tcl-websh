@@ -24,20 +24,20 @@ int filecounter_Init(Tcl_Interp * interp)
     if (interp == NULL)
 	return TCL_ERROR;
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * ClientData
-     * ------------------------------------------------------------------------*/
+     * --------------------------------------------------------------------*/
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * register commands
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     Tcl_CreateObjCommand(interp, "web::filecounter",
 			 (Tcl_ObjCmdProc *) filecounter,
 			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * register private data with interp
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     /* no data for module, but for each handle */
     return TCL_OK;
 }
@@ -59,18 +59,12 @@ int Web_Filecounter(ClientData clientData,
     int seqno;
     Tcl_Obj *result = NULL;
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * deal with an existing filecounter
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
 
     if (objc != 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, NULL);
-	while (*ptr != (char *) NULL) {
-	    Tcl_AppendResult(interp, *ptr, (char *) NULL);
-	    ptr++;
-	    if (*ptr != (char *) NULL)
-		Tcl_AppendResult(interp, "|", (char *) NULL);
-	}
+	Tcl_WrongNumArgs(interp, 1, objv, "curval|nextval|config");
 	return TCL_ERROR;
     }
 
@@ -112,10 +106,11 @@ int Web_Filecounter(ClientData clientData,
 	}
     case CONFIG:{
 
-	    Tcl_Obj *kv[16];
+	    Tcl_Obj *kv[18];
 	    int i;
+	    char buf[10];
 
-	    for (i = 0; i < 16; i++)
+	    for (i = 0; i < 18; i++)
 		kv[i] = Tcl_NewObj();
 
 	    Tcl_SetStringObj(kv[0], "file", -1);
@@ -130,18 +125,21 @@ int Web_Filecounter(ClientData clientData,
 	    Tcl_SetIntObj(kv[9], seqnogen->maxValue);
 	    Tcl_SetStringObj(kv[10], "incr", -1);
 	    Tcl_SetIntObj(kv[11], seqnogen->incrValue);
-	    Tcl_SetStringObj(kv[12], "wrap", -1);
+	    Tcl_SetStringObj(kv[12], "perms", -1);
+	    sprintf(buf, "%04o", seqnogen->mask);
+	    Tcl_SetStringObj(kv[13], buf, -1);
+	    Tcl_SetStringObj(kv[14], "wrap", -1);
 	    if (seqnogen->doWrap)
-		Tcl_SetStringObj(kv[13], "true", -1);
+		Tcl_SetStringObj(kv[15], "true", -1);
 	    else
-		Tcl_SetStringObj(kv[13], "false", -1);
-	    Tcl_SetStringObj(kv[14], "curr", -1);
+		Tcl_SetStringObj(kv[15], "false", -1);
+	    Tcl_SetStringObj(kv[16], "curr", -1);
 	    if (seqnogen->hasCurrent)
-		Tcl_SetIntObj(kv[15], seqnogen->currValue);
+		Tcl_SetIntObj(kv[17], seqnogen->currValue);
 	    else
-		Tcl_SetStringObj(kv[15], "not valid", -1);
+		Tcl_SetStringObj(kv[17], "not valid", -1);
 
-	    result = Tcl_NewListObj(16, kv);
+	    result = Tcl_NewListObj(18, kv);
 	    Tcl_SetObjResult(interp, result);
 	    return TCL_OK;
 	    break;
@@ -159,26 +157,26 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
 		int objc, Tcl_Obj * CONST objv[])
 {
 
-    int wrap;
-    Tcl_Obj *hnameobj, *fnameobj, *seedobj, *maxobj, *minobj, *incrobj;
+    Tcl_Obj *hnameobj, *fnameobj, *seedobj, *maxobj, 
+      *minobj, *incrobj, *maskobj, *wrapobj;
     SeqNoGenerator *seqnogen = NULL;
     Tcl_Obj *result = NULL;
     Tcl_CmdInfo cmdInfo;
     static char *params[] = { "-filename", "-seed", "-min", "-max",
-	"-incr", "-wrap", NULL
+	"-incr", "-perms", "-wrap", NULL
     };
     enum params
-    { FILENAME, SEED, MIN, MAX, INCR, WRAP };
+    { FILENAME, SEED, MIN, MAX, INCR, MASK, WRAP };
     int idx;
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * check for unknown params
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     WebAssertArgs(interp, objc, objv, params, idx, -1);
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * minimum requirement is: handle -filename <filename>
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     if (objc < 4 ||
 	argIndexOfFirstArg(objc, objv, NULL, NULL) != 1 ||
 	(fnameobj = argValueOfKey(objc, objv, params[FILENAME])) == NULL) {
@@ -187,34 +185,32 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
 	return TCL_ERROR;
     }
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * ok - retrieve params
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     hnameobj = objv[1];
     /* fnameobj already done */
     seedobj = argValueOfKey(objc, objv, params[SEED]);
     maxobj = argValueOfKey(objc, objv, params[MAX]);
     minobj = argValueOfKey(objc, objv, params[MIN]);
     incrobj = argValueOfKey(objc, objv, params[INCR]);
-    if (argKeyExists(objc, objv, params[WRAP]) == TCL_OK)
-	wrap = 1;
-    else
-	wrap = 0;
+    maskobj = argValueOfKey(objc, objv, params[MASK]);
+    wrapobj = argValueOfKey(objc, objv, params[WRAP]);
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * check if handle already exists
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     if (Tcl_GetCommandInfo(interp, Tcl_GetString(hnameobj), &cmdInfo) != 0) {
 	Tcl_SetResult(interp, "web::filecounter: handle already exists",
 		      NULL);
 	return TCL_ERROR;
     }
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * create SeqNoGenerator
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     seqnogen = createSeqNoGenerator(hnameobj, fnameobj, seedobj, minobj,
-				    maxobj, incrobj, wrap);
+				    maxobj, incrobj, maskobj, wrapobj);
 
     if (seqnogen == NULL) {
 	Tcl_SetResult(interp,
@@ -228,9 +224,9 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
 			 (Tcl_ObjCmdProc *) Web_Filecounter,
 			 (ClientData) seqnogen, (Tcl_CmdDeleteProc *) NULL);
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * register private data with interp under the name of the handle
-     * ----------------------------------------------------------------------- */
+     * ------------------------------------------------------------------- */
     Tcl_SetAssocData(interp, seqnogen->handleName,
 		     (Tcl_InterpDeleteProc *) destroySeqNoGenerator,
 		     (ClientData) seqnogen);
@@ -239,13 +235,14 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
     return TCL_OK;
 }
 
-/* ----------------------------------------------------------------------------
+/* ------------------------------------------------------------------------
  * Member functions of SeqNoGenerator
- * ------------------------------------------------------------------------- */
+ * --------------------------------------------------------------------- */
 
 SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
 				     Tcl_Obj * seed, Tcl_Obj * min,
-				     Tcl_Obj * max, Tcl_Obj * incr, int wrap)
+				     Tcl_Obj * max, Tcl_Obj * incr, 
+				     Tcl_Obj * mask, Tcl_Obj * wrap)
 {
 
     SeqNoGenerator *seqnogen = NULL;
@@ -259,7 +256,7 @@ SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
     seqnogen->fileName = allocAndSet(Tcl_GetString(fn));
     seqnogen->handleName = allocAndSet(Tcl_GetString(hn));
     if (seed == NULL)
-	seqnogen->seed = 0;
+	seqnogen->seed = WEB_FILECOUNTER_SEED;
     else if (Tcl_GetIntFromObj(NULL, seed, &(seqnogen->seed)) == TCL_ERROR)
 	err++;
     if (min == NULL)
@@ -271,10 +268,17 @@ SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
     else if (Tcl_GetIntFromObj(NULL, max, &(seqnogen->maxValue)) == TCL_ERROR)
 	err++;
     if (incr == NULL)
-	seqnogen->incrValue = 1;
-    else if (Tcl_GetIntFromObj(NULL, incr, &(seqnogen->incrValue)) ==
-	     TCL_ERROR)
+	seqnogen->incrValue = WEB_FILECOUNTER_INCR;
+    else if (Tcl_GetIntFromObj(NULL, incr, &(seqnogen->incrValue)) == TCL_ERROR)
 	err++;
+    if (mask == NULL)
+       seqnogen->mask = WEB_FILECOUNTER_MASK;
+    else if (Tcl_GetIntFromObj(NULL, mask, &(seqnogen->mask)) == TCL_ERROR)
+        err++;
+    if (wrap == NULL)
+       seqnogen->doWrap = WEB_FILECOUNTER_WRAP;
+    else if (Tcl_GetBooleanFromObj(NULL, wrap, &(seqnogen->doWrap)) == TCL_ERROR)
+        err++;
 
     if (err ||
 	seqnogen->minValue > seqnogen->maxValue ||
@@ -284,7 +288,6 @@ SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
 	return NULL;
     }
     seqnogen->hasCurrent = 0;
-    seqnogen->doWrap = wrap;
     return seqnogen;
 }
 
@@ -303,9 +306,9 @@ int destroySeqNoGenerator(ClientData clientData, Tcl_Interp * interp)
     return deleteSeqNoGenerator((SeqNoGenerator *) clientData);
 }
 
-/* ----------------------------------------------------------------------------
+/* ------------------------------------------------------------------------
  * nextSeqNo
- * ------------------------------------------------------------------------- */
+ * --------------------------------------------------------------------- */
 int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 {
 
@@ -319,13 +322,12 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 
     Tcl_SetResult(interp, "", TCL_STATIC);
 
-    /* --------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------
      * Try to create file
-     * ----------------------------------------------------------------------- */
-    /* FIXME: 0644 MUST BE PARAM */
+     * ------------------------------------------------------------------- */
     if ((channel = Tcl_OpenFileChannel(interp,
 				       seqnogen->fileName,
-				       "CREAT RDWR", 0644)) == NULL) {
+				       "CREAT RDWR", seqnogen->mask)) == NULL) {
 
 	LOG_MSG(interp, WRITE_LOG,
 		__FILE__, __LINE__,
@@ -335,9 +337,9 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 	return TCL_ERROR;
     }
 
-    /* ------------------------------------------------------------------------
+    /* --------------------------------------------------------------------
      * Try to lock file
-     * --------------------------------------------------------------------- */
+     * ----------------------------------------------------------------- */
     if (lock_TclChannel(interp, channel) == TCL_ERROR) {
 
 	LOG_MSG(interp, WRITE_LOG | SET_RESULT,
@@ -346,9 +348,9 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 	return TCL_ERROR;
     }
 
-    /* ------------------------------------------------------------------------
+    /* --------------------------------------------------------------------
      * Try to read file
-     * --------------------------------------------------------------------- */
+     * ----------------------------------------------------------------- */
     lineObj = Tcl_NewObj();
 
     if ((bytesRead = Tcl_GetsObj(channel, lineObj)) < 0) {
@@ -373,9 +375,9 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 	}
     }
 
-    /* ------------------------------------------------------------------------
+    /* --------------------------------------------------------------------
      * new file
-     * --------------------------------------------------------------------- */
+     * ----------------------------------------------------------------- */
     if (bytesRead == 0) {
 
 	LOG_MSG(interp, WRITE_LOG,
@@ -387,14 +389,14 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
     }
     else {
 
-	/* ------------------------------------------------------------------------
+	/* --------------------------------------------------------------------
 	 * have read
-	 * --------------------------------------------------------------------- */
+	 * ----------------------------------------------------------------- */
 	if (Tcl_GetIntFromObj(interp, lineObj, &currentSeqNo) != TCL_OK) {
 
-	    /* ----------------------------------------------------------------------
+	    /* ----------------------------------------------------------------
 	     * ... but cannot understand what I read
-	     * ------------------------------------------------------------------- */
+	     * ------------------------------------------------------------- */
 	    unlock_TclChannel(interp, channel);
 	    Tcl_Close(interp, channel);
 
@@ -410,9 +412,9 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 	    return TCL_ERROR;
 	}
 
-	/* ------------------------------------------------------------------------
+	/* --------------------------------------------------------------------
 	 * get value (and wrap)
-	 * --------------------------------------------------------------------- */
+	 * ----------------------------------------------------------------- */
 	currentSeqNo += seqnogen->incrValue;
 
 	if (currentSeqNo > seqnogen->maxValue) {

@@ -23,6 +23,11 @@
 
 #define WEB_FILECOUNTER_MAXVAL 2147483647
 #define WEB_FILECOUNTER_MINVAL 0
+#define WEB_FILECOUNTER_MASK 0644
+#define WEB_FILECOUNTER_INCR 1
+#define WEB_FILECOUNTER_SEED 0
+#define WEB_FILECOUNTER_WRAP 0
+
 
 /* --------------------------------------------------------------------------
  * SeqNoGenerator
@@ -36,6 +41,7 @@ typedef struct SeqNoGenerator
     int maxValue;
     int incrValue;
     int currValue;
+    int mask;
     int doWrap;
     int hasCurrent;
 }
@@ -43,7 +49,8 @@ SeqNoGenerator;
 
 SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
 				     Tcl_Obj * seed, Tcl_Obj * min,
-				     Tcl_Obj * max, Tcl_Obj * incr, int wrap);
+				     Tcl_Obj * max, Tcl_Obj * incr,
+				     Tcl_Obj * mask, Tcl_Obj * wrap);
 
 int deleteSeqNoGenerator(SeqNoGenerator * seqnogen);
 int destroySeqNoGenerator(ClientData clientData, Tcl_Interp * interp);
