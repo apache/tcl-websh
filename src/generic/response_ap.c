@@ -85,33 +85,36 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 			return TCL_ERROR;
 		    }
 
-		    /* fixme
-		     *
-		     * use ap_table_set unless web::response -count key is > 1
-		     * then use set for the first and add for the others.
-		     */
-
-		    for (i = 0; i < lobjc; i++) {
-		      if (strcasecmp(key, "Content-Type") == 0) {
+		    if (lobjc) {
 #ifndef APACHE2
-			    r->content_type =
-				ap_pstrdup(r->pool, Tcl_GetString(lobjv[i]));
+		      if (strcasecmp(key, "Content-Type") == 0) {
+			r->content_type =
+			  ap_pstrdup(r->pool, Tcl_GetString(lobjv[0]));
+		      } else {
+			ap_table_set(r->headers_out,
+				     key,
+				     Tcl_GetString(lobjv[0]));
+			for (i = 1; i < lobjc; i++) {
+			  ap_table_add(r->headers_out,
+				       key,
+				       Tcl_GetString(lobjv[i]));
 			}
-			else {
-			    ap_table_add(r->headers_out,
-					 key,
-					 Tcl_GetString(lobjv[i]));
+		      }
 #else /* APACHE2 */
-			    r->content_type =
-				(char *) apr_pstrdup(r->pool,
-						     Tcl_GetString(lobjv[i]));
+		      if (strcasecmp(key, "Content-Type") == 0) {
+			r->content_type =
+			  (char *) apr_pstrdup(r->pool, Tcl_GetString(lobjv[0]));
+		      } else {
+			apr_table_set(r->headers_out,
+				      key,
+				      Tcl_GetString(lobjv[0]));
+			for (i = 1; i < lobjc; i++) {
+			  apr_table_add(r->headers_out,
+					key,
+					Tcl_GetString(lobjv[i]));
 			}
-			else {
-			    apr_table_add(r->headers_out,
-					  key,
-					  Tcl_GetString(lobjv[i]));
+		      }
 #endif /* APACHE2 */
-			}
 		    }
 		}
 	    }
@@ -119,7 +122,7 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 #ifndef APACHE2
 	ap_send_http_header(r);
 #else /* APACHE2 */
-	/* fixme: ap 2.0 API might change this call ? */
+	/* fixme: wher is this call in ap 2.0 API? */
 	/* ap_send_http_header(r); */
 #endif /* APACHE2 */
 	responseObj->sendHeader = 0;
