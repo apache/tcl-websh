@@ -185,27 +185,22 @@ $Id$
       name of the command to be used is encoded in the querystring
       (see <literal remap="tt">web::cmdurl</literal> for details on
       how to produce such querystrings).  Command dispatching is
-      initiated with the command <literal
-					  remap="tt">web::dispatch</literal>.  Commands are defined with
-      <literal remap="tt">web::command</literal>.
+      initiated with the command <command>web::dispatch</command>.  Commands are defined with
+      <command>web::command</command>.
     </para>
     <section id="web::command">
       <title>web::command</title>
       <para>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::command</command>
+	  <arg choice="opt">cmdName</arg>
+	  <arg>cmdBody</arg>
+	</cmdsynopsis>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<emphasis>web::command</emphasis> ?&lt;cmdName&gt;? &lt;cmdBody&gt;
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
-	Registers &lt;cmdBody&gt; as &lt;cmdName&gt;. If &lt;cmdName&gt; is
-	omitted, &quot;default&quot; is used.
+	Registers <option>cmdBody</option> as
+	<option>cmdName</option>. If <option>cmdName</option> is
+	omitted, "default" is used.
 
       </para>
     </section>
@@ -213,19 +208,15 @@ $Id$
       <title>web::getcommand</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<emphasis>web::getcommand</emphasis> ?&lt;cmdName&gt;?
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::getcommand</command>
+	  <arg choice="opt">cmdName</arg>
+	</cmdsynopsis>
 
-	Retrieves the body of the command &lt;commandName&gt; or of the command &quot;default&quot;
-	if &lt;cmdName&gt; is omitted.
+	Retrieves the body of the command <option>commandName</option>
+	or of the command &quot;default&quot; if
+	<option>cmdName</option> is omitted.
 
       </para>
     </section>
@@ -249,7 +240,7 @@ $Id$
 	Generate URLs including querystring. By default, URLs are
 	self-referencing, but the exact output is subject to configuration. The
 	querystring is encrypted, using the encryption method specified by
-	configuration (see <literal remap="tt">web::config</literal>). If &lt;cmdName&gt; is &quot;&quot;, no command parameter
+	configuration (see <literal remap="tt">web::config</literal>). If <option>cmdName</option> is &quot;&quot;, no command parameter
 	is produced in the query string.
 
 	<variablelist>
@@ -362,8 +353,8 @@ $Id$
 		<emphasis>web::cmdurlcfg</emphasis> option ?&lt;value&gt;?</para><para>
 		Options are <emphasis>-scheme</emphasis>, <emphasis>-host</emphasis>, <emphasis>-port</emphasis>,
 		<emphasis>-scriptname</emphasis>, <emphasis>-pathinfo</emphasis>, <emphasis>-querystring</emphasis>, <emphasis>-urlformat</emphasis></para><para>
-		If &lt;value&gt; is omitted, the current value is returned.
-		Otherwise, the &lt;value&gt; is stored.
+		If <option>value</option> is omitted, the current value is returned.
+		Otherwise, the <option>value</option> is stored.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -388,7 +379,7 @@ $Id$
 	    <term>web::cmdurlcfg -set &lt;key&gt; &lt;value&gt;</term>
 	    <listitem>
 	      <para>
-		add the static parameter &lt;key&gt;
+		add the static parameter <option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -466,7 +457,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	In all cases, &quot;web::cmdurlcfg -option &lt;value&gt;&quot; sets the value of
+	In all cases, &quot;web::cmdurlcfg -option <option>value</option>&quot; sets the value of
 	the given option and returns the value that was used before the change,
 	while &quot;web::cmdurlcfg -option&quot; returns the current value.  If no value
 	has been set using web::cmdurlcfg, but is requested for the URL
@@ -523,8 +514,8 @@ $Id$
 	    <term>web::dispatch -cmd &lt;cmdName&gt;</term>
 	    <listitem>
 	      <para>
-		switch into command &lt;cmdName&gt;. If &lt;cmdName&gt; is an empty string,
-		no command is called. By default, &lt;cmdName&gt; is taken from
+		switch into command <option>cmdName</option>. If <option>cmdName</option> is an empty string,
+		no command is called. By default, <option>cmdName</option> is taken from
 		the querystring.
 	      </para>
 	    </listitem>
@@ -533,7 +524,7 @@ $Id$
 	    <term>web::dispatch -querystring &lt;string&gt;</term>
 	    <listitem>
 	      <para>
-		parse &lt;string&gt; as querystring. If &lt;string&gt; is an empty string,
+		parse <option>string</option> as querystring. If <option>string</option> is an empty string,
 		querystring parsing is turned off. By default, querystring is
 		taken from the request data (CGI environment or apache module
 		request object).
@@ -544,13 +535,13 @@ $Id$
 	    <term>web::dispatch -postdata &lt;string&gt; ?&lt;content_type&gt;?</term>
 	    <listitem>
 	      <para>
-		parse &lt;string&gt; as POST data input with type &lt;content_type&gt;.
-		&lt;content_type&gt; can be <literal remap="tt">application/x-www-form-urlencoded</literal> or
+		parse <option>string</option> as POST data input with type <option>content_type</option>.
+		<option>content_type</option> can be <literal remap="tt">application/x-www-form-urlencoded</literal> or
 		<literal remap="tt">multipart/form-data; boundary=xxx</literal>. In the second case,
-		&lt;content-type&gt; must specify the boundary as well. By default,
+		<option>content-type</option> must specify the boundary as well. By default,
 		POST data is taken from the request data.</para><para>
-		If &lt;string&gt; is an empty string, postdata parsing is turned off.</para><para>
-		Default for &lt;content_type&gt; is &quot;application/x-www-form-urlencoded&quot;
+		If <option>string</option> is an empty string, postdata parsing is turned off.</para><para>
+		Default for <option>content_type</option> is &quot;application/x-www-form-urlencoded&quot;
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -558,10 +549,10 @@ $Id$
 	    <term>web::dispatch -postdata &lt;channelName&gt; &lt;content_length&gt; &lt;content_type&gt;</term>
 	    <listitem>
 	      <para>
-		As above, but reads the POST data from channel &lt;channelName&gt;.</para><para>
-		Use the keyword <literal remap="tt">end</literal> for &lt;content_length&gt; to indicate that
+		As above, but reads the POST data from channel <option>channelName</option>.</para><para>
+		Use the keyword <literal remap="tt">end</literal> for <option>content_length</option> to indicate that
 		websh should read all content.</para><para>
-		Examples for &lt;content_type&gt; include:
+		Examples for <option>content_type</option> include:
 		<itemizedlist>
 		  <listitem><para><literal remap="tt">multipart/form-data; boundary=xxxx</literal></para></listitem>
 		  <listitem><para><literal remap="tt">application/x-www-form-urlencoded</literal></para></listitem>
@@ -575,7 +566,7 @@ $Id$
 	      <para>
 		Track a parameter: register it as &quot;static&quot; for the generation of
 		URLs with web::cmdurl. Thus, each parameter with the key in
-		&lt;paramKeyList&gt; will be repeated in every URL generated with
+		<option>paramKeyList</option> will be repeated in every URL generated with
 		web::cmdurl. See the documentation of web::cmdurl for details.
 	      </para>
 	    </listitem>
@@ -584,11 +575,11 @@ $Id$
 	    <term>web::dispatch -hook &lt;code&gt;</term>
 	    <listitem>
 	      <para>
-		Causes web::dispatch to eval &lt;code&gt; just before the command (from
-		any source) is evaluated. When &lt;code&gt; is evaluated, the full
+		Causes web::dispatch to eval <option>code</option> just before the command (from
+		any source) is evaluated. When <option>code</option> is evaluated, the full
 		request information has been parsed.  That is, web::param,
 		web::formvar etc. will have up-to-date information when
-		&lt;code&gt; is evaluated.
+		<option>code</option> is evaluated.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -667,7 +658,7 @@ $Id$
 	      The next time the user visits the Webshell application
 	      using one of these URLs,
 	      <emphasis>web::dispatch</emphasis> will detect the
-	      session id, and =|&lt;mgr&gt;::init= will directly load
+	      session id, and =|<option>mgr</option>::init= will directly load
 	      the corresponding session context without generating a
 	      new session id.
 	    </para>
@@ -697,7 +688,7 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>web::request</emphasis> ?options? ?&lt;key&gt;? ?&lt;value&gt; ...?</para><para>
-		<emphasis>web::request</emphasis> ?&lt;key&gt;? ?&lt;default&gt;?</para><para>
+		<emphasis>web::request</emphasis> ?<option>key</option>? ?<option>default</option>?</para><para>
 		Options are: <literal remap="tt">-count</literal>, <literal remap="tt">-set</literal>, <literal remap="tt">-lappend</literal>, <literal remap="tt">-names</literal>, <literal remap="tt">-unset</literal>, <literal remap="tt">-reset</literal>
 		and <literal remap="tt">-channel</literal> fixme: gibt es -channel noch?
 	      </para>
@@ -720,8 +711,8 @@ $Id$
 	    <term>web::request &lt;key&gt; ?&lt;default&gt;?</term>
 	    <listitem>
 	      <para>
-		returns the value for &lt;key&gt;. Can be a list. In case
-		that &lt;key&gt; does not exist, return &lt;default&gt;, if it is
+		returns the value for <option>key</option>. Can be a list. In case
+		that <option>key</option> does not exist, return <option>default</option>, if it is
 		given, or an empty string.
 	      </para>
 	    </listitem>
@@ -730,8 +721,8 @@ $Id$
 	    <term>web::request -count &lt;key&gt;</term>
 	    <listitem>
 	      <para>
-		returns number of items in list for &lt;key&gt;; returns 0 if
-		&lt;key&gt; does not exist
+		returns number of items in list for <option>key</option>; returns 0 if
+		<option>key</option> does not exist
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -739,7 +730,7 @@ $Id$
 	    <term>web::request -set &lt;key&gt;</term>
 	    <listitem>
 	      <para>
-		does the same as 'web::request &lt;key&gt;'
+		does the same as 'web::request <option>key</option>'
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -747,8 +738,8 @@ $Id$
 	    <term>web::request -set &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
 	    <listitem>
 	      <para>
-		adds the parameter &lt;key&gt; to the web::request data.
-		Any existing parameters with &lt;key&gt; are overwritten
+		adds the parameter <option>key</option> to the web::request data.
+		Any existing parameters with <option>key</option> are overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -756,8 +747,8 @@ $Id$
 	    <term>web::request -lappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
 	    <listitem>
 	      <para>
-		append parameters with the same &lt;key&gt; to the web::request data. In
-		this case the existing &lt;value&gt; is not overwritten
+		append parameters with the same <option>key</option> to the web::request data. In
+		this case the existing <option>value</option> is not overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -835,8 +826,8 @@ $Id$
 	    <term>web::param &lt;key&gt; ?&lt;default&gt;?</term>
 	    <listitem>
 	      <para>
-		returns the value for &lt;key&gt;. Can be a list. In case
-		that &lt;key&gt; does not exist, return &lt;default&gt;, if it is
+		returns the value for <option>key</option>. Can be a list. In case
+		that <option>key</option> does not exist, return <option>default</option>, if it is
 		given, or an empty string.
 	      </para>
 	    </listitem>
@@ -845,7 +836,7 @@ $Id$
 	    <term>web::param -count &lt;key&gt;</term>
 	    <listitem>
 	      <para>
-		returns number of items in list of &lt;key&gt;
+		returns number of items in list of <option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -853,7 +844,7 @@ $Id$
 	    <term>web::param -set &lt;key&gt;</term>
 	    <listitem>
 	      <para>
-		does the same as 'web::param &lt;key&gt;'
+		does the same as 'web::param <option>key</option>'
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -861,8 +852,8 @@ $Id$
 	    <term>web::param -set &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
 	    <listitem>
 	      <para>
-		add the parameter &lt;key&gt; to the web::param data.
-		Any existing parameters with &lt;key&gt; are overwritten
+		add the parameter <option>key</option> to the web::param data.
+		Any existing parameters with <option>key</option> are overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -870,8 +861,8 @@ $Id$
 	    <term>web::param -lappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
 	    <listitem>
 	      <para>
-		append parameters with the same &lt;key&gt; to the web::param data.  In
-		this case the existing &lt;value&gt; is not overwritten
+		append parameters with the same <option>key</option> to the web::param data.  In
+		this case the existing <option>value</option> is not overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -911,7 +902,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	web::formvar is an accessor to HTML &lt;FORM&gt; data.  After web::dispatch has
+	web::formvar is an accessor to HTML <option>FORM</option> data.  After web::dispatch has
 	parsed the POST data, you can access all form fields using web::formvar.
 
       </para>
@@ -973,8 +964,8 @@ $Id$
 
       </para><para>
 	<literal remap="tt">web::response -select &lt;channelName&gt;</literal> selects &lt;channelName&gt; as new
-	response object. If the &lt;channelName&gt; is prepended by a #, it refers
-	to a global variable named &lt;channelName&gt;.
+	response object. If the <option>channelName</option> is prepended by a #, it refers
+	to a global variable named <option>channelName</option>.
 
 	<variablelist>
 	  <varlistentry>
@@ -989,7 +980,7 @@ $Id$
 	    <term>web::response -select ?#?&lt;channel&gt;</term>
 	    <listitem>
 	      <para>
-		makes &lt;channel&gt; the new default response object and returns the
+		makes <option>channel</option> the new default response object and returns the
 		old default response object
 	      </para>
 	    </listitem>
@@ -998,10 +989,10 @@ $Id$
 	    <term>web::response -set &lt;key&gt; ?&lt;value&gt;?</term>
 	    <listitem>
 	      <para>
-		sets property &lt;key&gt; to &lt;value&gt;, or returns current value if
-		&lt;value&gt; is omitted.\\ 
-		The &lt;keys&gt; are names of HTTP header fields (do not include ':' at
-		the end of the header field name) and &lt;value&gt; the corresponding
+		sets property <option>key</option> to <option>value</option>, or returns current value if
+		<option>value</option> is omitted.\\ 
+		The <option>keys</option> are names of HTTP header fields (do not include ':' at
+		the end of the header field name) and <option>value</option> the corresponding
 		value of the field (like Content-Type) and their values (like
 		text/html).</para><para>
 		Example:</para><para>
@@ -1021,7 +1012,7 @@ $Id$
 	    <term>web::response -count &lt;key&gt;</term>
 	    <listitem>
 	      <para>
-		returns number of items in list of &lt;key&gt;
+		returns number of items in list of <option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1029,7 +1020,7 @@ $Id$
 	    <term>web::response -unset ?&lt;key&gt;?</term>
 	    <listitem>
 	      <para>
-		delete the value of &lt;key&gt;, if &lt;key&gt; is given, or
+		delete the value of <option>key</option>, if <option>key</option> is given, or
 		all keys.
 	      </para>
 	    </listitem>
@@ -1041,7 +1032,7 @@ $Id$
 		Sets the sendheader flag which indicates and controls
 		whether the HTTP headers have been or should be sent.
 		It is initially set to 1 and set to 0 after the first
-		call of <literal remap="tt">web::put</literal> or <literal remap="tt">web::putx</literal>. If &lt;boolean&gt; is
+		call of <literal remap="tt">web::put</literal> or <literal remap="tt">web::putx</literal>. If <option>boolean</option> is
 		omitted, returns the current value.
 	      </para>
 	    </listitem>
@@ -1051,7 +1042,7 @@ $Id$
 	    <listitem>
 	      <para>
 		Sets the HTTP response like &quot;HTTP/1.0 200 OK&quot; for the given
-		(or default) channel. If no &lt;value&gt; given, returns the the
+		(or default) channel. If no <option>value</option> given, returns the the
 		current HTTP response set. In the case of the Apache module
 		mod_websh, Apache replaces the protocol &quot;HTTP/??&quot; in the
 		reponse to &quot;HTTP/1.1&quot;
@@ -1125,7 +1116,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Writes &lt;text&gt; to the specified channel. Code in curly brackets is
+	Writes <option>text</option> to the specified channel. Code in curly brackets is
 	eval'd, unless the brackets are escaped by &quot;\&quot;. These markup characters
 	'{...}' can be changed to '&lt;% ... %&gt;' with 'web::config putxmarkup tag'.
 
@@ -1150,8 +1141,8 @@ $Id$
 	As web::putx, but takes input from a file.
 
 	Returns 0 on success, 1 otherwise. If an error occurs, an error
-	message is written to &lt;msg&gt;. If only two arguments are passed, then
-	&lt;channel&gt; takes precedence.
+	message is written to <option>msg</option>. If only two arguments are passed, then
+	<option>channel</option> takes precedence.
 
       </para><para>
       </para>
@@ -1264,7 +1255,7 @@ $Id$
 	  <term>web::logfilter add &lt;level&gt;</term>
 	  <listitem>
 	    <para>
-	      add a &lt;level&gt; to the list
+	      add a <option>level</option> to the list
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -1272,7 +1263,7 @@ $Id$
 	  <term>web::logfilter delete ?&lt;name&gt;?</term>
 	  <listitem>
 	    <para>
-	      remove a &lt;name&gt; from list, or remove all filters if &lt;name&gt; is omitted.
+	      remove a <option>name</option> from list, or remove all filters if &lt;name&gt; is omitted.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -1304,8 +1295,8 @@ $Id$
       </variablelist>
 
       Issue a log message.  <emphasis>Note</emphasis> that, for performance reasons,
-      variables and command names &lt;msg&gt; will be substituted by the log
-      module and you should put &lt;msg&gt; in curly braces to prevent Tcl from
+      variables and command names <option>msg</option> will be substituted by the log
+      module and you should put <option>msg</option> in curly braces to prevent Tcl from
       substituting the string as well. This ensures that webshell only
       spends time on messages which actually pass all filters, and debug
       messages that contain variable names and commands will not slow down
@@ -1436,7 +1427,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Creates a namespace &lt;name&gt; with the following commands:
+	Creates a namespace <option>name</option> with the following commands:
 
 	<variablelist>
 	  <varlistentry>
@@ -1461,7 +1452,7 @@ $Id$
 	    <term>&lt;name&gt;::cset &lt;key&gt; &lt;value&gt;</term>
 	    <listitem>
 	      <para>
-		store &lt;value&gt;
+		store <option>value</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1469,7 +1460,7 @@ $Id$
 	    <term>&lt;name&gt;::cappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
 	    <listitem>
 	      <para>
-		append &lt;value&gt; to existing value for &lt;key&gt;
+		append <option>value</option> to existing value for <option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1477,7 +1468,7 @@ $Id$
 	    <term>&lt;name&gt;::clappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
 	    <listitem>
 	      <para>
-		append &lt;value&gt; to existing list of values for &lt;key&gt;
+		append <option>value</option> to existing list of values for <option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1485,9 +1476,9 @@ $Id$
 	    <term>&lt;name&gt;::cget &lt;key&gt; ?&lt;default&gt;?</term>
 	    <listitem>
 	      <para>
-		access the value for key &lt;key&gt;, or return &lt;default&gt;
-		if &lt;key&gt; does not exist in the context. If &lt;default&gt;
-		is omitted, an empty string is returned if &lt;key&gt;
+		access the value for key <option>key</option>, or return <option>default</option>
+		if <option>key</option> does not exist in the context. If <option>default</option>
+		is omitted, an empty string is returned if <option>key</option>
 		is unknown.
 	      </para>
 	    </listitem>
@@ -1496,7 +1487,7 @@ $Id$
 	    <term>&lt;name&gt;::cexists &lt;key&gt;</term>
 	    <listitem>
 	      <para>
-		returns true (1) if &lt;key&gt; exists in context, false (0)
+		returns true (1) if <option>key</option> exists in context, false (0)
 		otherwise.
 	      </para>
 	    </listitem>
@@ -1505,7 +1496,7 @@ $Id$
 	    <term>&lt;name&gt;::cunset &lt;key&gt;</term>
 	    <listitem>
 	      <para>
-		remove &lt;key&gt; from context
+		remove <option>key</option> from context
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1522,7 +1513,7 @@ $Id$
 	    <term><option>&lt;name&gt;::cnames</option> <optional><option>pattern</option></optional></term>
 	    <listitem>
 	      <para>
-		lists existing keys of context matching &lt;pattern&gt;
+		lists existing keys of context matching <option>pattern</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1564,7 +1555,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Creates a namespace &lt;name&gt; to manage file-based context data:
+	Creates a namespace <option>name</option> to manage file-based context data:
 
 	<variablelist>
 	  <varlistentry>
@@ -1591,10 +1582,10 @@ $Id$
 	    <term><option>&lt;name&gt;::init</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
-		load an existing session context with id &lt;id&gt;, or create a new one,
+		load an existing session context with id <option>id</option>, or create a new one,
 		if possible. Automation depends on the settings of the actual
 		context manager settings, see below.</para><para>
-		If you specify an &lt;id&gt;, you must decide when to create
+		If you specify an <option>id</option>, you must decide when to create
 		a new file and when to use the old one, if any, by yourself.
 	      </para>
 	    </listitem>
@@ -1642,7 +1633,7 @@ $Id$
 	    <listitem>
 	      <para>
 		set the file permissions of the session context files
-		&lt;perm&gt; is an unix-like octal value like 0644.
+		<option>perm</option> is an unix-like octal value like 0644.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1671,10 +1662,10 @@ $Id$
 	    <term>web::filecontext &lt;name&gt; -idgen &lt;idgen&gt;</term>
 	    <listitem>
 	      <para>
-		Sets command &lt;idgen&gt; to find a new session id. See doc of
+		Sets command <option>idgen</option> to find a new session id. See doc of
 		<emphasis>web::filecounter</emphasis> below for an implementation
 		provided with webshell.</para><para>
-		&lt;idgen&gt; is used in case that no &lt;id&gt; argument
+		<option>idgen</option> is used in case that no <option>id</option> argument
 		has been passed to <emphasis>init</emphasis> or <emphasis>new</emphasis>.
 	      </para>
 	    </listitem>
@@ -1683,16 +1674,16 @@ $Id$
 	    <term>web::filecontext &lt;name&gt; -attachto &lt;idparam&gt;</term>
 	    <listitem>
 	      <para>
-		Use <literal remap="tt">web::param &lt;idparam&gt;</literal> to access current session id.
+		Use <literal remap="tt">web::param <option>idparam</option></literal> to access current session id.
 		This option is only used if <emphasis>init</emphasis> has been called
-		without &lt;id&gt; argument.</para><para>
+		without <option>id</option> argument.</para><para>
 		webshell passes session ids from one HTML request to
 		the next using the querystring (this is one reason why
 		the querystring is encrypted). After web::dispatch
 		has parsed the querystring, web::param will report the
 		current session id, if any. <emphasis>Note</emphasis> that you can 
 		maintain several sessions in parallel, and attach every
-		session to its own &lt;idparam&gt;.</para><para>
+		session to its own <option>idparam</option>.</para><para>
 		Using <emphasis>web::dispatch -track</emphasis> further automates the
 		passing of session ids from request to request.
 	      </para>
@@ -1724,7 +1715,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Creates a namespace &lt;name&gt; to manage cookie-based context data:
+	Creates a namespace <option>name</option> to manage cookie-based context data:
 
 	<variablelist>
 	  <varlistentry>
@@ -1791,7 +1782,7 @@ $Id$
 	    <term>web::cookiecontext &lt;name&gt; -expires &lt;time&gt;</term>
 	    <listitem>
 	      <para>
-		set the expiration date of the cookie. Possible values for &lt;time&gt;
+		set the expiration date of the cookie. Possible values for <option>time</option>
 		are <emphasis>day</emphasis> (lifetime: one day), <emphasis>week</emphasis>, <emphasis>today</emphasis>, <emphasis>seconds</emphasis>
 		(time in seconds since 1-1-1970) or <emphasis>date-string</emphasis>.
 	      </para>
@@ -1806,7 +1797,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cookiecontext &lt;name&gt; -domain  &lt;domain&gt;</term>
+	    <term>web::cookiecontext <option>name</option> -domain  &lt;domain&gt;</term>
 	    <listitem>
 	      <para>
 		set the <emphasis>domain</emphasis> property of the cookie
@@ -1842,8 +1833,8 @@ $Id$
 	</variablelist>
 
 	Because cookies are client-based, in principle no id is
-	needed. webshell uses &lt;id&gt; to name the cookie, however, and the
-	<literal remap="tt">new</literal>, <literal remap="tt">init</literal>, and <literal remap="tt">load</literal> commands still require the &lt;id&gt;
+	needed. webshell uses <option>id</option> to name the cookie, however, and the
+	<literal remap="tt">new</literal>, <literal remap="tt">init</literal>, and <literal remap="tt">load</literal> commands still require the <option>id</option>
 	argument. (fixme: any changes?) Please note that property settings
 	of a cookie context can only be changed <emphasis>before</emphasis> anything is output
 	on the respective channel.
@@ -1871,7 +1862,7 @@ $Id$
 	    <term>-filename &lt;filename&gt;</term>
 	    <listitem>
 	      <para>
-		uses &lt;filename&gt; to store the current value (no default)
+		uses <option>filename</option> to store the current value (no default)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1925,7 +1916,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	After creation, a new command &lt;name&gt; is registered with the following two
+	After creation, a new command <option>name</option> is registered with the following two
 	subcommands:
 
 	<variablelist>
@@ -1982,10 +1973,10 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	If the file &lt;fileName&gt; exists, it is sourced (must be a
+	If the file <option>fileName</option> exists, it is sourced (must be a
 	script). Otherwise if the library fileName+&quot;shared lib extension&quot;
 	exists, it is loaded (must be a shared library). Returns 0 on success,
-	1 otherwise. If an error occurs, an error message is written to &lt;msg&gt;.
+	1 otherwise. If an error occurs, an error message is written to <option>msg</option>.
 
       </para>
     </section>
@@ -2004,9 +1995,9 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	&lt;file&gt; is read and written to &lt;varName&gt;. Returns 0 on success, 1
+	<option>file</option> is read and written to <option>varName</option>. Returns 0 on success, 1
 	otherwise. If an error occurs, an error message is written to the
-	variable &lt;msg&gt;.
+	variable <option>msg</option>.
 
       </para>
     </section>
@@ -2212,7 +2203,7 @@ $Id$
 	    <term>web::decryptd &lt;message&gt;</term>
 	    <listitem>
 	      <para>
-		decrypts &lt;message&gt;
+		decrypts <option>message</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2297,7 +2288,7 @@ $Id$
 	      Options is: <literal remap="tt">-numeric</literal>.
 	    </para>
 	    <para>
-	      Return HTML-compliant &lt;text&gt; with HTML encoded
+	      Return HTML-compliant <option>text</option> with HTML encoded
 	      entities in mnemonic form (e.g. &amp;auml;) or - with
 	      option -numeric - numeric form (e.g. &amp;#228;)
 	    </para>
@@ -2306,7 +2297,7 @@ $Id$
 	    <para><emphasis>web::dehtmlify</emphasis>	&lt;text&gt;
 	    </para>
 	    <para>
-	      Remove all HTML-specifics of &lt;text&gt;
+	      Remove all HTML-specifics of <option>text</option>
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -2314,14 +2305,14 @@ $Id$
 	      &lt;text&gt;
 	    </para>
 	    <para>
-	      Return URI-compliant &lt;text&gt;.
+	      Return URI-compliant <option>text</option>.
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para>
 	      <emphasis>web::uridecode</emphasis> &lt;text&gt;
 	    </para>
-	    <para>Decode URI-compliant &lt;text&gt;.
+	    <para>Decode URI-compliant <option>text</option>.
 	    </para>
 	  </listitem>
 	</itemizedlist>
@@ -2366,11 +2357,11 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Send the command &lt;cmdNr&gt; and the message &lt;message&gt; to channel
-	&lt;channelName&gt; using the flags &lt;flags&gt;. The command numbers are
-	application specific. If #&lt;flags&gt; is used, flags is the numeric
+	Send the command <option>cmdNr</option> and the message <option>message</option> to channel
+	<option>channelName</option> using the flags <option>flags</option>. The command numbers are
+	application specific. If #<option>flags</option> is used, flags is the numeric
 	(integer) representation of the flags is to be set. If the # is
-	omitted, &lt;flags&gt; is a list of symbolic flags. Currently, there is only
+	omitted, <option>flags</option> is a list of symbolic flags. Currently, there is only
 	one flag: &quot;multiple&quot; or &quot;noflush&quot; with the same meaning, 
 	indicating that there is more to follow and no automatic flush on the
 	channel should be done.
@@ -2392,7 +2383,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Receives a message from &lt;channelName&gt;. The other arguments are the
+	Receives a message from <option>channelName</option>. The other arguments are the
 	names of the corresponding variables which will contain the message.
 	The flags are returned numeric. (To handle these flags, use the
 	web::msgflag function).
@@ -2429,7 +2420,7 @@ $Id$
 	    <term>web::msgflag &lt;flags&gt;</term>
 	    <listitem>
 	      <para>
-		returns the integer representation of the flags listed in &lt;flags&gt; 
+		returns the integer representation of the flags listed in <option>flags</option> 
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2437,7 +2428,7 @@ $Id$
 	    <term>web::msgflag &lt;flags&gt; &lt;testflags&gt;</term>
 	    <listitem>
 	      <para>
-		returns 1, if the flags in &lt;testflags&gt; are set in &lt;flags&gt;
+		returns 1, if the flags in <option>testflags</option> are set in <option>flags</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2494,8 +2485,8 @@ $Id$
 
 	Register code to be exectuted when the interpreter for this
 	Webshell script is deleted. <emphasis>web::dofinalize</emphasis> will then call
-	each &lt;code&gt; block that has been registered, starting with the
-	most recently added &lt;code&gt;.
+	each <option>code</option> block that has been registered, starting with the
+	most recently added <option>code</option>.
 
       </para>
     </section>
@@ -2515,7 +2506,7 @@ $Id$
 	</variablelist>
 
 	Execute finalizer code that has been registerd using
-	<emphasis>web::finalizer</emphasis>, starting with the most recently added &lt;code&gt;.
+	<emphasis>web::finalizer</emphasis>, starting with the most recently added <option>code</option>.
 
       </para>
     </section>
@@ -2554,7 +2545,7 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Set or accesses properties of the interpreter class &lt;classid&gt;.
+	Set or accesses properties of the interpreter class <option>classid</option>.
 
 	<variablelist>
 	  <varlistentry>
@@ -2562,7 +2553,7 @@ $Id$
 	    <listitem>
 	      <para>
 		gets or sets the maximum number of requests interpreters of this
-		class should handle. If &lt;value&gt; is 0, handle an unlimited number
+		class should handle. If <option>value</option> is 0, handle an unlimited number
 		of requests. Default: 1
 	      </para>
 	    </listitem>
@@ -2572,7 +2563,7 @@ $Id$
 	    <listitem>
 	      <para>
 		gets or sets the maximum number of seconds interpreters of this
-		class should live. If &lt;value&gt; is 0, it lives forever. Default: 0
+		class should live. If <option>value</option> is 0, it lives forever. Default: 0
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2581,7 +2572,7 @@ $Id$
 	    <listitem>
 	      <para>
 		gets or sets the maximum number of seconds interpreters of this
-		class should live beeing idle. If &lt;value&gt; is 0, no idle timeout is
+		class should live beeing idle. If <option>value</option> is 0, no idle timeout is
 		assumed. Default: 0
 	      </para>
 	    </listitem>
@@ -2674,8 +2665,9 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	In case &lt;searchFor&gt; exists in &lt;listToBeSearched&gt;, web::match returns
-	&lt;result&gt;, otherwise an empty string.
+	In case <option>searchFor</option> exists in
+	<option>listToBeSearched</option>, web::match returns
+	<option>result</option>, otherwise an empty string.
 
       </para><para>
 	For websh2 wizards:</para><para>
