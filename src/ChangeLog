@@ -1,6 +1,17 @@
+2004-09-15  Ronnie Brunner <ronnie.brunner@netcetera.ch>
+
+	* src/generic/cookie.ws3, src/tests/cookiecontext.test:
+	fixed expiry of cookies: expiry can be given in seconds and
+	in any relative format known to tcl (such as "2 days")
+	resolved locale dependecy that broke expiry format with tcl8.4
+	and higher
+
+	* doc/quickref.xml:
+	clearified documentation of expiry option for web::cookiecontext
+	
 2004-04-30  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
-	* src/generic/webout.c, src/test/webout.test:
+	* src/generic/webout.c, src/tests/webout.test:
 	set back response object after web::putx and accoring tests
 
 2004-03-24  Ronnie Brunner <ronnie.brunner@netcetera.ch>
