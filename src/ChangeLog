@@ -1,4 +1,60 @@
+2002-04-02  David N. Welton  <davidw@dedasys.com>
+
+	* quickref.xsl: <arg choice="plain"> now outputs monoseq text, to
+	indicate when an argument must be inserted literally, as a
+	subcommand.
+
+2002-03-28  David N. Welton  <davidw@dedasys.com>
+
+	* generic/interpool.c (initPool): Removed 'called' - it can only
+	happen once.  Thanks to Ronnie.
+
+2002-03-27  David N. Welton  <davidw@dedasys.com>
+
+	* generic/interpool.c (initPool): Remove locking, as this is
+	called from the child_init area, which shouldn't be
+	multi-threaded.  Thanks to Ronnie for pointing this out.
+
+2002-03-21  David N. Welton  <davidw@dedasys.com>
+
+	* quickref.xml: Changed documentation for web::log, which now
+	defaults to not running 'subst' on its arguments.
+
+2002-03-19  David N. Welton  <davidw@dedasys.com>
+
+	* generic/mod_websh.c (merge_websh_config): Don't reset the locks
+	here.
+
+	* generic/log.c (destroyLogPlugIn): Send something to stderr if
+	there is no plugin.
+
+2002-03-18  David N. Welton  <davidw@dedasys.com>
+
+	* apachetests: Added new, modularized test system.  Should allow
+	easier sharing of improvements across Apache Tcl projects.
+
+2002-03-11  David N. Welton  <davidw@dedasys.com>
+
+	* quickref.xml: changed <...> to <option>...</option.
+
+2002-03-08  David N. Welton  <davidw@dedasys.com>
+
+	* quickref.xsl: Added our own custom .xsl file for Tcl style
+	output.
+
 2002-03-07  David N. Welton  <davidw@dedasys.com>
+
+	* generic/logtocmd.c (logToCmd): Use a real list instead of a
+	DString.
+
+	* tests/cmdurl.test (getquerystringfromurl): Changed tests to use
+	getquerystringfromurl instead of web::querystring::getfromurl.
+
+	* generic/interpool.c (initPool): Make sure we are only called
+	once.
+
+	* generic/querystring.c: delete Web_GetQueryStringFromUrl
+	function/command.
 
 	* unix/Makefile.in: Avoid the final link step if it's already been
 	performed, for websh, and mod_websh.so.

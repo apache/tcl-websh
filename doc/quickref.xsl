@@ -80,7 +80,14 @@
 	<xsl:value-of select="$arg.choice.def.open.str"/>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:call-template name="inline.underlineseq"/>
+    <xsl:choose>
+      <xsl:when test="$choice='plain'">
+	<xsl:call-template name="inline.monoseq"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:call-template name="inline.underlineseq"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:choose>
       <xsl:when test="$rep='repeat'">
 	<xsl:value-of select="$arg.rep.repeat.str"/>

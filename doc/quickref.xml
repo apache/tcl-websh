@@ -1427,7 +1427,7 @@ $Id$
 	  Syntax:
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
-	    <arg>add</arg>
+	    <arg choice="plain">add</arg>
 	    <arg>destination.-level</arg>
 	    <arg>file</arg>
 	    <arg choice="opt">options</arg>
@@ -1439,16 +1439,14 @@ $Id$
       <section id="syslog">
 	<title>syslog</title>
 	<para>
-	  <variablelist>
-	    <varlistentry>
-	      <term>Syntax:</term>
-	      <listitem>
-		<para>
-		  web::logdest add *.-debug <emphasis>syslog</emphasis> <option>level</option></para><para>
-		</para>
-	      </listitem>
-	    </varlistentry>
-	  </variablelist>
+	  Syntax:
+	  <cmdsynopsis>
+	    <command>web::logdest</command>
+	    <arg choice="plain">add</arg>
+	    <arg>*.-debug</arg>
+	    <arg>syslog</arg>
+	    <arg choice="opt">level</arg>
+	  </cmdsynopsis>
 
 	  See the man page for syslog for levels on your system. Typical: 10.
 
@@ -1457,43 +1455,42 @@ $Id$
       <section id="command">
 	<title>command</title>
 	<para>
-
-	  <variablelist>
-	    <varlistentry>
-	      <term>Syntax:</term>
-	      <listitem>
-		<para>
-		  web::logdest add *.-debug <emphasis>command</emphasis> <option>cmdName</option>
-		</para>
-	      </listitem>
-	    </varlistentry>
-	  </variablelist>
-
+	  Syntax:
+	  <cmdsynopsis>
+	    <command>web::logdest</command>
+	    <arg choice="plain">add</arg>
+	    <arg>*.-debug</arg>
+	    <arg choice="plain">command</arg>
+	    <arg>cmdName</arg>
+	  </cmdsynopsis>
 	</para>
       </section>
       <section id="channel">
 	<title>channel</title>
 	<para>
 
-	  <variablelist>
-	    <varlistentry>
-	      <term>Syntax:</term>
-	      <listitem>
-		<para>
-		  web::logdest add *.-debug <emphasis>channel</emphasis> ?options? <option>channel</option></para><para>
-		  Option is: <option>-unbuffered</option>
-		</para>
-	      </listitem>
-	    </varlistentry>
-	  </variablelist>
-
+	  Syntax:
+	  <cmdsynopsis>
+	    <command>web::logdest</command>
+	    <arg choice="plain">add</arg>
+	    <arg>*.-debug</arg>
+	    <arg choice="plain">channel</arg>
+	    <arg choice="opt">options</arg>
+	    <arg>channel</arg>
+	  </cmdsynopsis>
+	  Option is: <option>-unbuffered</option>
 	</para>
       </section>
       <section id="apache">
 	<title>apache</title>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::logdest</command>
+	  <arg choice="plain">add</arg>
+	  <arg>*.-debug</arg>
+	  <arg choice="plain">apache</arg>
+	</cmdsynopsis>
 	<para>
-	  web::logdest add *.-debug <emphasis>apache</emphasis>
-
 	  Available in mod_websh only.
 
 	</para>
