@@ -829,10 +829,8 @@ int destroyLogPlugIn(void *plugIn, void *dum)
 
     LogPlugIn *logPlugIn = (LogPlugIn *) plugIn;
 
-    /* fixme: destroyLogPlugIn - have to assume that all channels are closed */
-
-    /* boh...  */
     if (logPlugIn != NULL) {
+	fprintf(stderr, "destroyLogPlugin: plugin doesn't exist!\n");
 	WebFreeIfNotNull(logPlugIn);
     }
     return TCL_OK;
