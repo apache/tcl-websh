@@ -6,6 +6,10 @@ cd src/unix
 ./configure
 make
 
+If you want to compile Websh as an Apache module:
+
+make mod_websh3.50.so
+
 You may have to pass special options to configure, such as
 
 --with-httpdinclude to indicate where the apache header files are.
