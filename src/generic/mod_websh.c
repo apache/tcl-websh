@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
  * mod_websh.c -- handler for websh applications for Apache-1.3
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -20,7 +20,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -122,6 +122,7 @@ static apr_status_t cleanup_websh_pool(void *conf)
 }
 #endif /* APACHE2 */
 
+#ifndef APACHE2
 static void exit_websh_pool(server_rec * s, APPOOL * p)
 {
     websh_server_conf *conf =
@@ -130,6 +131,18 @@ static void exit_websh_pool(server_rec * s, APPOOL * p)
     /* cleanup the pool when server is restarted (-HUP) */
     destroyPool(conf);
 }
+#else
+static apr_status_t exit_websh_pool(void *data)
+{
+    server_rec *s = data;
+    websh_server_conf *conf =
+	(websh_server_conf *) ap_get_module_config(s->module_config,
+						   &websh_module);
+    /* cleanup the pool when server is restarted (-HUP) */
+    destroyPool(conf);
+    return APR_SUCCESS;
+}
+#endif
 
 static void *create_websh_config(APPOOL * p, server_rec * s)
 {
@@ -189,9 +202,14 @@ static void websh_init_child(server_rec *s, pool *p)
 						   &websh_module);
     if (!initPool(conf))
 	/* fixme: what now!
-	   return "mod_websh: Could not init interpreter pool!"; 
+	   return "mod_websh: Could not init interpreter pool!";
+	   log, and, signal error
+
 	 */
 	;
+#ifdef APACHE2
+    apr_pool_cleanup_register(p, s, exit_websh_pool, exit_websh_pool);
+#endif
 }
 
 static const command_rec websh_cmds[] = {
@@ -335,37 +353,8 @@ static int websh_handler(request_rec * r)
 	return DECLINED;
 #endif /* APACHE2 */
 
-    /* fixme: do we really need to check for existence and directory? */
-
-#ifndef APACHE2
-
-    if (r->finfo.st_mode == 0) {
-	ap_log_printf(r->server, "websh script not found or unable to stat");
-	return NOT_FOUND;
-    }
-
-#else /* APACHE2 */
-
-    if (r->finfo.filetype != APR_REG) {
-	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "websh script not found or unable to stat");
-	return HTTP_NOT_FOUND;
-    }
-
-#endif /* APACHE2 */
-
-#ifndef APACHE2
-    if (S_ISDIR(r->finfo.st_mode)) {
-	ap_log_printf(r->server, "attempt to invoke directory as script");
-	return FORBIDDEN;
-    }
-#else /* APACHE2 */
-    /* fixme: proper checking of file or link in test above */
-    /*    if (S_ISDIR(r->finfo.st_mode)) {
-       ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, r, "attempt to invoke directory as script");
-       return HTTP_FORBIDDEN;
-       } */
-#endif /* APACHE2 */
+    /* We don't check to see if the file exists, because it might be
+     * mapped with web::interpmap. */
 
     if ((res = ap_setup_client_block(r, REQUEST_CHUNKED_ERROR)))
 	return res;
@@ -434,10 +423,6 @@ static void register_websh_hooks(void)
     ap_hook_handler(websh_handler, NULL, NULL, APR_HOOK_MIDDLE);
 
     ap_hook_child_init(websh_init_child, NULL, NULL, APR_HOOK_MIDDLE);
-
-    /* fixme: look at mod_example how to set this as pool cleanup in child_init 
-       ap_hook_child_exit(exit_websh_pool,NULL, NULL, APR_HOOK_MIDDLE);
-     */
 }
 
 module AP_MODULE_DECLARE_DATA websh_module = {
