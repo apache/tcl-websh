@@ -2554,7 +2554,7 @@ $Id$
 	      <para>
 		gets or sets the maximum number of requests interpreters of this
 		class should handle. If &lt;value&gt; is 0, handle an unlimited number
-		of requests. Default: 0
+		of requests. Default: 1
 	      </para>
 	    </listitem>
 	  </varlistentry>
