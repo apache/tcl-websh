@@ -874,29 +874,31 @@ $Id$
       <title>web::param</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>syntax</term>
-	    <listitem>
-	      <para>
-		<command>web::param</command> ?options? <optional><option>key</option></optional> ?<option>value</option> ...?</para><para>
-		Options are: <option>-count</option>, <option>-set</option>, <option>-lappend</option>, <option>-names</option>, and <option>-unset</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::param</command>
+	  <arg choice="opt">options</arg>
+	  <arg choice="opt">key</arg>
+	  <arg choice="opt">value</arg>
+	  <arg choice="opt">...</arg>
 
+	Options are: <option>-count</option>, <option>-set</option>,
+	<option>-lappend</option>, <option>-names</option>, and
+	<option>-unset</option>
+
+      </para>
+      <para>
 	web::param is an accessor to state information from the
 	querystring.  Suppose the querystring is &quot;lang=EN&quot;.
 	After web::dispatch has parsed the querystring,
 	<command>web::param</command> <option>lang</option> will
 	report <literal remap="tt">EN</literal>.  Additionaly,
-	<command>web::param</command> can manage this data and add,
-	append, and delete parameters as needed.
+	web::param can manage this data and add, append, and delete
+	parameters as needed.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::param -names</term>
+	    <term><command>web::param</command> <option>-names</option></term>
 	    <listitem>
 	      <para>
 		returns a list of all known keys
@@ -904,51 +906,65 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::param <option>key</option> <optional><option>default</option></optional></term>
+	    <term><command>web::param</command> <option>key</option>
+	    <optional><option>default</option></optional></term>
 	    <listitem>
 	      <para>
-		returns the value for <option>key</option>. Can be a list. In case
-		that <option>key</option> does not exist, return <option>default</option>, if it is
+		returns the value for <option>key</option>. Can be a
+		list. In case that <option>key</option> does not
+		exist, return <option>default</option>, if it is
 		given, or an empty string.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::param -count <option>key</option></term>
+	    <term><command>web::param</command>
+	    <option>-count</option> <option>key</option></term>
 	    <listitem>
 	      <para>
-		returns number of items in list of <option>key</option>
+		returns number of items in list of
+		<option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::param -set <option>key</option></term>
+	    <term><command>web::param</command> <option>-set</option>
+	    <option>key</option></term>
 	    <listitem>
 	      <para>
-		does the same as 'web::param <option>key</option>'
+		does the same as '<command>web::param</command> <option>key</option>'
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::param -set <option>key</option> <option>value</option> ?<option>value</option> ...?</term>
+	    <term><command>web::param</command> <option>-set</option>
+	    <option>key</option> <option>value</option>
+	    <optional><option>value</option></optional>
+	    <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
-		add the parameter <option>key</option> to the web::param data.
-		Any existing parameters with <option>key</option> are overwritten
+		add the parameter <option>key</option> to the
+		web::param data.  Any existing parameters with
+		<option>key</option> are overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::param -lappend <option>key</option> <option>value</option> ?<option>value</option> ...?</term>
+	    <term><command>web::param</command>
+	    <option>-lappend</option> <option>key</option>
+	    <option>value</option>
+	    <optional><option>value</option></optional>
+	    <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
-		append parameters with the same <option>key</option> to the web::param data.  In
-		this case the existing <option>value</option> is not overwritten
+		append parameters with the same <option>key</option>
+		to the web::param data.  In this case the existing
+		<option>value</option> is not overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::param -unset</term>
+	    <term><command>web::param</command> <option>-unset</option></term>
 	    <listitem>
 	      <para>
 		deletes all parameters from the web::param data
@@ -956,7 +972,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::param -unset <option>key</option></term>
+	    <term><command>web::param</command>
+	    <option>-unset</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		delete a parameter from the web::param data
