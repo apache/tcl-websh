@@ -159,7 +159,7 @@ int logToChannel(Tcl_Interp * interp, ClientData clientData, char *msg)
 
     logToChannelData = (LogToChannelData *) clientData;
 
-    /* FIXME: should we do this on a channel ? */
+    /* fixme: should we do this on a channel ? */
     /* Tcl_Seek(logToChannelData->channel, 0, SEEK_END); */
 
     res = Tcl_WriteChars(logToChannelData->channel, msg, -1);

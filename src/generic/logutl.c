@@ -429,7 +429,7 @@ Tcl_Obj *formatMessage(LogLevel * level, char *fmt,
 #ifdef WIN32
     {
 	struct tm *badts;
-	/* FIXME: race condition under WIN NT */
+	/* fixme: race condition under WIN NT */
 	badts = localtime(&t);
 	strftime(timeStr, sizeof(timeStr) - 1, fmt, badts);
     }
