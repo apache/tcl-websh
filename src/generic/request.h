@@ -101,7 +101,7 @@ typedef struct RequestData
 RequestData;
 
 
-void dRequestData(ClientData clientData);
+/*void dRequestData(ClientData clientData);*/
 
 RequestData *createRequestData(Tcl_Interp * interp);
 int resetRequestData(Tcl_Interp * interp, RequestData * requestData);
@@ -110,7 +110,7 @@ void destroyRequestData(ClientData clientData, Tcl_Interp * interp);
 int removeTempFiles(Tcl_Interp * interp, RequestData * requestData);
 
 
-int request_Init(Tcl_Interp * interp, int initial);
+int request_Init(Tcl_Interp * interp);
 
 int Web_Request(ClientData clientData,
 		Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);

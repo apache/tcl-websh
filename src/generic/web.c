@@ -26,12 +26,9 @@ int Websh_Init(Tcl_Interp * interp)
 
     UrlData *urlData;
     RequestData *requestData;
-    int initial;
 
     if (interp == NULL)
 	return TCL_ERROR;
-
-    initial = (Tcl_GetMaster(interp) == NULL);
 
     /* --------------------------------------------------------------------------
      * stubs
@@ -88,7 +85,7 @@ int Websh_Init(Tcl_Interp * interp)
     /* --------------------------------------------------------------------------
      * request data management
      * ----------------------------------------------------------------------- */
-    if (request_Init(interp, initial) == TCL_ERROR)
+    if (request_Init(interp) == TCL_ERROR)
 	return TCL_ERROR;
 
     /* --------------------------------------------------------------------------
@@ -110,7 +107,7 @@ int Websh_Init(Tcl_Interp * interp)
     /* --------------------------------------------------------------------------
      * config
      * ----------------------------------------------------------------------- */
-    if (cfg_Init(interp, initial) == TCL_ERROR)
+    if (cfg_Init(interp) == TCL_ERROR)
 	return TCL_ERROR;
 
     /* --------------------------------------------------------------------------

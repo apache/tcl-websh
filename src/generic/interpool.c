@@ -121,9 +121,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     /* now register here all websh modules */
     result = Tcl_Init(webInterp->interp);
     /* checkme: test result */
-
-    /* fixme: do it w/o initial */
-    result = Websh_Init(webInterp->interp, 0);
+    result = Websh_Init(webInterp->interp);
 
     /* also register the destrcutor, etc. functions, passing webInterp as
        client data */
@@ -301,10 +299,6 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     /* get interpreter id for filename */
 
     Tcl_MutexLock(&(conf->mainInterpLock));
-
-/*
-Tcl_Eval(conf->mainInterp, "memory active /home/ronnie/websh/[clock seconds].pre");
-*/
 
     mapCmd = Tcl_NewStringObj("web::interpmap ", -1);
     Tcl_IncrRefCount(mapCmd);
@@ -485,12 +479,6 @@ void poolReleaseWebInterp(WebInterp * webInterp)
 	/* cleanup all EXPIRED interps */
 	cleanupPool(webInterpClass->conf);
 
-/*
-Tcl_MutexLock(&(webInterpClass->conf->mainInterpLock));
-Tcl_Eval(webInterpClass->conf->mainInterp, "memory active /home/ronnie/websh/[clock seconds].post");
-Tcl_MutexUnlock(&(webInterpClass->conf->mainInterpLock));
-*/
-
 	Tcl_MutexUnlock(&(webInterpClass->conf->webshPoolLock));
 
     }
@@ -529,28 +517,6 @@ int initPool(websh_server_conf * conf)
 	return 0;
     }
 
-    /* create one interp to initialize the exit handlers properly */
-    {
-      Tcl_Interp* interp = NULL;
-      interp = Tcl_CreateInterp();
-      if (interp != NULL) {
-	/* checkme: we should really check the results here ... */
-	Tcl_Init(interp);
-	/*fixme: do it with initial ... */
-	Websh_Init(interp);
-	Tcl_DeleteInterp(interp);
-      } else {
-	errno = 0;
-#ifndef APACHE2
-	ap_log_printf(conf->server, "could'nt create initial interp\n");
-#else /* APACHE2 */
-	ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, conf->server,
-		     "could'nt create initial interp\n");
-#endif /* APACHE2 */
-	return 0;
-      }
-    }
-    
     /* create our table of interp classes */
     HashUtlAllocInit(conf->webshPool, TCL_STRING_KEYS);
 
@@ -606,9 +572,6 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
 	return NULL;
     }
 
-/*
-Tcl_InitMemory(mainInterp);
-*/
     /* register Log Module in here */
     if (log_Init(mainInterp) == TCL_ERROR) {
 	Tcl_DeleteInterp(mainInterp);

@@ -18,19 +18,16 @@
 #include "request.h"
 #include "crypt.h"
 
-void dCfgData(ClientData clientData);
-
-void dCfgData(ClientData clientData)
+/*void dCfgData(ClientData clientData)
 {
-
     destroyCfgData(clientData, NULL);
-}
+}*/
 
 
 /* ----------------------------------------------------------------------------
  * Init --
  * ------------------------------------------------------------------------- */
-int cfg_Init(Tcl_Interp * interp, int initial)
+int cfg_Init(Tcl_Interp * interp)
 {
 
     CfgData *cfgData;
@@ -60,10 +57,11 @@ int cfg_Init(Tcl_Interp * interp, int initial)
 		     destroyCfgData, (ClientData) cfgData);
 
     /* -------------------------------------------------------------------------
-     * need an exit handler, too (if this is the main interp)
+     * need an exit handler too (if this is the main interp)
      * ---------------------------------------------------------------------- */
-    if (initial)
-	Tcl_CreateThreadExitHandler(dCfgData, (ClientData) cfgData);
+    /*fixme: do we really need this? (it's leaking memory) */
+    /* if (Tcl_GetMaster(interp) == NULL)
+       Tcl_CreateThreadExitHandler(dCfgData, (ClientData) cfgData);*/
 
     /* -------------------------------------------------------------------------
      * done

@@ -25,16 +25,15 @@
 #  include <time.h>
 #endif
 
-void dRequestData(ClientData clientData)
+/*void dRequestData(ClientData clientData)
 {
-
     destroyRequestData(clientData, NULL);
-}
+}*/
 
 /* ----------------------------------------------------------------------------
  * Init --
  * ------------------------------------------------------------------------- */
-int request_Init(Tcl_Interp * interp, int initial)
+int request_Init(Tcl_Interp * interp)
 {
 
     RequestData *requestData;
@@ -83,10 +82,12 @@ int request_Init(Tcl_Interp * interp, int initial)
 		     destroyRequestData, (ClientData) requestData);
 
     /* -------------------------------------------------------------------------
-     * need an exit handler, too (if this is the main interp)
+     * need an exit handler too (if this is the main interp)
      * ---------------------------------------------------------------------- */
-    if (initial)
-      Tcl_CreateThreadExitHandler(dRequestData, (ClientData) requestData);
+    /*fixme: do we really need this? (it's leaking memory) */
+    /*if (Tcl_GetMaster(interp) == NULL)
+      Tcl_CreateThreadExitHandler(dRequestData, (ClientData) requestData);*/
+
     /* -------------------------------------------------------------------------
      * done
      * ---------------------------------------------------------------------- */
