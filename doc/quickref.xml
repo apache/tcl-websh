@@ -170,8 +170,9 @@ $Id$
       <para>
 
 	<programlisting>
-	  web::config decryptchain
-	  ==&gt; web::encryptd
+	% web::config decryptchain
+	web::encryptd
+	%
 	</programlisting>
 
       </para>
@@ -236,11 +237,7 @@ $Id$
 	  <command>web::cmdurl</command>
 	  <arg choice="opt">options</arg>
 	  <arg>cmdName</arg>
-	  <arg>k1</arg>
-	  <arg>v1</arg>
-	  <arg>...</arg>
-	  <arg>kN</arg>
-	  <arg>vN</arg>
+	  <arg choice="opt">k1 v1 ... kN vN</arg>
 	</cmdsynopsis>
       </para>
       <para>
@@ -353,8 +350,9 @@ $Id$
       <para>
 
 	<programlisting>
-	  web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
-	  ==&gt; http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
+	% web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
+	http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
+	%
 	</programlisting>
 
       </para>
@@ -513,14 +511,15 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	  % web::cmdurl
-	  ==&gt; ?XD8Fseb6tjYQsBUWZ9
-	  % web::cmdurlcfg -scriptname bin/test_script
-	  % web::cmdurl
-	  ==&gt; bin/test_script?XD8Fseb6tjYRl1M9Fl
-	  % web::cmdurlcfg -scriptname &quot;&quot;
-	  % web::cmdurl
-	  ==&gt; ?XD8Fseb6tjYQsBUWZ9
+	% web::cmdurl &quot;&quot;
+	?XDqPtk34XvyPh41gUBo
+	% web::cmdurlcfg -scriptname bin/test_script
+	% web::cmdurl &quot;&quot;
+	bin/test_script?XDqPtk34XvyPh41gUBo
+	% web::cmdurlcfg -scriptname &quot;&quot;
+	% web::cmdurl &quot;&quot;
+	?XDqPtk34XvyPh41gUBo
+	%
 	</programlisting>
 
       </para>
@@ -651,13 +650,15 @@ $Id$
       <para>
 
 	<programlisting>
-	  set tst {puts &quot;On the hook&quot;}
-	  web::command acmd {  puts &quot;this is acmd&quot; }
-	  web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
-	  ==&gt; this is acmd
-	  web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
-	  ==&gt; On the hook
-	  ==&gt; this is acmd
+	% set tst {puts &quot;On the hook&quot;}
+	puts &quot;On the hook&quot;
+	% web::command acmd {puts &quot;this is acmd&quot;}
+	% web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
+	this is acmd
+	% web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
+	On the hook
+	this is acmd
+	%
 	</programlisting>
 
       </para>
@@ -1010,16 +1011,17 @@ $Id$
       <para>
 
 	<programlisting>
-	  web::request CONTENT_LENGTH
-	  ==&gt;
-	  web::dispatch -querystring [web::cmdurl default] -postdata &quot;&quot; -cmd &quot;&quot;
-	  web::param
-	  ==&gt; t cmd
-	  web::param cmd
-	  ==&gt; default
-	  web::param -set k v
-	  web::param
-	  ==&gt; t cmd k
+	% web::request CONTENT_LENGTH
+	% web::dispatch -querystring &quot;cmd=default&amp;t=100&quot; -postdata &quot;&quot; -cmd &quot;&quot;
+	% web::param -names
+	t cmd
+	% web::param cmd
+	default
+	% web::param -set k v
+	v
+	% web::param -names
+	t cmd k
+	%
 	</programlisting>
 
       </para>
@@ -1265,27 +1267,28 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	  web::response
-	  ==&gt; stdout
-	  web::response -select stderr
-	  ==&gt; stdout
-	  web::response
-	  ==&gt; stderr
-	  web::response -sendheader
-	  ==&gt; 1
-	  web::response -names
-	  ==&gt; Content-Type Generator
-	  web::response -set Content-type
-	  ==&gt; text/html
-	  web::response -bytessent
-	  ==&gt; 0
-	  web::response -lappend &quot;Set-Cookie&quot; &quot;mycookie&quot;
-	  web::put &quot;Hello, world&quot;
-	  ==&gt;Content-Type: text/html
-	  Generator: websh 3.0 (c) Netcetera AG, http://netcetera.ch
-	  Set-Cookie: mycookie
+	% web::response
+	stdout
+	% web::response -select stderr
+	stdout
+	% web::response
+	stderr
+	% web::response -sendheader
+	1
+	% web::response -names
+	Content-Type Generator
+	% web::response Content-Type
+	text/html
+	% web::response -bytessent
+	0
+	% web::response -set Set-Cookie &quot;my cookie that contains data&quot;
+	% web::put &quot;Hello, world\n&quot;
+	Content-Type: text/html
+	Set-Cookie: my cookie that contains data
+	Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
 
-	  Hello, world
+	Hello, world
+	%
 	</programlisting>
 
       </para>
@@ -1501,16 +1504,22 @@ $Id$
       <para>
 
 	<programlisting>
-	  web::logfilter add *.-debug
-	  web::logdest add *.-debug channel stdout
-	  web::log info {websh is cool}
-	  ==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
-	  web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
-	  web::log info {websh is cool}
-	  ==&gt; --&gt; websh is cool
-	  web::logdest add -maxchar 5 *.-debug channel stdout
-	  web::log info {websh is cool}
-	  ==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
+	% web::logfilter add *.-debug
+	logfilter0
+	% web::logdest add *.-debug channel stdout
+	logdest0
+	% web::log info {websh is cool}
+	03/01/00 00:00:00 [111] user.info: websh is cool
+	% web::logdest delete logdest0
+	% web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
+	logdest1
+	% web::log info {websh is cool}
+	--&gt; websh is cool
+	% web::logdest delete logdest1
+	% web::logdest add -maxchar 5 *.-debug channel stdout
+	% web::log info {websh is cool}
+	03/01/00 00:00:00 [111] user.info: websh
+	%
 	</programlisting>
 
       </para>
@@ -1650,11 +1659,13 @@ $Id$
 
 	Example:
 	<programlisting>
-	  % web::context sc
-	  % sc::cset lang FR
-	  ... some code ...
-	  set lang [sc::cget lang EN]
-	  ==&gt; FR
+	% web::context sc
+	% sc::cset lang FR
+	FR
+	% # ... some code ...
+	% set lang [sc::cget lang EN]
+	FR
+	%
 	</programlisting>
 
       </para>
@@ -2068,10 +2079,16 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	  web::filecounter handleName -filename &quot;test.dat&quot;
-	  ==&gt; from now on, use handleName &lt;curval|nextval&gt;
-	  web::filecounter handleName -filename &quot;test.dat&quot; \
-	  -min 1 -max 10 -seed 1 -incr 2 -wrap 1
+	% web::filecounter handleName -filename &quot;test.dat&quot;
+	handleName
+	% # from now on, use handleName &lt;curval|nextval|config&gt;
+	% handleName config
+	file test.dat handle handleName seed 0 min 0 max 2147483647 incr 1 wrap false curr {not valid}
+	% web::filecounter otherHandleName -filename &quot;othertest.dat&quot; -min 1 -max 10 -seed 1 -incr 2 -wrap 1
+	otherHandleName
+	% otherHandleName config
+	file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
+	%
 	</programlisting>
 
       </para>
@@ -2233,10 +2250,11 @@ $Id$
 
 	Examples:
 	<programlisting>
-	  % web::encrypt &quot;Hello, world!&quot;
-	  ==&gt; XDaL9T6OqaqUXVJVKDAKQU
-	  %  web::decrypt [web::encrypt &quot;Hello, world!&quot;]
-	  ==&gt; Hello, world!
+	% web::encrypt &quot;Hello, world!&quot;
+	XDIVAhkgkxRjcfA7UTwpD7
+	% web::decrypt [web::encrypt &quot;Hello, world!&quot;]
+	Hello, world!
+	%
 	</programlisting>
 
       </para>
@@ -2443,16 +2461,17 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	  % web::htmlify &auml;
-	  ==&gt; &amp;auml;
-	  % web::htmlify -numeric &auml;
-	  ==&gt; &amp;#228;
-	  % web::dehtmlify &amp;auml;
-	  ==&gt; &auml;
-	  % web::uriencode &quot;Hello, world!&quot;
-	  ==&gt; Hello,+world%21
-	  % web::uridecode %21
-	  ==&gt; !
+	% web::htmlify &lt;
+	&amp;lt;
+	% web::htmlify -numeric &lt;
+	&amp;#60;
+	% web::dehtmlify &quot;&amp;lt; &amp;#60;&quot;
+	&lt; &lt;
+	% web::uriencode &quot;Hello, world!&quot;
+	Hello%2c+world%21
+	% web::uridecode &quot;Hello%2c+world%21&quot;
+	Hello, world!
+	%
 	</programlisting>
 
       </para>
