@@ -264,8 +264,8 @@ int send_msg(Tcl_Channel f, int command, int flags, int size, void *data)
     /* origsig=signal(SIGPIPE,SIG_IGN); */
 
     /* fill in message header */
-    mh.magic = htonl(MAGIC);
-    mh.version = htonl(WEB_MSG_VERSION);
+    mh.magic = htonl(WMSG_MAGIC);
+    mh.version = htonl(WMSG_VERSION);
     mh.command = htonl((u_long) ((command & 0xffff) | (flags & 0xffff0000)));
     mh.size = htonl((u_long) size);
 
@@ -340,7 +340,7 @@ int receive_msg(Tcl_Channel f, int *command, int *flags, int *size,
 	maxsize = *size;
     }
     /* read from socket until timeout or magic header word appears */
-    while (magic != MAGIC) {
+    while (magic != WMSG_MAGIC) {
 	ret = Tcl_Read(f, (char *) &magic, sizeof(u_long));
 	magic = ntohl(magic);
 	if (ret == -1) {
@@ -376,7 +376,7 @@ int receive_msg(Tcl_Channel f, int *command, int *flags, int *size,
     }
 
     version = (int) ntohl(mh.version);
-    if (version > WEB_MSG_VERSION) {
+    if (version > WMSG_VERSION) {
 #ifdef MSGDEBUG
 	printf("Got unknown version %d\n", version);
 #endif

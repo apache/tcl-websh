@@ -22,8 +22,8 @@
 #include <stdio.h>
 #include <tcl.h>
 
-#define MAGIC        0xa5a53333
-#define WEB_MSG_VERSION      0x1
+#define WMSG_MAGIC        0xa5a53333
+#define WMSG_VERSION      0x1
 #define WMSG_TIMEOUT 100	/* seconds */
 
 #define WMSG_SLAVELET_BASE 0x2000
