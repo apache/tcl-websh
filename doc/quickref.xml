@@ -363,29 +363,39 @@ $Id$
       <title>web::cmdurlcfg</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>syntax</term>
-	    <listitem>
-	      <para>
-		<emphasis>web::cmdurlcfg</emphasis> ?options? <optional><option>key</option></optional> <optional><option>value</option></optional></para><para>
-		Exactly like <command>web::param</command></para><para>
-		<emphasis>web::cmdurlcfg</emphasis> option <optional><option>value</option></optional></para><para>
-		Options are <emphasis>-scheme</emphasis>, <emphasis>-host</emphasis>, <emphasis>-port</emphasis>,
-		<emphasis>-scriptname</emphasis>, <emphasis>-pathinfo</emphasis>, <emphasis>-querystring</emphasis>, <emphasis>-urlformat</emphasis></para><para>
-		If <option>value</option> is omitted, the current value is returned.
-		Otherwise, the <option>value</option> is stored.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::cmdurlcfg</command>
+	  <arg choice="opt">options</arg>
+	  <arg choice="opt">key</arg>
+	  <arg choice="opt">value</arg>
+	</cmdsynopsis>
+      </para>
+      <para>
+	Command options are exactly like those of
+	<command>web::param</command>.
+      </para>
+      <para>
+	<command>web::cmdurlcfg</command> <option>option</option>
+	<optional><option>value</option></optional>
+      </para>
+      <para>
+	Options are <option>-scheme</option>,
+	<option>-host</option>, <option>-port</option>,
+	<option>-scriptname</option>,
+	<option>-pathinfo</option>,
+	<option>-querystring</option>,
+	<option>-urlformat</option></para><para> If
+	<option>value</option> is omitted, the current value is
+	returned.  Otherwise, the <option>value</option> is stored.
 
 	Configuration for web::cmdurl.  This command serves two purposes:
 	<orderedlist>
 	  <listitem><para>management of static parameters</para></listitem>
 	  <listitem><para>configuration for <command>web::cmdurl</command></para></listitem>
 	</orderedlist>
-
+	By "static parameters", we mean those which are set for every
+	page, instead of set on a per-page basis.
       </para>
     </section>
     <section id="management_of_static_parameters">
@@ -393,10 +403,12 @@ $Id$
       <para>
 
 	In order to set, retrieve, append or unset static parameters,
-	use the syntax of the <command>web::param</command> command, for example:
+	use the syntax of the <command>web::param</command> command,
+	for example:
 	<variablelist>
 	  <varlistentry>
-	    <term>web::cmdurlcfg -set <option>key</option> <option>value</option></term>
+	    <term><command>web::cmdurlcfg</command> -set
+	    <option>key</option> <option>value</option></term>
 	    <listitem>
 	      <para>
 		add the static parameter <option>key</option>
@@ -404,7 +416,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cmdurlcfg</term>
+	    <term><command>web::cmdurlcfg</command></term>
 	    <listitem>
 	      <para>
 		returns a list of all known static parameters
@@ -413,12 +425,13 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-      </para><para>
-	<emphasis>Important</emphasis>: <command>web::cmdurl</command> compares every key from the static
-	parameters (see <command>web::cmdurlcfg</command>) against the keys from the command
-	line. The static parameter is only used if there is no parameter given
-	on the command line.
-
+      </para>
+      <para>
+	<emphasis>Important</emphasis>: <command>web::cmdurl</command>
+	compares every key from the static parameters (see
+	<command>web::cmdurlcfg</command>) against the keys from the
+	command line. The static parameter is only used if there is no
+	parameter given on the command line.
       </para>
     </section>
     <section id="configuration_for_web_cmdurl">
@@ -427,7 +440,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::cmdurlcfg -protocol <optional><option>value</option></optional></term>
+	    <term><option>-protocol</option> <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
 		protocol to be used. Default: http.
@@ -435,7 +448,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cmdurlcfg -servername <optional><option>value</option></optional></term>
+	    <term><option>-servername</option> <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
 		server name to be used. Default: taken from request.
@@ -443,7 +456,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cmdurlcfg -port </term>
+	    <term><option>-port</option></term>
 	    <listitem>
 	      <para>
 		port number to be used. Default: 80.
@@ -451,7 +464,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-scriptname</term>
+	    <term><option>-scriptname</option></term>
 	    <listitem>
 	      <para>
 		name of CGI executable. Default: taken from request.
@@ -459,7 +472,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-pathinfo</term>
+	    <term><option>-pathinfo</option></term>
 	    <listitem>
 	      <para>
 		path info (path after scriptname). Default: taken from request.
@@ -467,10 +480,10 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-urlformat <option>list</option></term>
+	    <term><option>-urlformat</option> <option>list</option></term>
 	    <listitem>
 	      <para>
-		changes the urlformat permanently. See web::cmdurl for the
+		changes the urlformat permanently. See <command>web::cmdurl </command>for the
 		description of this option
 	      </para>
 	    </listitem>
@@ -484,8 +497,10 @@ $Id$
 	generation, the value from the request will be used.  This value,
 	however, can not be retrieved using web::cmdurlcfg.
 
-      </para><para>
-	Note that setting a value to an empty string amounts to &quot;unset&quot;.
+      </para>
+      <para>
+	Note that setting a value to an empty string amounts to
+	<command>unset</command>.
 
 	<emphasis>Note also</emphasis>: web::cmdurl compares every key from the static
 	parameters see --&gt;(web::cmdurlcfg) against the keys from the command
@@ -514,18 +529,15 @@ $Id$
       <title>web::dispatch</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>syntax</term>
-	    <listitem>
-	      <para>
-		<emphasis>web::dispatch</emphasis> ?options?</para><para>
-		Options are: <option>-cmd</option>, <literal remap="tt">-querystring</literal>, <literal remap="tt">-postdata</literal>,
-		<literal remap="tt">-track</literal> and <literal remap="tt">-hook</literal>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::dispatch</command>
+	  <arg choice="opt">options</arg>
+	</cmdsynopsis>
+
+	Options are: <option>-cmd</option>,
+	<option>-querystring</option>, <option>-postdata</option>,
+	<option>-track</option> and <option>-hook</option>
 
 	Parse information and call a command.
 
