@@ -1,13 +1,55 @@
+2004-04-30  Ronnie Brunner <ronnie.brunner@netcetera.ch>
+
+	* src/generic/webout.c, src/test/webout.test:
+	set back response object after web::putx and accoring tests
+
+2004-03-24  Ronnie Brunner <ronnie.brunner@netcetera.ch>
+
+	* src/generic/tclAppInit.c:
+	removed old SUN OS compatibilty hack (not needed anymore)
+	* src/generic/checksum.c:
+	hack around gcc optimization problem
+	(thanks to Jason Brazile for the "volatile" hint ...)
+
+2004-03-12  Ronnie Brunner <ronnie.brunner@netcetera.ch>
+
+	* src/tests/msc.test:
+	cleanup environment in modwebsh-1.6, so tcltest does not complain
+	
 2004-03-01  David N. Welton  <davidw@dedasys.com>
 
 	* LICENSE: Added Apache License, version 2.0.
 
-2004-02-03  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2004-03-01  Ronnie Brunner <ronnie.brunner@netcetera.ch>
+
+	* src/generic/messages.c:
+	removed unused include which fails with newer Solaris cc
+
+	* src/generic/formdata.c:
+	fixed minor memory leak in parseMultipartFormData
+
+	* src/generic/hashdata.h, src/generic/hashdata.c:
+	removed unused function (resetHashIterator)
+
+	* src/generic/varchannel.c:
+	removed unused header include (webutl.h)
+
+	* src/tests/logtofile.test:
+	added logtofile-3.1 test (coverage of web::log to file)
+
+	* src/tests/cookiecontext.c:
+	fixed cookie tests to match proper cookie expiry format
+	changed webshell to Websh (just for beauty reasons ;-)
+
+	* src/tests/msc.test:
+	added coverage tests for cgi modwebsh stubs
+	
+2004-02-03  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/cookie.ws3:
 	fixed cookie expiry date format to meet Netscape specs
 
-2003-11-15  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2003-11-15  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/interpool.c:
 	bug fix in web::interpmap (files with spaces in names)
@@ -15,34 +57,34 @@
 	* src/generic/formdata.c
 	potential bug fix of call to web::uri2list
 
-2003-10-31  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2003-10-31  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* doc/quickref.xml:
 	added documentation for context::delete
 	added documentation for web::config cmdurltimestamp
 
-2003-05-27  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2003-05-27  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* INSTALL, README:
 	added hint on GNU make extensions
 	
-2003-02-28  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2003-02-28  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* doc/quickref.xml:
 	fixed documentation of web::cmdurlcfg and web::request
 
-2002-11-26  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-11-26  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/weboutint.c, src/tests/script.test:
 	bug fix of web::putx and web::putxfile (double UTF encoding)
 	patch submitted by David Welton (Thanx David)
 
-2002-11-22  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-11-22  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* doc/quickref.xml:
 	added documentation of web::formvar (file upload)
 
-2002-11-13  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-11-13  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/url.c:
 	fixed core dump when [web::cmdurl] called scheme in urlformat
@@ -50,7 +92,7 @@
 	* src/tests/cmdurl.test:
 	added test to test bug that has been fixed today
 
-2002-09-11  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-09-11  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/*.[ch]:
 	fixed different declarations for Tcl8.4: added TCLCONST define
@@ -69,7 +111,7 @@
 	* src/generic/tcldecmt.tcl:
 	tweaked line length of output for win32
 	
-2002-08-01  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-08-01  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* makedist:
 	added makedist to create tar balls from actual and previous builds
@@ -84,7 +126,7 @@
 	* src/unix/configure.in:
 	removed initcode from cleanfiles
 	
-2002-07-31  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-31  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* INSTALL, README:
 	added autoconf and other info to compile instructions
@@ -113,7 +155,7 @@
 	* src/unix/configure.in:
 	fixed NODOT_VERSION (currently unused)
 
-2002-07-30  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-30  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/web.c (Websh_Init):
 	provide package websh
@@ -121,23 +163,23 @@
 	* ChangeLog, changes: 
 	incorporated file "changes", which is now removed
 
-2002-07-29  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-29  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* INSTALL: 
 	added hint for threads
 
-2002-07-28  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-28  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* quickref.xml: 
 	added explanation of # to web::put*
 
-2002-07-27  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-27  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* quickref.xml, quickref.xsl: 
 	fixed links to examples
 	formal cleanup
 	
-2002-07-25  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-25  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/cfg.c, generic/cfg.h (cfg_Init):
 	fixed memory leak temporarily (added fixme)
@@ -152,7 +194,7 @@
 	* generic/weboutint.c (webout_eval_tag):
 	fixed memory leak in web::putx
 	
-2002-07-24  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-24  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/interpool.c (poolGetWebInterp):
 	proper return (unlock on error)
@@ -160,7 +202,7 @@
 	* generic/request_ap.c (requestFillRequestValues):
 	removed minor memory leak (initialized but unused Tcl_Obj)
 	
-2002-07-16  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-07-16  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/dispatch.c (Web_Dispatch):
 	keep error msg when <hook> fails in web::dispatch -hook <hook>
@@ -185,7 +227,7 @@
 	* quickref.xml: Changed 'title' to 'emphasis' in order to avoid
 	having examples sections listed in the table of contents.
 
-2002-04-25  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-04-25  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* tests/script.test:
 	fixes for tcl8.4 (new error strings)
@@ -193,12 +235,12 @@
 	* tests/webout.test:
 	fixed tests output-4.4 and output-4.1
 
-2002-04-19  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-04-19  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* apachetests/runtests.tcl, apachetests/apachetest/apachetest.tcl, apachetests/apachetest/template.conf.tcl:
 	solved configuration problems for apache-1.3.24
 
-2002-04-18  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-04-18  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/cfg.c (Web_Cfg):
 	removed handling of [web::config script]
@@ -217,7 +259,7 @@
 	apachetests/websh.conf, apachetest/apachetest.tcl:
 	created test for new web::config stuff
 
-2002-04-17  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-04-17  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* tests/cfg.test:
 	fixed cfg-1.1 (new subcommands)
@@ -234,7 +276,7 @@
 	* quickref.xsl: Added 'monounderlineseq' for options.  Looks
 	better visually.
 
-2002-04-09  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-04-09  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* apachetests/*:
 	made all tests work for Apache 1.3 and Apache 2.0
@@ -253,7 +295,7 @@
 	* tests/webout.test:
 	fixed tests output-4.4 and output-4.1
 
-2002-04-05  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-04-05  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/interpool.c:
 	removed unnecessary check and don't destroyPool on error
@@ -284,7 +326,7 @@
 	* generic/interpool.c (initPool): Removed 'called' - it can only
 	happen once.  Thanks to Ronnie.
 
-2002-03-27  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-03-27  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/formdata.c (parseUrlEncodedFormData, parseMultipartFormData):
 	set back channels after reading form data
@@ -300,7 +342,7 @@
 	* quickref.xml: Changed documentation for web::log, which now
 	defaults to not running 'subst' on its arguments.
 
-2002-03-20  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-03-20  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/paramlist.c (paramGetIndexFromObj): removed fixed allocation
 	(is a bit slower though since we need to find out how much to allocate)
@@ -329,7 +371,7 @@
 	* quickref.xsl: Added our own custom .xsl file for Tcl style
 	output.
 
-2002-03-07  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-03-07  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/filecounter.c, generic/filecounter.h:
 	- added configurable permissions
@@ -369,7 +411,7 @@
 	* unix/Makefile.in: Avoid the final link step if it's already been
 	performed, for websh, and mod_websh.so.
 
-2002-03-06  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-03-06  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/interpool.c (readWebInterpCode): use
 	Tcl_ErrnoMsg(Tcl_GetErrno()) instead of Tcl_PosixError(interp),
@@ -408,7 +450,7 @@
 	(createWebInterp): Log readWebInterpCode failure via Apache.
 	(destroyWebInterp): Log web::finalize errors to Apache logs.
 
-2002-03-05  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-03-05  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/mod_websh.c:
 	API change for Apache 2 (register_hooks and ap_log_error)
@@ -458,7 +500,7 @@
 
 	* doc/quickref.xml: fixed web::interpclasscfg default of maxrequests
 
-2002-02-18  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2002-02-18  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/interpool.c (poolReleaseWebInterp):
 	allow interps to live forever when maxrequests == 0
@@ -488,7 +530,7 @@
 	* generic/uricode.c (uriDecode): Fixed comparisons to work with
 	'char *' instead of specifying signed/unsigned.
 
-2001-12-28  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+2001-12-28  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* generic/tcldecmt.tcl: escaped newline in output
 	(Solaris cc does not like newlines in string literals)
