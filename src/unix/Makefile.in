@@ -329,100 +329,104 @@ args.o: ../generic/args.c
 	$(COMPILE) -c $<
 cfg.o: ../generic/cfg.c
 	$(COMPILE) -c $<
-checksum.o: ../generic/checksum.c 
+checksum.o: ../generic/checksum.c
 	$(COMPILE) -c $<
-command.o: ../generic/command.c 
+command.o: ../generic/command.c
 	$(COMPILE) -c $<
-conv.o: ../generic/conv.c 
+conv.o: ../generic/conv.c
 	$(COMPILE) -c $<
-crypt.o: ../generic/crypt.c 
+crypt.o: ../generic/crypt.c
 	$(COMPILE) -c $<
-nca_d.o: ../generic/nca_d.c 
+nca_d.o: ../generic/nca_d.c
 	$(COMPILE) -c $<
-dispatch.o: ../generic/dispatch.c 
+dispatch.o: ../generic/dispatch.c
 	$(COMPILE) -c $<
-filecounter.o: ../generic/filecounter.c 
+filecounter.o: ../generic/filecounter.c
 	$(COMPILE) -c $<
-filelock.o: ../generic/filelock.c 
+filelock.o: ../generic/filelock.c
 	$(COMPILE) -c $<
-formdata.o: ../generic/formdata.c 
+formdata.o: ../generic/formdata.c
 	$(COMPILE) -c $<
-hashutl.o: ../generic/hashutl.c 
+hashutl.o: ../generic/hashutl.c
 	$(COMPILE) -c $<
-htmlify.o: ../generic/htmlify.c 
+htmlify.o: ../generic/htmlify.c
 	$(COMPILE) -c $<
-log.o: ../generic/log.c 
+log.o: ../generic/log.c
 	$(COMPILE) -c $<
-logtocmd.o: ../generic/logtocmd.c 
+logtocmd.o: ../generic/logtocmd.c
 	$(COMPILE) -c $<
-logtochannel.o: ../generic/logtochannel.c 
+logtochannel.o: ../generic/logtochannel.c
 	$(COMPILE) -c $<
-logtofile.o: ../generic/logtofile.c 
+logtofile.o: ../generic/logtofile.c
 	$(COMPILE) -c $<
-logtosyslog.o: ../generic/logtosyslog.c 
+logtosyslog.o: ../generic/logtosyslog.c
 	$(COMPILE) -c $<
-logutl.o: ../generic/logutl.c 
+logutl.o: ../generic/logutl.c
 	$(COMPILE) -c $<
-messages.o: ../generic/messages.c 
+messages.o: ../generic/messages.c
 	$(COMPILE) -c $<
-messagesCmd.o: ../generic/messagesCmd.c 
+messagesCmd.o: ../generic/messagesCmd.c
 	$(COMPILE) -c $<
-paramlist.o: ../generic/paramlist.c 
+paramlist.o: ../generic/paramlist.c
 	$(COMPILE) -c $<
-querystring.o: ../generic/querystring.c 
+querystring.o: ../generic/querystring.c
 	$(COMPILE) -c $<
-request.o: ../generic/request.c 
+request.o: ../generic/request.c
 	$(COMPILE) -c $<
-script.o: ../generic/script.c 
+script.o: ../generic/script.c
 	$(COMPILE) -c $<
-uricode.o: ../generic/uricode.c 
+uricode.o: ../generic/uricode.c
 	$(COMPILE) -c $<
-url.o: ../generic/url.c 
+url.o: ../generic/url.c
 	$(COMPILE) -c $<
-web.o: ../generic/web.c 
+web.o: ../generic/web.c
 	$(COMPILE) -c $<
-webout.o: ../generic/webout.c 
+webout.o: ../generic/webout.c
 	$(COMPILE) -c $<
-weboutint.o: ../generic/weboutint.c 
+weboutint.o: ../generic/weboutint.c
 	$(COMPILE) -c $<
-webutl.o: ../generic/webutl.c 
+webutl.o: ../generic/webutl.c
 	$(COMPILE) -c $<
 webutlcmd.o: ../generic/webutlcmd.c
 	$(COMPILE) -c $<
 varchannel.o: ../generic/varchannel.c
 	$(COMPILE) -c $<
 
-# web_cgi_SOURCES = 
+# web_cgi_SOURCES =
 modwebsh_cgi.o: ../generic/modwebsh_cgi.c
 	$(COMPILE) -c $<
-request_cgi.o: ../generic/request_cgi.c 
+request_cgi.o: ../generic/request_cgi.c
 	$(COMPILE) -c $<
 response_cgi.o:	../generic/response_cgi.c
 	$(COMPILE) -c $<
 
-# web_ap_SOURCES =  
+# web_ap_SOURCES =
 apchannel.o: ../generic/apchannel.c
 	$(COMPILE) -c $<
 #                                            special
 interpool.o: ../generic/interpool.c
 	$(COMPILE) -UUSE_TCL_STUBS -c $<
-logtoap.o: ../generic/logtoap.c 
+logtoap.o: ../generic/logtoap.c
 	$(COMPILE) -c $<
-mod_websh.o: ../generic/mod_websh.c 
+mod_websh.o: ../generic/mod_websh.c
 	$(COMPILE) -c $<
-modwebsh_ap.o: ../generic/modwebsh_ap.c 
+modwebsh_ap.o: ../generic/modwebsh_ap.c
 	$(COMPILE) -c $<
-request_ap.o: ../generic/request_ap.c 
+request_ap.o: ../generic/request_ap.c
 	$(COMPILE) -c $<
 response_ap.o: ../generic/response_ap.c
 	$(COMPILE) -c $<
 
 
-websh: tclAppInit.$(OBJEXT) $(web_OBJECTS)
+websh: websh$(VERSION)
+
+websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
 	$(TCL_LIB_SPEC) $(TCL_LIBS) -o websh$(VERSION)
 
-mod_websh.so: $(web_ap_OBJECTS)
+mod_websh.so: mod_websh$(SHARED_LIB_SUFFIX)
+
+mod_websh$(SHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
 	$(SHLIB_LD) -o mod_websh$(SHARED_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
 
 mod_websh.a: $(web_ap_OBJECTS)
@@ -453,7 +457,7 @@ cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 # variable in configure.in
 # =============================================================================
 
-clean:  
+clean:
 	-test -z "$(BINARIES)" || rm -f $(BINARIES)
 	-rm -f *.o core *.core
 	-rm -f *.$(OBJEXT)
