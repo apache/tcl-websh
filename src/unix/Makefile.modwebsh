@@ -1,0 +1,79 @@
+# makefile for mod_websh
+# nca-073-9
+#
+# @(#) $Id$
+#
+
+ECHO = echo
+TOP_DIR = ..
+## CC = gcc
+CC = cc -g
+
+SOURCES := apchannel.c \
+	mod_websh.c \
+	args.c \
+	cfg.c \
+	checksum.c \
+	command.c \
+	conv.c \
+	crypt.c \
+	nca_d.c \
+	dispatch.c \
+	filecounter.c \
+	filelock.c \
+	formdata.c \
+	hashutl.c \
+	htmlify.c \
+	interpool.c \
+	log.c \
+	logtoap.c \
+	logtocmd.c \
+	logtochannel.c \
+	logtofile.c \
+	logtosyslog.c \
+	logutl.c \
+	messages.c \
+	messagesCmd.c \
+	paramlist.c \
+	querystring.c \
+	request.c \
+	request_ap.c \
+	response_ap.c \
+	modwebsh_ap.c \
+	script.c \
+	uricode.c \
+	url.c \
+	web.c \
+	webout.c \
+	weboutint.c \
+	webutl.c \
+	webutlcmd.c \
+	varchannel.c
+
+OBJECTS :=  $(SOURCES:.c=.o)
+
+# where are Apache and Tcl?
+APACHE  = /usr/local/apache
+TCL     = /usr/local/tcl8.3.3
+TCLLIB  = tcl8.3
+
+# Apache2 requires threads
+#THREADFLAGS = -DTCL_THREADS=1 -D_REENTRANT=1
+# Apache1 no threads
+#THREADFLAGS =
+
+THREADFLAGS =
+
+INCLUDES = -I$(TCL)/include -I$(APACHE)/include
+
+all: $(OBJECTS)
+	/usr/ccs/bin/ld -G -o mod_websh.so $(OBJECTS) -L$(TCL)/lib -l$(TCLLIB)
+
+%.o: ../generic/%.c
+	$(ECHO) cc $<
+	$(CC) $(THREADFLAGS) -DSYSV -DVERSION="\"modwebsh\"" -c $(INCLUDES) $<
+
+clean:  
+	-rm -f core *.core
+	-rm -f $(OBJECTS)
+	-rm -f *pure*

@@ -1,0 +1,576 @@
+#
+# Makefile.in -- make file def for websh
+# nca-073-9
+#
+# (adapted from sampleextension-0.2)
+#
+# See the file "license.terms" for information on usage an
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+#
+# @(#) $Id$
+#
+
+ECHO = echo
+TOP_DIR = ..
+
+lib_BINARIES=$(web_LIB_FILE)
+BINARIES=$(lib_BINARIES)
+
+web_SOURCES = ../generic/args.c \
+	../generic/cfg.c \
+	../generic/checksum.c \
+	../generic/command.c \
+	../generic/conv.c \
+	../generic/crypt.c \
+	../generic/nca_d.c \
+	../generic/dispatch.c \
+	../generic/filecounter.c \
+	../generic/filelock.c \
+	../generic/formdata.c \
+	../generic/hashutl.c \
+	../generic/htmlify.c \
+	../generic/log.c \
+	../generic/logtocmd.c \
+	../generic/logtochannel.c \
+	../generic/logtofile.c \
+	../generic/logtosyslog.c \
+	../generic/logutl.c \
+	../generic/messages.c \
+	../generic/messagesCmd.c \
+	../generic/paramlist.c \
+	../generic/querystring.c \
+	../generic/request.c \
+	../generic/script.c \
+	../generic/uricode.c \
+	../generic/url.c \
+	../generic/web.c \
+	../generic/webout.c \
+	../generic/weboutint.c \
+	../generic/webutl.c \
+	../generic/webutlcmd.c \
+	../generic/varchannel.c
+
+web_cgi_SOURCES = ../generic/modwebsh_cgi.c \
+	../generic/request_cgi.c \
+	../generic/response_cgi.c
+
+web_ap_SOURCES =  ../generic/apchannel.c \
+	../generic/interpool.c \
+	../generic/logtoap.c \
+	../generic/mod_websh.c \
+	../generic/modwebsh_ap.c \
+	../generic/request_ap.c \
+	../generic/response_ap.c
+
+
+
+SOURCES = $(web_SOURCES) $(web_cgi_SOURCES)
+
+web_OBJECTS_gen = args.o \
+	cfg.o \
+	checksum.o \
+	command.o \
+	conv.o \
+	crypt.o \
+	nca_d.o \
+	dispatch.o \
+	filecounter.o \
+	filelock.o \
+	formdata.o \
+	hashutl.o \
+	htmlify.o \
+	log.o \
+	logtocmd.o \
+	logtochannel.o \
+	logtofile.o \
+	logtosyslog.o \
+	logutl.o \
+	messages.o \
+	messagesCmd.o \
+	paramlist.o \
+	querystring.o \
+	request.o \
+	script.o \
+	uricode.o \
+	url.o \
+	web.o \
+	webout.o \
+	weboutint.o \
+	webutl.o \
+	webutlcmd.o \
+	varchannel.o
+
+web_OBJECTS_cgi = modwebsh_cgi.o \
+	request_cgi.o \
+	response_cgi.o
+
+web_OBJECTS_ap = apchannel.o \
+	interpool.o \
+	logtoap.o \
+	mod_websh.o \
+	modwebsh_ap.o \
+	request_ap.o \
+	response_ap.o
+
+
+web_OBJECTS = $(web_OBJECTS_gen) $(web_OBJECTS_cgi)
+web_ap_OBJECTS := $(web_OBJECTS_gen) $(web_OBJECTS_ap)
+
+OBJECTS = $(web_OBJECTS)
+
+web_LIB_FILE = @web_LIB_FILE@
+$(web_LIB_FILE)_OBJECTS = $(web_OBJECTS)
+
+# =============================================================================
+# This is a list of header files to be installed
+# =============================================================================
+
+GENERIC_HDRS=
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = .
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+CC = @CC@
+CFLAGS_DEBUG = @CFLAGS_DEBUG@
+CFLAGS_DEFAULT = @CFLAGS_DEFAULT@
+CFLAGS_OPTIMIZE = @CFLAGS_OPTIMIZE@
+CLEANFILES = @CLEANFILES@
+EXEEXT = @EXEEXT@
+LDFLAGS_DEBUG = @LDFLAGS_DEBUG@
+LDFLAGS_DEFAULT = @LDFLAGS_DEFAULT@
+LDFLAGS_OPTIMIZE = @LDFLAGS_OPTIMIZE@
+MAKE_LIB = @MAKE_LIB@
+MAKE_SHARED_LIB = @MAKE_SHARED_LIB@
+MAKE_STATIC_LIB = @MAKE_STATIC_LIB@
+OBJEXT = @OBJEXT@
+RANLIB = @RANLIB@
+SHLIB_CFLAGS = @SHLIB_CFLAGS@
+SHLIB_LD = @SHLIB_LD@
+SHLIB_LDFLAGS = @SHLIB_LDFLAGS@
+SHLIB_LD_LIBS = @SHLIB_LD_LIBS@
+STLIB_LD = @STLIB_LD@
+TCL_BIN_DIR = @TCL_BIN_DIR@
+TCL_DEFS = @TCL_DEFS@
+TCL_EXTRA_CFLAGS = @TCL_EXTRA_CFLAGS@
+TCL_LD_FLAGS = @TCL_LD_FLAGS@
+TCL_LIBS = @TCL_LIBS@
+TCL_SHLIB_LD_LIBS = @TCL_SHLIB_LD_LIBS@
+TCL_SRC_DIR = @TCL_SRC_DIR@
+TCL_DBGX = @TCL_DBGX@
+TCL_STUB_LIB_FILE = @TCL_STUB_LIB_FILE@
+TCL_STUB_LIB_SPEC = @TCL_STUB_LIB_SPEC@
+TCL_LIB_SPEC = @TCL_LIB_SPEC@
+TCL_TOOL_DIR_NATIVE = @TCL_TOOL_DIR_NATIVE@
+TCL_TOP_DIR_NATIVE = @TCL_TOP_DIR_NATIVE@
+TCL_UNIX_DIR_NATIVE = @TCL_UNIX_DIR_NATIVE@
+TCL_WIN_DIR_NATIVE = @TCL_WIN_DIR_NATIVE@
+INCLUDE_DIR_NATIVE = @INCLUDE_DIR_NATIVE@
+TCL_BMAP_DIR_NATIVE = @TCL_BMAP_DIR_NATIVE@
+TCL_PLATFORM_DIR_NATIVE = @TCL_PLATFORM_DIR_NATIVE@
+TCL_GENERIC_DIR_NATIVE = @TCL_GENERIC_DIR_NATIVE@
+TCLSH_PROG = @TCLSH_PROG@
+TCL_PACKAGE_PATH = @TCL_PACKAGE_PATH@
+
+SHARED_LIB_SUFFIX = @SHARED_LIB_SUFFIX@
+UNSHARED_LIB_SUFFIX = @UNSHARED_LIB_SUFFIX@
+HTTPD_INCLUDES = @HTTPD_INCLUDES@
+
+AUTOCONF = autoconf
+
+LDFLAGS = $(LDFLAGS_DEFAULT)
+
+INCLUDES = @TCL_INCLUDES@ $(HTTPD_INCLUDES)
+
+EXTRA_CFLAGS = $(TCL_DEFS) $(PROTO_FLAGS) $(SECURITY_FLAGS) $(MEM_DEBUG_FLAGS) $(KEYSYM_FLAGS) $(NO_DEPRECATED_FLAGS)
+
+DEFS = @DEFS@ $(EXTRA_CFLAGS)
+
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_CLEAN_FILES = mkIndex.tcl
+
+CPPFLAGS = @CPPFLAGS@
+LIBS = @LIBS@
+AR = ar
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+
+
+# =============================================================================
+# TEA TARGETS.
+# =============================================================================
+
+bin_BINARIES:=websh$(VERSION)
+
+all: binaries libraries doc
+
+binaries: $(BINARIES) $(OBJECTS) websh
+
+libraries:
+
+doc:
+
+install: all install-binaries install-libraries install-doc
+
+install-binaries: binaries install-lib-binaries install-bin-binaries
+
+# =============================================================================
+# This rule installs platform-independent files, such as header files.
+# =============================================================================
+
+install-libraries: libraries
+#	$(mkinstalldirs) $(includedir)
+#	echo "Installing header files in $(includedir)"
+#	@for i in $(GENERIC_HDRS) ; do \
+#	    echo "Installing $$i" ; \
+#	    $(INSTALL_DATA) $$i $(includedir) ; \
+#	done;
+
+# =============================================================================
+# Install documentation.  Unix manpages should go in the $(mandir)
+# directory.
+# =============================================================================
+
+install-doc: doc
+	$(mkinstalldirs) $(prefix)/doc
+	@for i in quickref.html quickref.txt ; \
+	do \
+	echo "Installing $$i"; \
+	rm -f $(prefix)/doc/$$i; \
+	$(INSTALL_DATA) ../doc/$$i $(prefix)/doc/$$i ; \
+	chmod 444 $(prefix)/doc/$$i; \
+	done
+	@for i in README license.terms ChangeLog changes ; \
+	do \
+	echo "Installing $$i"; \
+	rm -f $(prefix)/doc/$$i; \
+	$(INSTALL_DATA) ../$$i $(prefix)/doc/$$i ; \
+	chmod 444 $(prefix)/doc/$$i; \
+	done
+
+test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
+	@LD_LIBRARY_PATH="$(TCL_PACKAGE_PATH):$(TCL_LIB_DIR):`pwd`:$(LD_LIBRARY_PATH)"; \
+	export LD_LIBRARY_PATH; \
+	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
+	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
+	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION); export WEB_BIN; \
+	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
+	cd $(TOP_DIR)/tests; \
+	(echo source webtest.ws3) | ../unix/websh$(VERSION)
+
+test.pure: websh$(VERSION).pure
+	@LD_LIBRARY_PATH="$(TCL_PACKAGE_PATH):$(TCL_LIB_DIR):`pwd`:$(LD_LIBRARY_PATH)"; \
+	export LD_LIBRARY_PATH; \
+	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
+	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
+	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION).pure; export WEB_BIN; \
+	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
+	cd $(TOP_DIR)/tests; \
+	(echo source webtest.ws3) | ../unix/websh$(VERSION).pure
+
+test.cov: websh$(VERSION).cov
+	@LD_LIBRARY_PATH="$(TCL_PACKAGE_PATH):$(TCL_LIB_DIR):`pwd`:$(LD_LIBRARY_PATH)"; \
+	export LD_LIBRARY_PATH; \
+	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
+	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
+	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION).cov; export WEB_BIN; \
+	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
+	cd $(TOP_DIR)/tests; \
+	(echo source webtest.ws3) | ../unix/websh$(VERSION).cov
+
+depend:
+
+$(web_LIB_FILE): $(web_OBJECTS)
+	-rm -f $(web_LIB_FILE)
+	@MAKE_LIB@
+	$(RANLIB) $(web_LIB_FILE)
+
+# generic
+script.o: ../generic/script.c ../generic/script.h
+
+../generic/script.h: ../generic/script.ws3 ../generic/cookie.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/tcldecmt.tcl initcode
+	cat ../generic/script.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/cookie.ws3  > script1.tmp
+	$(TCLSH_PROG) ../generic/tcldecmt.tcl script1.tmp > script2.tmp
+	./initcode script2.tmp script.h
+	mv script.h ../generic
+	rm -f script1.tmp script2.tmp
+
+initcode: ../generic/initcode.c
+	$(CC) -o initcode $<
+
+tclAppInit.o: ../generic/tclAppInit.c
+	$(COMPILE) -c $<
+
+# for emacs
+# ../generic/\([^\.]*\)\.c \\$
+# \1.o: ../generic/\1.c \
+
+# web_SOURCES
+
+args.o: ../generic/args.c
+	$(COMPILE) -c $<
+cfg.o: ../generic/cfg.c
+	$(COMPILE) -c $<
+checksum.o: ../generic/checksum.c 
+	$(COMPILE) -c $<
+command.o: ../generic/command.c 
+	$(COMPILE) -c $<
+conv.o: ../generic/conv.c 
+	$(COMPILE) -c $<
+crypt.o: ../generic/crypt.c 
+	$(COMPILE) -c $<
+nca_d.o: ../generic/nca_d.c 
+	$(COMPILE) -c $<
+dispatch.o: ../generic/dispatch.c 
+	$(COMPILE) -c $<
+filecounter.o: ../generic/filecounter.c 
+	$(COMPILE) -c $<
+filelock.o: ../generic/filelock.c 
+	$(COMPILE) -c $<
+formdata.o: ../generic/formdata.c 
+	$(COMPILE) -c $<
+hashutl.o: ../generic/hashutl.c 
+	$(COMPILE) -c $<
+htmlify.o: ../generic/htmlify.c 
+	$(COMPILE) -c $<
+log.o: ../generic/log.c 
+	$(COMPILE) -c $<
+logtocmd.o: ../generic/logtocmd.c 
+	$(COMPILE) -c $<
+logtochannel.o: ../generic/logtochannel.c 
+	$(COMPILE) -c $<
+logtofile.o: ../generic/logtofile.c 
+	$(COMPILE) -c $<
+logtosyslog.o: ../generic/logtosyslog.c 
+	$(COMPILE) -c $<
+logutl.o: ../generic/logutl.c 
+	$(COMPILE) -c $<
+messages.o: ../generic/messages.c 
+	$(COMPILE) -c $<
+messagesCmd.o: ../generic/messagesCmd.c 
+	$(COMPILE) -c $<
+paramlist.o: ../generic/paramlist.c 
+	$(COMPILE) -c $<
+querystring.o: ../generic/querystring.c 
+	$(COMPILE) -c $<
+request.o: ../generic/request.c 
+	$(COMPILE) -c $<
+script.o: ../generic/script.c 
+	$(COMPILE) -c $<
+uricode.o: ../generic/uricode.c 
+	$(COMPILE) -c $<
+url.o: ../generic/url.c 
+	$(COMPILE) -c $<
+web.o: ../generic/web.c 
+	$(COMPILE) -c $<
+webout.o: ../generic/webout.c 
+	$(COMPILE) -c $<
+weboutint.o: ../generic/weboutint.c 
+	$(COMPILE) -c $<
+webutl.o: ../generic/webutl.c 
+	$(COMPILE) -c $<
+webutlcmd.o: ../generic/webutlcmd.c
+	$(COMPILE) -c $<
+varchannel.o: ../generic/varchannel.c
+	$(COMPILE) -c $<
+
+# web_cgi_SOURCES = 
+modwebsh_cgi.o: ../generic/modwebsh_cgi.c
+	$(COMPILE) -c $<
+request_cgi.o: ../generic/request_cgi.c 
+	$(COMPILE) -c $<
+response_cgi.o:	../generic/response_cgi.c
+	$(COMPILE) -c $<
+
+# web_ap_SOURCES =  
+apchannel.o: ../generic/apchannel.c
+	$(COMPILE) -c $<
+#                                            special
+interpool.o: ../generic/interpool.c
+	$(COMPILE) -UUSE_TCL_STUBS -c $<
+logtoap.o: ../generic/logtoap.c 
+	$(COMPILE) -c $<
+mod_websh.o: ../generic/mod_websh.c 
+	$(COMPILE) -c $<
+modwebsh_ap.o: ../generic/modwebsh_ap.c 
+	$(COMPILE) -c $<
+request_ap.o: ../generic/request_ap.c 
+	$(COMPILE) -c $<
+response_ap.o: ../generic/response_ap.c
+	$(COMPILE) -c $<
+
+
+websh: tclAppInit.$(OBJEXT) $(web_OBJECTS)
+	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
+	$(TCL_LIB_SPEC) $(TCL_LIBS) -o websh$(VERSION)
+
+mod_websh.so: $(web_ap_OBJECTS)
+	$(SHLIB_LD) -o mod_websh$(SHARED_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
+
+mod_websh.a: $(web_ap_OBJECTS)
+	echo "proto: $(PROTO_FLAGS)"
+	echo "sec: $(SECURITY_FLAGS)"
+	echo "mem: $(MEM_DEBUG_FLAGS)"
+	echo "key: $(KEYSYM_FLAGS)"
+	echo "depre: $(NO_DEPRECATED_FLAGS)"
+	echo "tcl_defs: $(TCL_DEFS)"
+	echo "defs: $(DEFS)"
+	echo "cflags $(CFLAGS)"
+	echo "compile $(COMPILE)"
+	exit
+	$(STLIB_LD) mod_websh$(UNSHARED_LIB_SUFFIX) $(web_ap_OBJECTS)
+
+pure: tclAppInit.$(OBJEXT) $(web_OBJECTS)
+	purify $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
+	$(TCL_LIB_SPEC) -o websh$(VERSION).pure
+	-rm -f *_pure_*.o
+
+cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
+	purecov $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
+	$(TCL_LIB_SPEC) -o websh$(VERSION).cov
+	-rm -f *_pure_*.o
+
+# =============================================================================
+# Don't modify the file to clean here.  Instead, set the "CLEANFILES"
+# variable in configure.in
+# =============================================================================
+
+clean:  
+	-test -z "$(BINARIES)" || rm -f $(BINARIES)
+	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
+	-rm -f *pure*
+	-rm -f $(web_OBJECTS) $(web_ap_OBJECTS) mod_websh$(SHARED_LIB_SUFFIX) mod_websh$(UNSHARED_LIB_SUFFIX)
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+
+
+distclean: clean
+	-rm -f *.tab.c
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-rm -f config.status
+
+# =============================================================================
+# Install binary object libraries.  On Windows this includes both .dll and
+# .lib files.  Because the .lib files are not explicitly listed anywhere,
+# we need to deduce their existence from the .dll file of the same name.
+# Additionally, the .dll files go into the bin directory, but the .lib
+# files go into the lib directory.  On Unix platforms, all library files
+# go into the lib directory.  In addition, this will generate the pkgIndex.tcl
+# file in the install location (assuming it can find a usable tclsh8.2 shell)
+#
+# You should not have to modify this target.
+# =============================================================================
+
+install-lib-binaries: installdirs
+	@list='$(lib_BINARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    ext=`echo $$p|sed -e "s/.*\.//"`; \
+	    if test "x$$ext" = "xdll"; then \
+	        echo " $(INSTALL_DATA) $$p $(DESTDIR)$(bindir)/$$p"; \
+	        $(INSTALL_DATA) $$p $(DESTDIR)$(bindir)/$$p; \
+		lib=`basename $$p|sed -e 's/.[^.]*$$//'`.lib; \
+		if test -f $$lib; then \
+		    echo " $(INSTALL_DATA) $$lib $(DESTDIR)$(libdir)/$$lib"; \
+	            $(INSTALL_DATA) $$lib $(DESTDIR)$(libdir)/$$lib; \
+		fi; \
+	    else \
+		echo " $(INSTALL_PROGRAM) $$p $(DESTDIR)$(libdir)/$$p"; \
+	        $(INSTALL_PROGRAM) $$p $(DESTDIR)$(libdir)/$$p; \
+	    fi; \
+	  else :; fi; \
+	done
+	@list='$(lib_BINARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(RANLIB) $(DESTDIR)$(bindir)/$$p"; \
+	    $(RANLIB) $(DESTDIR)$(bindir)/$$p; \
+	  else :; fi; \
+	done
+
+# =============================================================================
+# Install binary executables (e.g. .exe files)
+#
+# You should not have to modify this target.
+# =============================================================================
+
+install-bin-binaries: installdirs
+	@list='$(bin_BINARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$p"; \
+	    $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$p; \
+	  else :; fi; \
+	done
+
+.SUFFIXES: .c .o .obj
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+	$(SHELL) ./config.status --recheck
+$(srcdir)/configure: $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
+	cd $(srcdir) && $(AUTOCONF)
+
+
+uninstall-binaries:
+	@$(NORMAL_UNINSTALL)
+	list='$(BINARIES)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(libdir)/$$p; \
+	done
+
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(libdir)
+	$(mkinstalldirs)  $(DESTDIR)$(bindir)
+	$(mkinstalldirs)  $(DESTDIR)$(pkglibdir)
+
+.PHONY: all binaries clean depend distclean doc install installdirs \
+libraries test
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
