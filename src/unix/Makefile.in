@@ -388,7 +388,8 @@ distclean: clean
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 	-rm -f config.status
-	( cd ../../ && find . -name "*~" | xargs rm )
+	-rm -f configure
+	( cd ../../ && find . -name "*~" -exec rm -f {} \;)
 
 # =============================================================================
 # Install binary object libraries.  On Windows this includes both .dll and
