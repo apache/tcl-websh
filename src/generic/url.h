@@ -73,7 +73,7 @@ typedef struct UrlData
 }
 UrlData;
 
-UrlData *createUrlData(void);
+UrlData *createUrlData(Tcl_Interp *interp);
 int resetUrlData(Tcl_Interp * interp, UrlData * urlData);
 void destroyUrlData(ClientData clientData, Tcl_Interp * interp);
 

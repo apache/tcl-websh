@@ -80,7 +80,7 @@ int url_Init(Tcl_Interp * interp)
     /* --------------------------------------------------------------------------
      * new data
      * ----------------------------------------------------------------------- */
-    urlData = createUrlData();
+    urlData = createUrlData(interp);
 
     /* --------------------------------------------------------------------------
      * register commands
@@ -107,7 +107,7 @@ int url_Init(Tcl_Interp * interp)
 /* ----------------------------------------------------------------------------
  * create
  * ------------------------------------------------------------------------- */
-UrlData *createUrlData(void)
+UrlData *createUrlData(Tcl_Interp *interp)
 {
 
     UrlData *urlData = NULL;
@@ -115,8 +115,14 @@ UrlData *createUrlData(void)
     urlData = WebAllocInternalData(UrlData);
 
     if (urlData != NULL) {
-
-	WebNewStringObjFromStringIncr(urlData->scheme, WEB_DEFAULT_SCHEME);
+	char *https = Tcl_GetVar2(interp, "env", "HTTPS", 0);
+	
+	if (https == NULL || strcmp(https, "on"))
+	{
+	    WebNewStringObjFromStringIncr(urlData->scheme, WEB_DEFAULT_SCHEME);
+	} else {
+	    WebNewStringObjFromStringIncr(urlData->scheme, "https");
+	}
 	/* we want to read port from request if available */
 	/*WebNewStringObjFromStringIncr(urlData->port,WEB_DEFAULT_PORT); */
 	urlData->port = NULL;
@@ -138,12 +144,21 @@ UrlData *createUrlData(void)
  * ------------------------------------------------------------------------- */
 int resetUrlData(Tcl_Interp * interp, UrlData * urlData)
 {
+    char *https;
 
     if ((interp == NULL) || (urlData == NULL))
 	return TCL_ERROR;
 
     WebDecrRefCountIfNotNullAndSetNull(urlData->scheme);
-    WebNewStringObjFromStringIncr(urlData->scheme, WEB_DEFAULT_SCHEME);
+    
+    https = Tcl_GetVar2(interp, "env", "HTTPS", 0);
+    
+    if (https == NULL || strcmp(https, "on"))
+    {
+	WebNewStringObjFromStringIncr(urlData->scheme, WEB_DEFAULT_SCHEME);
+    } else {
+	WebNewStringObjFromStringIncr(urlData->scheme, "https");
+    }
 
     WebDecrRefCountIfNotNullAndSetNull(urlData->port);
     /* we want to read port from request if available */
