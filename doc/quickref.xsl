@@ -36,20 +36,21 @@
 
   <xsl:param name="use.id.as.filename" select="1"/>
 
-  <xsl:variable name="arg.choice.opt.open.str">?</xsl:variable>
+  <xsl:variable name="arg.choice.opt.open.str" xml:space="preserve">?</xsl:variable>
   <xsl:variable name="arg.choice.opt.close.str">?</xsl:variable>
 
-  <xsl:variable name="arg.choice.req.open.str" xml:space="preserve"> </xsl:variable>
+  <xsl:variable name="arg.choice.req.open.str" xml:space="preserve"></xsl:variable>
   <xsl:variable name="arg.choice.req.close.str"></xsl:variable>
+
+  <xsl:variable name="arg.choice.def.open.str" xml:space="preserve"></xsl:variable>
+  <xsl:variable name="arg.choice.def.close.str"></xsl:variable>
 
   <xsl:template name="inline.underlineseq">
     <xsl:param name="content">
       <xsl:call-template name="anchor"/>
       <xsl:apply-templates/>
     </xsl:param>
-    <span style="text-decoration:underline">
       <xsl:copy-of select="$content"/>
-    </span>
   </xsl:template>
 
   <xsl:template name="inline.monounderlineseq">
@@ -57,9 +58,10 @@
       <xsl:call-template name="anchor"/>
       <xsl:apply-templates/>
     </xsl:param>
-    <tt><span style="text-decoration:underline"><xsl:copy-of
-	  select="$content"/></span></tt>
+    <tt><xsl:copy-of
+	  select="$content"/></tt>
   </xsl:template>
+
 
   <xsl:template match="/article/section/title" mode="titlepage.mode"
     priority="2">
