@@ -23,7 +23,6 @@
 #include <tcl.h>
 #include "varchannel.h"
 #include "webout.h"		/* belongs to output module of websh */
-#include "webutl.h"		/* Web_IntIncrObj */
 
 /* ----------------------------------------------------------------------------
  * close var channel
