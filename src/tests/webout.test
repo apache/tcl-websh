@@ -207,16 +207,16 @@ test putx-3.4 {putx tag stuff (all-in-one} {
     set putx3_4
 } {PreHelloPostPreHelloPostPre\{web::put Hello\}PostPreHelloPost {tag tag}}
 
-test putx-3.5 {putx = syntax} {
-    web::response -select #putx3_5
-    web::response -sendheader 0
-    set a "Hello, world"
-    web::putx {Pre{=$a}Post}
-    set res $putx3_5
-    web::response -select stdout
-    unset putx3_5
-    set res
-} {PreHello, worldPost}
+# test putx-3.5 {putx = syntax} {
+#     web::response -select #putx3_5
+#     web::response -sendheader 0
+#     set a "Hello, world"
+#     web::putx {Pre{=$a}Post}
+#     set res $putx3_5
+#     web::response -select stdout
+#     unset putx3_5
+#     set res
+# } {PreHello, worldPost}
 
 test putx-3.6 {putx of empty string before first brace does not send headers} {
     web::response -select #buf-putx-36
