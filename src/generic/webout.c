@@ -19,6 +19,7 @@
 #include "args.h"		/* arg processing */
 #include "webutl.h"
 #include "hashutl.h"
+#include "request.h"
 #include "paramlist.h"		/* destroyParamList */
 
 

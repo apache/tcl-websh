@@ -48,4 +48,7 @@ int cfg_Init(Tcl_Interp * interp);
 
 int Web_Cfg(ClientData clientData,
 	    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
+
+int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
+
 #endif
