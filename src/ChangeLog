@@ -1,3 +1,26 @@
+2001-11-22  David N. Welton  <davidw@dedasys.com>
+
+	* tests/dispatch.test: Changes necessary here to correctly handle
+	errors that are now propogated from web::dispatch.
+
+	* generic/dispatch.c (Web_Dispatch): Propogate errors from
+	parsePostData.
+
+	* cfg.c: Added CMDURLTIMESTAMP as a global option that may be
+	configured with web::config.
+
+	* unix/configure.in: Added debugging flags.
+
+	* generic/request_ap.c (requestFillRequestValues): Make
+	requestFillRequestValues return TCL_ERROR instead of NULL.
+
+	* generic/context.tcl: Added 'delete' proc for contexts.
+
+	* Added apachetests directory.
+
+	* generic/log.c (createLogData): Change logSubst to default to 0
+	(off).
+
 2001-11-07  David N. Welton  <davidw@dedasys.com>
 
 	* generic/uricode.c (uriDecode): changed 'utf' to be a signed
