@@ -29,17 +29,14 @@ int Web_Initializer(ClientData clientData,
     int res = 0;
 
     if (objc != 2) {
-	LOG_MSG(interp, WRITE_LOG | INTERP_ERRORINFO,
-		__FILE__, __LINE__,
-		"web::initializer", WEBLOG_ERROR,
-		"wrong # args: should be \"web::initializer code\"", NULL);
+	Tcl_WrongNumArgs(interp, 1, objv, "code");
 	return TCL_ERROR;
     }
     if (clientData == NULL) {
 	LOG_MSG(interp, WRITE_LOG | INTERP_ERRORINFO,
 		__FILE__, __LINE__,
 		"web::initializer", WEBLOG_ERROR,
-		"panic - cannot acces web interp", NULL);
+		"panic - cannot access web interp", NULL);
 	return TCL_ERROR;
     }
 
@@ -78,17 +75,14 @@ int Web_Finalizer(ClientData clientData,
     int res = 0;
 
     if (objc != 2) {
-	LOG_MSG(interp, WRITE_LOG | INTERP_ERRORINFO,
-		__FILE__, __LINE__,
-		"web::finalizer", WEBLOG_ERROR,
-		"wrong # args: should be \"web::finalizer code\"", NULL);
+	Tcl_WrongNumArgs(interp, 1, objv, "code");
 	return TCL_ERROR;
     }
     if (clientData == NULL) {
 	LOG_MSG(interp, WRITE_LOG | INTERP_ERRORINFO,
 		__FILE__, __LINE__,
 		"web::finalizer", WEBLOG_ERROR,
-		"panic - cannot acces web interp", NULL);
+		"panic - cannot access web interp", NULL);
 	return TCL_ERROR;
     }
 
@@ -152,7 +146,7 @@ int Web_Finalize(ClientData clientData,
 				 &tobj);
 	    if ((res == TCL_OK) && (tobj != NULL)) {
 
-/*         printf("DBG doFinalize: calling \"%s\"\n",Tcl_GetString(tobj)); fflush(stdout); */
+/*         printf("DBG Finalize: calling \"%s\"\n",Tcl_GetString(tobj)); fflush(stdout); */
 
 		Tcl_IncrRefCount(tobj);
 		res = Tcl_EvalObjEx(webInterp->interp, tobj, 0);
@@ -162,18 +156,18 @@ int Web_Finalize(ClientData clientData,
 
 		if (res != TCL_OK) {
 
-/*           fprintf(stderr,"DBG doFinalize -- PROBLEM: %s\n",Tcl_GetStringResult(webInterp->interp)); fflush(stderr); */
+/*           fprintf(stderr,"DBG Finalize -- PROBLEM: %s\n",Tcl_GetStringResult(webInterp->interp)); fflush(stderr); */
 
 		    LOG_MSG(webInterp->interp, WRITE_LOG | INTERP_ERRORINFO,
 			    __FILE__, __LINE__,
-			    "web::dofinalize", WEBLOG_ERROR,
+			    "web::finalize", WEBLOG_ERROR,
 			    "error evaluating \"", Tcl_GetString(tobj), "\"",
 			    NULL);
 		    continue;
 		}
 	    }
 	}
-/*     printf("DBG doFinalize -- done\n"); fflush(stdout); */
+/*     printf("DBG Finalize -- done\n"); fflush(stdout); */
 
     }
     return res;
@@ -366,10 +360,7 @@ int Web_MainEval(ClientData clientData,
     websh_server_conf *conf;
 
     if (objc != 2) {
-	LOG_MSG(interp, WRITE_LOG | INTERP_ERRORINFO,
-		__FILE__, __LINE__,
-		"web::maineval", WEBLOG_ERROR,
-		"wrong # args: should be \"web::maineval code\"", NULL);
+	Tcl_WrongNumArgs(interp, 1, objv, "code");
 	return TCL_ERROR;
     }
 
