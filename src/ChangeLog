@@ -1,3 +1,8 @@
+2002-11-13  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* src/generic/url.c:
+	fixed core dump when [web::cmdurl] called scheme in urlformat
+
 2002-09-11  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* src/generic/*.[ch]:
