@@ -200,13 +200,11 @@ static void websh_init_child(server_rec *s, pool *p)
     websh_server_conf *conf =
 	(websh_server_conf *) ap_get_module_config(s->module_config,
 						   &websh_module);
-    if (!initPool(conf))
-	/* fixme: what now!
-	   return "mod_websh: Could not init interpreter pool!";
-	   log, and, signal error
-
-	 */
-	;
+    if (!initPool(conf)) {
+	ap_log_error(APLOG_MARK, APLOG_ERR, r->server,
+		     "Could not init interp pool\n");
+	return;
+    }
 #ifdef APACHE2
     apr_pool_cleanup_register(p, s, exit_websh_pool, exit_websh_pool);
 #endif
