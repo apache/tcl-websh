@@ -447,7 +447,7 @@ void poolReleaseWebInterp(WebInterp * webInterp)
 	    /* check for num requests */
 
 	    /* fixme: add interp id to log */
-	    if (webInterp->numrequests >= webInterpClass->maxrequests) {
+	    if (webInterpClass->maxrequests && (webInterp->numrequests >= webInterpClass->maxrequests)) {
 		logToAp(webInterp->interp, NULL,
 			"interpreter expired (request count reached)");
 		webInterp->state = WIP_EXPIRED;
