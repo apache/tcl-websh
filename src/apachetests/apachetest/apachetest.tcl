@@ -61,6 +61,7 @@ proc apachetest::start { options code } {
     }
     kill $serverpid
     wait $serverpid
+    catch {file delete httpd.pid}
 }
 
 # startserver - start the server with 'options'.
