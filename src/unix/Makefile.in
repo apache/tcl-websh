@@ -239,14 +239,13 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CF
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
 
-
 # =============================================================================
 # TEA TARGETS.
 # =============================================================================
 
 bin_BINARIES:=websh$(VERSION)
 
-all: binaries libraries doc
+all: binaries libraries
 
 binaries: $(BINARIES) $(OBJECTS) websh
 
@@ -257,6 +256,16 @@ doc:
 install: all install-binaries install-libraries install-doc
 
 install-binaries: binaries install-lib-binaries install-bin-binaries
+
+# =============================================================================
+# Dist target - to make the tarball.
+# =============================================================================
+
+dist: distclean distdoc
+	(cd ../../../ && pwd && tar czvf Websh-$(VERSION).tar.gz tcl-websh)
+
+distdoc: ../../doc/quickref.xml ../../doc/quickref.xsl
+	(cd ../../doc/ && make)
 
 # =============================================================================
 # This rule installs platform-independent files, such as header files.
@@ -472,6 +481,7 @@ distclean: clean
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 	-rm -f config.status
+	( cd ../../ && find . -name "*~" | xargs rm )
 
 # =============================================================================
 # Install binary object libraries.  On Windows this includes both .dll and
