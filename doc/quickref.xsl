@@ -22,14 +22,17 @@
 
   <!-- ==================================================================== -->
 
-  <!--
   <xsl:import
-  href="http://docbook.sourceforge.net/release/xsl/1.48/html/docbook.xsl"/>
-  -->
-
+    href="http://docbook.sourceforge.net/release/xsl/1.49/html/chunk.xsl"
+  />
+  <!-- local alternatives to the network URL for faster processing 
   <xsl:import
     href="/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/html/chunk.xsl"
-    />
+  />
+  <xsl:import
+    href="/usr/local/share/xsl/docbook/docbook/html/chunk.xsl"
+  /> 
+  -->
 
   <xsl:param name="use.id.as.filename" select="1"/>
 
