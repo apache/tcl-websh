@@ -169,6 +169,54 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="programlisting|screen|synopsis">
+    <xsl:param name="suppress-numbers" select="'0'"/>
+    <xsl:variable name="id">
+      <xsl:call-template name="object.id"/>
+    </xsl:variable>
+
+    <xsl:call-template name="anchor"/>
+
+    <xsl:variable name="content">
+      <xsl:choose>
+	<xsl:when test="$suppress-numbers = '0'
+	  and @linenumbering = 'numbered'
+	  and $use.extensions != '0'
+	  and $linenumbering.extension != '0'">
+	  <xsl:variable name="rtf">
+	    <xsl:apply-templates/>
+	  </xsl:variable>
+	  <pre class="{name(.)}">
+	    <xsl:call-template name="number.rtf.lines">
+	      <xsl:with-param name="rtf" select="$rtf"/>
+	    </xsl:call-template>
+	  </pre>
+	</xsl:when>
+	<xsl:otherwise>
+	  <pre style="background:#bbffbb ; width:75%"
+	    class="{name(.)}">
+	    <xsl:apply-templates/>
+	  </pre>
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$shade.verbatim != 0">
+	<table xsl:use-attribute-sets="shade.verbatim.style">
+	  <tr>
+	    <td>
+	      <xsl:copy-of select="$content"/>
+	    </td>
+	  </tr>
+	</table>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:copy-of select="$content"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 
 </xsl:stylesheet>
+
