@@ -1,7 +1,7 @@
 /*
  * interpool.c -- Interpreter Pool Manager for Apache Module
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -103,7 +103,9 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 
     if (webInterp->interp == NULL) {
 	Tcl_Free((char *) webInterp);
-	/* fixme: some logging needed? */
+	/* fixme: some logging needed?
+	   log to apache
+	*/
 	return NULL;
     }
 
@@ -289,25 +291,19 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	return NULL;
     }
 
-    /* get absolute filename (if already absolute, same as 
+    /* get absolute filename (if already absolute, same as
        Tcl_GetString(idObj) -> no DecrRefCount yet) */
     id = (char *) ap_server_root_relative(r->pool, Tcl_GetString(idObj));
 
     /* get last modified time for id */
     if (strcmp(id, filename)) {
-	/* take mtime from system */
-	Tcl_Obj *fileCmd = Tcl_NewStringObj("file mtime ", -1);
-	Tcl_AppendToObj(fileCmd, id, -1);
-	Tcl_IncrRefCount(fileCmd);
-
-	if (Tcl_EvalObjEx(conf->mainInterp, fileCmd, 0) == TCL_OK) {
-	    /* we don't really care if it works or not */
-	    Tcl_GetLongFromObj(conf->mainInterp,
-			       Tcl_GetObjResult(conf->mainInterp), &mtime);
+	struct stat statPtr;
+	if (Tcl_Access(id, R_OK) != 0 ||
+	    Tcl_Stat(id, &statPtr) != TCL_OK)
+	{
+	    return NULL;
 	}
-
-	Tcl_ResetResult(conf->mainInterp);
-	Tcl_DecrRefCount(fileCmd);
+	mtime = statPtr.st_mtime;
     }
 
     Tcl_MutexUnlock(&(conf->mainInterpLock));
@@ -358,9 +354,8 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	while (webInterp != NULL) {
 
 	    if ((webInterp->state) == WIP_FREE) {
-
-	      /* fixme: make expiring message easy to understand (add WebInterpClass.filename, times ...) */
-
+		/* fixme: make expiring message easy to understand
+		 * (add WebInterpClass.filename, times ...) */
 		/* check for expiry */
 		if (webInterpClass->maxidletime
 		    && (t - webInterp->lastusedtime) >
@@ -475,6 +470,8 @@ int initPool(websh_server_conf * conf)
 
     /* fixme: is this really called once, by a single thread, and we don't do
        any locking in here ?? */
+
+    /* check immediately to see if we have already been called.  */
 
     Tcl_FindExecutable(NULL);
 
