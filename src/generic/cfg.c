@@ -134,6 +134,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 			       "version",
 			       "copyright",
 			       "cmdurltimestamp",
+			       "reset",
 			       NULL
     };
 
@@ -148,7 +149,8 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	LOGSUBST,
 	WEBSHVERSION,
 	WEBSHCOPYRIGHT,
-	CMDURLTIMESTAMP
+	CMDURLTIMESTAMP,
+	RESET
     };
 
 
@@ -440,6 +442,23 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    return TCL_ERROR;
 	}
 	return TCL_OK;
+    }
+    case RESET: {
+	WebAssertObjc(objc != 2, 2, NULL);
+
+	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->upLoadFileSize);
+	cfgData->requestData->upLoadFileSize = Tcl_NewLongObj(0);
+	
+	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->timeTag);
+	WebNewStringObjFromStringIncr(cfgData->requestData->timeTag, "t");
+	
+	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->cmdTag);
+	WebNewStringObjFromStringIncr(cfgData->requestData->cmdTag, "cmd");
+	
+	Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, 1);
+
+	return TCL_OK;
+	break;
     }
     default:
 	break;

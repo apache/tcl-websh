@@ -26,7 +26,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 test cfg-1.1 {wrong subcommand} {
     catch {web::config foo bar} msg
     set msg
-} {bad subcommand "foo": must be uploadfilesize, encryptchain, decryptchain, cmdparam, timeparam, putxmarkup, logsubst, version, copyright, or cmdurltimestamp}
+} {bad subcommand "foo": must be uploadfilesize, encryptchain, decryptchain, cmdparam, timeparam, putxmarkup, logsubst, version, copyright, cmdurltimestamp, or reset}
 
 
 test cfg-1.2 {invalid value} {

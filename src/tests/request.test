@@ -24,6 +24,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # util
 # -----------------------------------------------------------------------------
 proc cleanParam {} {
+    web::config reset
     web::cmdurlcfg -unset
     web::formvar -unset
     web::param -unset
@@ -69,6 +70,7 @@ test request-2.3 {reset} {
     lappend res [web::param -names]
     lappend res [web::config cmdparam]
     web::request -reset
+    web::config reset
     lappend res [web::formvar -names]
     lappend res [web::param -names]
     lappend res [web::config cmdparam]

@@ -162,12 +162,13 @@ int resetRequestData(Tcl_Interp * interp, RequestData * requestData)
 				  deleteTclObj_fnc, NULL) != TCL_OK)
 	return TCL_ERROR;
 
-    WebDecrRefCountIfNotNullAndSetNull(requestData->upLoadFileSize);
-    requestData->upLoadFileSize = Tcl_NewLongObj(0);
-
     if (resetHashTableWithContent(requestData->request, TCL_STRING_KEYS,
 				  deleteTclObj_fnc, NULL) != TCL_OK)
 	return TCL_ERROR;
+
+#if 0
+    WebDecrRefCountIfNotNullAndSetNull(requestData->upLoadFileSize);
+    requestData->upLoadFileSize = Tcl_NewLongObj(0);
 
     WebDecrRefCountIfNotNullAndSetNull(requestData->timeTag);
     WebNewStringObjFromStringIncr(requestData->timeTag, "t");
@@ -176,6 +177,7 @@ int resetRequestData(Tcl_Interp * interp, RequestData * requestData)
     WebNewStringObjFromStringIncr(requestData->cmdTag, "cmd");
 
     Tcl_SetBooleanObj(requestData->cmdUrlTimestamp, 1);
+#endif
 
     requestData->requestIsInitialized = 0;
     return TCL_OK;
