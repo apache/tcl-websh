@@ -331,7 +331,7 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		    name = Tcl_GetString(objv[2]);
 		    /* we have to find the new channel */
 		    if (!strcmp(name, "default")) {
-			name = requestGetDefaultOutChannelName();
+			name = (char *) requestGetDefaultOutChannelName();
 		    }
 		    responseObj =
 			getResponseObj(interp, outData, name);
