@@ -1,0 +1,15 @@
+To install Websh:
+
+from the top level directory,
+
+cd src/unix
+./configure
+make
+
+You may have to pass special options to configure, such as
+
+--with-httpdinclude to indicate where the apache header files are.
+
+--with-tclinclude to indicate where the Tcl header files are.
+
+--with-tcl to indicate where tclConfig.sh is located.
