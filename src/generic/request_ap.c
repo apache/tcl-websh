@@ -88,12 +88,11 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 	    valo = Tcl_NewStringObj(hdrs[i].val, -1);
 
 	if (paramListAdd(requestData->request, hdrs[i].key, valo) != TCL_OK)
-	    /* fata case */
+	    /* fatal case */
 	    return TCL_ERROR;
     }
 
-    /* fixme: better name */
     paramListSetAsWhole(requestData->request, "GATEWAY_INTERFACE",
-			Tcl_NewStringObj("websh", -1));
+			Tcl_NewStringObj("CGI-websh/1.1", -1));
     return TCL_OK;
 }

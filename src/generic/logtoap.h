@@ -16,8 +16,6 @@
 #ifndef WEB_LOGTOAP_H
 #define WEB_LOGTOAP_H
 
-/* fixme: not specified yet */
-#define WEB_LOGTOAP_USAGE "?-unbuffered? TBD"
 
 /* ----------------------------------------------------------------------------
  * plugin logger: toAp

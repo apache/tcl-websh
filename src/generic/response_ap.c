@@ -43,7 +43,6 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 	char *key;
 	Tcl_Obj *headerList;
 
-	/* fixme: might get that differently */
 	r = (request_rec *) Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
 	if (r == NULL) {
 	    Tcl_SetResult(interp, "error accessing httpd request object",
@@ -53,11 +52,16 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 
 	httpResponse = responseObj->httpresponse;
 	if (httpResponse != NULL) {
-	    /* fixme: is this the proper way of dealing with the problem that
-	     * apache ALWAYS adds the protocol by itself? */
-	    char *response = strchr(Tcl_GetString(httpResponse), (int) ' ');
-	    if (response)
+
+	  /* note: looks like this is the only way to set a status line in ap
+	   * - still looking for better solutions, though */
+
+	  /* 404 not found */
+	  char *response = strchr(Tcl_GetString(httpResponse), (int) ' ');
+	  /* _not found */
+	  if (response)
 #ifndef APACHE2
+	      /* not found */
 		r->status_line = ap_pstrdup(r->pool, ++response);
 #else /* APACHE2 */
 		r->status_line = (char *) apr_pstrdup(r->pool, ++response);
@@ -80,32 +84,32 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 				Tcl_GetStringResult(interp), NULL);
 			return TCL_ERROR;
 		    }
-		    /* add all occurrences of this header */
-		    /* fixme: ap_table_setn overwrites -> only last header is set !!! */
+
+		    /* fixme
+		     *
+		     * use ap_table_set unless web::response -count key is > 1
+		     * then use set for the first and add for the others.
+		     */
+
 		    for (i = 0; i < lobjc; i++) {
-			/* fixme: check if case insenitive case compare */
-			if (strcmp(key, "Content-Type") == 0) {
+		      if (strcasecmp(key, "Content-Type") == 0) {
 #ifndef APACHE2
 			    r->content_type =
 				ap_pstrdup(r->pool, Tcl_GetString(lobjv[i]));
 			}
 			else {
-			    ap_table_setn(r->headers_out,
-					  ap_pstrdup(r->pool, key),
-					  ap_pstrdup(r->pool,
-						     Tcl_GetString(lobjv
-								   [i])));
+			    ap_table_add(r->headers_out,
+					 key,
+					 Tcl_GetString(lobjv[i]));
 #else /* APACHE2 */
 			    r->content_type =
 				(char *) apr_pstrdup(r->pool,
 						     Tcl_GetString(lobjv[i]));
 			}
 			else {
-			    apr_table_setn(r->headers_out,
-					   (char *) apr_pstrdup(r->pool, key),
-					   (char *) apr_pstrdup(r->pool,
-								Tcl_GetString
-								(lobjv[i])));
+			    apr_table_add(r->headers_out,
+					  key,
+					  Tcl_GetString(lobjv[i]));
 #endif /* APACHE2 */
 			}
 		    }
@@ -115,8 +119,8 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 #ifndef APACHE2
 	ap_send_http_header(r);
 #else /* APACHE2 */
-	/* fixme: how to force headers to be sent? */
-	/*ap_send_http_header(r); */
+	/* fixme: ap 2.0 API might change this call ? */
+	/* ap_send_http_header(r); */
 #endif /* APACHE2 */
 	responseObj->sendHeader = 0;
     }

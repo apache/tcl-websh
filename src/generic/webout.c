@@ -231,7 +231,7 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
     }
 
     /* handle first paramList things */
-    /* fixme: here the keys might not be strictly case sensitive */
+    /* note: the keys might not be strictly case sensitive */
     res = paramGet((ParamList *) responseObj->headers, interp, objc, objv, 1);
 
     if (res == TCL_CONTINUE) {
@@ -348,8 +348,6 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		    if (old->name != NULL)
 			Tcl_SetObjResult(interp, old->name);
 		    return TCL_OK;
-		    /* fixme: same error msg as above if there's no
-		     * name, but preferably at one place */
 		    break;
 		}
 

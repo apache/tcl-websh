@@ -167,6 +167,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     webInterp->numrequests = 0;
 
     /* checkme: set correct starttime */
+    /* fixme: use request_rec.request_time */
     time(&t);
     webInterp->starttime = (long) t;
     webInterp->lastusedtime = (long) t;
@@ -194,7 +195,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 	    webInterpClass->mtime = mtime;
 	}
 	else {
-	    /* fixme: BIG EXCEPTION, what to do? */
+	    /* fixme: BIG EXCEPTION. log webInterp.interp.result to apache */
 	    webInterp->code = NULL;
 	}
     }
@@ -214,7 +215,7 @@ void destroyWebInterp(WebInterp * webInterp)
 	result = Tcl_Eval(webInterp->interp, "web::finalize");
 
 	if (result != TCL_OK) {
-	    /* fixme: log the message into our main interp */
+	    /* fixme: log the message to apache */
 	}
 
 	Tcl_ResetResult(webInterp->interp);
@@ -331,6 +332,9 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	    /* invalidate all interpreters, code must be loaded from scratch */
 	    webInterp = webInterpClass->first;
 	    while (webInterp != NULL) {
+
+	      /* fixme: make expiring message easy to understand (add WebInterpClass.filename, times ...) */
+
 		logToAp(webInterp->interp, NULL,
 			"interpreter expired (source changed)");
 		if (webInterp->state == WIP_INUSE)
@@ -347,6 +351,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	}
 
 	/* search a free interp */
+	/* fixme: use request_req.request_time */
 	time(&t);
 	webInterp = webInterpClass->first;
 
@@ -354,7 +359,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 
 	    if ((webInterp->state) == WIP_FREE) {
 
-		/* fixme: put id in log (for easier debugging) */
+	      /* fixme: make expiring message easy to understand (add WebInterpClass.filename, times ...) */
 
 		/* check for expiry */
 		if (webInterpClass->maxidletime
@@ -401,7 +406,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 
 	    Tcl_MutexUnlock(&(conf->webshPoolLock));
 	    Tcl_DecrRefCount(idObj);
-	    /* fixme: do something useful */
+	    /* fixme: log to apache *somehow* */
 	    /* logToAp(webInterp->interp,NULL,"panic - cannot create webInterpClass '%s'", id); */
 
 	    return NULL;
