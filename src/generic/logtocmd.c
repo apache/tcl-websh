@@ -85,7 +85,7 @@ int logToCmd(Tcl_Interp * interp, ClientData clientData, char *msg)
      * ------------------------------------------------------------------- */
     cmdlist = Tcl_NewObj();
     Tcl_IncrRefCount(cmdlist);
-    Tcl_ListObjAppendElement(interp, cmdlist, Tcl_NewStringObj(logToCmdData, -1));
+    Tcl_ListObjAppendElement(interp, cmdlist, Tcl_NewStringObj((char *)logToCmdData, -1));
     Tcl_ListObjAppendElement(interp, cmdlist, Tcl_NewStringObj(msg, -1));
 
     res = Tcl_EvalObjEx(interp, cmdlist, 0);
