@@ -66,6 +66,7 @@ web_ap_SOURCES =  ../generic/apchannel.c \
 
 
 SOURCES = $(web_SOURCES) $(web_cgi_SOURCES)
+SCRIPT_SOURCES = ../generic/context.tcl ../generic/script.ws3 ../generic/cookie.ws3 ../generic/sessctx.ws3 
 
 web_OBJECTS_gen = args.o \
 	cfg.o \
@@ -262,7 +263,7 @@ install-binaries: binaries install-lib-binaries install-bin-binaries
 # =============================================================================
 
 dist: distclean distdoc
-	(cd ../../../ && pwd && tar czvf Websh-$(VERSION).tar.gz tcl-websh)
+	(cd ../../../ && pwd && tar czvf websh-$(VERSION).tar.gz tcl-websh)
 
 distdoc: ../../doc/quickref.xml ../../doc/quickref.xsl
 	(cd ../../doc/ && make)
@@ -317,123 +318,29 @@ $(web_LIB_FILE): $(web_OBJECTS)
 	$(RANLIB) $(web_LIB_FILE)
 
 # generic
+../generic/script.h: ../generic/tcldecmt.tcl $(SCRIPT_SOURCES)
+	$(TCLSH_PROG) ../generic/tcldecmt.tcl $(SCRIPT_SOURCES) > $@
+
 script.o: ../generic/script.c ../generic/script.h
-
-../generic/script.h: ../generic/script.ws3 ../generic/cookie.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/tcldecmt.tcl
-	$(TCLSH_PROG) ../generic/tcldecmt.tcl ../generic/script.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/cookie.ws3  > ../generic/script.h
-
-initcode: ../generic/initcode.c
-	$(CC) -o initcode $<
-
-tclAppInit.o: ../generic/tclAppInit.c
 	$(COMPILE) -c $<
 
-# for emacs
-# ../generic/\([^\.]*\)\.c \\$
-# \1.o: ../generic/\1.c \
-
-# web_SOURCES
-
-args.o: ../generic/args.c
-	$(COMPILE) -c $<
-cfg.o: ../generic/cfg.c
-	$(COMPILE) -c $<
-checksum.o: ../generic/checksum.c
-	$(COMPILE) -c $<
-command.o: ../generic/command.c
-	$(COMPILE) -c $<
-conv.o: ../generic/conv.c
-	$(COMPILE) -c $<
-crypt.o: ../generic/crypt.c
-	$(COMPILE) -c $<
-nca_d.o: ../generic/nca_d.c
-	$(COMPILE) -c $<
-dispatch.o: ../generic/dispatch.c
-	$(COMPILE) -c $<
-filecounter.o: ../generic/filecounter.c
-	$(COMPILE) -c $<
-filelock.o: ../generic/filelock.c
-	$(COMPILE) -c $<
-formdata.o: ../generic/formdata.c
-	$(COMPILE) -c $<
-hashutl.o: ../generic/hashutl.c
-	$(COMPILE) -c $<
-htmlify.o: ../generic/htmlify.c
-	$(COMPILE) -c $<
-log.o: ../generic/log.c
-	$(COMPILE) -c $<
-logtocmd.o: ../generic/logtocmd.c
-	$(COMPILE) -c $<
-logtochannel.o: ../generic/logtochannel.c
-	$(COMPILE) -c $<
-logtofile.o: ../generic/logtofile.c
-	$(COMPILE) -c $<
-logtosyslog.o: ../generic/logtosyslog.c
-	$(COMPILE) -c $<
-logutl.o: ../generic/logutl.c
-	$(COMPILE) -c $<
-messages.o: ../generic/messages.c
-	$(COMPILE) -c $<
-messagesCmd.o: ../generic/messagesCmd.c
-	$(COMPILE) -c $<
-paramlist.o: ../generic/paramlist.c
-	$(COMPILE) -c $<
-querystring.o: ../generic/querystring.c
-	$(COMPILE) -c $<
-request.o: ../generic/request.c
-	$(COMPILE) -c $<
-script.o: ../generic/script.c
-	$(COMPILE) -c $<
-uricode.o: ../generic/uricode.c
-	$(COMPILE) -c $<
-url.o: ../generic/url.c
-	$(COMPILE) -c $<
-web.o: ../generic/web.c
-	$(COMPILE) -c $<
-webout.o: ../generic/webout.c
-	$(COMPILE) -c $<
-weboutint.o: ../generic/weboutint.c
-	$(COMPILE) -c $<
-webutl.o: ../generic/webutl.c
-	$(COMPILE) -c $<
-webutlcmd.o: ../generic/webutlcmd.c
-	$(COMPILE) -c $<
-varchannel.o: ../generic/varchannel.c
-	$(COMPILE) -c $<
-
-# web_cgi_SOURCES =
-modwebsh_cgi.o: ../generic/modwebsh_cgi.c
-	$(COMPILE) -c $<
-request_cgi.o: ../generic/request_cgi.c
-	$(COMPILE) -c $<
-response_cgi.o:	../generic/response_cgi.c
-	$(COMPILE) -c $<
-
-# web_ap_SOURCES =
-apchannel.o: ../generic/apchannel.c
-	$(COMPILE) -c $<
-#                                            special
 interpool.o: ../generic/interpool.c
 	$(COMPILE) -UUSE_TCL_STUBS -c $<
-logtoap.o: ../generic/logtoap.c
+
+%.o: ../generic/%.c
 	$(COMPILE) -c $<
-mod_websh.o: ../generic/mod_websh.c
-	$(COMPILE) -c $<
-modwebsh_ap.o: ../generic/modwebsh_ap.c
-	$(COMPILE) -c $<
-request_ap.o: ../generic/request_ap.c
-	$(COMPILE) -c $<
-response_ap.o: ../generic/response_ap.c
-	$(COMPILE) -c $<
+
 
 
 websh: websh$(VERSION)
+
+mod_websh.so: mod_websh$(SHARED_LIB_SUFFIX)
+
 
 websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
 	$(TCL_LIB_SPEC) $(TCL_LIBS) -o websh$(VERSION)
 
-mod_websh.so: mod_websh$(SHARED_LIB_SUFFIX)
 
 mod_websh$(SHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
 	$(SHLIB_LD) -o mod_websh$(SHARED_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
