@@ -2,6 +2,7 @@
 # context.tcl -- context manager
 #
 # Copyright (C) 2000 by Netcetera AG.
+# Copyright (C) 2001 by Apache Software Foundation.
 # All rights reserved.
 #
 # See the file "license.terms" for information on usage and
