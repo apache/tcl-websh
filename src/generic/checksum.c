@@ -59,7 +59,7 @@ unsigned short crcCalc(Tcl_Obj * in)
     int bytesLen = -1;
     unsigned short word = 0;
     int i = 0;
-    unsigned char idx = 0;
+    volatile unsigned char idx = 0;
 
     if (in == NULL)
 	return 0;
