@@ -159,8 +159,8 @@ int logToChannel(Tcl_Interp * interp, ClientData clientData, char *msg)
 
     logToChannelData = (LogToChannelData *) clientData;
 
-    /* fixme: should we do this on a channel ? */
-    /* Tcl_Seek(logToChannelData->channel, 0, SEEK_END); */
+    /* No seek function because it might well not exist, and we ought
+     * to be at the end anyway. */
 
     res = Tcl_WriteChars(logToChannelData->channel, msg, -1);
     if (res < 0)
