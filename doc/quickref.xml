@@ -2699,7 +2699,12 @@ $Id$
 	  <command>web::maineval</command> <arg>code</arg>
 	</cmdsynopsis>
 
-	Execute code in the &quot;main&quot; interpreter of mod_websh.
+	Execute code in the &quot;main&quot; interpreter of mod_websh. (Note 
+	that this is synchronized, i.e. the main interpreter is locked for
+	exclusive access by the current thread within the process. However,
+	running Apache in a prefork setting sets up a main interpreter per 
+	child, so the exclusive access does not refer to server wide
+	exclusivity, but only to child process wide exclusiveity.)
 
       </para>
     </section>
@@ -2839,6 +2844,59 @@ $Id$
 
       </para>
     </section>
+    <section id="web::interpmap">
+      <title>web::interpmap</title>
+      <para>
+
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::interpmap</command>
+	  <option>filename</option>
+	</cmdsynopsis>
+
+	Hook to define interpreter classes depending on the requested file.
+	Note that this hook must be defined in the Websh configuration file
+	(WebshConfig directive of mod_websh).
+      </para>
+
+      <para>
+	When a request is directed to mod_websh, Websh needs to determine the
+	interpreter class for that reqest. It does that by calling
+	<command>web::interpmap</command> with the requested file as argument.
+	The return value of that command is the name of the interpreter class
+	and at the same time the filename of the script for this interpreter
+	class.
+      </para>
+        <section>
+	<title>Example</title>
+	<para>
+	<programlisting>
+	  proc web::interpmap {filename} {
+	      if {[string match "/path/to/myApp" $filename]} {
+	          # this is my special app
+	          return /real/path/to/myApp
+	      }
+	      if {[string match "*.ws3"]} {
+	          # scripts have their own interp class
+	          return $filename
+	      }
+	      # default: all templates are handled by my handler
+	      return /my/special/template/handler
+	  }
+	</programlisting>
+	</para>
+        </section>
+      <para>
+        The default implementation of web::interpmap is
+	<programlisting>
+	  proc web::interpmap {filename} {return $filename}
+	</programlisting>
+        which sets up a separate interpreter class for every requested URL
+	and takes the file itself as script.
+      </para>
+
+    </section>
+
   </section>
   <section id="misc_commands">
     <title>Miscellaneous commands</title>
