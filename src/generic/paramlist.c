@@ -24,6 +24,9 @@ static char *paramsubcmd[] =
 enum paramsubcmd
 { PARAM_COUNT, PARAM_UNSET, PARAM_SET, PARAM_LAPPEND, PARAM_NAMES };
 
+/* the number of options in paramsubcmd */
+#define PARAMSUBCMDLEN 5
+
 /* ----------------------------------------------------------------------------
  * paramGetIndexFromObj -- same as Tcl_GetIndexFromObj, but includes
  * the values from static table paramsubcmd.
@@ -32,16 +35,19 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
 			 char *msg, int flags, int *indexPtr)
 {
 
-    /* fixme-later: fixed allocation */
-    /* We need to get rid of the '20' below, as it's a "magic
-     * number" */
-    char *allopts[20];
+    char **allopts = NULL;
     int i = 0, numprivateopts, po;
     Tcl_Obj *objCopy = Tcl_DuplicateObj(obj);
 
+    /* dynamically determine size of allopts */
+    while (tablePtr[i]) {i++;}
+    allopts = (char **) Tcl_Alloc((i+PARAMSUBCMDLEN+1) * sizeof(char *));
+    if (allopts == NULL) {
+      return TCL_ERROR;
+    }
+
+    i = 0;
     while (tablePtr[i]) {
-	if (i > 19)
-	    break;
 	allopts[i] = tablePtr[i];
 	i++;
     }
@@ -49,21 +55,22 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
     po = i;
     i = 0;
     while (paramsubcmd[i]) {
-	if (i > 19)
-	    break;
 	allopts[po] = paramsubcmd[i];
 	po++;
 	i++;
     }
     allopts[po] = NULL;
+
     if (Tcl_GetIndexFromObj(interp, objCopy, allopts, msg, flags, indexPtr) ==
 	TCL_OK) {
 	if (*indexPtr < numprivateopts) {
 	    Tcl_DecrRefCount(objCopy);
+	    Tcl_Free((char *)allopts);
 	    return TCL_OK;
 	}
     }
     Tcl_DecrRefCount(objCopy);
+    Tcl_Free((char*) allopts);
     return TCL_ERROR;
 }
 
