@@ -1,8 +1,8 @@
 /*
- * formdata.c -- x-www-form-urlencoded and multipart/form-data 
+ * formdata.c -- x-www-form-urlencoded and multipart/form-data
  *               (file upload) handling for websh3
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -62,6 +62,7 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
     }
 
     /* fixme: we don't set the channel options back. maybe we should  ;-) */
+    /* add to documentation!  */
     Tcl_SetChannelOption(interp, channel, "-translation", "binary");
 
     /* ------------------------------------------------------------------------
@@ -262,7 +263,11 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
      * read until last
      * ----------------------------------------------------------------------- */
 
-    /* fixme: only read content_length bytes ... */
+    /* fixme: only read content_length bytes ...
+
+    Add to documentation
+
+    */
     while (isLast == TCL_ERROR) {
 
 	/* ------------------------------------------------------------------------
