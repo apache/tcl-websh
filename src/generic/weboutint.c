@@ -417,7 +417,6 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
 		    Tcl_Obj * in, const char *strstart, const char *strend)
 {
     Tcl_DString dstr;
-    Tcl_DString convdstr;
     Tcl_Obj *tclo = NULL;
 
     int inLen;
@@ -517,11 +516,6 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
 	cur ++;
     }
 
-    Tcl_ExternalToUtfDString(NULL,
-			     Tcl_DStringValue(&dstr),
-			     Tcl_DStringLength(&dstr),
-			     &convdstr);
-
     /* build up the web::put with the name of the channel. */
     if (begin) {
 	tclo = Tcl_NewStringObj("web::put \"", -1);
@@ -529,15 +523,14 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
 	tclo = Tcl_NewStringObj("", -1);
     }
 
-    Tcl_AppendToObj(tclo, Tcl_DStringValue(&convdstr),
-		    Tcl_DStringLength(&convdstr));
+    Tcl_AppendToObj(tclo, Tcl_DStringValue(&dstr),
+		    Tcl_DStringLength(&dstr));
 
     if (cntOpen < 1) {
 	Tcl_AppendToObj(tclo, "\"\n", 2);
     }
 
     Tcl_DStringFree(&dstr); 
-    Tcl_DStringFree(&convdstr); 
     res = Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
     return res;
 }

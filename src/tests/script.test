@@ -108,6 +108,45 @@ test script-evalfile-1.2 {web::putxfile (to channel)} {
 } {0}
 
 
+test script-evalfile-1.3 {web::putxfile and web::putx of 8-bit stuff} {
+
+    if {[info exists ws3_test_script_evalfile]} {
+	unset ws3_test_script_evalfile
+    }
+    web::response -select \#ws3_test_script_evalfile
+    web::response -sendheader 0
+
+    ## make a temp file with a test script
+    set curTim [clock seconds]
+    set fileName $curTim-[pid]-evalfile.tcl
+    set fileId [open $fileName "w"]
+    
+    set text "üצהüיאט"
+    puts -nonewline $fileId $text
+    close $fileId
+
+    ## now source it
+    web::putxfile \#ws3_test_script_evalfile $fileName
+
+    ## add a test for include
+    web::readfile $fileName f
+    web::putx \#ws3_test_script_evalfile $f
+
+    ## and send $text directly
+    web::putx $text
+
+    ## remove file
+    file delete $fileName
+
+    set res [string compare $ws3_test_script_evalfile $text$text$text]
+    if {$res != 0 } {
+        puts "expected: $text."
+        puts "found:    $ws3_test_script_evalfile."
+    }
+    set res
+} {0}
+
+
 # -----------------------------------------------------------------------------
 # readfile
 # -----------------------------------------------------------------------------
