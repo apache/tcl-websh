@@ -214,6 +214,7 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
 	LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
 		"web::dispatch -postdata", WEBLOG_WARNING,
 		"error getting channel \"", channelName, "\"", NULL);
+	WebFreeIfNotNull(boundary);
 	return TCL_ERROR;
     }
 
@@ -224,6 +225,7 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
 
 	/* unregister if was a varchannel */
 	Web_UnregisterVarChannel(interp, channelName, channel);
+	WebFreeIfNotNull(boundary);
 	return TCL_ERROR;
     }
 
@@ -238,6 +240,7 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
     /* unregister if was a varchannel */
     Web_UnregisterVarChannel(interp, channelName, channel);
 
+    WebFreeIfNotNull(boundary);
     return res;
 }
 
