@@ -8,6 +8,7 @@
  */
 
 #include <tcl.h>
+#include <limits.h>
 #include "web.h"
 #include "stdlib.h"		/* strtol() */
 #include "conv.h"
@@ -138,7 +139,7 @@ Tcl_Obj *uriDecode(Tcl_Obj * in)
 
     int length;
     Tcl_Obj *res = NULL;
-    signed char *utf = NULL;
+    char *utf = NULL;
     Tcl_UniChar unic;
     char buf[3];
 
@@ -157,13 +158,14 @@ Tcl_Obj *uriDecode(Tcl_Obj * in)
 	case '%':
 	    utf = Tcl_UtfNext(utf);
 
-	    if (utf[0] > 0) {
+
+	    if (utf[0] > 0 && utf[0] < 128) {
 
 		/* case: %[7bit] */
 		buf[0] = utf[0];
 
 		utf = Tcl_UtfNext(utf);
-		if (utf[0] > 0) {
+		if (utf[0] > 0 && utf[0] < 128) {
 
 		    /* case: %[7bit][7bit] */
 		    buf[1] = utf[0];
