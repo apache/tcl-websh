@@ -752,6 +752,7 @@ $Id$
         <option>-unset</option>, <option>-reset</option> and
         <option>-channel</option> fixme: gibt es -channel noch?
       </para>
+      <para>
 
       web::request is an accessor to CGI related information.
 
@@ -765,26 +766,31 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	    <term>web::request <option>key</option> <optional><option>default</option></optional></term>
+	    <term><command>web::request</command> <option>key</option>
+	    <optional><option>default</option></optional></term>
 	    <listitem>
 	      <para>
-		returns the value for <option>key</option>. Can be a list. In case
-		that <option>key</option> does not exist, return <option>default</option>, if it is
+		returns the value for <option>key</option>. Can be a
+		list. In case that <option>key</option> does not
+		exist, return <option>default</option>, if it is
 		given, or an empty string.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -count <option>key</option></term>
+	    <term><command>web::request</command>
+	    <option>-count</option> <option>key</option></term>
 	    <listitem>
 	      <para>
-		returns number of items in list for <option>key</option>; returns 0 if
+		returns number of items in list for
+		<option>key</option>; returns 0 if
 		<option>key</option> does not exist
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -set <option>key</option></term>
+	    <term><command>web::request</command>
+	    <option>-set</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		does the same as 'web::request <option>key</option>'
@@ -792,25 +798,36 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -set <option>key</option> <option>value</option> ?<option>value</option> ...?</term>
+	    <term><command>web::request</command>
+	      <option>-set</option> <option>key</option>
+	      <option>value</option>
+	      <optional><option>value</option></optional>
+	      <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
-		adds the parameter <option>key</option> to the web::request data.
-		Any existing parameters with <option>key</option> are overwritten
+		adds the parameter <option>key</option> to the
+		web::request data.  Any existing parameters with
+		<option>key</option> are overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -lappend <option>key</option> <option>value</option> ?<option>value</option> ...?</term>
+	    <term><command>web::request</command>
+	    <option>-lappend</option> <option>key</option>
+	    <option>value</option>
+	    <optional><option>value</option></optional>
+	    <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
-		append parameters with the same <option>key</option> to the web::request data. In
-		this case the existing <option>value</option> is not overwritten
+		append parameters with the same <option>key</option>
+		to the web::request data. In this case the existing
+		<option>value</option> is not overwritten
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -unset</term>
+	    <term><command>web::request</command>
+	    <option>-unset</option></term>
 	    <listitem>
 	      <para>
 		deletes all parameters from the web::request data
@@ -818,7 +835,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -unset <option>key</option></term>
+	    <term><command>web::request</command>
+	    <option>-unset</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		deletes a parameter from the web::request data
@@ -826,21 +844,25 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -reset</term>
+	    <term><command>web::request</command>
+	    <option>-reset</option></term>
 	    <listitem>
 	      <para>
-		deletes all parameters from the web::request data (like 'web::request -unset'),
-		removes all static parameters (like 'web::cmdurlcfg -unset'), all form variables 
-		(like 'web::formvar -unset'), all query string parameters (like 'web::param -unset'),
-		and all temporary files created by HTTP form upload
+		deletes all parameters from the web::request data
+		(like 'web::request -unset'), removes all static
+		parameters (like 'web::cmdurlcfg -unset'), all form
+		variables (like 'web::formvar -unset'), all query
+		string parameters (like 'web::param -unset'), and all
+		temporary files created by HTTP form upload
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::request -channel</term>
+	    <term><command>web::request</command>
+	    <option>-channel</option></term>
 	    <listitem>
 	      <para>
-		fixme: what does it?
+		fixme: what does it do?
 	      </para>
 	    </listitem>
 	  </varlistentry>
