@@ -97,11 +97,11 @@ typedef struct RequestData
     Tcl_HashTable *tmpFnList;	/* list of temporary file names given out */
 /* ............ *//* for dispatch: */
     int requestIsInitialized;
-    ClientData handleToSpecificReqData;
-
 }
 RequestData;
 
+
+void dRequestData(ClientData clientData);
 
 RequestData *createRequestData(Tcl_Interp * interp);
 int resetRequestData(Tcl_Interp * interp, RequestData * requestData);
