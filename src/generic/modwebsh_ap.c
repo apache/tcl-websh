@@ -297,8 +297,9 @@ int Web_InterpClassCfg(ClientData clientData,
 
     if (webInterpClass == NULL) {
 	int isnew = 0;
-	/* fixme: should get mtime for id, but this needs lock on mainInterp
-	   which would be an incremental lock ... */
+	/* fixme: should get mtime for id, but this needs lock on
+	   mainInterp which would be an incremental lock ...  - use
+	   Tcl_Stat. */
 	webInterpClass = createWebInterpClass(conf, id, 0L);
 
 	entry = Tcl_CreateHashEntry(conf->webshPool, id, &isnew);
