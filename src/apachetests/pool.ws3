@@ -1,15 +1,18 @@
 # $Id$
 # interp pool testing code.
 
-web::command default {
-    if { [info exists counter] } {
-	incr counter
-    } else {
-	set counter 1
+web::initializer {
+
+    web::command default {
+	if { [info exists counter] } {
+	    incr counter
+	} else {
+	    set counter 1
+	}
+	
+	web::put "Counter is $counter"
     }
 
-    web::put "Counter is $counter"
 }
 
 web::dispatch
-

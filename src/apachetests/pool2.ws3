@@ -1,19 +1,20 @@
 # $Id$
 # interp pool testing websh code.
 
-set classid [web::interpcfg]
-web::interpclasscfg $classid maxrequests 10
+web::initializer {
 
-web::command default {
+    set classid [web::interpcfg]
+    web::interpclasscfg $classid maxrequests 10
 
-    if { [info exists counter] } {
-	incr counter
-    } else {
-	set counter 1
+    web::command default {
+	if { [info exists counter] } {
+	    incr counter
+	} else {
+	    set counter 1
+	}
+	web::put "Counter is $counter, maxrequests is [web::interpclasscfg $classid maxrequests]"
     }
 
-    web::put "Counter is $counter, maxrequests is [web::interpclasscfg $classid maxrequests]"
 }
 
 web::dispatch
-
