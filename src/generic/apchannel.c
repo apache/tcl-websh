@@ -71,7 +71,7 @@ int apchannelInputProc(ClientData clientData,
  * output to apache channel
  * ------------------------------------------------------------------------- */
 int apchannelOutputProc(ClientData clientData,
-			char *buf, int toWrite, int *errorCodePtr)
+			TCLCONST char *buf, int toWrite, int *errorCodePtr)
 {
 
     int res = -1;

@@ -119,13 +119,13 @@ int argIndexOfNextKey(int objc, Tcl_Obj * CONST objv[], int previous)
  * argPosParam -- scan params to find key
  * returns index to **params, if key is found, or -1
  * ------------------------------------------------------------------------- */
-int argPosParam(char **params, char *key)
+int argPosParam(TCLCONST char *params[], char *key)
 {
 
     char **intParams;
     int pos = 0;
 
-    intParams = params;
+    intParams = (char **) params;
 
     if ((key == NULL) || (params == NULL))
 	return -1;
@@ -189,7 +189,7 @@ int argIndexOfFirstOpt(int objc, Tcl_Obj * CONST objv[])
  * note: assumes that first arg is command name
  * ------------------------------------------------------------------------- */
 int argIndexOfFirstArg(int objc, Tcl_Obj * CONST objv[],
-		       char **params, int *Nparams)
+		       TCLCONST char *params[], int *Nparams)
 {
 
     int pos = -1;
@@ -303,8 +303,8 @@ Tcl_Obj *argValueOfKey(int objc, Tcl_Obj * CONST objv[], char *key)
  * (from 1 to min(objc,scanc)). If scanc == -1, scan up to objc.
  * returns 0 if ok, index of argument which is unknown, if found
  * ------------------------------------------------------------------------- */
-int argHasOnlyAccepted(int objc, Tcl_Obj * CONST objv[], char *params[],
-		       int scanc)
+int argHasOnlyAccepted(int objc, Tcl_Obj * CONST objv[],
+		       TCLCONST char *params[], int scanc)
 {
 
     int i;

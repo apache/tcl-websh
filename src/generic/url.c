@@ -32,7 +32,7 @@
         scheme = paramListGetObjectByString(interp,urlData->requestData->request,key);
 
 
-static char *urlElementOpts[] = {
+static TCLCONST char *urlElementOpts[] = {
     "-scheme",
     "-host",
     "-port",
@@ -199,7 +199,7 @@ int parseUrlFormat(Tcl_Interp * interp, Tcl_Obj * list)
     int i = -1;
     int res = 0;
 
-    char *accepted[20];
+    TCLCONST char *accepted[20];
     enum urlElement e;
 
 
@@ -472,7 +472,7 @@ int Web_CmdUrl(ClientData clientData,
 	       Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
 
-    static char *params[] = { "-urlformat",
+    static TCLCONST char *params[] = { "-urlformat",
 	"-notimestamp", NULL
     };
     enum params
@@ -527,7 +527,7 @@ int Web_CmdUrl(ClientData clientData,
      * check for flags
      * ----------------------------------------------------------------------- */
     urlformat = urlData->urlformat;
-    if ((urlFmt = argValueOfKey(objc, objv, params[URLFORMAT])) != NULL) {
+    if ((urlFmt = argValueOfKey(objc, objv, (char *)params[URLFORMAT])) != NULL) {
 
 	urlformat = parseUrlFormat(interp, urlFmt);
 
@@ -535,7 +535,7 @@ int Web_CmdUrl(ClientData clientData,
 	    return TCL_ERROR;
     }
 
-    if (argIndexOfKey(objc, objv, params[NOTIMESTAMP]) > 0)
+    if (argIndexOfKey(objc, objv, (char *)params[NOTIMESTAMP]) > 0)
 	flag = (flag | WEB_URL_NOTIMESTAMP);
 
     Tcl_GetBooleanFromObj(interp, urlData->requestData->cmdUrlTimestamp, &bool);
@@ -754,7 +754,7 @@ int Web_CmdUrlCfg(ClientData clientData,
     int res;
 
     for (i = SCHEME; i <= QUERYSTRING; i++)
-	params[i] = urlElementOpts[i];
+	params[i] = (char *) urlElementOpts[i];
 
     params[URLCFGRESET] = "-reset";
     params[URLCFGURLFORMAT] = "-urlformat";

@@ -19,7 +19,7 @@
 #include "log.h"
 #include "hashutl.h"
 
-static char *paramsubcmd[] =
+static TCLCONST char *paramsubcmd[] =
     { "-count", "-unset", "-set", "-lappend", "-names", NULL };
 enum paramsubcmd
 { PARAM_COUNT, PARAM_UNSET, PARAM_SET, PARAM_LAPPEND, PARAM_NAMES };
@@ -55,13 +55,13 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
     po = i;
     i = 0;
     while (paramsubcmd[i]) {
-	allopts[po] = paramsubcmd[i];
+	allopts[po] = (char *) paramsubcmd[i];
 	po++;
 	i++;
     }
     allopts[po] = NULL;
 
-    if (Tcl_GetIndexFromObj(interp, objCopy, allopts, msg, flags, indexPtr) ==
+    if (Tcl_GetIndexFromObj(interp, objCopy, (TCLCONST char **)allopts, msg, flags, indexPtr) ==
 	TCL_OK) {
 	if (*indexPtr < numprivateopts) {
 	    Tcl_DecrRefCount(objCopy);

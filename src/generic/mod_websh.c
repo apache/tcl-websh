@@ -316,7 +316,7 @@ static int run_websh_script(request_rec * r)
 
 	    char *errorInfo = NULL;
 	    errorInfo =
-		Tcl_GetVar(webInterp->interp, "errorInfo", TCL_GLOBAL_ONLY);
+		(char *) Tcl_GetVar(webInterp->interp, "errorInfo", TCL_GLOBAL_ONLY);
 	    logToAp(webInterp->interp, NULL, errorInfo);
 	}
 

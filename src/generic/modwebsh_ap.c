@@ -184,7 +184,7 @@ int Web_InterpCfg(ClientData clientData,
 
     int index;
 
-    static char *interpParams[] = {
+    static TCLCONST char *interpParams[] = {
 	"numrequests",
 	"starttime",
 	"lastusedtime",
@@ -272,7 +272,8 @@ int Web_InterpClassCfg(ClientData clientData,
     WebInterpClass *webInterpClass = NULL;
     int index;
 
-    static char *classParams[] = { "maxttl", "maxidletime", "maxrequests" };
+    static TCLCONST char *classParams[] = { "maxttl", 
+					    "maxidletime", "maxrequests" };
     enum params
     { CLASS_TTL, CLASS_IDLETIME, CLASS_REQUESTS };
 
@@ -437,7 +438,7 @@ int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
 
   /* these options should be in sync with the options in Web_Cfg
    * not the order or anything, but the actual text strings */
-  static char *subCmd[] = {
+  static TCLCONST char *subCmd[] = {
     "script",
     "server_root",
     "document_root",

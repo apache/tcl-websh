@@ -318,7 +318,7 @@ int Web_TempFile(ClientData clientData,
 
     Tcl_Obj *tclo = NULL;
     RequestData *requestData = NULL;
-    static char *params[] = { "-path", "-prefix", "-remove", NULL };
+    static TCLCONST char *params[] = { "-path", "-prefix", "-remove", NULL };
     enum params
     { PATH, PREFIX, REMOVE };
     int idx = -1;
@@ -329,7 +329,7 @@ int Web_TempFile(ClientData clientData,
     WebAssertArgs(interp, objc, objv, params, idx, -1);
 
     /* do we see "-remove" ? */
-    if (argKeyExists(objc, objv, params[REMOVE]) == TCL_OK) {
+    if (argKeyExists(objc, objv, (char *)params[REMOVE]) == TCL_OK) {
 
 	/* do remove */
 	return removeTempFiles(interp, requestData);
@@ -339,8 +339,8 @@ int Web_TempFile(ClientData clientData,
      * this works beause argValueOfKey may return NULL and
      * tempFileName takes NULL as "default" */
     tclo = tempFileName(interp, requestData,
-			argValueOfKey(objc, objv, params[PATH]),
-			argValueOfKey(objc, objv, params[PREFIX]));
+			argValueOfKey(objc, objv, (char *)params[PATH]),
+			argValueOfKey(objc, objv, (char *)params[PREFIX]));
 
     if (tclo == NULL)
 	return TCL_ERROR;

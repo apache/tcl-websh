@@ -640,7 +640,7 @@ int objectHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 			LOG_MSG(interp, WRITE_LOG,
 				__FILE__, __LINE__,
 				"web::put", WEBLOG_ERROR,
-				Tcl_GetStringResult(interp), NULL);
+				(char *) Tcl_GetStringResult(interp), NULL);
 			return TCL_ERROR;
 		    }
 		    /* add all occurrences of this header */

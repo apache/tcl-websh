@@ -50,10 +50,10 @@ int Web_Filecounter(ClientData clientData,
 {
 
     SeqNoGenerator *seqnogen = (SeqNoGenerator *) clientData;
-    static char *subCommands[] = { "curval", "nextval", "config", NULL };
+    static TCLCONST char *subCommands[] = { "curval", "nextval", "config", NULL };
     enum subCommands
     { CURVAL, NEXTVAL, CONFIG };
-    char **ptr = subCommands;
+    char **ptr = (char **) subCommands;
 
     int idx;
     int seqno;
@@ -162,7 +162,7 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
     SeqNoGenerator *seqnogen = NULL;
     Tcl_Obj *result = NULL;
     Tcl_CmdInfo cmdInfo;
-    static char *params[] = { "-filename", "-seed", "-min", "-max",
+    static TCLCONST char *params[] = { "-filename", "-seed", "-min", "-max",
 			      "-incr", "-perms", "-wrap", NULL
     };
     enum params
@@ -179,7 +179,7 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
      * ------------------------------------------------------------------- */
     if (objc < 4 ||
 	argIndexOfFirstArg(objc, objv, NULL, NULL) != 1 ||
-	(fnameobj = argValueOfKey(objc, objv, params[FILENAME])) == NULL) {
+	(fnameobj = argValueOfKey(objc, objv, (char *) params[FILENAME])) == NULL) {
 	Tcl_WrongNumArgs(interp, 1, objv,
 			 "handle -filename filename ?options?");
 	return TCL_ERROR;
@@ -190,12 +190,12 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
      * ------------------------------------------------------------------- */
     hnameobj = objv[1];
     /* fnameobj already done */
-    seedobj = argValueOfKey(objc, objv, params[SEED]);
-    maxobj = argValueOfKey(objc, objv, params[MAX]);
-    minobj = argValueOfKey(objc, objv, params[MIN]);
-    incrobj = argValueOfKey(objc, objv, params[INCR]);
-    maskobj = argValueOfKey(objc, objv, params[MASK]);
-    wrapobj = argValueOfKey(objc, objv, params[WRAP]);
+    seedobj = argValueOfKey(objc, objv, (char *)params[SEED]);
+    maxobj = argValueOfKey(objc, objv, (char *)params[MAX]);
+    minobj = argValueOfKey(objc, objv, (char *)params[MIN]);
+    incrobj = argValueOfKey(objc, objv, (char *)params[INCR]);
+    maskobj = argValueOfKey(objc, objv, (char *)params[MASK]);
+    wrapobj = argValueOfKey(objc, objv, (char *)params[WRAP]);
 
     /* ----------------------------------------------------------------------
      * check if handle already exists
@@ -332,7 +332,7 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 	LOG_MSG(interp, WRITE_LOG,
 		__FILE__, __LINE__,
 		"web::filecounter", WEBLOG_ERROR,
-		Tcl_GetStringResult(interp), NULL);
+		(char *) Tcl_GetStringResult(interp), NULL);
 
 	return TCL_ERROR;
     }

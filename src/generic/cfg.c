@@ -117,13 +117,13 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 {
 
     /* keep consistent with enum PutxMarkup in request.h */
-    static char *putxMarkups[] = {
+    static TCLCONST char *putxMarkups[] = {
 	"brace",
 	"tag",
 	NULL
     };
 
-    static char *subCmd1[] = {
+    static TCLCONST char *subCmd1[] = {
 	"uploadfilesize",
 	"encryptchain",
 	"decryptchain",

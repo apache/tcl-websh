@@ -106,7 +106,7 @@ int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
 
   /* these options should be in sync with the options in Web_Cfg
    * not the order or anything, but the actual text strings */
-  static char *subCmd[] = {
+  static TCLCONST char *subCmd[] = {
     "script",
     "server_root",
     "document_root",

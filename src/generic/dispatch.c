@@ -38,7 +38,7 @@ int Web_Dispatch(ClientData clientData,
 {
 
     RequestData *requestData = NULL;
-    char *params[] = { "-track",
+    TCLCONST char *params[] = { "-track",
 	"-querystring",
 	"-postdata",
 	"-cmd",
@@ -79,7 +79,7 @@ int Web_Dispatch(ClientData clientData,
     /* ==========================================================================
      * query_string
      * ======================================================================= */
-    query_string = argValueOfKey(objc, objv, params[QUERYSTRING]);
+    query_string = argValueOfKey(objc, objv, (char *)params[QUERYSTRING]);
 
     if (query_string == NULL) {
 	/* ------------------------------------------------------------------------
@@ -109,7 +109,7 @@ int Web_Dispatch(ClientData clientData,
     /* ==========================================================================
      * post_data
      * ======================================================================= */
-    post_data = argValueOfKey(objc, objv, params[POSTDATA]);
+    post_data = argValueOfKey(objc, objv, (char *)params[POSTDATA]);
 
     if (post_data != NULL) {
 
@@ -124,7 +124,7 @@ int Web_Dispatch(ClientData clientData,
 	    int idx1 = 0;
 	    int idx2 = 0;
 
-	    if ((idx1 = argIndexOfKey(objc, objv, params[POSTDATA])) > 0) {
+	    if ((idx1 = argIndexOfKey(objc, objv, (char *)params[POSTDATA])) > 0) {
 
 		idx2 = argIndexOfNextKey(objc, objv, idx1);
 
@@ -212,7 +212,7 @@ int Web_Dispatch(ClientData clientData,
 	Tcl_Obj *key = NULL;
 	Tcl_Obj *val = NULL;
 
-	trackList = argValueOfKey(objc, objv, params[TRACK]);
+	trackList = argValueOfKey(objc, objv, (char *)params[TRACK]);
 
 	if ((trackList != NULL) &&
 	    (listLen = tclGetListLength(interp, trackList)) != -1) {
@@ -275,7 +275,7 @@ int Web_Dispatch(ClientData clientData,
 	 * --------------------------------------------------------------------- */
 	Tcl_ResetResult(interp);
 
-	cmdName = argValueOfKey(objc, objv, params[CMD]);
+	cmdName = argValueOfKey(objc, objv, (char *)params[CMD]);
 
 	if (cmdName != NULL) {
 
@@ -356,7 +356,7 @@ int Web_Dispatch(ClientData clientData,
 	    Tcl_Obj *hook = NULL;
 
 	    /* first eval hook, if any */
-	    hook = argValueOfKey(objc, objv, params[HOOK]);
+	    hook = argValueOfKey(objc, objv, (char *)params[HOOK]);
 
 	    if (hook != NULL) {
 

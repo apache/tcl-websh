@@ -346,12 +346,12 @@ int webDeHtmlify(ConvData * convData, Tcl_Obj * in, Tcl_Obj * out)
 /* ----------------------------------------------------------------------------
  * findCmtClose 
  * ------------------------------------------------------------------------- */
-char *findHtmlCmtClose(char *utf)
+TCLCONST char *findHtmlCmtClose(TCLCONST char *utf)
 {
 
-    char *cmtclose = NULL;
-    char *next1 = NULL;
-    char *next2 = NULL;
+    TCLCONST char *cmtclose = NULL;
+    TCLCONST char *next1 = NULL;
+    TCLCONST char *next2 = NULL;
 
     if (utf == NULL)
 	return NULL;
@@ -382,12 +382,12 @@ int removeHtmlComments(Tcl_Interp * interp, Tcl_Obj * in, Tcl_Obj * res)
 {
 
     int len = 0;
-    char *utf = NULL;
-    char *cmtopen = NULL;
-    char *cmtclose = NULL;
-    char *next1 = NULL;
-    char *next2 = NULL;
-    char *next3 = NULL;
+    TCLCONST char *utf = NULL;
+    TCLCONST char *cmtopen = NULL;
+    TCLCONST char *cmtclose = NULL;
+    TCLCONST char *next1 = NULL;
+    TCLCONST char *next2 = NULL;
+    TCLCONST char *next3 = NULL;
 
     if ((in == NULL) || (res == NULL))
 	return TCL_ERROR;

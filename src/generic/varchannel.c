@@ -95,7 +95,7 @@ int varchannelInputProc(ClientData clientData,
  * output to var channel
  * ------------------------------------------------------------------------- */
 int varchannelOutputProc(ClientData clientData,
-			 char *buf, int toWrite, int *errorCodePtr)
+			 TCLCONST char *buf, int toWrite, int *errorCodePtr)
 {
 
     VarChannel *varChannel = NULL;

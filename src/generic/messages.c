@@ -118,7 +118,7 @@ int Web_Recv(ClientData clientData,
     int mode = 0;
     Tcl_DString ds;
     char *data = NULL;
-    char *res = NULL;
+    TCLCONST char *res = NULL;
     int cmdcode = 0;
     int flags = 0;
     int size = 0;
@@ -226,7 +226,7 @@ int Web_MsgFlag(ClientData clientData,
 int parseFlags(Tcl_Interp * interp, char *flaglist, int *flags)
 {
 
-    char **argv;
+    TCLCONST char **argv;
     int argc;
     int count;
     Tcl_DString ds;

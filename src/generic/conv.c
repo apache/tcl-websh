@@ -76,7 +76,7 @@ int Web_Htmlify(ClientData clientData,
     Tcl_Obj *res = NULL;
     int useNumeric = TCL_ERROR;
     int iCurArg = 0;
-    static char *params[] = { "-numeric", NULL };
+    static TCLCONST char *params[] = { "-numeric", NULL };
     enum params
     { NUMERIC };
 

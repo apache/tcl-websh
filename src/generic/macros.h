@@ -16,6 +16,18 @@
 #ifndef WEB_MACROS_H
 #define WEB_MACROS_H
 
+#include <tcl.h>
+
+#if TCL_MAJOR_VERSION > 8 || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION >= 4)
+#  ifndef NO_CONST
+#    define TCLCONST const
+#  else
+#    define TCLCONST
+#  endif
+#else
+#  define TCLCONST
+#endif
+
 #include "log.h"
 
 #define WEBSH     "websh"

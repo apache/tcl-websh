@@ -139,7 +139,7 @@ Tcl_Obj *uriDecode(Tcl_Obj * in)
 
     int length;
     Tcl_Obj *res = NULL;
-    char *utf = NULL;
+    TCLCONST char *utf = NULL;
     Tcl_UniChar unic;
     char buf[3];
 
@@ -160,7 +160,7 @@ Tcl_Obj *uriDecode(Tcl_Obj * in)
 
 	    if (!(utf[0] & 0x80) && utf[0] != 0) {
 		/* case: %[7bit] */
-		buf[0] = utf[0];
+		buf[0] = (char) utf[0];
 
 		utf = Tcl_UtfNext(utf);
 		if (!(utf[0] & 0x80) && utf[0] != 0) {

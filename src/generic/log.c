@@ -370,13 +370,13 @@ int Web_LogDest(ClientData clientData,
     int idx;
     int iCurArg;
 
-    static char *params[] = { "-maxchar",
+    static TCLCONST char *params[] = { "-maxchar",
 	"-format",
 	NULL
     };
     enum params
     { MAXCHAR, FORMAT };
-    static char *subCommands[] = { WEB_LOG_SUBCMD_ADD,
+    static TCLCONST char *subCommands[] = { WEB_LOG_SUBCMD_ADD,
 	WEB_LOG_SUBCMD_DELETE,
 	WEB_LOG_SUBCMD_NAMES, NULL
     };
@@ -444,7 +444,7 @@ int Web_LogDest(ClientData clientData,
 	    }
 
 	    /* check for -format */
-	    if ((tcloTmp = argValueOfKey(objc, objv, params[FORMAT])) != NULL) {
+	    if ((tcloTmp = argValueOfKey(objc, objv, (char *)params[FORMAT])) != NULL) {
 		format = allocAndSet(Tcl_GetString(tcloTmp));
 	    }
 	    else {
@@ -453,7 +453,7 @@ int Web_LogDest(ClientData clientData,
 
 	    /* check for -maxchar */
 	    if ((tcloTmp =
-		 argValueOfKey(objc, objv, params[MAXCHAR])) != NULL) {
+		 argValueOfKey(objc, objv, (char *)params[MAXCHAR])) != NULL) {
 		if (Tcl_GetLongFromObj(interp, tcloTmp, &maxCharInMsg) ==
 		    TCL_ERROR) {
 		    LOG_MSG(interp, WRITE_LOG | SET_RESULT, __FILE__,
@@ -642,7 +642,7 @@ int Web_LogFilter(ClientData clientData,
     LogData *logData;
     int idx;
 
-    static char *subCommands[] = {
+    static TCLCONST char *subCommands[] = {
 	WEB_LOG_SUBCMD_ADD,
 	WEB_LOG_SUBCMD_DELETE,
 	WEB_LOG_SUBCMD_NAMES,
@@ -922,7 +922,7 @@ void LOG_MSG(Tcl_Interp * interp, int flag, char *filename, int linenr,
 #endif
 
     if ((flag & INTERP_ERRORINFO) && (interp != NULL)) {
-	char *errorInfo = Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
+	char *errorInfo = (char *) Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
 	if (errorInfo != NULL)
 	    webLog(interp, WEBLOG_DEBUG, errorInfo);
 	else
