@@ -1214,20 +1214,13 @@ $Id$
     <section id="web::put">
       <title>web::put</title>
       <para>
-
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::put</command> ??#<optional><option>channel</option></optional> <option>text</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
-	Send output to a Tcl channel.
-	No newline is added to output.
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::put</command>
+	  <arg choice="opt">channel</arg>
+	  <arg choice="opt">text</arg>
+	</cmdsynopsis>
+	Send output to a Tcl channel.  No newline is added to output.
 
       </para>
     </section>
@@ -1235,46 +1228,37 @@ $Id$
       <title>web::putx</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::putx</command> ??#<optional><option>channel</option></optional> <option>text</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	<cmdsynopsis>
+	  <command>web::putx</command>
+	  <arg choice="opt">channel</arg>
+	  <arg choice="opt">text</arg>
+	</cmdsynopsis>
 
-	Writes <option>text</option> to the specified channel. Code in curly brackets is
-	eval'd, unless the brackets are escaped by &quot;\&quot;. These markup characters
-	'{...}' can be changed to '&lt;% ... %&gt;' with 'web::config putxmarkup tag'.
+	Writes <option>text</option> to the specified channel. Code in
+	curly brackets is eval'd, unless the brackets are escaped by
+	&quot;\&quot;. These markup characters '{...}' can be changed
+	to '&lt;% ... %&gt;' with 'web::config putxmarkup tag'.
 
-      </para><para>
       </para>
     </section>
     <section id="web::putxfile">
       <title>web::putxfile</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::putxfile</command> ??#<optional><option>channel</option></optional> <option>file</option> <optional><option>msg</option></optional>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	<cmdsynopsis>
+	  <command>web::putxfile</command>
+	  ??#<optional><option>channel</option></optional>
+	  <option>file</option>
+	  <optional><option>msg</option></optional>
+      </cmdsynopsis>
 
 	As web::putx, but takes input from a file.
 
-	Returns 0 on success, 1 otherwise. If an error occurs, an error
-	message is written to <option>msg</option>. If only two arguments are passed, then
-	<option>channel</option> takes precedence.
+	Returns 0 on success, 1 otherwise. If an error occurs, an
+	error message is written to <option>msg</option>. If only two
+	arguments are passed, then <option>channel</option> takes
+	precedence.
 
-      </para><para>
       </para>
     </section>
     <section id="Examples7">
@@ -1310,8 +1294,10 @@ $Id$
   <section id="logging">
     <title>logging</title>
     <para>
-      Logging consists of two parts. <command>web::log</command> issues a logging message, while
-      <command>web::logfilter</command> and <command>web::logdest</command> determine where to send a
+      Logging consists of two parts. <command>web::log</command>
+      issues a logging message, while
+      <command>web::logfilter</command> and
+      <command>web::logdest</command> determine where to send a
       message. webshell uses a two-step filtering. First, webshell
       determines whether it should handle a message, or not, using the
       filters configured with &quot;web::logfilter&quot;. Then,
@@ -1335,25 +1321,29 @@ $Id$
     <title>web::logdest</title>
     <para>
 
-      web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest
+	web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest
 
-      <variablelist>
-	<varlistentry>
-	  <term>Syntax:</term>
-	  <listitem>
-	    <para>
-	      <command>web::logdest</command> subcommand ?options? <option>level</option> <option>plugin</option></para><para>
-	      Subcommands are: <literal remap="tt">add</literal>, <literal remap="tt">delete</literal>, and <literal remap="tt">names</literal>.</para><para>
-	      Options are: <literal remap="tt">-maxchar</literal>, and <literal remap="tt">-format</literal>.</para><para>
-	      Known plug-ins are:  <literal remap="tt">file</literal>, <literal remap="tt">syslog</literal>, <literal remap="tt">command</literal>,
-	      <literal remap="tt">channel</literal>, and <literal remap="tt">apache</literal>. <emphasis>Note</emphasis>: the plugins may have
-	      indiviudal options (<literal remap="tt">-unbuffered)</literal>, see documentation below.
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
+	<cmdsynopsis>
+	  <command>web::logdest</command> <arg>subcommand</arg> <arg
+	  choice="opt">options</arg> <arg>level</arg>
+	  <arg>plugin</arg>
+	</cmdsynopsis>
 
-      The format string consits of format specifications for <literal remap="tt">fprintf()</literal>
+	Subcommands are: <option>add</option>,
+	<option>delete</option>, and <option>names</option>.  Options
+	are: <option>-maxchar</option>, and
+	<option>-format</option>.
+      </para>
+      <para>
+
+	Known plug-ins are: <option>file</option>,
+	<option>syslog</option>, <option>command</option>,
+	<option>channel</option>, and
+	<option>apache</option>. <emphasis>Note</emphasis>: the
+	plugins may have indiviudal options
+	(<option>-unbuffered</option>), see documentation below.
+
+      The format string consits of format specifications for <function>fprintf()</function>
       plus: <literal remap="tt">p</literal> (process id), <literal remap="tt">t</literal> (thread id), <literal remap="tt">n</literal> (log level),
       <literal remap="tt">f</literal> (log type), and <literal remap="tt">m</literal> (the message).
 
