@@ -22,7 +22,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 
 test filecontext-1.1 {simple set} {
 
-    web::filecontext ctxb
+    web::filecontext ctxb -path "%d" 
 
     ctxb::new 113
     ctxb::cset a 1
@@ -50,7 +50,7 @@ test filecontext-1.2 {option -path} {
 
 test filecontext-1.3 {option -crypt} {
 
-    web::filecontext ctxb -crypt no
+    web::filecontext ctxb -crypt no -path "%d"
 
     ctxb::new 113
     ctxb::cset a 1
@@ -66,7 +66,7 @@ test filecontext-1.3 {option -crypt} {
 
 test filecontext-1.4 {option -attachto} {
 
-    web::filecontext ctxb
+    web::filecontext ctxb -path "%d"
 
     ctxb::new 113
     ctxb::cset a 1
@@ -98,13 +98,13 @@ test filecontext-1.5 {option -idgen} {
 
 test filecontext-1.6 {read someone others ctx} {
 
-    web::filecontext ctxb
+    web::filecontext ctxb -path "%d"
 
     ctxb::new 113
     ctxb::cset a 1
     ctxb::commit
 
-    web::filecontext ctxc
+    web::filecontext ctxc -path "%d"
     ctxc::load 113
 
     file delete 113
