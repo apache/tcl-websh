@@ -365,7 +365,7 @@ int Web_Dispatch(ClientData clientData,
 		Tcl_DecrRefCount(hook);
 
 		if (res == TCL_ERROR) {
-		    LOG_MSG(interp, WRITE_LOG | SET_RESULT | INTERP_ERRORINFO,
+		    LOG_MSG(interp, WRITE_LOG | INTERP_ERRORINFO,
 			    __FILE__, __LINE__,
 			    "web::dispatch", WEBLOG_ERROR,
 			    "error evaluating hook \"", Tcl_GetString(hook),
