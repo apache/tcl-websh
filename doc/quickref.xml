@@ -988,23 +988,19 @@ $Id$
     <section id="web::formvar">
       <title>web::formvar</title>
       <para>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::formvar</command>
+	  <arg choice="opt">options</arg>
+	  <arg choice="opt">key</arg>
+	  <arg choice="opt">value</arg>
+	</cmdsynopsis>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>syntax</term>
-	    <listitem>
-	      <para>
-		<command>web::formvar</command> ?options? <optional><option>key</option></optional> <optional><option>value</option></optional></para><para>
-		Exactly like <command>web::param</command>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Exactly like <command>web::param</command>
 
-	<command>web::formvar</command> is an accessor to HTML
-	<option>FORM</option> data.  After
-	<command>web::dispatch</command> has parsed the POST data, you
-	can access all form fields using
+	<command>web::formvar</command> is an accessor to HTML FORM
+	data.  After <command>web::dispatch</command> has parsed the
+	POST data, you can access all form fields using
 	<command>web::formvar</command>.
 
       </para>
@@ -1044,33 +1040,42 @@ $Id$
       <title>web::response</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax</term>
-	    <listitem>
-	      <para>
-		<command>web::response</command></para><para>
-		<command>web::response</command> ?option?</para><para>
-		<command>web::response</command> ?subcommand? args</para><para>
-		Subcommands are <command>-select</command>, <emphasis>-set</emphasis>, <emphasis>-lappend</emphasis>,
-		<emphasis>-names</emphasis>, <emphasis>-count</emphasis>, <emphasis>-unset</emphasis>, <emphasis>-reset</emphasis>, and <emphasis>-resetall</emphasis>
-		Options are <emphasis>-sendheader</emphasis>, <emphasis>-httpresponse</emphasis>, and <emphasis>-bytessent</emphasis>.</para><para>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
 
-	Selects the default response object and sets and accesses properties
-	of the response object, and returns the name of the response object.
+	<cmdsynopsis>
+	  <command>web::response</command>
+	  <command>web::response</command>
+	  <arg choice="opt">option</arg>
+	  <command>web::response</command>
+	  <arg choice="opt">subcommand</arg>
+	  <arg>args</arg>
+	</cmdsynopsis>
+
+	Subcommands are <command>-select</command>,
+	<option>-set</option>, <option>-lappend</option>,
+	<option>-names</option>, <option>-count</option>,
+	<option>-unset</option>, <option>-reset</option>, and
+	<option>-resetall</option> Options are
+	<option>-sendheader</option>, <option>-httpresponse</option>,
+	and <option>-bytessent</option>.</para><para>
+
+	Selects the default response object and sets and accesses
+	properties of the response object, and returns the name of the
+	response object.
 
       </para><para>
-	<literal remap="tt">web::response -select <option>channelName</option></literal> selects <option>channelName</option> as new
-	response object. If the <option>channelName</option> is prepended by a #, it refers
-	to a global variable named <option>channelName</option>.
+	<command>web::response</command>
+	<option>-select</option>
+	<option>channelName</option>
+
+	selects <option>channelName</option> as new response
+	object. If the <option>channelName</option> is prepended by a
+	#, it refers to a global variable named
+	<option>channelName</option>.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::response</term>
+	    <term><command>web::response</command></term>
 	    <listitem>
 	      <para>
 		returns the name of the currently selected response object
@@ -1078,31 +1083,39 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -select ?#?<option>channel</option></term>
+	    <term><command>web::response</command>
+	    <option>-select</option>
+	      <optional>#</optional><option>channel</option></term>
 	    <listitem>
 	      <para>
-		makes <option>channel</option> the new default response object and returns the
-		old default response object
+		makes <option>channel</option> the new default
+		response object and returns the old default response
+		object
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -set <option>key</option> <optional><option>value</option></optional></term>
+	    <term><command>web::response</command>
+	    <option>-set</option> <option>key</option>
+	    <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
-		sets property <option>key</option> to <option>value</option>, or returns current value if
-		<option>value</option> is omitted.\\ 
-		The <option>keys</option> are names of HTTP header fields (do not include ':' at
-		the end of the header field name) and <option>value</option> the corresponding
-		value of the field (like Content-Type) and their values (like
-		text/html).</para><para>
-		Example:</para><para>
-		<literal remap="tt">web::response -set Status 200</literal>
+		sets property <option>key</option> to
+		<option>value</option>, or returns current value if
+		<option>value</option> is omitted.  The
+		<option>keys</option> are names of HTTP header fields
+		(do not include ':' at the end of the header field
+		name) and <option>value</option> the corresponding
+		value of the field (like Content-Type) and their
+		values (like text/html).</para><para>
+		Example:</para><para> <literal
+		remap="tt">web::response -set Status 200</literal>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -names</term>
+	    <term><command>web::response</command>
+	    <option>-names</option></term>
 	    <listitem>
 	      <para>
 		returns the list of known keys
@@ -1110,7 +1123,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -count <option>key</option></term>
+	    <term><command>web::response</command>
+	    <option>-count</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		returns number of items in list of <option>key</option>
@@ -1118,40 +1132,51 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -unset <optional><option>key</option></optional></term>
+	    <term><command>web::response</command>
+	    <option>-unset</option>
+	    <optional><option>key</option></optional></term>
 	    <listitem>
 	      <para>
-		delete the value of <option>key</option>, if <option>key</option> is given, or
-		all keys.
+		delete the value of <option>key</option>, if
+		<option>key</option> is given, or all keys.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -sendheader <optional><option>boolean</option></optional></term>
+	    <term><command>web::response</command>
+	    <option>-sendheader</option>
+	    <optional><option>boolean</option></optional></term>
 	    <listitem>
 	      <para>
 		Sets the sendheader flag which indicates and controls
 		whether the HTTP headers have been or should be sent.
 		It is initially set to 1 and set to 0 after the first
-		call of <command>web::put</command> or <command>web::putx</command>. If <option>boolean</option> is
-		omitted, returns the current value.
+		call of <command>web::put</command> or
+		<command>web::putx</command>. If
+		<option>boolean</option> is omitted, returns the
+		current value.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -httpresponse <optional><option>value</option></optional></term>
+	    <term><command>web::response</command>
+	    <option>-httpresponse</option>
+	    <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
-		Sets the HTTP response like &quot;HTTP/1.0 200 OK&quot; for the given
-		(or default) channel. If no <option>value</option> given, returns the the
-		current HTTP response set. In the case of the Apache module
-		mod_websh, Apache replaces the protocol &quot;HTTP/??&quot; in the
-		reponse to &quot;HTTP/1.1&quot;
+		Sets the HTTP response like &quot;HTTP/1.0 200
+		OK&quot; for the given (or default) channel. If no
+		<option>value</option> given, returns the the current
+		HTTP response set. In the case of the Apache module
+		mod_websh, Apache replaces the protocol
+		&quot;HTTP/??&quot; in the reponse to
+		&quot;HTTP/1.1&quot;
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -bytessent</term>
+	    <term><command>web::response</command>
+	    <option>-bytessent</option></term>
 	    <listitem>
 	      <para>
 		returns the number of bytes that have already been sent to this
@@ -1160,21 +1185,25 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -reset</term>
+	    <term><command>web::response</command>
+	    <option>-reset</option></term>
 	    <listitem>
 	      <para>
-		resets the 'sendheader' flag for the channel to true, the HTTP
-		response to the default &quot;HTTP/?? 200 OK&quot;, removes any HTTP headers
-		set, and resets the names of the query string parameters for the timestamp
-		and the command to their default values (&quot;t&quot; and &quot;cmd&quot;, respectively)
+		resets the 'sendheader' flag for the channel to true,
+		the HTTP response to the default &quot;HTTP/?? 200
+		OK&quot;, removes any HTTP headers set, and resets the
+		names of the query string parameters for the timestamp
+		and the command to their default values (&quot;t&quot;
+		and &quot;cmd&quot;, respectively)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::response -resetall</term>
+	    <term><command>web::response</command>
+	    <option>-resetall</option></term>
 	    <listitem>
 	      <para>
-		makes a 'web::response -reset' on all registered channels
+		performs a 'web::response -reset' on all registered channels
 	      </para>
 	    </listitem>
 	  </varlistentry>
