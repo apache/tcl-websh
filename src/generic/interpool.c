@@ -486,12 +486,9 @@ int initPool(websh_server_conf * conf)
 {
     static called = 0;
 
-    Tcl_MutexLock(&(conf->webshPoolLock));
     if (called == 1) {
-	Tcl_MutexUnlock(&(conf->webshPoolLock));
 	return 1;
     } else {
-	Tcl_MutexUnlock(&(conf->webshPoolLock));
 	called = 1;
     }
 
@@ -499,7 +496,6 @@ int initPool(websh_server_conf * conf)
 
     if (conf->mainInterp != NULL || conf->webshPool != NULL) {
 	/* we have to cleanup */
-	/* fixme: in threaded mode, this is a bit too rude maybe */
 	destroyPool(conf);
     }
 
