@@ -24,9 +24,6 @@
 #  include <time.h>
 #endif
 
-/* fixme: why prototype here? */
-void dRequestData(ClientData clientData);
-
 void dRequestData(ClientData clientData)
 {
 
@@ -66,7 +63,7 @@ int request_Init(Tcl_Interp * interp)
     Tcl_CreateObjCommand(interp, "web::formvar",
 			 Web_FormVar, (ClientData) requestData, NULL);
 
-    /*fixme: needed? */
+    /*fixme: needed? Simon will deal with this. */
     Tcl_CreateObjCommand(interp, "web::querystring::getfromurl",
 			 Web_GetQueryStringFromUrl,
 			 (ClientData) requestData, NULL);
@@ -127,8 +124,6 @@ RequestData *createRequestData(Tcl_Interp * interp)
 	HashUtlAllocInit(requestData->tmpFnList, TCL_STRING_KEYS);
 	HashUtlAllocInit(requestData->staticList, TCL_STRING_KEYS);
 	requestData->requestIsInitialized = 0;
-	/* fixme: this is ap/cgi specific */
-	requestData->handleToSpecificReqData = NULL;
     }
 
     return requestData;
@@ -213,7 +208,9 @@ int removeTempFiles(Tcl_Interp * interp, RequestData * requestData)
 		    "removeTempFiles", WEBLOG_INFO,
 		    "removing temporary file ", Tcl_GetString(tclo), ".",
 		    NULL);
-	    /* fixme: check for result of remove() --> log message */
+	    /* fixme: check for result of remove() --> log message
+	       Use PosixError
+	    */
 	    remove(Tcl_GetString(tclo));
 	    Tcl_DecrRefCount(tclo);
 	}
@@ -421,7 +418,9 @@ Tcl_Obj *tempFileName(Tcl_Interp * interp, RequestData * requestData,
 
     Tcl_IncrRefCount(tclo);
 
-    /* fixme: should I check for for TMP_MAX filenames per app ? */
+    /* fixme: should I check for for TMP_MAX filenames per app ?
+       fixme - later
+    */
     return tclo;
 }
 
