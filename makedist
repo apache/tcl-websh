@@ -53,9 +53,24 @@ if {![file exists tcl-websh/README]} {
     fatal "checkout in directory $tmpdir failed"
 }
 
-# do some cleanup in the build
+cd tcl-websh
+## -------------------------------------------------------------
+## do some cleanup in the build (just add more fixes or stuff
+
+# remove the examples
+file delete -force examples
+
+# make the docs
+cd doc
+catch {exec make}
+cd ..
+
+## end of cleanup
+## -------------------------------------------------------------
+cd ..
+
+# rename subdirectory
 file rename tcl-websh websh-$build
-file delete -force websh-$build/examples
 
 # creating tar ball
 puts "creating tar ball websh-$build.tar.gz"
