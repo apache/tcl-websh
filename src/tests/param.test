@@ -33,6 +33,21 @@ proc cleanParam {} {
 # -----------------------------------------------------------------------------
 # errors
 # -----------------------------------------------------------------------------
+test param-1.0 {error message} {
+
+    catch {
+	web::param -foo
+    } cmsg
+    set cmsg
+} {bad subcommand "-foo": must be -count, -unset, -set, -lappend, or -names}
+
+test param-1.1 {error message} {
+
+    catch {
+	web::param set a b
+    } cmsg
+    set cmsg
+} {wrong # args: should be "web::param key ?default?"}
 
 
 # -----------------------------------------------------------------------------

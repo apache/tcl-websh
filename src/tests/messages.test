@@ -105,6 +105,28 @@ test messages-2.1b {web::send and recieve} {unixOnly} {
     set res [string compare $expected $res]
 } {0}
 
+test messages-2.1c {web::send and recieve unicode} {} {
+
+    set fileName [web::tempfile]
+
+    set fileId [open $fileName "w"]
+    set cmd  10011
+    set flags 131072
+    set text "abc\u00c2defä1ö2ü3"
+    web::send $fileId $cmd $text \#$flags
+    close $fileId
+
+    set fileId [open $fileName "r"]
+
+    set expected "$cmd-$text-$flags"
+
+    web::recv $fileId cmd res flag
+
+    set res "$cmd-$res-$flag"
+
+    set res [string compare $expected $res]
+} {0}
+
 test messages-2.2 {web::msgflag no arg} {unixOnly} {
     set res [web::msgflag]
 } {multiple}
