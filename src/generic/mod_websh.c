@@ -174,17 +174,14 @@ static const char *set_webshscript(cmd_parms * cmd, void *dummy, char *arg)
 						   &websh_module);
     conf->scriptName = ap_server_root_relative(cmd->pool, arg);
 
-#ifndef APACHE2
-    /* here we create our main Interp and Pool */
-    if (!initPool(conf))
-	return "mod_websh: Could not init interpreter pool!";
-#endif /* APACHE2 */
-
     return NULL;
 }
 
 #ifdef APACHE2
 static void websh_init_child(apr_pool_t * p, server_rec * s)
+#else /* APACHE2 */
+static void websh_init_child(server_rec *s, pool *p)
+#endif
 {
     /* here we create our main Interp and Pool */
     websh_server_conf *conf =
@@ -196,7 +193,6 @@ static void websh_init_child(apr_pool_t * p, server_rec * s)
 	 */
 	;
 }
-#endif /* APACHE2 */
 
 static const command_rec websh_cmds[] = {
     {"WebshConfig", set_webshscript, NULL, RSRC_CONF, TAKE1,
@@ -426,7 +422,7 @@ module MODULE_VAR_EXPORT websh_module = {
     NULL,			/* fixups */
     NULL,			/* logger */
     NULL,			/* header parser */
-    NULL,			/* child_init */
+    websh_init_child,		/* child_init */
     exit_websh_pool,		/* child_exit */
     NULL			/* post read-request */
 };
