@@ -9,7 +9,7 @@ $Id$
 
 <article lang="en">
 
-  <title>webshell reference</title>
+  <title>Webshell Reference</title>
   <articleinfo>
     <releaseinfo>
       $Id$
@@ -25,8 +25,10 @@ $Id$
       </para>
       <para>
 	Typically, webshell commands have the following syntax:
-	<emphasis>web::acommand ?options? ?subcommands ?
-	  ?arguments?</emphasis>.  Options start with a dash
+	<command>web::acommand  <arg choice="opt">options</arg> <arg choice="opt">subcommands</arg>
+	<arg choice="opt">arguments</arg>
+	</command>.
+	Options start with a dash
 	(&quot;-&quot;). As usual, dash-dash (&quot;--&quot;) indicates
 	the &quot;end-of-options&quot;. Thus, <emphasis>web::acommand
 	  -o1 a1 -- -o2</emphasis> takes &quot;-o2&quot; as the first
@@ -71,7 +73,7 @@ $Id$
 	      <para>
 		<emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
 		&lt;key&gt;: <emphasis>uploadfilesize</emphasis>, <emphasis>cmdparam</emphasis>, <emphasis>timeparam</emphasis>,
-		<emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>, 
+		<emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>,
 		<emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis></para><para>
 		If &lt;value&gt; is ommitted, the current value of &lt;key&gt; is returned.
 	      </para>
