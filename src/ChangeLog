@@ -1,3 +1,30 @@
+2002-04-18  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/cfg.c (Web_Cfg):
+	removed handling of [web::config script]
+	call Web_ConfigPath in Web_Cfg to handle all mod_webh specific stuff
+
+	* generic/mod_websh.c, generic/mod_websh.h:
+	added a second assoc data to pool interpreter
+
+	* generic/modwebsh_ap.c, generic/modwebsh_cgi.c, generic/modwebsh.h:
+	added Web_ConfigPath
+
+	* generic/request_ap.c, generic/request_cgi.c, generic/request.h:
+	removed requestScriptName
+
+	* apachetests/hello.test, apachetests/hello.ws3, 
+	apachetests/websh.conf, apachetest/apachetest.tcl:
+	created test for new web::config stuff
+
+2002-04-17  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* tests/cfg.test:
+	fixed cfg-1.1 (new subcommands)
+
+	* tests/msc.test:
+	fixed copyright-1.0 (new web site url)
+
 2002-04-10  David N. Welton  <davidw@dedasys.com>
 
 	* Makefile (quickref.html): Use catalogs for XML processing.
@@ -6,6 +33,45 @@
 
 	* quickref.xsl: Added 'monounderlineseq' for options.  Looks
 	better visually.
+
+2002-04-09  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* apachetests/*:
+	made all tests work for Apache 1.3 and Apache 2.0
+
+	* generic/cfg.c, generic/macros.h, generic/webout.h:
+	fixed copyright notice
+	removed copyright in Generator
+	removed (now) unnecessary define NETCETERA
+
+	* generic/mod_websh.c:
+	set proper handler for Apache 2 (changed websh-script to websh)
+
+	* generic/modwebsh_ap.c:
+	make it compile under Apache 2.0 and Solaris (include <sys/stat.h>)
+
+	* tests/webout.test:
+	fixed tests output-4.4 and output-4.1
+	
+2002-04-05  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/interpool.c:
+	removed unnecessary check and don't destroyPool on error
+	(The state we're in when we have an error is very unclear
+	and it should be checked eventually, but for normal operation
+	this doesn't matter)
+
+	* generic/messages.c, generic/messages.h:
+	renamed MAGIC and WEB_MSG_VERSION (consistency, no other impact)
+
+	* generic/modwebsh_ap.c:
+	fixed naming (dofinalize -> finalize)
+	slightly change error handling (return proper result instead of logging
+	to apache in case of 'wrong # args')
+
+	* generic/modwebsh_cgi.c:
+	proper error handling in dummy procs (web::initializer 
+	and web::finalizer)
 
 2002-04-02  David N. Welton  <davidw@dedasys.com>
 
