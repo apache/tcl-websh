@@ -1343,9 +1343,13 @@ $Id$
 	plugins may have indiviudal options
 	(<option>-unbuffered</option>), see documentation below.
 
-      The format string consits of format specifications for <function>fprintf()</function>
-      plus: <literal remap="tt">p</literal> (process id), <literal remap="tt">t</literal> (thread id), <literal remap="tt">n</literal> (log level),
-      <literal remap="tt">f</literal> (log type), and <literal remap="tt">m</literal> (the message).
+      The format string consits of format specifications for
+      <function>fprintf()</function> plus: <literal
+      remap="tt">p</literal> (process id), <literal
+      remap="tt">t</literal> (thread id), <literal
+      remap="tt">n</literal> (log level), <literal
+      remap="tt">f</literal> (log type), and <literal
+      remap="tt">m</literal> (the message).
 
     </para>
   </section>
@@ -1353,39 +1357,42 @@ $Id$
     <title>web::logfilter</title>
     <para>
 
-      <variablelist>
-	<varlistentry>
-	  <term>Syntax:</term>
-	  <listitem>
-	    <para>
-	      <command>web::logfilter</command> subcommand args</para><para>
-	      Subcommands are: <literal remap="tt">add</literal>, <literal remap="tt">delete</literal>, and <literal remap="tt">names</literal>.
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::logfilter</command>
+	  <arg>subcommand</arg>
+	  <arg>args</arg>
+	</cmdsynopsis>
 
-      Add a filter to the list.
-
-      <variablelist>
+	Subcommands are: <option>add</option>,
+	<option>delete</option>, and <option>names</option>.
+      </para>
+      <para>
+	Add a filter to the list.
+	<variablelist>
 	<varlistentry>
-	  <term>web::logfilter add <option>level</option></term>
+	    <term><command>web::logfilter</command>
+	    <option>add</option> <option>level</option></term>
 	  <listitem>
 	    <para>
-	      add a <option>level</option> to the list
+	      add a level to the list
 	    </para>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>web::logfilter delete <optional><option>name</option></optional></term>
+	    <term><command>web::logfilter</command>
+	    <option>delete</option>
+	    <optional><option>name</option></optional></term>
 	  <listitem>
 	    <para>
-	      remove a <option>name</option> from list, or remove all filters if <option>name</option> is omitted.
+	      remove a <option>name</option> from list, or remove all
+	      filters if <option>name</option> is omitted.
 	    </para>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>web::logfilter names</term>
+	    <term><command>web::logfilter</command>
+	    <option>names</option></term>
 	  <listitem>
 	    <para>
 	      list all filters that have been set
@@ -1400,27 +1407,22 @@ $Id$
     <title>web::log</title>
     <para>
 
-      <variablelist>
-	<varlistentry>
-	  <term>Syntax:</term>
-	  <listitem>
-	    <para>
-	      <command>web::log</command> <option>level</option> <option>msg</option>
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
+	<cmdsynopsis>
+	  <command>web::log</command> <arg>level</arg>
+	  <arg>msg</arg>
+	</cmdsynopsis>
 
-      Issue a log message.  <emphasis>Note</emphasis> that, for performance reasons,
-      variables and command names <option>msg</option> will be substituted by the log
-      module and you should put <option>msg</option> in curly braces to prevent Tcl from
-      substituting the string as well. This ensures that webshell only
-      spends time on messages which actually pass all filters, and debug
-      messages that contain variable names and commands will not slow down
-      the productive system, where no debug messages pass the filters. This
-      default behaviour can be changed with 'web::config logsubst 0'.
+      Issue a log message.  <emphasis>Note</emphasis> that, for
+      performance reasons, variables and command names
+      <option>msg</option> will be substituted by the log module and
+      you should put <option>msg</option> in curly braces to prevent
+      Tcl from substituting the string as well. This ensures that
+      webshell only spends time on messages which actually pass all
+      filters, and debug messages that contain variable names and
+      commands will not slow down the productive system, where no
+      debug messages pass the filters. This default behaviour can be
+      changed with 'web::config logsubst 0'.
 
-    </para><para>
     </para>
   </section>
   <section id="log_plug-ins">
@@ -1435,7 +1437,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      web::logdest add *.-debug <emphasis>file</emphasis> ?options? <option>fileName</option></para><para>
-	      Option is: <literal remap="tt">-unbuffered</literal>
+	      Option is: <option>-unbuffered</option>
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -1489,7 +1491,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      web::logdest add *.-debug <emphasis>channel</emphasis> ?options? <option>channel</option></para><para>
-	      Option is: <literal remap="tt">-unbuffered</literal>
+	      Option is: <option>-unbuffered</option>
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -1552,9 +1554,9 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; <option>args</option></para><para>
-		Subcommands are: <literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>,
-		<literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,  <literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>,
-		<literal remap="tt">cnames</literal>, and <literal remap="tt">dump</literal>.  
+		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
+		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
+		<option>cnames</option>, and <option>dump</option>.  
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1665,8 +1667,8 @@ $Id$
 	    <listitem>
 	      <para>
 		<command>web::filecontext</command> <option>name</option> ?options?</para><para>
-		Options are: <literal remap="tt">-perm</literal>, <literal remap="tt">-path</literal>, <literal remap="tt">-crypt</literal>,
-		<literal remap="tt">-idgen</literal>, and <literal remap="tt">-attachto</literal>.
+		Options are: <option>-perm</option>, <option>-path</option>, <option>-crypt</option>,
+		<option>-idgen</option>, and <option>-attachto</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1680,9 +1682,9 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>&lt;name&gt;</emphasis>::<option>subcommand</option> <option>args</option></para><para>
-		Subcommands are: <literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>,
-		<literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,  <literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>,
-		<literal remap="tt">cnames</literal>, <literal remap="tt">init</literal>, <literal remap="tt">new</literal>, <literal remap="tt">commit</literal>, <literal remap="tt">invalidate</literal>, and <literal remap="tt">id</literal>.
+		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
+		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
+		<option>cnames</option>, <option>init</option>, <option>new</option>, <option>commit</option>, <option>invalidate</option>, and <option>id</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1691,8 +1693,8 @@ $Id$
 	Manages file-based context data. The subcommands have their familiar
 	behaviour of the Tcl commands with similar names. Please refer to the
 	section <literal remap="tt">context management</literal> for a description of the commands
-	<literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>, <literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,
-	<literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>, and <literal remap="tt">cnames</literal>.
+	<option>cset</option>, <option>cappend</option>, <option>clappend</option>, <option>cget</option>, <option>cexists</option>,
+	<option>cunset</option>, <option>carray</option>, and <option>cnames</option>.
 
 	<variablelist>
 	  <varlistentry>
@@ -1825,8 +1827,8 @@ $Id$
 	    <listitem>
 	      <para>
 		<command>web::cookiecontext</command> <option>name</option> ?options?</para><para>
-		Options are: <literal remap="tt">-expires</literal>, <literal remap="tt">-path</literal>, <literal remap="tt">-domain</literal>,
-		<literal remap="tt">-secure</literal>, <literal remap="tt">-crypt</literal>, and <literal remap="tt">-channel</literal>.
+		Options are: <option>-expires</option>, <option>-path</option>, <option>-domain</option>,
+		<option>-secure</option>, <option>-crypt</option>, and <option>-channel</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1840,9 +1842,9 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; <option>args</option></para><para>
-		Subcommands are: <literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>,
-		<literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,  <literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>,
-		<literal remap="tt">cnames</literal>, <literal remap="tt">init</literal>, <literal remap="tt">new</literal>, <literal remap="tt">commit</literal>, <literal remap="tt">invalidate</literal>, and <literal remap="tt">id</literal>.
+		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
+		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
+		<option>cnames</option>, <option>init</option>, <option>new</option>, <option>commit</option>, <option>invalidate</option>, and <option>id</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1971,7 +1973,7 @@ $Id$
 	    <listitem>
 	      <para>
 		web::filecounter <option>name</option> -filename <option>fname</option> <optional><option>options</option></optional></para><para>
-		Options are: <literal remap="tt">-min</literal>, <literal remap="tt">-max</literal>, <literal remap="tt">-seed</literal>, <literal remap="tt">-incr</literal>, <literal remap="tt">-mask</literal>, <literal remap="tt">-wrap</literal>
+		Options are: <option>-min</option>, <option>-max</option>, <option>-seed</option>, <option>-incr</option>, <option>-mask</option>, <option>-wrap</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2402,7 +2404,7 @@ $Id$
 	      <command>web::htmlify</command> ?-options? <option>text</option>
 	    </para>
 	    <para>
-	      Options is: <literal remap="tt">-numeric</literal>.
+	      Options is: <option>-numeric</option>.
 	    </para>
 	    <para>
 	      Return HTML-compliant <option>text</option> with HTML encoded
@@ -2656,7 +2658,7 @@ $Id$
 	    <listitem>
 	      <para>
 		<command>web::interpclasscfg</command> <option>classid</option> property ?value?</para><para>
-		Properties are: <literal remap="tt">maxrequests</literal>, <literal remap="tt">maxttl</literal>, <literal remap="tt">maxidletime</literal>
+		Properties are: <option>maxrequests</option>, <option>maxttl</option>, <option>maxidletime</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2708,8 +2710,11 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<command>web::interpcfg</command> ?property? ?value?</para><para>
-		Properties are: <literal remap="tt">numreq</literal>, <literal remap="tt">retire</literal>, <literal remap="tt">starttime</literal>, <literal remap="tt">lastusedtime</literal>
+		<command>web::interpcfg</command> ?property?
+		?value?</para><para> Properties are:
+		<option>numreq</option>, <option>retire</option>,
+		<option>starttime</option>,
+		<option>lastusedtime</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
