@@ -1,3 +1,12 @@
+2002-04-10  David N. Welton  <davidw@dedasys.com>
+
+	* Makefile (quickref.html): Use catalogs for XML processing.
+
+2002-04-09  David N. Welton  <davidw@dedasys.com>
+
+	* quickref.xsl: Added 'monounderlineseq' for options.  Looks
+	better visually.
+
 2002-04-02  David N. Welton  <davidw@dedasys.com>
 
 	* quickref.xsl: <arg choice="plain"> now outputs monoseq text, to
@@ -13,7 +22,7 @@
 
 	* generic/formdata.c (parseUrlEncodedFormData, parseMultipartFormData):
 	set back channels after reading form data
-	
+
 2002-03-27  David N. Welton  <davidw@dedasys.com>
 
 	* generic/interpool.c (initPool): Remove locking, as this is
@@ -29,9 +38,9 @@
 
 	* generic/paramlist.c (paramGetIndexFromObj): removed fixed allocation
 	(is a bit slower though since we need to find out how much to allocate)
-	
+
 	* tests/dispatch.test: fixed dispatch-5.14
-	
+
 2002-03-19  David N. Welton  <davidw@dedasys.com>
 
 	* generic/mod_websh.c (merge_websh_config): Don't reset the locks
