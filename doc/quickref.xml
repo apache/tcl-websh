@@ -1412,17 +1412,11 @@ $Id$
 	  <arg>msg</arg>
 	</cmdsynopsis>
 
-      Issue a log message.  <emphasis>Note</emphasis> that, for
-      performance reasons, variables and command names
-      <option>msg</option> will be substituted by the log module and
-      you should put <option>msg</option> in curly braces to prevent
-      Tcl from substituting the string as well. This ensures that
-      webshell only spends time on messages which actually pass all
-      filters, and debug messages that contain variable names and
-      commands will not slow down the productive system, where no
-      debug messages pass the filters. This default behaviour can be
-      changed with 'web::config logsubst 0'.
-
+	Issue a log message.  It is possible, should the user so
+	desire, to have the <command>web::log</command> run
+	<command>subst</command> on its arguments.  This behaviour is
+	turned off by default, and can be turned on by doing:
+	<programlisting>web::config logsubst 1</programlisting>.
     </para>
   </section>
   <section id="log_plug-ins">
