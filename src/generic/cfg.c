@@ -119,7 +119,8 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 {
 
     /* keep consistent with enum PutxMarkup in request.h */
-    static char *putxMarkups[] = { "brace",
+    static char *putxMarkups[] = {
+	"brace",
 	"tag",
 	NULL
     };
@@ -136,6 +137,10 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	"copyright",
 	"cmdurltimestamp",
 	"reset",
+	"script",
+	"server_root",
+	"document_root",
+	"interpclass",
 	NULL
     };
 
@@ -151,7 +156,11 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	WEBSHVERSION,
 	WEBSHCOPYRIGHT,
 	CMDURLTIMESTAMP,
-	RESET
+	RESET,
+	SCRIPT,
+	SERVER_ROOT,
+	DOCUMENT_ROOT,
+	INTERPCLASS
     };
 
 
@@ -398,7 +407,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    Tcl_AppendResult(interp,
 	      "Copyright (c) 1996-2000 by Netcetera AG, http://netcetera.ch\n",
 	      "Copyright (c) 2001-2002 by Apache Software Foundation\n",
-	      "For license and information details, see http://websh.com\n",
+	      "For license and information details, see http://tcl.apache.org/websh/\n",
 	      "Send comments and requests for help to info@websh.com",
 	      NULL);
 	    return TCL_OK;
@@ -449,6 +458,13 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 
 	Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, 1);
 
+	return TCL_OK;
+    }
+    case SCRIPT: {
+	char *scriptname;
+	WebAssertObjc(objc != 2, 2, NULL);
+	requestScriptName(interp, &scriptname);
+	Tcl_SetResult(interp, scriptname, NULL);
 	return TCL_OK;
     }
     default:

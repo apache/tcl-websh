@@ -345,8 +345,9 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		    }
 		    outData->defaultResponseObj = responseObj;
 		    Tcl_ResetResult(interp);	/* empty string */
-		    if (old->name != NULL)
+		    if (old->name != NULL) {
 			Tcl_SetObjResult(interp, old->name);
+		    }
 		    return TCL_OK;
 		    break;
 		}

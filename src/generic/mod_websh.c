@@ -385,15 +385,14 @@ static int websh_handler(request_rec * r)
     /* ---------------------------------------------------------------------
      * ready to rumble
      * --------------------------------------------------------------------- */
-
     if (!run_websh_script(r)) {
-
 #ifndef APACHE2
 	ap_log_rerror(APLOG_MARK, APLOG_ERR, r,
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
 #endif /* APACHE2 */
-		      "couldn't run websh script: %s", r->filename);
+		      "couldn't run websh script: %s",
+		      r->filename);
 	return HTTP_INTERNAL_SERVER_ERROR;
     }
 

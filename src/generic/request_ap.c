@@ -94,3 +94,10 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 			Tcl_NewStringObj("CGI-websh/1.1", -1));
     return TCL_OK;
 }
+
+int requestScriptName(Tcl_Interp *interp, char **filename) {
+    request_rec *r;
+    r = (request_rec *)Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
+    *filename = ap_pstrdup(r->pool, r->filename);
+    return TCL_OK;
+}

@@ -1,7 +1,7 @@
 /*
  * request.h --- websh3 request data processing
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -184,11 +184,13 @@ long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
 		     long *bytesSkipped);
 char *mimeGetParameterFromContDisp(const char *contentDisp, const char *name);
 
-/* in CGI case: implemented in request_cgi.c 
+/* in CGI case: implemented in request_cgi.c
  * in httpd case: implemented in mod_websh.c */
 Tcl_Obj *requestGetDefaultChannelName();
 char *requestGetDefaultOutChannelName();
 
 int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData);
+
+int requestScriptName(Tcl_Interp *interp, char **filename);
 
 #endif

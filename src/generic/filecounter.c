@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
- * filecounter.c --- 
+ * filecounter.c ---
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -157,16 +157,16 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
 		int objc, Tcl_Obj * CONST objv[])
 {
 
-    Tcl_Obj *hnameobj, *fnameobj, *seedobj, *maxobj, 
-      *minobj, *incrobj, *maskobj, *wrapobj;
+    Tcl_Obj *hnameobj, *fnameobj, *seedobj, *maxobj,
+	*minobj, *incrobj, *maskobj, *wrapobj;
     SeqNoGenerator *seqnogen = NULL;
     Tcl_Obj *result = NULL;
     Tcl_CmdInfo cmdInfo;
     static char *params[] = { "-filename", "-seed", "-min", "-max",
-	"-incr", "-perms", "-wrap", NULL
+			      "-incr", "-perms", "-wrap", NULL
     };
     enum params
-    { FILENAME, SEED, MIN, MAX, INCR, MASK, WRAP };
+	{ FILENAME, SEED, MIN, MAX, INCR, MASK, WRAP };
     int idx;
 
     /* ----------------------------------------------------------------------
