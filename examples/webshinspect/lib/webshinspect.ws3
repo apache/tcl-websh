@@ -7,7 +7,7 @@ web::logdest add *.-debug file /tmp/webinspect.log
 web::cookiecontext context -idtag sessionid -expires "today"
 
 # work also with a file-based context
-web::filecontext f_context
+web::filecontext f_context -path "%d"
 
 # id-generator file
 set idgenfn /tmp/idgen.dat
