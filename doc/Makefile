@@ -1,2 +1,2 @@
-quickref.html: quickref.xml
-	xsltproc  -o quickref.html /usr/share/sgml/docbook/stylesheet/xsl/nwalsh/html/docbook.xsl quickref.xml
+quickref.html: quickref.xml quickref.xsl
+	xsltproc  -o quickref.html quickref.xsl quickref.xml
