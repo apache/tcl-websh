@@ -183,19 +183,3 @@ ClientData valueOfCurrent(HashTableIterator * iterator)
 
     return NULL;
 }
-
-/* ----------------------------------------------------------------------------
- * resetHashTableIterator -- init again
- * ------------------------------------------------------------------------- */
-int resetHashIterator(HashTableIterator * iterator)
-{
-
-    if (iterator == NULL)
-	return TCL_ERROR;
-
-    iterator->e =
-	Tcl_FirstHashEntry(iterator->htable, &(iterator->hashSearch));
-    iterator->current = NULL;
-
-    return TCL_OK;
-}

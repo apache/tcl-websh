@@ -52,6 +52,4 @@ int nextFromHashIterator(HashTableIterator * iterator);
 char *keyOfCurrent(HashTableIterator * iterator);
 ClientData valueOfCurrent(HashTableIterator * iterator);
 
-int resetHashIterator(HashTableIterator * iterator);
-
 #endif
