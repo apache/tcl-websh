@@ -18,7 +18,6 @@
 
 #include "log.h"
 
-#define NETCETERA "Netcetera AG, http://netcetera.ch"
 #define WEBSH     "websh"
 
 

@@ -26,8 +26,7 @@
 #define END_TAG "?>"
 
 #define HTTP_RESPONSE "HTTP/1.0 200 OK"
-#define HEADER "Content-Type","text/html",\
-               "Generator",WEBSH VERSION " (c) " NETCETERA
+#define HEADER "Content-Type","text/html", "Generator", "Websh" VERSION
 
 /* ----------------------------------------------------------------------------
  * typedefs

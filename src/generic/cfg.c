@@ -395,11 +395,12 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    WebAssertObjc(objc != 2, 2, NULL);
 
 	    Tcl_ResetResult(interp);
-	    Tcl_AppendResult(interp, "Copyright (c) 1996-2000 ", NETCETERA,
-			     "\nFor license and information details, "
-			     "see http://websh.com\n",
-			     "Send comments and requests for help to info@websh.com",
-			     NULL);
+	    Tcl_AppendResult(interp,
+	      "Copyright (c) 1996-2000 by Netcetera AG, http://netcetera.ch\n",
+	      "Copyright (c) 2001-2002 by Apache Software Foundation\n",
+	      "For license and information details, see http://websh.com\n",
+	      "Send comments and requests for help to info@websh.com",
+	      NULL);
 	    return TCL_OK;
 	}
     case CMDURLTIMESTAMP: {
