@@ -201,7 +201,7 @@ static void websh_init_child(server_rec *s, pool *p)
 	(websh_server_conf *) ap_get_module_config(s->module_config,
 						   &websh_module);
     if (!initPool(conf)) {
-	ap_log_error(APLOG_MARK, APLOG_ERR, r->server,
+	ap_log_error(APLOG_MARK, APLOG_ERR, s,
 		     "Could not init interp pool\n");
 	return;
     }
