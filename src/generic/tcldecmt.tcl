@@ -30,9 +30,9 @@ proc DoFile { fileName } {
 		set res [string map {\" \\\" \\ \\\\} $res]
 		set tLine $res
 		if { [regexp {^\s*(.*)} $tLine dum res] } {
-		    puts $res
+		    puts "$res\\n\\"
 		} else {
-		    puts $tLine
+		    puts "$tLine\\n\\"
 		}
 	    }
 	}

@@ -429,8 +429,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 			"got \"", Tcl_GetString(objv[2]), "\"", NULL);
 		return TCL_ERROR;
 	    }
-	    WebDecrOldIncrNew(cfgData->requestData->cmdUrlTimestamp,
-			      Tcl_DuplicateObj(objv[2]));
+	    Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, tmpbool);
 	    return TCL_OK;
 	    break;
 	default:

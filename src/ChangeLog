@@ -1,4 +1,14 @@
+2001-11-23  David N. Welton  <davidw@dedasys.com>
+
+	* generic/tcldecmt.tcl: Add newlines/newline quoting backslashes
+	to mirror the script in Tcl's initScript.
+
+	* generic/cfg.c (Web_Cfg): cmdUrlTimestamp changes.
+
 2001-11-22  David N. Welton  <davidw@dedasys.com>
+
+	* generic/url.c (createUrlData): First cut at making cmdurl scheme
+	bswitch between https and http depending on environmental variables.
 
 	* tests/dispatch.test: Changes necessary here to correctly handle
 	errors that are now propogated from web::dispatch.
