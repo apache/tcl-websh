@@ -182,6 +182,8 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     
     /* add to beginning of list of webInterpClass */
     webInterp->next = webInterpClass->first;
+    if (webInterp->next != NULL)
+      webInterp->next->prev = webInterp;
     webInterpClass->first = webInterp;
     webInterp->prev = NULL;
 
@@ -269,7 +271,6 @@ void destroyWebInterp(WebInterp * webInterp)
 	webInterp->prev->next = webInterp->next;
     else
 	webInterp->interpClass->first = webInterp->next;
-
     if (webInterp->next != NULL)
 	/* we are not the last */
 	webInterp->next->prev = webInterp->prev;
@@ -303,8 +304,8 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     mapCmd = Tcl_NewStringObj("web::interpmap ", -1);
     Tcl_IncrRefCount(mapCmd);
     Tcl_AppendToObj(mapCmd, filename, -1);
-
     res = Tcl_EvalObjEx(conf->mainInterp, mapCmd, 0);
+    Tcl_DecrRefCount(mapCmd);
 
     idObj = Tcl_DuplicateObj(Tcl_GetObjResult(conf->mainInterp));
     Tcl_ResetResult(conf->mainInterp);
@@ -312,7 +313,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     if (res != TCL_OK) {
 	/* no valid id for filename */
 	Tcl_MutexUnlock(&(conf->mainInterpLock));
-	Tcl_DecrRefCount(mapCmd);
+	Tcl_DecrRefCount(idObj);
 	return NULL;
     }
 
@@ -327,14 +328,13 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	    Tcl_Stat(id, &statPtr) != TCL_OK)
 	{
 	    Tcl_MutexUnlock(&(conf->mainInterpLock));
-	    Tcl_DecrRefCount(mapCmd);
+	    Tcl_DecrRefCount(idObj);
 	    return NULL;
 	}
 	mtime = statPtr.st_mtime;
     }
 
     Tcl_MutexUnlock(&(conf->mainInterpLock));
-    Tcl_DecrRefCount(mapCmd);
 
     Tcl_MutexLock(&(conf->webshPoolLock));
 
@@ -669,7 +669,6 @@ void cleanupPool(websh_server_conf * conf)
 			logToAp(webInterp->interp, NULL,
 				"interpreter expired: idle time reached (id %ld, class %s)", webInterp->id, webInterp->interpClass->filename);
 			webInterp->state = WIP_EXPIRED;
-
 		    }
 		    else {
 			if (webInterpClass->maxttl
