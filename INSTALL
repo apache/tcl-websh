@@ -4,6 +4,7 @@ Compile Websh 3.5.0
 from the top level directory,
 
 cd src/unix
+autoconf
 ./configure
 make
 

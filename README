@@ -62,10 +62,10 @@ Tcl8.3 or newer to compile and install Websh 3.5.0.
 typically:
 
   cd unix
+  autoconf
   ./configure
   make
   make test
-  make clean
 
 Make will create two targets: websh3.5.0, which is the standalone 
 Websh application (dynamically linked to Tcl) and libwebsh3.5.0.so, 
