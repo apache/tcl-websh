@@ -165,7 +165,7 @@ proc web::filecontext {ctxmgrname args} {
     namespace eval ::$ctxmgrname {
 	variable _perm 0666
 	# path format. file path is created by passing this to format
-	variable _path %d
+	# variable _path %d
 	# if to save/load values crypted
 	variable _crypt 1
     }
@@ -190,6 +190,9 @@ proc web::filecontext {ctxmgrname args} {
 	    lappend baseargs $arg
 	}
     }
+    if {[info exists ${ctxmgrname}::_path] == 0} {
+	error "web::filecontext requires a -path argument"
+    } 
 
     # now eat up remaining args
     ${ctxmgrname}::_parseargs $baseargs
