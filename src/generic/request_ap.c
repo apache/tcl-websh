@@ -71,7 +71,7 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
     hdrs_arr = ap_table_elts(r->subprocess_env);
     hdrs = (table_entry *) hdrs_arr->elts;
 #else /* APACHE2 */
-    hdrs_arr = apr_table_elts(r->subprocess_env);
+    hdrs_arr = (apr_array_header_t *) apr_table_elts(r->subprocess_env);
     hdrs = (apr_table_entry_t *) hdrs_arr->elts;
 #endif /* APACHE2 */
     for (i = 0; i < hdrs_arr->nelts; ++i) {
