@@ -1,0 +1,504 @@
+#
+# cmdurl.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# setup
+# -----------------------------------------------------------------------------
+web::config cmdparam cmd
+web::config timeparam t
+
+# -----------------------------------------------------------------------------
+# util
+# -----------------------------------------------------------------------------
+proc cleanParam {} {
+    web::cmdurlcfg -unset
+    web::formvar -unset
+    web::param -unset
+}
+
+
+proc cmdUrlToPlainTextAndParse {cmdurl} {
+
+    cleanParam
+
+    set tmp [web::querystring::getfromurl $cmdurl]
+    set res [web::decrypt $tmp]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+
+    return $res
+}
+
+proc requestParamsAsList {url} {
+
+    cleanParam
+
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+
+    set keys [web::param]
+    set res $keys
+    foreach key $keys {
+	lappend res $key
+	set vals [web::param $key]
+	lappend res $vals
+    }
+    return $res
+}
+
+# -----------------------------------------------------------------------------
+# predefined URL formats
+# -----------------------------------------------------------------------------
+set ufserverport [list scheme port querystring]
+set ufservername [list scheme host scriptname querystring]
+set ufnameport   [list scheme host port scriptname querystring]
+set ufpathinfo1  [list scriptname pathinfo querystring]
+set ufpathinfo2  [list scheme host port scriptname pathinfo querystring]
+set ufpathinfo3  [list scheme host port scriptname pathinfo]
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+# test cmdurl-1.1 {web::cmdurl: use env() for SCRIPT_NAME} {
+
+#     set ::env(SCRIPT_NAME) "test_script_test"
+#     set res [web::cmdurl]
+#     set res [string range $res 0 15]
+# } {test_script_test}
+
+test cmdurl-1.2 {web::cmdurl "" k1 v1 shows no command} {
+
+    cleanParam
+
+    set res [cmdUrlToPlainTextAndParse [web::cmdurl "" k1 v1]]
+    set res [web::param cmd]
+} {}
+
+test cmdurl-1.3 {web::cmdurl -foo cmd cmd} {
+    catch { web::cmdurl -foo cmd cmd } msg
+    set msg
+} {bad option "-foo": must be -urlformat or -notimestamp}
+
+# -----------------------------------------------------------------------------
+# cmdurlcfg
+# -----------------------------------------------------------------------------
+test cmdurl-2.1 {web::cmdurlcfg set} {
+
+    cleanParam
+
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+
+    if { [info exists values] } { unset values}
+    set values [list httpa "www.websh.com" 25 "/websh3" "/somepath"]
+
+    foreach key $keys val $values {
+
+	web::cmdurlcfg $key $val
+    }
+
+    set res ""
+    foreach key $keys {
+
+	lappend res [web::cmdurlcfg $key]
+    }
+
+#     puts "DBG values: $values"
+#     puts "DBG res:    $res"
+
+    set res [string compare $res $values]
+    unset keys
+    unset key
+    unset values
+    unset val
+    set res
+} {0}
+
+test cmdurl-2.2 {web::cmdurlcfg -set } {
+
+    cleanParam
+
+    web::cmdurlcfg -set k1 v1
+    web::cmdurlcfg -lappend k1 v2
+    web::cmdurlcfg -lappend k1 v3
+    web::cmdurlcfg -lappend k2 v4
+    web::cmdurlcfg -lappend k3 v5
+    web::cmdurlcfg -unset k3
+
+    set res [web::cmdurlcfg -names]
+} {k1 k2}
+
+test cmdurl-2.3 {web::cmdurlcfg  k1} {
+
+    cleanParam
+
+    web::cmdurlcfg -set k1 v1
+    web::cmdurlcfg -lappend k1 v2
+    web::cmdurlcfg -lappend k1 v3
+    web::cmdurlcfg -lappend k2 v4
+    web::cmdurlcfg -lappend k3 v5
+    web::cmdurlcfg -unset k3
+
+    set res [web::cmdurlcfg k1]
+} {v1 v2 v3}
+
+test cmdurl-2.3 {web::cmdurlcfg -reset} {
+
+    cleanParam
+
+    web::cmdurlcfg -set k v
+    web::cmdurlcfg -scheme gugus
+    set res [web::cmdurlcfg -names]
+    lappend res [web::cmdurlcfg -scheme]
+    web::cmdurlcfg -reset
+    web::cmdurlcfg -unset
+    lappend res [web::cmdurlcfg -names]
+    lappend res [web::cmdurlcfg -scheme]
+    ## for the subsequent tests: go back to funny values
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+    if { [info exists values] } { unset values}
+    set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
+    foreach key $keys val $values {
+	web::cmdurlcfg $key $val
+    }
+    set res
+} {k gugus {} http}
+
+# -----------------------------------------------------------------------------
+# cmdurl
+# -----------------------------------------------------------------------------
+test cmdurl-3.2 {web::cmdurl aCommand} {
+
+    cleanParam
+
+    set url [web::cmdurl aCommand]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param cmd]
+    unset url
+    unset tmp
+    set res
+} {aCommand}
+
+test cmdurl-3.3 {web::cmdurl aCmd k1 v1} {
+
+    cleanParam
+
+    set url [web::cmdurl aCmd k1 v1]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param -names]
+    unset url
+    unset tmp
+    set res
+} {t cmd k1}
+
+test cmdurl-3.4 {web::cmdurl aCmd k1} {
+
+    cleanParam
+
+    catch {
+	set res [web::cmdurl aCmd k1]
+    } msg
+    set msg
+    ## fails
+} {key-value list "k1" must be even-numbered}
+
+test cmdurl-3.5 {web::cmdurl aCmd alist} {
+
+    cleanParam
+
+    set url [web::cmdurl aCmd [list k1 v1 k1 v2 k2 v3]]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param -names]
+    unset url
+    unset tmp
+    set res
+} {t cmd k1 k2}
+
+# not checked on validity anymore
+# test cmdurl-3.6 {web::cmdurl -urlformat $ufserverport aCmd [list k1 v1]} {
+#     cleanParam
+#     catch {[web::cmdurl -urlformat $ufserverport aCmd [list k1 v1]]} msg
+#     set msg
+# } {cannot add port to URL withou adding servername, too}
+
+test cmdurl-3.7 {web::cmdurl -urlformat $ufservername aCmd [list k1 v1]} {
+
+    cleanParam
+
+    set res [web::cmdurl -urlformat $ufservername aCmd [list k1 v1]]
+    set res [string range $res 0 27]
+} {httpa://www.websh.com/websh3}
+#  012345678901234567890123456789
+#  0         1         2         3
+
+
+test cmdurl-3.8 {web::cmdurl -urlformat $ufnameport aCmd [list k1 v1]} {
+
+    cleanParam
+
+    set res [web::cmdurl -urlformat $ufnameport aCmd [list k1 v1]]
+    set res [string range $res 0 30]
+} {httpa://www.websh.com:25/websh3}
+#  01234567890123456789012345678901
+#  0         1         2         3
+
+test cmdurl-3.9 {web::cmdurl -urlformat $ufpathinfo1 aCmd [list k1 v1]} {
+
+    cleanParam
+
+    set res [web::cmdurl -urlformat $ufpathinfo1 aCmd [list k1 v1]]
+    set res [string range $res 0 15]
+} {/websh3/somepath}
+#  0123456789012345678901234567890
+#  0         1         2         3
+
+test cmdurl-3.10 {web::cmdurl -urlformat $ufpathinfo2 -withservername \
+  -withserverport aCmd [list k1 v1]} {
+			  
+    cleanParam    
+    set res [web::cmdurl -urlformat $ufpathinfo2 \
+		 aCmd [list k1 v1]]
+    set res [string range $res 0 39]
+} {httpa://www.websh.com:25/websh3/somepath}
+#  012345678901234567890123456789012345678901
+#  0         1         2         3         4
+
+
+test cmdurl-3.11 {web::cmdurl w/o query-string} {
+
+    cleanParam
+
+    set res [web::cmdurl -urlformat $ufpathinfo3 aCmd [list k1 v1]]
+    set res [string range $res 0 39]
+} {httpa://www.websh.com:25/websh3/somepath}
+#  012345678901234567890123456789012345678901
+#  0         1         2         3         4
+
+
+test cmdurl-3.12 {web::cmdurl: add two value for one key} {
+
+    cleanParam
+
+    set url [web::cmdurl aCmd k1 v1 k1 v2]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param -names]
+    unset url
+    unset tmp
+    set res
+} {t cmd k1}
+
+test cmdurl-3.13 {empty value} {
+
+    cleanParam
+
+    set url [web::cmdurl aCmd id ""]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param id]
+    unset url
+    unset tmp
+    set res
+} {}
+
+test cmdurl-3.14 {empty value, in list} {
+
+    cleanParam
+
+    set url [web::cmdurl aCmd [list id ""]]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param -names]
+    unset url
+    unset tmp
+    set res
+} {t cmd id}
+
+test cmdurl-3.15 {funny keys} {
+
+    cleanParam
+
+    set url [web::cmdurl "" \" v1 \} v2 ? v3 * v4 ` v5]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param -names]
+    unset url
+    unset tmp
+    set res
+} "t ` \\} * {\"} ?"
+
+test cmdurl-3.16 {string as value} {
+
+    cleanParam
+
+    set url [web::cmdurl "" id "this is a \"test\" string with \{braces\}"]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param id]
+    unset url
+    unset tmp
+    set res
+} {this is a "test" string with {braces}}
+
+test cmdurl-3.19 {no time and no cmd tag} {
+
+    cleanParam    
+
+    web::config timeparam "t"
+    web::config cmdparam "cmd"
+
+    set url [web::cmdurl -notimestamp "" k319 v319]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param k319]
+    lappend res [web::param t]
+    lappend res [web::param cmd]
+    unset url
+    unset tmp
+    set res
+} "v319 {} {}"
+
+
+test cmdurl-3.20 {full web::param syntax for web::cmdurlcfg, all-in-one} {
+
+    cleanParam    
+
+    web::cmdurlcfg -set id 11
+    web::cmdurlcfg -set lang DE
+    web::cmdurlcfg -lappend lang EN
+
+    set res [web::cmdurlcfg -names]
+    lappend res [web::cmdurlcfg id]
+    lappend res [lsort [web::cmdurlcfg lang]]
+    lappend res [web::cmdurlcfg -count id]
+    lappend res [web::cmdurlcfg -count lang]
+    web::cmdurlcfg -unset id
+    lappend res [lsort [web::cmdurlcfg -names]]
+    web::cmdurlcfg -set ordered pizza
+    lappend res [lsort [web::cmdurlcfg -names]]
+    lappend res [web::cmdurlcfg -count ordered]
+    web::cmdurlcfg -lappend ordered pizza
+    lappend res [lsort [web::cmdurlcfg -names]]
+    lappend res [web::cmdurlcfg -count ordered]
+    lappend res [web::cmdurlcfg ordered]
+    web::cmdurlcfg -unset
+    lappend res [web::cmdurlcfg -names]
+    set res
+} {id lang 11 {DE EN} 1 2 lang {lang ordered} 1 {lang ordered} 2 {pizza pizza} {}}
+
+
+test cmdurl-3.21 {add static params only in not on cmdline} {
+
+    cleanParam
+    web::cmdurlcfg -lappend lang EN
+    web::config encryptchain ""
+    set res [web::cmdurl -notimestamp ""]
+    lappend res [web::cmdurl -notimestamp "" lang DE]
+    set res
+
+} {/websh3/somepath?lang=EN /websh3/somepath?lang=DE}
+
+test cmdurl-3.22 {try all URL gen features} {
+
+    cleanParam
+
+    set uf [list scheme host port scriptname pathinfo querystring]
+    set res "[web::cmdurl -notimestamp -urlformat $uf ""]\n"
+    set uf [list scheme host port scriptname pathinfo]
+    set res "$res[web::cmdurl -notimestamp -urlformat $uf ""]\n"
+    set uf [list scheme host port scriptname]
+    set res "$res[web::cmdurl -notimestamp -urlformat $uf ""]\n"
+    set uf [list scheme host port]
+    set res "$res[web::cmdurl -notimestamp -urlformat $uf ""]\n"
+    set uf [list scheme host]
+    set res "$res[web::cmdurl -notimestamp -urlformat $uf ""]\n"
+    set uf [list scheme]
+    set res "$res[web::cmdurl -notimestamp -urlformat $uf ""]\n"
+    set res
+} {httpa://www.websh.com:25/websh3/somepath?
+httpa://www.websh.com:25/websh3/somepath
+httpa://www.websh.com:25/websh3
+httpa://www.websh.com:25
+httpa://www.websh.com
+httpa:
+}
+
+test cmdurl-3.23 {error of URL format} {
+
+    catch {
+        web::cmdurl -notimestamp -urlformat ""  ""
+    } msg
+    set msg
+} {no url elements specified}
+
+test cmdurl-3.24 {setting -urlformat} {
+
+    set res [web::cmdurlcfg -urlformat {host pathinfo}]
+    lappend res [web::cmdurlcfg -urlformat]
+    lappend res [web::cmdurlcfg -urlformat {host querystring}]
+    set res
+} {scriptname pathinfo querystring {host pathinfo} {host pathinfo}}
+
+test cmdurl-3.25 {setting -urlformat fails} {
+
+    catch {[web::cmdurlcfg -urlformat {foo bar}]} msg
+    set msg
+} {bad url element "foo": must be scheme, host, port, scriptname, pathinfo, or querystring}
+
+test cmdurl-3.26 {setting has effect} {
+
+    set res [web::cmdurlcfg -urlformat {host pathinfo}]
+    lappend res [web::cmdurl -notimestamp ""]
+    web::cmdurlcfg -urlformat {host querystring}
+    set res
+} {host querystring //www.websh.com/somepath}
+
+test cmdurl-3.27 {tests from specification, all-in-one} {
+
+    web::config encryptchain web::encryptd
+    web::config decryptchain web::decryptd
+
+    web::cmdurlcfg -host "websh.com"
+    web::cmdurlcfg -scriptname ""
+    set res [web::cmdurl -notimestamp "" k v]
+    set res "$res\n[web::cmdurl -notimestamp -urlformat host {} k v]"
+    set res "$res\n[web::cmdurl -notimestamp -urlformat {host querystring} {} k v]"
+    web::cmdurlcfg -scheme "https"
+    web::cmdurlcfg -urlformat [list scheme host port]
+    set res "$res\n[web::cmdurl -notimestamp {} k v]"
+    set res "$res\n[web::cmdurl -notimestamp -urlformat host {} k v]"
+    web::cmdurlcfg -urlformat [list scriptname querystring]
+    set res
+} {//websh.com?XDhGkR1IqT
+//websh.com
+//websh.com?XDhGkR1IqT
+https://websh.com:25
+//websh.com}
+
+test cmdurl-3.28 {--} {
+    set tst [string range [web::cmdurl -- -urlformat] 1 end]
+    web::dispatch -cmd "" -postdata "" -querystring $tst
+    web::param cmd
+} {-urlformat}
+
+# cleanup
+::tcltest::cleanupTests

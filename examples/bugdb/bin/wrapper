@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# \
+LD_LIBRARY_PATH=../lib; export LD_LIBRARY_PATH; \
+exec ../bin/websh3 "$0" "$@"
+
+## --- vvv --- config for sdb -------------------------------------------------
+set sdb_name bugdb
+set sdb_datadir [file join .. .. data $sdb_name]
+array set sdb_perms {
+    canEdit 1
+    canDelete 0
+}
+array set sdb_items {
+    submitter {varDsc {e-mail of submitter} type text size 30 showInTable 0 isLink 0}
+    sdsc {varDsc {short description} type text size 60 showInTable 0 isLink 0}
+    url  {varDsc {URL}        type text size 50 showInTable 1 isLink 1 showAsLink sdsc}
+    ldsc {varDsc {long description} type textarea rows 10 cols 80 showInTable 0 isLink 0}
+    status {varDsc {status} type text size 10 showInTable 1 isLink 0}
+    severity {varDsc {severity} type text size 10 showInTable 1 isLink 0}
+    history {varDsc {history} type text size 50 showInTable 0 isLink 0}
+}
+set sdb_itemorder [list url sdsc severity status ldsc history]
+## --- ^^^ --- config for sdb -------------------------------------------------
+
+web::logfilter add *.-debug
+web::logdest add *.-debug file ../../logs/${sdb_name}.log
+
+web::include [file join .. lib sdb.ws3]
+
+web::dispatch -track id

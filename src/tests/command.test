@@ -1,0 +1,91 @@
+#
+# command.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# utils
+# -----------------------------------------------------------------------------
+proc cleanParam {} {
+    web::cmdurlcfg -unset
+    web::formvar -unset
+    web::param -unset
+}
+
+
+# -----------------------------------------------------------------------------
+# errors -1.x
+# -----------------------------------------------------------------------------
+test command-1.1 {too many args} {
+    catch { web::command 1 2 3 } msg
+    set msg
+} {wrong # args: should be "web::command ??command? code?"}
+
+test command-1.2 {too many args} {
+    catch {web::getcommand 1 2 3 } msg
+    set msg
+} {wrong # args: should be "web::getcommand ?command?"}
+
+test command-1.3 {return "default"} {
+    ## simulate querystring and querystring parsing
+    cleanParam
+
+    catch {set res [web::command] } msg
+    set msg
+} {default}
+## old version: {cannot access cmdname from querystringdata}
+
+# -----------------------------------------------------------------------------
+# web::command normal operation -2.x
+# -----------------------------------------------------------------------------
+test command-2.1 {code} {
+    web::command {puts $tcl_patchlevel}
+    set res [web::getcommand]
+} {puts $tcl_patchlevel}
+
+
+test command-2.2 {dumCmd code} {
+    web::command dumCmd {puts $tcl_patchlevel}
+    set res [web::getcommand dumCmd]
+} {puts $tcl_patchlevel}
+
+test command-2.3 {parsing} {
+    ## simulate querystring and querystring parsing
+    cleanParam
+    set qstr [web::encrypt "key value t 101 cmd NeWCmD"]
+    set res [web::dispatch -cmd "" -postdata "" -querystring $qstr]
+    unset qstr
+    set res [web::command]
+} {NeWCmD}
+
+test command-2.4 {default name} {
+    cleanParam
+    web::command {return command2_4}
+    web::dispatch -cmd "default" -postdata "" -querystring ""
+} {command2_4}
+
+test command-2.5 {getcommand returns default name} {
+    cleanParam
+    web::command default {foo}
+    catch {web::getcommand}  msg
+    set msg
+} {foo}
+
+# cleanup
+::tcltest::cleanupTests

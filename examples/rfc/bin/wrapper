@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# \
+LD_LIBRARY_PATH=../lib; export LD_LIBRARY_PATH; \
+exec ../bin/websh3 "$0" "$@"
+
+
+web::logfilter add *.-debug
+web::logdest add *.-debug file ../../logs/rfc.log
+
+web::include [file join .. lib rfc.ws3]

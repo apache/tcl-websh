@@ -1,0 +1,660 @@
+#
+# sdb.ws3 -- simple data storage using webshell's filecontext
+# nca-073-9
+# 
+# Copyright (C) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+## create a command named "idgen". "idgen nextval" will return a
+##   unique sequence number, since it is file-based.
+web::filecounter idgen -filename [file join $sdb_datadir state.SEQNO]
+
+## create a file-based context named "dscc"
+## context files will be stored at the given path with name 1.dsc, 2.dsc ...
+## idgen is the command that will be used to create a new context
+web::filecontext dscc \
+    -path [file join $sdb_datadir %d.dsc] \
+    -idgen idgen
+
+## --- vvv --- usage ----------------------------------------------------------
+#
+# ::sdb_showtitle - show this string as page title
+#
+# example: set sdb_showtitle "ProjeX"
+#
+# ::sdb_additionalcommands - additional links (dedault is: new and main)
+#
+# list of linkname-URL pairs to be displayed in the main commands
+# section of the page
+# example: set sdb_additionalcommands [list HowTo \
+#   https://infoplaza.netcetera.ch/internal/news/custom/howto-000711.html]
+#
+# attribute definition:
+# varDesc: descriptive text to be used in overview table and for
+#          the edit fields
+# type:    one of possible HTML input fields
+# - text   sub-attributes:
+#          size (eg 60)
+# - textarea
+#          rows (eg 10)
+#          colse (eg 80)
+#
+# showInTable: boolean
+# isLink:      boolean
+#          sub-attributes:
+#          showAsLink references an other variable (eg sdsc)
+#
+## --- ^^^ --- usage ----------------------------------------------------------
+
+## --- vvv --- now follow html output routines --------------------------------
+
+### page -- output a HTML page
+proc page {title code} {
+
+    web::put "
+	<HTML>
+	<HEAD>
+	  <title>$title</title>
+        </HEAD>
+        <BODY bgcolor=\"#ffffff\">
+	  <h1>$title</h1>
+    "
+    commandList
+    web::put "<hr><br>\n"
+
+    uplevel 1 $code
+
+    web::put "<hr>\n"
+    commandList
+
+    web::put "
+	<hr>
+	[web::copyright -version]<br>
+	</BODY>
+        </HTML>
+    "
+}
+
+
+### table -- output a HTML table
+proc table {code} {
+
+    web::put "<table border=\"0\" cellspacing=\"0\">\n"
+    uplevel 1 $code
+    web::put "\n</table>\n"
+}
+
+### tablerow --
+proc tablerow {code {bgcolor {}}} {
+    if {[string length $bgcolor] } {
+	web::put "<tr BGCOLOR=\"$bgcolor\">\n"
+    } else {
+	web::put "<tr>\n"
+    }
+    uplevel 1 $code
+    web::put "\n</tr>\n"
+}
+
+### zebrarow -- as tablerow, but changes background color
+proc zebrarow {code} {
+    global _zebrarow
+
+    if { ![info exist _zebrarow] } {
+	set _zebrarow 1
+    }
+    if {$_zebrarow} {
+	set bgcolor "#99CCCC"
+	set _zebrarow 0
+    } else {
+	set bgcolor "#FFFFFF"
+	set _zebrarow 1
+    }
+    uplevel 1 [list tablerow $code $bgcolor]
+}
+
+#
+proc headItem {item} {
+
+    set name [lindex $item 0]
+    set varName [lindex $item 1]
+    set doSort [lindex $item 2]
+
+    if { $doSort == 0 } {
+
+	tablecell "<b>$name</b>" 2
+
+    } else {
+
+	web::cmdurlcfg -set sort $varName
+	set tmp [formatLink [web::cmdurl sort] $name]
+	tablecell "<b>$tmp</b>" 2
+    }
+}
+
+### tableHeadRow -- format headers on two rwos to save screen real estate
+proc tableHeadRow {titleList {bgcolor {}}} {
+
+    set len [llength $titleList]
+    tablerow {
+	for {set i 0} {$i < $len} {incr i 2} {
+
+	    headItem [lindex $titleList $i]
+	}
+    } $bgcolor
+    tablerow {
+	tablecell "&nbsp"
+	for {set i 1} {$i < $len} {incr i 2} {
+	    headItem [lindex $titleList $i]
+	}
+    } $bgcolor
+}
+
+### tablecell --
+proc tablecell {code {colspan ""}} {
+
+    if { $colspan == "" } {
+	web::put "<td>\n<tt>"
+    } else {
+	web::put "<td colspan=\"$colspan\">\n<tt>"
+    }
+	
+    web::put $code
+    web::put "&nbsp</tt>\n</td>\n"
+}
+
+### desclist -- output HTML description list
+proc desclist {code} {
+    
+    web::put "<dl>\n"
+    uplevel 1 $code
+    web::put "\n</dl>\n"
+}
+
+### desclist -- one item of the description list
+proc descitem {code1 code2} {
+
+    web::put "<dt>\n<b>"
+    uplevel 1 $code1
+    web::put ":</b>\n</dt>\n"
+    web::put "<dd>\n"
+    uplevel 1 $code2
+    web::put "\n</dd>\n"
+}
+
+### input -- format the "submit" button
+proc input {type name size value} {
+    set res "<input type=\"$type\" name=\"$name\" size=\"$size\""
+    append res "value=\"$value\">\n"
+    return $res
+}
+
+### textarea
+proc textarea {rows cols name value} {
+    set res "<textarea rows=\"$rows\" cols=\"$cols\" name=\"$name\">\n"
+    append res $value
+    append res "\n</textarea>\n"
+    return $res
+}
+
+### select -- ooutput HTML combobox
+proc select {name list selected} {
+    set res "<select name=\"$name\">\n"
+    foreach option $list {
+	if {$option == $selected} {
+	    append res "<option selected>$option\n"
+	} else {
+	    append res "<option>$option\n"
+	}
+    }
+    append res "\n</select>\n"
+    return $res
+}
+
+### form -- output HTML form
+proc form {code {method post} {action {}} } {
+
+    web::put "<form method=\"$method\" action=\"$action\">\n"
+    uplevel 1 $code
+    web::put </form>
+}
+## --- ^^^ --- now follow html output routines --------------------------------
+
+
+## --- vvv --- helpers --------------------------------------------------------
+
+### commandList -- put links for commands "new" and "main"
+proc commandList {} {
+    putLink [web::cmdurl edit] new
+    web::put " | "
+    putLink [web::cmdurl ""] "$::sdb_name-main"
+    if { [info exists ::sdb_additionalcommands] } {
+	foreach {name link} $::sdb_additionalcommands {
+
+	    web::put " | "
+	    putLink $link $name
+	}
+    }
+
+    web::put "<br>"
+}
+
+### formatLink -- add link
+proc formatLink {url {show ""}} {
+
+    if {$show == ""} { set show $url }
+    return "<a href=\"$url\">$show</a>"
+}
+
+### putLink -- output link
+proc putLink {url {show ""}} {
+
+    web::put [formatLink $url $show]
+}
+
+
+## --- ^^^ --- helpers --------------------------------------------------------
+
+
+## --- vvv --- helpers that use file contexts ---------------------------------
+proc invalidateList {} {
+
+    web::log info "invalidateList"
+    set flist {}
+    catch {
+	set flist [glob pattern [file join $::sdb_datadir *.sorted]]
+    }
+
+    foreach dsc $flist {
+
+	web::log info "gonna delete $dsc"
+	file delete -force $dsc
+    }
+}
+
+proc createList {attr {sortf {}}} {
+
+    set flist {}
+    set res   {}
+
+    catch {
+	set flist [glob pattern [file join $::sdb_datadir *.dsc]]
+    }
+
+    foreach dsc $flist {
+
+	## load this context
+	set dsc [file rootname [file tail $dsc]]
+
+	if {[catch {
+	    dscc::init $dsc
+	} catchmsg]} {
+	    web::log debug "error loading record $dsc: $catchmsg"
+	    return $res
+	}
+
+	if { [dscc::cget isDeleted 0] == 0 } {
+
+	    # not marked as deleted
+
+	    lappend res [list [dscc::cget $attr] $dsc]
+	}
+    }
+
+    if { [string length $sortf] } {
+
+	set res [$sortf $res]
+
+    } else {
+
+	web::log info "before sort: $res"
+	set res [lsort -index 0 $res]
+	web::log info "after sort: $res"
+
+    }
+
+    foreach entry $res {
+
+	lappend res2 [lindex $entry 1]
+    }
+
+    # write index
+    set fn [file join $::sdb_datadir $attr.sorted]
+    set fh [open $fn {WRONLY CREAT TRUNC}]
+    puts $fh $res2
+    close $fh
+    return $res2
+}
+
+proc getList {attr {sortf {}}} {
+
+    set fn [file join $::sdb_datadir $attr.sorted]
+    set res {}
+
+    if { [file exists $fn] } {
+
+	set fh [open $fn r]
+	gets $fh res
+	close $fh
+    } else {
+
+	set res [createList $attr $sortf]
+    }
+
+    return $res
+}
+
+## --- ^^^ --- helpers --------------------------------------------------------
+
+
+## --- vvv --- helpers that use file contexts ---------------------------------
+
+### showOverview -- show table with all current entries
+proc showOverview {{sortBy {$::sdb_defaultsort}}} {
+
+    ## is there a title specified, or shall we use the default name ?
+    if { [info exists ::sdb_showtitle] } {
+	set title $::sdb_showtitle
+    } else {
+	set title $::sdb_name
+    }
+
+    page $title {
+
+	set slist [getList $sortBy]
+
+	if {[llength $slist]} {
+	
+	    table {
+
+		## cols depend on permissions
+		if { $::sdb_perms(canEdit) } {
+		    set headItems [list [list edit {} 0] [list view {} 0]]
+		} else {
+		    set headItems [list [list view {} 0]]
+		}
+		if { $::sdb_perms(canDelete) } {
+		    lappend headItems [list delete {} 0]
+		}
+
+		## list all items that are marked as "showInTable"
+		foreach itemName $::sdb_itemorder {
+
+		    if { [string equal _dsc $itemName] } {
+
+			lappend headItems [list Id {} 0]
+
+		    } else {
+			
+			## get meta-data for this item
+			if {[info exists item]} {unset item}
+			array set item $::sdb_items($itemName)
+
+			if { $item(showInTable) } {
+
+			    if { $item(isLink) } {
+
+				array set item2 $::sdb_items($item(showAsLink))
+				lappend headItems [list $item2(varDsc) $item(showAsLink) 1]
+
+			    } else {
+				lappend headItems [list $item(varDsc) $itemName 1]
+			    }
+			}
+		    }
+		}
+		
+		## output fancy header rows
+		tableHeadRow $headItems
+
+		foreach dsc $slist {
+
+		    zebrarow {
+
+			## load this context
+			# set dsc [file rootname [file tail $dsc]]
+			if {[catch {
+			    dscc::init $dsc
+			} catchmsg]} {
+			    web::log debug "error loading record $dsc: $catchmsg"
+			    continue
+			}
+			
+			## permission to edit ?
+			if { $::sdb_perms(canEdit) } {
+			    tablecell \
+				[formatLink [web::cmdurl edit [list dscid $dsc]] [web::htmlify -- {e}]]
+			    tablecell \
+				[formatLink [web::cmdurl show [list dscid $dsc]] [web::htmlify -- {v}]]
+			} else {
+			    ## can View in any case 
+			    tablecell \
+				[formatLink [web::cmdurl show [list dscid $dsc]] [web::htmlify -- {v}]]
+			}
+
+			## permission to delete ?
+			if { $::sdb_perms(canDelete) } {
+			    tablecell \
+				[formatLink [web::cmdurl delete [list dscid $dsc]] {x}]
+			}
+
+			## loop over items according to defined order
+			foreach itemName $::sdb_itemorder {
+
+			    if { [string equal _dsc $itemName] } {
+
+				tablecell $dsc
+
+			    } else {
+				
+				if {[info exists item]} {unset item}
+				array set item $::sdb_items($itemName)
+
+				## do we need to format this item ?
+				if { [info exists item(formatCode)] } {
+
+				    set data [eval [list $item(formatCode) [dscc::cget $itemName]]]
+
+				} else {
+
+				    set data [dscc::cget $itemName]
+				}
+
+				## marked explicitely as "doNotShow" ?
+				if { ![info exists item(doNotShow) ]} {
+				    
+				    ## marked as "showInTable" ?
+				    if { $item(showInTable) } {
+					
+					## is this is a link, then show "showAsLink", 
+					## but put link "$data"
+					if { $item(isLink) } {
+					    
+					    if { [string length $data]  > 1 } {
+						tablecell \
+						    [formatLink $data [dscc::cget $item(showAsLink)]]
+					    } else {
+						tablecell [dscc::cget $item(showAsLink)]
+					    }
+					    
+					} else {
+					    tablecell $data
+					}
+				    }
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
+
+
+### showDetail -- show all records, both in edit (==> form) and view mode
+proc showDetail {{edit 0}} {
+
+    desclist {
+	
+	foreach itemName $::sdb_itemorder {
+
+	    if { [string equal _dsc $itemName] } {
+		
+		descitem {web::put Id} {web::put [dscc::id]}
+
+	    } else {
+		
+		if {[info exists item]} {unset item}
+		array set item $::sdb_items($itemName)
+
+		## do we need to format the data ?
+		if { [info exists item(formatCode)] } {
+
+		    set data [eval [list $item(formatCode) [dscc::cget $itemName]]]
+
+		} else {
+
+		    set data [dscc::cget $itemName]
+		}
+		
+		## output depends on permissions
+		if { $edit == 0 } {
+
+		    descitem {web::put $item(varDsc)} {web::put $data}
+		    
+		} else {
+
+		    ## there are also per-field permissions
+		    if { ![info exists item(viewOnly) ]} {
+
+			descitem {web::put $item(varDsc)} {
+
+			    ## switch on data type
+			    if { $item(type) == "textarea" } {
+				
+				web::put [textarea $item(rows) $item(cols) \
+					      $itemName  $data]
+			    } elseif { $item(type) == "select" } {
+				web::put [select $itemName $item(options) $data]
+				
+			    } else {
+				web::put [input $item(type) $itemName \
+					      $item(size) $data]
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
+
+## delete needs confirmation - if this is called, go ahead and delete the file
+web::command deleteconfirmed {
+
+    if { [web::param -count dscid] == 0 } {
+
+	showOverview
+    }
+
+    file delete [file join $::sdb_datadir [web::param dscid].dsc]
+    invalidateList
+    showOverview
+}
+
+## delete command -- ask for confirmation
+web::command delete {
+
+    if { [web::param -count dscid] } {
+	dscc::init [web::param dscid]
+    } else {
+	web::dispatch -cmd default -querystring "" -postdata ""
+    }
+
+    page "delete: confirmation" {
+
+	web::put "<h2>do you really want to delete this record:</h2>\n"
+
+	## form: view detail and have action "deleteconfirmed"
+	form {
+
+	    showDetail 0
+
+	    web::put [input submit "" "" delete]
+	} post [web::cmdurl deleteconfirmed [list dscid [web::param dscid]]]
+    }
+}
+
+## "form action" for new record - write it
+web::command submit {
+
+    if { [web::param -count dscid] } {
+	dscc::init [web::param dscid]
+    } else {
+	dscc::new [idgen nextval]
+    }
+    foreach nam [web::formvar] {
+	dscc::cset $nam [web::formvar $nam]
+    }
+    dscc::commit
+    invalidateList
+    showOverview
+}
+
+## wrapper of "showDetail" for "edit"
+web::command edit {
+
+    if { [web::param -count dscid] } {
+	dscc::init [web::param dscid]
+	set action [web::cmdurl submit [list dscid [web::param dscid]]]
+
+    } else {
+	set action [web::cmdurl submit]
+    }
+
+    page edit {
+
+	form {
+
+	    showDetail 1
+	    
+	    web::put [input submit "" "" save]
+	    web::put {<INPUT TYPE="reset" VALUE="reset">}
+	} post $action 
+    }
+}
+
+## wrapper of "showDetail" for "show"
+web::command show {
+
+    if { [web::param -count dscid] } {
+	dscc::init [web::param dscid]
+
+    } else {
+	## error msg
+    }
+
+    page view {
+	
+	showDetail 0
+    }
+}
+
+## main
+web::command sort {
+
+    web::log debug "sort: got [web::param sort]"
+    showOverview [web::param sort $::sdb_defaultsort]
+}
+
+## main
+web::command default {
+
+    showOverview
+}

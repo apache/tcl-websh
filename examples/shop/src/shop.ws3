@@ -1,0 +1,1330 @@
+# shop.ws3 - Example shop application for websh3
+# nca-073-9 
+#
+# Copyright (C) 2000 by Netcetera AG.
+# All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property of
+# Netcetera AG, Switzerland. The program(s) may be used and/or copied
+# only with the written permission of Netcetera AG or in accordance
+# with the terms and conditions stipulated in the agreement/contract
+# under which the program(s) have been supplied.
+#
+# @(#) $Id$
+#
+#
+
+# ------------------------------------------------------------------------------
+# util proc and HTML abstractions
+# ------------------------------------------------------------------------------
+
+# create a form tag
+proc createForm {action code} {
+    web::put "<FORM METHOD=\"POST\" ACTION=\"$action\" ENCTYPE=\"multipart/form-data\">\n"
+    uplevel $code
+    web::put "</FORM>"
+}
+
+# creates a table tag
+proc table {width attributes code} {
+    web::put "<TABLE BORDER=\"0\" WIDTH=\"$width\" $attributes> \n"
+    uplevel $code
+    web::put "</TABLE>"
+}
+
+# creates a <TR> tag
+proc trtr {code} {
+    web::put "<TR>"
+    uplevel $code
+    web::put "</TR>"
+}
+
+proc trtrAttr {attributes code} {
+    if {[string length $attributes]} {
+	web::put "<TR $attributes>"
+    } else {
+	web::put "<TR>"
+    }
+    uplevel $code
+    web::put "</TR>"
+}
+
+# creates a <TD> tag
+proc tdtd {code} {
+    web::put "<TD>"
+    uplevel $code
+    web::put "</TD>"
+}
+
+proc tdtdAttr {attributes code} {
+    if {[string length $attributes]} {
+	web::put "<TD $attributes>"
+    } else {
+	web::put "<TD>"
+    }
+    uplevel $code
+    web::put "</TD>"
+}
+
+# creates a <TD> tag plus a put command
+proc tdPut {text} {
+    tdtd { web::put "$text"}
+}
+
+# create a font tag and put 
+proc fontPut {size str} {   
+    font $size {web::put "$str"}
+}
+
+# create a table data tag, font tag and put command
+proc tdFontPut {size str} {   
+    tdtd { fontPut $size $str}
+}
+
+# create a table data, font, input form and put 
+proc tdFontPutInputfield {size type name value {inputsize ""} {text ""}} {   
+    tdtd { font $size {
+    inputfield $type $name $value $inputsize
+    web::put "$text"
+    }}
+}
+
+# create a input form
+proc inputfield {type name value {size -1}} {
+    web::put "<INPUT TYPE=\"$type\" NAME=\"$name\" VALUE=\"$value\""
+    if { $size > 0} {
+	web::put " SIZE=\"$size\""
+    }
+    web::put ">"
+}
+
+# create a form submit button
+proc inputSubmit {name value} {
+    inputfield submit $name $value
+}
+
+# sets the font class name
+proc setFontClass {size} {
+    switch $size {
+	5       {set css "ShopStyleXLarge"}
+	3       {set css "ShopStyleLarge" }
+	error   {set css "ShopStyleError" }
+	white   {set css "ShopStyleWhite" }
+	default {set css "ShopStyle"      }
+    }
+}
+
+proc createCSS {styleName fontFamily fontSize {color {black}} {fontWeight {standard}}} {
+    web::put "
+	\.$styleName \{
+	font-family\: $fontFamily\;
+	font-size\: $fontSize\;
+	color\: $color\;
+	font-weight\: $fontWeight\;
+	\}
+"
+}
+
+# create a font tag
+proc font {size code} {
+    web::put "<FONT CLASS=\"[setFontClass $size]\">\n"
+    uplevel $code
+    web::put "</FONT>\n"
+}
+
+# create a link tag
+proc linkIt {url val} {
+    return "<A HREF=\"$url\" BORDER=\"0\">$val</A>"
+}
+
+# creates a <BR> tag
+proc br {{max 1}} {
+    set count 0
+    while {$count < $max} {
+	web::put "<BR>"
+ 	incr count
+    }
+}
+
+proc space {{max 1}} {
+    set count 0
+    while {$count < $max} {
+	web::put "\&nbsp\;"
+ 	incr count
+    }
+}
+
+proc hr {} {
+    web::put "<HR WIDTH=\"400\" ALIGN=\"left\">"
+}
+
+# changes the row color
+
+proc rowColorChanger {rowColor} {
+    if {[string equal $rowColor [cget firstRowColor]]} {
+	set rowColor [cget secondRowColor]
+    } else { 
+	set rowColor [cget firstRowColor]
+    }
+    return $rowColor
+}
+
+# calculate the total price of the shop bag
+proc getTotalPrice {} {
+    uplevel  {set totPrice [expr $totPrice + [proddata::cget price] * \
+				[shopbag::cget prod($prodID) 0]]}
+}
+
+# gets the image from the product
+proc getImage {imageFile} { 
+
+    set imageFile "[file join [cget pimagesDir] $imageFile].gif"
+
+    if {[catch {set fh [open "$imageFile" r]
+	fconfigure $fh -translation binary
+	set imageData [read $fh]
+	close $fh} errMsg]} {
+	putErrorMessage $errMsg 
+    }
+
+    web::response -set header Content-Type image/gif
+
+    fconfigure [web::response] -translation binary
+
+    web::put $imageData
+
+    web::log debug "getImage: got done"
+}
+
+# is doing a glob in the entered directory
+proc getFileList {typ} {
+    set var [glob -nocomplain [file join [cget catalogueDir] $typ*.dat]]
+    return $var
+}
+
+# gets the session id from a file
+proc getSessionIdFromFileName {tag filename} {
+
+    set fn [file tail $filename]
+    if {[string equal [string index $fn 0] $tag]} {
+	set id [scan $fn $tag%d.dat]
+    } else {
+	error "not found"
+    }
+    return $id
+}
+
+proc displayProductList {from} {
+    table 600 "ALIGN=\"left\" CELLPADDING=\"0\" CELLSPACING=\"0\"" {
+	set prodfile [getFileList p]
+	set rowColor "[cget firstRowColor]"
+	
+	trtrAttr "bgcolor=\"\#000000\"" {
+	    tdFontPut white "\&nbsp\;\&nbsp\;Product name"
+	    tdFontPut white "description"
+	    tdFontPut white "price"
+	    tdFontPut white "add to bag"
+	}
+	
+	foreach item $prodfile {
+	    
+	    set p_id [getSessionIdFromFileName p $item]
+	    proddata::init $p_id
+	    
+	    # check if the product is 
+	    # assigned to the root category
+	    
+	    if {[string equal [proddata::cget category] $from]} {
+		trtrAttr "bgcolor=\"$rowColor\"" {
+		    tdFontPut 2 "&nbsp;&nbsp; \
+		    [linkIt "[web::cmdurl showDetail [list pid $p_id]]" \
+		     "[web::htmlify [proddata::cget name]]"]"
+		    tdFontPut 2 "[web::htmlify [proddata::cget sdesc]]"
+		    tdFontPut 2 "[web::htmlify [proddata::cget price]]"
+		    tdFontPut 2 "[linkIt " \
+			[web::cmdurl addShopBag [list pid $p_id]]" \
+				    "<IMG SRC=\"[file join [cget imagePath] \
+						     [bagImage::cget picture]]\"  BORDER=\"0\">" ]"
+		    
+		    # change the row color
+		    set rowColor [rowColorChanger $rowColor]
+		}
+	    }
+	}
+    }
+}
+
+proc fileCounter {counterName fileName} {
+    web::filecounter $counterName \
+	-filename [file join [cget shopdata] $fileName]
+}
+
+proc fileContext {contextName path idgen attachto {logMessage {created shopbag path: [file join [cget shopdata] $path]}}} {
+    web::filecontext $contextName\
+	-path [file join [cget shopdata] $path] \
+	-idgen "$idgen nextval" \
+	-attachto $attachto
+    
+    web::log *.-debug "$logMessage"
+}
+
+proc imgSrc {fileName {attributes {}}} {
+    web::put "<IMG SRC=\"$fileName\" $attributes>"
+}
+
+# -----------------------------------------------------------------------
+# application part
+# -----------------------------------------------------------------------
+
+
+# default procedure - displays the welcome screen
+proc welcomeForm {} {
+    
+    page "Welcome" { 
+	table "600" "ALIGN=\"left\" CELLPADDING=\"0\" CELLSPACING=\"0\"" {
+	    trtr { 
+		tdtd {
+		    br
+		    imgSrc "[file join [cget imagePath]content_t.gif]" "ALIGN=\"right\""
+		    br 4
+		    
+		    web::log *.-debug "catalogue Dir: [file join [cget catalogueDir] c*]" 
+		    
+		    set catfiles [getFileList c]
+		    
+		    # list categories 
+		    foreach item $catfiles {
+			
+			set c_id [lindex [getSessionIdFromFileName c $item] 0]
+			prodcat::init $c_id
+			
+ 			fontPut 5 "<B>[linkIt "[web::cmdurl showCategory [list cid $c_id]]" "[web::htmlify [prodcat::cget name]]"]</B>"
+			
+			fontPut 5 "[br]<I><B>
+			[web::htmlify [prodcat::cget desc]]</B></I>"
+			br 2
+			
+		    }
+		    
+		    # list products of root category
+		    displayProductList "root"
+		}
+	    }
+	}
+    }
+}
+
+
+
+# display a category
+proc showCategory {} {
+    page "Category" {
+	prodcat::init [web::param cid]
+
+	table "600" "" {
+	    trtr {
+		tdtd {
+		    br
+		    imgSrc "[file join [cget imagePath] content_t.gif]" "ALIGN=\"right\""
+		    br 3
+		    fontPut 5 "<B>[web::htmlify [prodcat::cget name]]</B>"
+		    br 2
+
+		    set prodfile [getFileList p]
+		    set rowColor "[cget firstRowColor]"
+		    
+		    # displays the product list of the category
+		    displayProductList [web::param cid]
+
+		    trtr {
+			tdFontPut 2 "[linkIt "[web::cmdurl default]" "back"]"
+		    }
+		}
+	    }
+	}
+    }
+}
+
+
+
+# display the product details
+proc showProdDetail {} {
+    page "Product detail" {
+	table 600 "" {
+	    trtr {
+		tdtd {
+		    br
+		    imgSrc "[file join [cget imagePath] content_t.gif]" "ALIGN=\"right\""
+		    br 3
+		    
+		    proddata::init [web::formvar pid]
+		    set p_id [proddata::init [web::formvar pid]]
+		    
+		    table 500 "" {
+			trtr {
+			    tdtdAttr "COLSPAN=\"3\" WIDTH=\"500\"" {
+				imgSrc "[web::cmdurl getImage [list imageFile \
+			    [proddata::cget pictname]]]"
+			    }
+			}
+			trtr {
+			    tdtdAttr "WIDTH=\"100\"" {
+				fontPut 2 "<B>Product name:</B>"
+			    }
+			    tdtdAttr "WIDTH=\"400\"" {
+				fontPut 2 "<B>[web::htmlify [proddata::cget name]]</B>"
+			    }
+			    tdtdAttr "ALIGN=\"right\"" {
+				web::put "[linkIt "[web::cmdurl addShopBag [list pid $p_id]]" \
+				    "[imgSrc "[file join [cget imagePath] \
+						     [bagImage::cget picture]]" "BORDER=\"0\""]"]"
+			    }
+			}
+			trtr {
+			    tdtdAttr "WIDTH=\"500\" COLSPAN=\"3\"" {
+				fontPut 2 "<I>[web::htmlify [proddata::cget sdesc]]</I>"
+				br 2
+				fontPut 2 "[web::htmlify [proddata::cget desc]]"
+				br
+				fontPut 2 "Price [web::htmlify [proddata::cget price]]
+			    [cget currency] - TAX [web::htmlify [proddata::cget tax]]%"
+			    }
+			}
+			trtr {
+			    tdtdAttr "WIDTH=\"500\" COLSPAN=\"3\"" {
+			    fontPut 2 "
+			    [linkIt "[web::cmdurl default]" "back"]"
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
+
+
+# display a form for enteringn the order informations
+proc checkOutOrder {error} {
+    page "Order form" {    
+	
+	createForm  [web::cmdurl submit] {
+	    table 600 "" {
+		br 3
+		font 2 {web::putx {
+		    <DL>
+		    <DT>
+		    <B>Name:</B> 
+		    {
+			# if "error" flag is set, show the red 
+			# error message asking for input
+			if {[string equal $error 1]} {
+			    fontPut "error" "Please enter your name \n"
+			}
+		    }
+		    <DD>
+		    {inputfield "text" "name" "[web::htmlify [web::formvar name]]" "30"}
+		    <DT>
+		    <B>Address:</B>
+		    <DD>
+		    <TEXTAREA NAME="addr" ROWS="4" COLS="30" WRAP="auto"> \
+		    {web::put [web::htmlify [web::formvar addr]]}</TEXTAREA>
+		    <DT>
+		    <B>E-Mail:</B>
+		    {
+			# if "error" flag is set, show the red 
+			# error message asking for input
+			if {[string equal $error 2]} {
+			    fontPut "error" "Please enter a valid email \n"
+			}
+		    }
+		    <DD>
+		    {inputfield "text" "email" "[web::htmlify [web::formvar email]]" "30"}
+		    </DL>
+		    {inputSubmit "ok" "Send"}
+		}
+		}
+	    }
+	}
+    }
+}
+
+# checks the enterd values in a form 
+proc checkFormData {} {
+
+    # check if a value is in the name field
+    if  { [string length [web::formvar name]] < 0} {
+	# return error code
+	return 1
+    }
+
+    set email [string trim [web::formvar email]]
+    if {![regexp  {^[^@]+@[^@][^@]+\.[^@][^@]+$} $email] || [regexp "\[ \t\r\n,;\]" $email]} {
+	# the email has an invalid format
+	return 2
+    }
+
+    
+    # log (facility: emailform, level: debug)
+    web::log ckeckFormData.info {name [web::formvar name] is valid}
+
+    # looks good: no error
+    return 0
+}
+
+# generates a email and send it
+proc sendEmail {} {
+
+    # sets the email body text
+    set emailtxt "Websh DemoShop \n"
+    append emailtxt "\nName:\n[web::formvar name]\n"
+    append emailtxt "Address:\n"
+    append emailtxt "[web::formvar addr]\n"
+    append emailtxt "[web::formvar email]\n"
+
+    shopbag::init
+
+    set p_id [shopbag::carray names prod]
+    set totPrice 0
+    set orderId [orderIdGenerator nextval]
+
+    append emailtxt "This is a order from Websh DemoShop\n \
+	Order ID: $orderId\n\nOrderd Products:\n"
+
+    # generates the order list included product name, - price, amount
+    if {[string length $p_id] > 0} { 
+ 	foreach prodID $p_id {
+
+	    proddata::init $prodID
+
+	    append emailtxt "[shopbag::cget prod($prodID) 0] x \
+		[proddata::cget name] for [proddata::cget price]\n"
+	    getTotalPrice
+	}
+    }
+
+    append emailtxt "Total price: $totPrice"
+    
+    append emailtxt {
+	The Websh DemoShop.
+    }
+    
+    # open pipe for e-mail
+    if {[catch {set fh [open "| /usr/lib/sendmail [cget email]" w]} msg]} {
+	putErrorMessage $msg }
+    
+    # set email header information
+    puts $fh "From: info@websh.com"
+    puts $fh "Subject: $orderId - Order from Websh DemoShop"
+    puts $fh ""
+    puts $fh $emailtxt
+
+    # close pipe
+    if {[catch {close $fh} msg]}  {
+	putErrorMessage $msg 
+    }
+    
+    web::log sendOrder.info {order sendt}
+
+    orderSuccess $orderId
+    
+}
+
+# display a confirmation and order ID
+proc orderSuccess {orderId} {
+    page "succsefully orderd" {
+	table 600 "" {
+	    br 3
+	    font 2 { 
+		web::putx { 
+		{br 2}
+		<B>Thank you for using Websh DemoShop</B>
+		{br}
+		Your order ID: {web::put $orderId}<br><br>You'll receive your \
+		    orderd items in a few days.{br 2}
+		    {web::put [linkIt "[web::cmdurl cleanBag]" "back"]}
+		}
+	    }
+	} 
+    }
+}
+
+# display the admin screen (add/edit product and categories)
+proc adminform {error} {
+    page "welcome to the admin-screen" {
+	createForm [web::cmdurl addEditProduct] {
+	    
+	    fontPut 4 "<B>Insert a new Product to the DemoShop</B><br><br>"
+	    
+	    table 400 "" {
+		web::putx {
+		    <TR>
+		    {tdFontPut 2 "Category"}
+		    <TD><SELECT NAME="p_category">
+		    <OPTION VALUE="root" SELECTED>Root }
+		
+		set catfile [getFileList c]
+		
+		# display a dropdown menu to select the category
+		foreach item $catfile {
+		    
+		    set c_id [lindex [getSessionIdFromFileName c $item] 0]
+		    prodcat::init $c_id
+		    
+		    fontPut 2 "<OPTION VALUE=\"$c_id\">[prodcat::cget name]"
+		}
+		
+		web::putx {</SELECT>
+		    
+		    {
+			# if "error" flag is set, show the red 
+			# error message asking for input
+			if {[string equal $error 1]} {
+			    {trtr {tdFontPut "error" "Please enter a product  name"}}
+			}
+		    }
+		    {trtr {
+			tdFontPut 2 "Product Name:"
+			tdFontPutInputfield "2" "text" "p_name" \
+			"[web::formvar p_name]" "30"
+		    }}
+		    {trtr {
+			tdFontPut 2 "Short Description:"
+			tdFontPutInputfield "2" "text" "p_sdesc" \
+			"[web::formvar p_sdesc]" "50"
+		    }}
+		    {trtr {
+			tdFontPut 2 "Product Description:"
+			tdFontPut 2 "<TEXTAREA ROWS=\"3\" COLS=\"40\" NAME=\"p_desc\" \
+			     WRAP=\"auto\">[web::formvar p_desc]</TEXTAREA>"
+		    }}
+		    {
+			# if "error" flag is set, show the red 
+			# error message asking for input
+			if {[string equal $error 2]} {
+			    trtr {
+				tdtdAttr "COLSPAN=\"2\"" {
+				    fontPut error "Please enter a valid product price"
+				}
+			    }
+			}
+		    }
+
+		    {trtr {
+			tdFontPut 2 "Product Price:"
+			tdFontPutInputfield "2" "text" "p_price" \
+			"[web::formvar p_price]" "4" "[cget currency]"
+		    }}
+		    {trtr {
+			tdFontPut 2 "TAX:"
+			tdFontPutInputfield "2" "text" "p_tax" \
+			"[web::formvar p_tax]" "2" "%"
+		    }}
+		    {
+			# if "error" flag is set, show the red 
+			# error message asking for input
+			if {[string equal $error 3]} {
+			    trtr {
+				tdtdAttr "COLSPAN=\"2\"" {
+				    fontPut error "Please upload a valid picture"
+				}
+			    }
+			}
+		    }
+		    
+		    {trtr {
+			tdFontPut 2 "Image:"
+			tdFontPutInputfield "2" "file" "upload" \
+			"[web::formvar upload]" "30"
+		    }}
+		    {trtr {
+			tdtd {space}
+			tdtd {inputSubmit "AddEditProduct" "Insert"}
+		    }}
+		}
+	    }
+	}
+
+	br
+	hr
+	br
+	
+	createForm [web::cmdurl addCategory] {
+	    fontPut 4 "<B>Insert a new Category to the DemoShop</B>"
+	    br 2
+	    
+	    table 400 "" {
+		trtr {
+		    tdFontPut 2 "Category Name:"
+		    tdFontPutInputfield "2" "text" \
+		    "c_name" "" "30"
+		}
+		trtr {
+		    tdFontPut 2 "Description:"
+		    tdFontPutInputfield "2" "text" \
+		    "c_desc" "" "50"
+		}
+		trtr {
+		    tdtd {space}
+		    tdtd {inputSubmit "ok" "Add"}
+		}
+	    }
+	}
+	
+	# display the available products in the shop
+
+	br
+	hr
+	br
+	fontPut 2 "<B>The following products are available in the DemoShop</B>"
+	br
+	
+	table 400 "" {
+	    
+	    trtr {
+		tdtdAttr "WIDTH=\"50\"" {
+		    fontPut 2 "<B>Product</B>"
+		}
+		tdtdAttr "WIDTH=\"300\"" {
+		    fontPut 2 "<B>Product Description</B>"
+		}
+		tdtdAttr "WIDTH=\"50\"" {
+		    fontPut 2 "<B>Price</B>"
+		}
+		tdtd {
+		    space
+		}
+	    }
+
+	    set prodfile [getFileList p]
+
+	    foreach item $prodfile {
+		set p_id [lindex [getSessionIdFromFileName p $item] 0]
+		proddata::init $p_id
+		
+		trtr {
+		    tdFontPut 2 "[linkIt "[web::cmdurl showDetail [list pid $p_id]]" \
+		    "[web::htmlify [proddata::cget name]]"]"
+		    tdFontPut 2 "[web::htmlify [proddata::cget sdesc]]"
+		    tdFontPut 2 "[web::htmlify [proddata::cget price]]"
+		    tdFontPut 2 "[linkIt "[web::cmdurl delProduct [list pid $p_id]]" "delete"] |
+		    [linkIt "[web::cmdurl editProduct [list pid $p_id]]" "edit"]"
+		}
+	    }
+	}
+	
+	# display the available categories in the shop
+	fontPut 2 "<B>The following Categories are in the DemoShop</B>"
+	br
+	
+	table 400 "" {
+	    trtr {
+		tdtdAttr "WIDTH=\"50\"" {
+		    fontPut 2 "<B>Category</B>" 
+		}
+		tdtdAttr "WIDTH=\"300\"" {
+		    fontPut 2 "<B>Category Description</B>"
+		}
+		tdtd {space}
+	    }
+	    
+	    set catfile [getFileList c]
+	    foreach item $catfile {
+		
+		set c_id [lindex [getSessionIdFromFileName c $item] 0]
+		prodcat::init $c_id
+		
+		trtr {
+		    tdFontPut 2 "[web::htmlify [prodcat::cget name]]"
+		    tdFontPut 2 "[web::htmlify [prodcat::cget desc]]"
+		    tdFontPut 2 "[linkIt "[web::cmdurl delCategory [list cid $c_id]]" \
+		"delete"] | [linkIt "[web::cmdurl editCategory [list cid $c_id]]" "edit"]"
+		}
+	    }
+	}
+	web::put "</BODY></HTML>"
+    }
+}
+
+# displays a form for edit a product
+proc editProduct {error} {
+    set p_id [proddata::init [web::formvar pid]]
+    
+    page "edit product" {
+	createForm [web::cmdurl addEditProduct [list pid $p_id]] {
+	    fontPut 2 "<B>Edit Product from Websh DemoShop</B>"
+	    br 2
+	    
+	    table 400 "" {
+		trtr {
+		    tdFontPut 2 "Category"
+		    tdtd { 
+			fontPut 2 "<SELECT NAME=\"p_category\"> 
+			<OPTION VALUE=\"root\">Root"
+			
+			set catfile [getFileList c]
+			
+			foreach item $catfile {
+			    set c_id [lindex \
+				      [getSessionIdFromFileName c $item] 0]
+			    prodcat::init $c_id
+			    fontPut 2 "<OPTION VALUE=\"$c_id\">[prodcat::cget name]"
+			}
+			
+			web::putx {</SELECT>
+			    {
+				# if "error" flag is set, show the red 
+				# error message asking for input
+				if {[string equal $error 1]} {
+				    trtr {				    
+					tdtdAttr "COLSPAN=\"2\"" { 
+					    fontPut error "Please enter a product  name"
+					}
+				    }
+				}
+			    }
+			    {trtr {
+				tdFontPut 2 "Product Name:"
+				tdFontPutInputfield "2" "text" "p_name" \
+				"[proddata::cget name]" "30"
+			    }}
+			    {trtr {
+				tdFontPut 2 "Short Description:"
+				tdFontPutInputfield "2" "text" "p_sdesc" \
+				"[proddata::cget sdesc]" "50"
+			    }}
+			    {trtr {
+				tdFontPut 2 "Product Description:"
+				tdFontPut 2 "<TEXTAREA ROWS=\"3\" COLS=\"40\" 
+				NAME=\"p_desc\" \
+				WRAP=\"auto\">[proddata::cget desc]</TEXTAREA>"
+			    }}
+			    
+			    {
+				# if "error" flag is set, show the red 
+				# error message asking for input
+				if {[string equal $error 2]} {
+				    trtr {
+					tdtdAttr "COLSPAN=\"2\"" {
+					    fontPut error "Please enter a valid product price"
+					}
+				    }
+				}
+			    }
+			    
+			    {trtr {
+				tdFontPut 2 "Product Price:"
+				tdFontPutInputfield "2" "text" "p_price" \
+				    "[proddata::cget price]" "4" "[cget currency]"
+			    }}
+			    {trtr {
+				tdFontPut 2  "TAX:"
+				tdFontPutInputfield "2" "text" "p_tax" \
+				    "[proddata::cget tax]" "2" "%"
+			    }}
+			    {trtr {
+				tdFontPut 2 "Image:"
+				tdFontPutInputfield "2" "file" "upload" \
+				    "[web::formvar upload]" "40"
+			    }}
+			    {trtr {
+				tdtd {space}
+				tdtd {inputSubmit "AddEditProduct" "Update"}
+			    }}
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
+
+# insert or update the product datas
+proc insertOrUpdateProduct {} {
+    set name [web::formvar p_name]
+    set sdesc [web::formvar p_sdesc]
+    set desc  [web::formvar p_desc]
+    set price [web::formvar p_price]
+    set tax   [web::formvar p_tax]
+    set category [web::formvar p_category]
+    set fileName [imageIdGenerator nextval]
+    
+    proddata::init
+    
+    set localname [lindex [web::formvar upload] 0]
+    set remotename [lindex [web::formvar upload] 1]
+    if {[string length $localname]} {
+	file copy $localname ../data/catalogue/pimages/$fileName.gif
+    } else {
+	set fileName [proddata::cget pictname]
+    }
+    
+    proddata::cset name $name
+    proddata::cset sdesc $sdesc
+    proddata::cset desc $desc
+    proddata::cset price $price
+    proddata::cset tax $tax
+    proddata::cset category $category
+    
+    proddata::cset pictname $fileName
+    
+    proddata::commit
+    
+    web::log addProduct.info {Product where added or edited - \
+				  Product ID: [web::formvar $p_id]}
+    
+    if {$category != "root"} {
+	prodcat::init $category
+	set category [web::htmlify [prodcat::cget name]]
+    }
+    
+    web::formvar -unset
+    web::param -unset
+    
+    adminform 0
+}
+
+# validate enterd data
+proc checkProductData {} {
+    
+    # check if a value is in the name field
+    if  { [string length [web::formvar p_name]] < 1} {
+	# return error code
+	return 1
+    }
+    
+    # log (facility: emailform, level: debug)
+    web::log checkProductData.info {name [web::formvar p_name] is valid}
+    
+    # check email
+    set p_price [web::formvar p_price]
+
+    # make sure we have alpha-numeric stuff separated by "@"
+    if {![regexp -nocase {^[0-9]+$} $p_price]} {
+	# return error code
+	return 2
+    }
+    
+    web::log checkFormData.info \
+	{datas of Product [web::formvar name] are valid}
+    
+    # looks good: no error
+    return 0
+}
+
+
+# displays a form for edit a category 
+proc editCategory {} {
+    set c_id [prodcat::init [web::formvar cid]]
+
+    page "edit category" {
+	
+	createForm [web::cmdurl addCategory [list cid $c_id]] {
+	    
+	    fontPut 5 "<B>Edit category from Websh DemoShop</B>"
+	    br 2
+	    
+	    table "400" "" {
+		
+		trtr {
+		    tdFontPut 2 "Product Name\:"
+		    tdFontPutInputfield "2" "text" "c_name" "[prodcat::cget name]" "30"
+		}
+		trtr {
+		    tdFontPut 2 "Description:"
+		    tdFontPutInputfield "2" "text" "c_desc" "[prodcat::cget desc]" "50"
+		}
+		trtr {
+		    tdtd {space}
+		    tdtd {
+			inputSubmit "AddEditProduct" "Update"
+		    }
+		}
+	    }
+	}
+    }
+}
+
+# general html layout
+proc page {title code} {
+    web::putx {
+	<HTML>
+	<HEAD>
+	<TITLE>
+	{web::put "[cget pageTitle] $title"}
+	</TITLE>
+	<STYLE TYPE="text/css">
+	<!-- }
+    
+    createCSS "ShopStyle" "[cget fontType]" "12"
+    createCSS "ShopStyleLarge" "[cget fontType]" "14"
+    createCSS "ShopStyleXLarge" "[cget fontType]" "16"
+    createCSS "ShopStyleError" "[cget fontType]" "12" "red"
+    createCSS "ShopStyleWhite" "[cget fontType]" "12" "white" "bold"
+    
+    web::putx {
+	-->
+	</STYLE>
+	</HEAD>
+	<BODY BGCOLOR="#FFFFFF" MARGINHEIGHT="0" MARGINWIDTH="0">
+    }
+    table "800" "ALIGN=\"left\" CELLPADDING=\"0\" CELLSPACING=\"0\"" {
+	trtr { 
+	    tdtdAttr "COLSPAN=\"2\" BGCOLOR=\"\#006699\" HEIGHT=\"100\"" {
+		imgSrc "[file join [cget imagePath] title.gif]"
+	    }
+	}
+	trtr {
+	    tdtdAttr "VALIGN=\"top\"" {
+		imgSrc "[file join [cget imagePath] left_border.gif]" "ALIGN=\"top\""
+		
+		br
+		
+		# ---------- shopBagDisplay ------------------------------
+		
+		table 100% "" {
+		    trtr {
+			tdtdAttr "WIDTH=\"1\"" {
+			    space
+			}
+			tdtd { 
+			    imgSrc "[file join [cget imagePath] bag_disp.gif]" "ALIGN=\"right\""
+			}
+			
+			br
+			
+			set b_id [shopbag::init]
+			set p_id [shopbag::carray names prod]
+			set totPrice 0	    
+			table "100%" "ALIGN=\"left\" CELLPADDING=\"0\" CELLSPACING=\"0\"" {
+			    # if the admin screen is displayed - the shopbag will not
+			    # displayed. it displayes the amount of categories and products 
+			    if {[string equal [web::param cmd] "admin"]} {    
+				
+				set cat [llength [getFileList c]]
+				set prd [llength [getFileList p]]
+				
+				trtr { tdtdAttr "COLSPAN=\"2\"" {
+				    space
+				}
+				}
+				trtr {
+				    tdFontPut 2 "Amount of categories:"
+				    tdFontPut 2 "$cat"
+				}
+				trtr {
+				    tdFontPut 2 "Amount of products:"
+				    tdFontPut 2 "$prd"
+				}
+			    } else { 
+				
+				if {[string length $p_id] > 0} { 
+				    set count 0
+				    set p_id [lsort -integer $p_id]
+				    foreach prodID $p_id {
+					proddata::init $prodID
+					# if there is a product with the amount of 0
+					# - do not display
+					if {[shopbag::cget prod($prodID) 0]} {
+					    trtr {
+						tdFontPut 2 "
+				    <A HREF=\"[web::cmdurl addShopBag [list pid $prodID]]\"> \
+				    <IMG SRC=\"[file join [cget imagePath] plus.gif]\" \
+				    BORDER=\"0\"></A>
+						<A HREF=\"[web::cmdurl removeFromShopBag \
+  				    [list pid $prodID bid $b_id]]\"><IMG SRC=\"[file join \
+				    [cget imagePath] minus.gif]\" BORDER=\"0\"></A> \
+				    [shopbag::cget prod($prodID) 0] x [proddata::cget name] "
+						
+						tdFontPut 2 "[proddata::cget price]"
+					    }
+					    
+					    getTotalPrice
+					    
+					    incr count
+					    
+					    # is a product in the shopbag - the bag image 
+					    # will be modified and it will show you a 
+					    # image with a full shopbag for adding products				
+					    bagImage::cset picture "bag.gif" 
+					} 
+				    }
+				}
+				
+				if {$totPrice} {
+				    trtr {
+					tdFontPut 2 "<B>Price:</B>"
+					tdFontPut 2 "<B> $totPrice </B>"
+				    }
+				    trtr {
+					tdFontPut 2 "[linkIt "[web::cmdurl checkOut]" \
+			    "order"] | [linkIt "[web::cmdurl cleanBag]" "clean bag"]"
+				    }
+				} else {
+				    # if the shopbag is empty the bag image will be
+				    # modified and 3 breaks will be enterd instead 
+				    # of a shopbag
+				    bagImage::cset picture "bag_empty.gif"
+				    br 3 
+				}
+			    }
+			    
+			}	
+			
+			# --------- end shopBagDisplay ---------------------------
+			
+			imgSrc "[file join [cget imagePath] bag_border.gif]"
+			br 2
+			
+			table "100" "ALIGN=\"left\" CELLPADDING=\"0\" CELLSPACING=\"0\"" {
+			    trtr {
+				tdtd {
+				    imgSrc "[file join [cget imagePath] bottom_border.gif]"
+				}
+			    }
+			    
+			    trtr {
+				tdtdAttr "BGCOLOR=\"\#006699\" HEIGHT=\"100%\"" {
+				    space
+				}
+			    }
+			}
+			
+			web::put "</TD>"
+			
+			tdtdAttr "VALIGN=\"top\"" {
+			    uplevel $code
+			}
+		    }
+		}
+	    }
+	}
+    }
+    web::put "</BODY></HTML>\n"
+}
+
+proc putErrorMessage {msg} {
+    # emit an error message in red.
+    fontPut error "<P>[web::htmlify $msg]</P>"
+}
+
+# -----------------------------------------------------------------------
+#  web::commands
+# -----------------------------------------------------------------------
+
+
+# $$$$ shopbag $$$$ 
+
+# add product to shopbag
+web::command addShopBag {
+    
+    shopbag::init [web::formvar bid]
+    set prod_id [proddata::init [web::formvar pid]]
+    
+    set count [shopbag::cget prod($prod_id) 0]
+    incr count
+    shopbag::cset prod($prod_id) $count
+    shopbag::commit
+
+    web::log addShopBag.info {Product added to shopbag - Bag ID: \
+				  [web::formvar bid] - Product ID: $count}
+    
+    welcomeForm
+
+}
+
+# remove a product from shopbag
+web::command removeFromShopBag {
+
+    shopbag::init [web::formvar bid]
+    set prod_id [proddata::init [web::formvar pid]]
+
+    set count [shopbag::cget prod($prod_id) 0]
+    web::log addShopBag.info {count : $count}
+    incr count -1
+    web::log addShopBag.info {count - 1 : $count}
+    shopbag::cset prod($prod_id) $count
+
+    shopbag::commit
+    web::log addShopBag.info {Product removed from shopbag - Bag ID: \
+				  [web::formvar bid] - Product ID: $count}    
+
+    welcomeForm
+}
+
+# $$$$ products $$$$
+
+# add or edit a product
+web::command addEditProduct {
+
+    if {[string equal [set res [checkProductData]] 0]} {
+	insertOrUpdateProduct
+    } else { 
+	if {[string equal [web::formvar AddEditProduct] "Insert"]} {
+	    adminform $res
+	} {
+	    editProduct $res
+	}
+	
+    }
+}
+
+# call procedure editProduct without error
+web::command editProduct {
+    editProduct 0
+}
+
+
+web::command showDetail {
+    showProdDetail
+}
+
+# delete a product from the shop
+web::command delProduct {
+    proddata::init [web::formvar pid]
+    proddata::invalidate
+    web::log delProduct.info {invalidate product from admin - Product ID: \
+				  [web::formvar pid]}
+    web::formvar -unset
+    web::param -unset
+    adminform 0
+}
+
+# $$$$ categories $$$$
+
+# add a category to the shop
+web::command addCategory {
+    set name [web::formvar c_name]
+    set desc [web::formvar c_desc]
+
+    prodcat::init
+    
+    prodcat::cset name $name
+    prodcat::cset desc $desc
+    
+    prodcat::commit
+
+    web::log addCategory.info {Category where added - Category ID: $c_id}
+
+# desc it
+    web::formvar -unset
+    web::param -unset
+
+    adminform 0
+    
+}
+
+# delete a category from the shop
+web::command delCategory {
+    prodcat::init [web::formvar cid]
+    prodcat::invalidate
+    web::log delCategory.info {invalidate category from admin - category ID: \
+				   [web::formvar cid]}
+
+# desc it
+    web::formvar -unset
+    web::param -unset
+    adminform 0
+}
+
+# edit a category 
+web::command editCategory {
+    editCategory
+}
+
+web::command showCategory {
+    showCategory
+}
+
+
+# $$$$ others $$$$
+
+# call procedure checkOutOrder to send the order
+web::command checkOut {
+    checkOutOrder 0
+}
+
+# flush the shopbag
+web::command cleanBag {
+    shopbag::init [web::formvar bid]
+
+    shopbag::cunset prod
+
+    shopbag::commit
+
+    web::log cleanBag.info {delete bag - Bag ID: [web::formvar bid]}
+    welcomeForm
+}
+
+# call the checkFormData - if there's no error it sends the order
+web::command submit {
+
+    if {[string equal [set res [checkFormData]] 0]} {
+	sendEmail
+    } else {
+	checkOutOrder $res
+    }
+    
+}
+
+web::command admin {
+    adminform 0
+}
+
+web::command admin {
+    adminform 0
+}
+
+web::command default {
+    welcomeForm
+}
+
+web::command getImage {
+    getImage [web::param imageFile]
+}
+
+# --- setup -------------------------------------------------------------------
+ 
+cinit -file "../etc/shop.conf"
+
+# desc it
+web::config uploadfilesize 10000000
+
+web::context bagImage
+
+
+#
+# id generators
+#
+
+fileCounter "bagIdGenerator" "shopbag SEQNR"
+
+fileCounter "idGenerator" "catalogue SEQNR"
+
+fileCounter "imageIdGenerator" "catalogue pimages SEQNR"
+
+fileCounter "orderIdGenerator" "orderSEQNR"
+
+#
+# file-based contexts
+#
+
+# session
+fileContext "shopbag" "shopbag/%s.dat" "bagIdGenerator" "bid"
+
+# catalog
+fileContext "proddata" "catalogue/p%s.dat" "idGenerator nextval" "pid"
+
+# category
+fileContext "prodcat" "catalogue/c%s.dat" "idGenerator nextval" "cid"
+
+# ensure we have directories
+file mkdir [file join [cget shopdata] shopbag]
+file mkdir [file join [cget shopdata] catalogue]
+file mkdir [file join [cget shopdata] catalogue pimages]
+
+# -----------------------------------------------------------------------
+#  dispatch
+# -----------------------------------------------------------------------
+
+web::dispatch -track bid

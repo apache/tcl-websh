@@ -1,0 +1,78 @@
+#
+# cfg.test -- test web::config
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+test cfg-1.1 {wrong subcommand} {
+    catch {web::config foo bar} msg
+    set msg
+} {bad subcommand "foo": must be uploadfilesize, encryptchain, decryptchain, cmdparam, timeparam, putxmarkup, logsubst, version, or copyright}
+
+
+test cfg-1.2 {invalid value} {
+    catch {web::config uploadfilesize large} msg
+    set msg
+} {web::config uploadfilesize only accepts integers but got "large"}
+##fixme: whats the return value here? expected integer but got "large"
+
+# -----------------------------------------------------------------------------
+# tests
+# -----------------------------------------------------------------------------
+test cfg-2.1 {uploadfilesize set/get} {
+    set res ""
+    lappend res [web::config uploadfilesize 13]
+    lappend res [web::config uploadfilesize]
+    lappend res [web::config uploadfilesize 0]
+    lappend res [web::config uploadfilesize]
+} {0 13 13 0}
+
+test cfg-2.2 {default retrun values} {
+    set res [list [web::config uploadfilesize] [web::config cmdparam] [web::config timeparam]]
+} {0 cmd t}
+
+test cfg-2.3 {crypt default} {
+    set res [web::config encryptchain [list a b]]
+    set res "$res\n[web::config encryptchain web::encryptd]"
+    set res "$res\n[web::config encryptchain]"
+    set res "$res\n[web::config decryptchain [list c d]]"
+    set res "$res\n[web::config decryptchain [list web::decryptd]]"
+    set res "$res\n[web::config decryptchain]"
+} {web::encryptd
+a b
+web::encryptd
+web::decryptd
+c d
+web::decryptd}
+
+test cfg-3.1 {putxmarkup} {
+    catch {web::config putxmarkup foo} msg
+    set res ""
+    lappend res $msg
+    lappend res [web::config putxmarkup tag]
+    lappend res [web::config putxmarkup tag]
+    lappend res [web::config putxmarkup brace]
+    lappend res [web::config putxmarkup]
+} {{bad type "foo": must be brace or tag} brace tag tag brace}
+
+
+# cleanup
+::tcltest::cleanupTests

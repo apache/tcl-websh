@@ -1,0 +1,204 @@
+#
+# cookie.ws3 -- session context using cookies
+# nca-073-9
+# 
+# Copyright (C) 1999 by Netcetera AG.
+# All rights reserved.
+# 
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# Cookie-Specs: http://www.netscape.com/newsref/std/cookie_spec.html
+
+
+proc web::cookiecontext {ctxmgrname args} {
+
+    # correct namespace (relative to caller)
+    if {![string match ::* $ctxmgrname]} {
+	set ctxmgrname [uplevel namespace current]::$ctxmgrname
+    }
+
+    web::sessioncontextfactory $ctxmgrname
+    
+    # set default values for some properties
+    namespace eval $ctxmgrname {
+
+        # where to send cookie to
+        variable _channel ""
+        variable _domain ""
+        variable _path ""
+        variable _expires "day"
+        # key to be used for key-value pair in cookie
+	variable _crypt 1
+	# secure flag of cookie
+	variable _secure 0
+    }
+
+    # parse args for this
+    set argc [llength $args]
+    set baseargs {}
+    for {set i 0} {$i < $argc} {incr i} {
+	set arg [lindex $args $i]
+	set found 0
+	foreach opt {channel domain path expires secure crypt} {
+	    if {[string equal $arg -$opt]} {
+		if {[incr i]>$argc} {
+		    error "argument -$opt needs a value."
+		}
+		set ${ctxmgrname}::_$opt [lindex $args $i]
+		set found 1
+		break
+	    }
+	}
+	if {!$found} {
+	    lappend baseargs $arg
+	}
+    }
+
+    # now eat up remaining args
+    ${ctxmgrname}::_parseargs $baseargs
+
+    # getCookie - find my cookie
+    proc ${ctxmgrname}::_getCookie {id} {
+        ::set cookie [web::request HTTP_COOKIE]
+        foreach v [split $cookie "=;"] {
+            lappend kvlist [string trim $v]
+        }
+        # search for $datatag
+        foreach {key value} $kvlist {
+            if {[string compare $key $id] == 0} {
+                return $value
+            }
+        }
+        error "no matching cookie found"
+    }
+
+    # 
+    # init (overwrite sessctx init here)
+    proc ${ctxmgrname}::init {id {create 0}} {
+	cunset
+	# load it
+        if { [catch {_load $id $create}]} {
+            # .. or make new
+            new $id
+        }
+    }
+
+    # Load - load a state from a cookie
+    proc ${ctxmgrname}::load {id {create 0}} {
+        variable _crypt
+	variable _id
+
+        if {$_crypt} {
+            namespace eval [namespace current] [web::decrypt [_getCookie $id]]
+        } else {
+            namespace eval [namespace current] [web::uridecode [_getCookie $id]]
+        }
+	set _id $id
+    }
+
+    # Save cookie
+    proc ${ctxmgrname}::save {id {doInvalidate 0}} {
+
+        variable _channel
+        variable _domain
+        variable _path
+        variable _expires
+        variable _secure
+
+	set ochannel [web::response]
+        if {[string length $_channel]} {
+	    web::response -select $_channel
+	}
+
+        # test if header was not already sent
+	if {[web::response -sendheader] == 0} {
+	    web::log ws3.error "web::cookiecontext::commit: commit too late, header already sent"
+	    if {![info exists ochannel]} {
+		web::response -select $ochannel
+	    }
+	    error "cookie commit too late (header already sent)"
+	}
+
+        # write the data
+	variable _crypt
+	if {$_crypt} {
+	    set data [web::encrypt [dump]]
+	} else {
+	    set data [web::uriencode [dump]]
+	}
+
+	set cookie "$id=$data"
+
+	if { $doInvalidate } {
+	    append cookie "; expires=Sat, 01-01-2000 00:00:00 MET"
+	} else {
+
+	    if { $data == "{}" || $data == ""} {
+		set cookie "$id=; expires=Sat, 01-01-2000 00:00:00 MET"
+	    } else {
+
+		# write the expiry-date
+		set expsec [clock seconds]
+		if {[regexp {^[0-9]+$} $_expires]} {
+		    ## is a number
+		    set expsec $_expires
+		} else {
+		    if {[string equal $_expires "day"]} {
+			incr expsec 86400
+		    } elseif { [string equal $_expires "week"] } {
+			incr expsec 604800
+		    }
+		}
+		if { [catch {clock scan $_expires} msg] } {
+		    
+		    set expstr $_expires
+		} else {
+		    
+		    if {[string equal $_expires "today"]} {
+			set expstr $_expires
+		    } else {
+			set expstr [clock format $expsec -format "%a, %d-%m-%Y %H:%M:%S %Z"]
+		    }
+		}
+		if { [string length $expstr] } {
+		    append cookie "; expires=$expstr"
+		}
+	    }
+	}
+
+	# write the path
+	if {[string length $_path]} {
+	    append cookie "; path=$_path"
+	}
+	# write the domain
+	if {[string length $_domain]} {
+	    append cookie "; domain=$_domain"
+        }
+        # write secure if required 
+        if {$_secure} {
+            append cookie "; secure"
+        }
+
+        # write the cookie into the header of the channel 
+	web::response -set Set-Cookie $cookie
+
+	if {![info exists ochannel]} {
+	    web::response -select $ochannel
+	}
+    }
+
+    # invalidate context
+    proc ${ctxmgrname}::invalidate {} {
+ 
+	# delete in namespace
+	cunset
+ 
+	# mark for deletion on client side
+	save [id] 1
+    }
+}
+

@@ -1,0 +1,168 @@
+#
+# time.test -- measure execution-time of selected websh commands
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+proc bogoMips {cmd {sys 1} {threshold 0} } {
+
+    set cal [lindex [time {eval $cmd} 5] 0]
+
+    if {$threshold > 0} {
+
+	set rat [expr $cal / $sys]
+	puts "DBG this: $cal (accepted: [expr $threshold * $sys]) system: $sys ratio: $rat"
+	return [expr $rat < $threshold]
+    }
+    return $cal
+}
+
+
+proc sysBogoMips {} {
+
+    set t1 [bogoMips {set t [string repeat a 1000]}]
+    for {set i 0} {$i < 1000} {incr i} {
+	set tsta($i) tst$i
+    }
+    set t2 [bogoMips {set t [array names tsta]}]
+    set t3 [bogoMips {set t [array get tsta]}]
+    set return [expr $t1 + $t2 + $t3]
+}
+
+set curBogoMips [sysBogoMips]
+
+
+test time-1.1 {htmlify numeric} {
+
+    set line abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXY
+    set html ">"
+    for {set i 0} {$i < 11} {incr i} {
+	append html "$html$line"
+    }
+    append html "<"
+
+    bogoMips "web::htmlify -numeric $html" $curBogoMips 50
+} {1}
+
+test time-1.2 {htmlify} {
+
+    set line abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXY
+    set html ">"
+    for {set i 0} {$i < 11} {incr i} {
+	append html "$html$line"
+    }
+    append html "<"
+
+    bogoMips "web::htmlify $html" $curBogoMips 50
+} {1}
+
+test time-1.3 {uriencode} {
+
+    set line "הצü"
+    set plain $line
+    for {set i 0} {$i < 10} {incr i} {append plain $plain$line}
+
+    bogoMips "web::uriencode $plain" $curBogoMips 20
+} {1}
+
+test time-1.4 {uridecode} {
+
+    set enco [web::uriencode $plain]
+    bogoMips "web::uridecode $enco" $curBogoMips 12
+} {1}
+
+test time-1.5 {encrypt} {
+
+    set line "הצü"
+    set plain $line
+    for {set i 0} {$i < 10} {incr i} {append plain $plain$line}
+
+    bogoMips "web::encrypt $plain" $curBogoMips 12
+} {1}
+
+test time-1.6 {decrypt} {
+
+    set enco [web::encrypt $line]
+
+    bogoMips "web::decrypt $enco" $curBogoMips 1
+} {1}
+
+test time-1.7 {putx} {
+
+    set fh [open [set fn [web::tempfile]] w]
+    web::response $fh -select
+
+    set line "simple {web::put [clock seconds]} test"
+    set plain $line
+    for {set i 0} {$i < 7} {incr i} {append plain $plain$line}
+
+    set res [bogoMips "web::putx \"$plain\"" $curBogoMips 50]
+    close $fh
+    set res
+} {1}
+
+test time-1.7 {log} {
+
+    web::logdest delete
+    web::logfilter delete
+
+    set fh [open [set fn [web::tempfile]] w]
+
+    web::logfilter add a.-info
+    web::logfilter add goo1.alert-warning
+    web::logfilter add b.info-info
+    web::logfilter add goo2.-debug
+    web::logfilter add c.-debug
+    web::logfilter add goo3.-debug
+    web::logfilter add d.-debug
+    web::logfilter add good.info-info
+    web::logfilter add good.debug-debug
+    web::logfilter add e.-debug
+    web::logfilter add f.-debug
+    web::logfilter add goo4.-debug
+
+    web::logdest add a.-info channel $fh
+    web::logdest add goo1.alert-warning channel $fh
+    web::logdest add b.info-info channel $fh
+    web::logdest add goo2.-debug channel $fh
+    web::logdest add c.-debug channel $fh
+    web::logdest add goo3.-debug channel $fh
+    web::logdest add d.-debug channel $fh
+    web::logdest add good.info-info channel $fh
+    web::logdest add good.debug-debug channel $fh
+    web::logdest add e.-debug channel $fh
+    web::logdest add f.-debug channel $fh
+    web::logdest add goo4.-debug channel $fh
+
+    set line "simple {web::put [clock seconds]} test"
+    set plain $line
+    for {set i 0} {$i < 7} {incr i} {append plain $plain$line}
+
+    set res [bogoMips "web::log good.info \"$plain\"" $curBogoMips 10]
+
+    web::logdest delete
+    close $fh
+
+    set res
+    
+} {1}
+
+# cleanup
+::tcltest::cleanupTests
+

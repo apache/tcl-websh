@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# \
+LD_LIBRARY_PATH=../lib; export LD_LIBRARY_PATH; \
+exec ../bin/websh3 "$0" "$@"
+
+## vv config (gonna move)
+set sdb_name terms
+set sdb_datadir [file join .. .. data $sdb_name]
+array set sdb_perms {
+    canEdit 1
+    canDelete 1
+}
+array set sdb_items {
+    term {varDsc {term} type text size 30 showInTable 0 isLink 0}
+    url  {varDsc {URL}        type text size 50 showInTable 1 isLink 1 showAsLink term}
+    sdsc {varDsc {short description} type text size 60 showInTable 1 isLink 0}
+    ldsc {varDsc {long description} type textarea rows 10 cols 80 showInTable 0 isLink 0}
+}
+set sdb_itemorder [list url term sdsc ldsc]
+## ^^ config (gonna move)
+
+web::logfilter add *.-debug
+web::logdest add *.-debug file ../../logs/${sdb_name}.log
+
+web::include [file join .. lib sdb.ws3]
+
+web::dispatch -track id

@@ -1,0 +1,100 @@
+#
+# logtosyslog.test --
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# scanFileForPattern -- return "Ok" if pattern found in one of the lines of
+#   file, "Failed" else.
+# -----------------------------------------------------------------------------
+proc scanFileForPattern {fileName pattern} {
+
+    set res "Failed"
+    if {[file exists $fileName]} {
+	if {[catch {
+	    set fileId [open $fileName "r"]
+	    while {[eof $fileId] == 0} {
+		gets $fileId tLine
+		if {[string match $pattern $tLine] == 1} {
+		    set res "Ok"
+		    break
+		}
+	    }
+	    close $fileId
+	} msg]} {
+	    return "$res: $msg" 
+	}
+    }
+    return $res
+}
+
+# -----------------------------------------------------------------------------
+# try to log to syslog
+# -----------------------------------------------------------------------------
+
+test logToSyslog-1.1 {websh3_toSyslog: logdest add returns id} {unixOnly} {
+    web::logdest delete
+    set res [web::logdest add info2.-debug syslog 0]
+} {logdest0}
+
+test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly, emptyTest} {
+    set res "Failed"
+    set curTim [clock seconds]
+
+    web::logdest delete
+    web::logfilter delete
+
+    web::logfilter add info.-debug
+    web::logdest add \
+	-format "T E S T toSyslog -- %x %X \[$curTim\] \$f-\$l-\$m\n" \
+	info.-debug \
+	syslog 10
+
+    web::log info.info {toSyslog}
+
+    # and see if you find it in the file
+    #fixme: generic filename please!
+
+    set pat1 "[file dirname [web::tempfile]]/messages"
+
+    set srclst [list /var/adm/messages /var/log/messages /var/log/syslog]
+
+    foreach tmp $srclst {
+        set res "Failed"
+        set res [scanFileForPattern $tmp "T E S T toSyslog*$curTim*"]
+        if {[string equal $res "Failed"]} {
+            ## give syslog a little time to feed the message to the file
+            after 1000
+            set res [scanFileForPattern $pat1 "T E S T toSyslog*$curTim*"]
+        }
+        if {[string equal $res "Ok"]} {
+            break
+        }
+    }
+
+    ## clean up
+    web::logdest delete
+    web::logfilter delete
+
+    set res
+} {Ok}
+
+# cleanup
+::tcltest::cleanupTests

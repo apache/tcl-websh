@@ -1,0 +1,375 @@
+#
+# log.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# util
+# -----------------------------------------------------------------------------
+proc logTestCatchMsg {msg} {
+    return $msg
+}
+
+# -----------------------------------------------------------------------------
+# manage filters
+# -----------------------------------------------------------------------------
+test log-1.1 {web::logfilter wrong number of arguments} {
+    catch {web::logfilter} msg
+    set msg
+} {bad option "web::logfilter": must be add, delete, or names}
+
+test log-1.2 {web::logfilter wrong argument} {
+    catch {web::logfilter gugus} msg
+    set msg
+} {bad option "gugus": must be add, delete, or names}
+
+test log-1.3 {websh3_weblog: add a filter} {
+    web::logfilter delete
+    web::logfilter add testWithoutAdd.alert-warning
+    web::logfilter add testWithAdd.error-warning
+    set res [web::logfilter names]
+} {logfilter0 testWithoutAdd.alert-warning
+logfilter1 testWithAdd.error-warning}
+
+test log-1.4 {websh3_weblog: reset list of filters} {
+    web::logfilter delete
+    set res [web::logfilter names]
+} {}
+
+test log-1.5 {websh3_weblog: different warn levels} {
+    web::logfilter delete
+    web::logfilter add testAlert.alert
+    web::logfilter add testError.error
+    web::logfilter add testWarning.warning
+    web::logfilter add testInfo.info
+    web::logfilter add testDebug.debug
+    web::logfilter add testAlert.alert
+    web::logfilter add testError.error
+    web::logfilter add testWarning.warning
+    web::logfilter add testInfo.info
+    web::logfilter add testDebug.debug
+    web::logfilter add testAlert.alert
+    web::logfilter add testError.error
+    web::logfilter add testWarning.warning
+    web::logfilter add testInfo.info
+    web::logfilter add testDebug.debug
+    web::logfilter add testAlert.alert
+    web::logfilter add testError.error
+    web::logfilter add testWarning.warning
+    web::logfilter add testInfo.info
+    web::logfilter add testDebug.debug
+    set res [web::logfilter names]
+} {logfilter8 testInfo.info-info
+logfilter10 testError.error-error
+logfilter9 testDebug.debug-debug
+logfilter11 testWarning.warning-warning
+logfilter12 testInfo.info-info
+logfilter13 testDebug.debug-debug
+logfilter0 testAlert.alert-alert
+logfilter1 testError.error-error
+logfiltera testAlert.alert-alert
+logfilter2 testWarning.warning-warning
+logfilterb testError.error-error
+logfilterc testWarning.warning-warning
+logfilter3 testInfo.info-info
+logfilterd testInfo.info-info
+logfilter4 testDebug.debug-debug
+logfiltere testDebug.debug-debug
+logfilter5 testAlert.alert-alert
+logfilterf testAlert.alert-alert
+logfilter6 testError.error-error
+logfilter7 testWarning.warning-warning}
+
+test log-1.6 {websh3_weblog: special syntax for message levels} {
+    web::logfilter delete
+    web::logfilter add *.-debug
+    web::logfilter add *.alert-
+    web::logfilter add *.alert-debug
+    web::logfilter add test*.info
+    web::logfilter add websh2.alert-error
+    set res [web::logfilter names]
+} {logfilter4 websh2.alert-error
+logfilter0 *.alert-debug
+logfilter1 *.alert-debug
+logfilter2 *.alert-debug
+logfilter3 test*.info-info}
+
+test log-1.7 {websh3_weblog: see if we get the id} {
+    web::logfilter delete
+    set id [web::logfilter add testWithoutAdd.alert-warning]
+} {logfilter0}
+
+test log-1.8 {websh3_weblog: test delete} {
+    web::logfilter delete
+    ## set-up a list of filters
+    web::logfilter add test0.alert-warning
+    set id [web::logfilter add test1.alert-warning]
+    web::logfilter add test2.alert-warning
+    ## now delete the middle one
+    web::logfilter delete $id
+    ## and see what we have
+    web::logfilter names
+} {logfilter0 test0.alert-warning
+logfilter2 test2.alert-warning}
+
+test log-1.9 {websh3_weblog: tons of filters} {
+    if {[info exists test]} {unset test}
+    web::logfilter delete
+    for {set i 0} {$i < 100} {incr i} {
+	web::logfilter add test.alert
+    }
+    web::logfilter add last.warning
+    set res [web::logfilter names]
+    set res [split $res "\n "]
+    array set test $res
+    set res $test(logfilter64)
+} "last.warning-warning"
+
+test log-1.10 {websh3_weblog: delete first filter} {
+    web::logfilter delete
+    ## set-up a list of filters
+    set id [web::logfilter add test1.alert-warning]
+    web::logfilter add test2.alert-warning
+    web::logfilter add test3.alert-warning
+    ## now delete the middle one
+    web::logfilter delete $id
+    ## and see what we have
+    web::logfilter names
+} {logfilter1 test2.alert-warning
+logfilter2 test3.alert-warning}
+
+test log-1.11 {websh3_weblog: try to delete non-existing logfilter} {
+
+    web::logfilter delete
+
+    catch {
+	web::logfilter delete "filter10"
+    } msg
+    set msg
+} {no such log filter "filter10"}
+
+# -----------------------------------------------------------------------------
+# manage logdests (or "rules" or "destinations")
+# -----------------------------------------------------------------------------
+test log-2.1 {web::logdest wrong number of arguments} {
+    catch {web::logdest} msg
+    set msg
+} {bad option "web::logdest": must be add, delete, or names}
+
+test log-2.2 {web::logdest wrong argument} {
+    catch {web::logdest gugus} msg
+    set msg
+} {bad option "gugus": must be add, delete, or names}
+
+test log-2.3 {websh3_weblog: logdest add returns id} {
+    set fn [web::tempfile]
+    web::logdest delete
+    set res [web::logdest add info2.-debug file -unbuffered $fn]
+    ## note: can only delete after logdest has closed file !
+    web::logdest delete $res
+    file delete $fn
+    set res
+} {logdest0}
+
+test log-2.4 {websh3_weblog: break logbad add} {
+    web::logdest delete
+    catch {
+	set res [web::logdest add info2.-debug -unbuffered file test.dat]
+    } msg
+    file delete test.dat
+    set msg
+} {no log handler of type "-unbuffered" registered}
+
+test log-2.5 {websh3_weblog: add a logdest} {
+
+    set curTim [clock seconds]
+
+    web::logfilter delete
+    web::logdest delete
+
+    web::logfilter add *.-debug
+    web::logdest add -format "$curTim \$m" *.-debug command logTestCatchMsg
+
+    set tmp [web::log info {AABBCCDD}]
+
+    set res [string compare $tmp "$curTim AABBCCDD"]
+} {0}
+
+test log-2.6 {websh3_weblog: test delete from logdest} {emptyTest} {
+
+    web::logdest delete
+
+    web::logdest add test0.alert file "test.dat"
+    web::logdest add test1.error command dummy
+    web::logdest add test2.warning syslog 10
+    set id [web::logdest add test3.info command dummy]
+    web::logdest add test4.debug command dummy
+
+    ## now delete one
+    web::logdest delete $id
+
+    ## and see what we have
+    set res [web::logdest names]
+    file delete test.dat
+    set res
+} {logdest0 test0.alert-alert file
+logdest1 test1.error-error command
+logdest2 test2.warning-warning syslog
+logdest4 test4.debug-debug command}
+
+test log-2.7 {websh3_weblog: try to delete non-existing logdest} {
+
+    web::logdest delete
+
+    catch {
+	web::logdest delete "logdest10"
+    } msg
+    set msg
+} {no such log destination "logdest10"}
+
+
+test log-3.0 {maxchar option} {
+
+    web::logdest delete
+    web::logfilter delete
+    web::logfilter add *.-debug
+    web::logdest add -maxchar 5 -format "\$m"  *.-debug command logTestCatchMsg
+    set tmp [web::log info {ThisIsALongLogMsg}]
+    set res [string compare $tmp "ThisI"]
+} {0}
+
+test log-3.1 {maxchar option, msg shorter than maxchar} {
+
+    web::logdest delete
+    web::logfilter delete
+    web::logfilter add *.-debug
+    web::logdest add -maxchar 5 -format "\$m"  *.-debug command logTestCatchMsg
+    set tmp [web::log info {T}]
+    set res [string compare $tmp "T"]
+} {0}
+
+test log-3.2 {truncate really long msg} {
+
+    web::logdest delete
+    web::logfilter delete
+    web::logfilter add *.-debug
+    web::logdest add -maxchar 5 -format "\$m"  *.-debug command logTestCatchMsg
+    set tmp [web::log info [string repeat "Test" 10000]]
+    set res [string compare $tmp "TestT"]
+} {0}
+
+test log-3.3 {-nosubst} {
+
+    web::logdest delete
+    web::logfilter delete
+    web::logfilter add *.-debug
+    web::logdest add -maxchar 5 -format "\$m"  *.-debug command logTestCatchMsg
+    set i 0
+    set tmp [web::log info {[incr i]}]
+    web::config logsubst 0
+    set tmp [web::log info {[incr i]}]
+    web::config logsubst 0
+    set i
+} {1}
+
+test log-3.4 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logfilter add foo} msg
+    set msg
+} {wrong log level "foo"}
+
+test log-3.5 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logfilter add foo.bar} msg
+    set msg
+} {wrong log level "foo.bar"}
+
+test log-3.6 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logfilter add foo.foo-bar} msg
+    set msg
+} {wrong log level "foo.foo-bar"}
+
+test log-3.7 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logfilter add foo.foo-bar-pi} msg
+    set msg
+} {wrong log level "foo.foo-bar-pi"}
+
+test log-3.8 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logdest add foo channel stdout} msg
+    set msg
+} {wrong log level "foo"}
+
+test log-3.9 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logdest add foo.bar channel stdout} msg
+    set msg
+} {wrong log level "foo.bar"}
+
+test log-3.10 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logdest add foo.foo-bar channel stdout} msg
+    set msg
+} {wrong log level "foo.foo-bar"}
+
+test log-3.11 {invalid filter name} {
+
+    web::logdest delete
+    web::logfilter delete
+    catch {web::logdest add foo.foo-bar-pi channel stdout} msg
+    set msg
+} {wrong log level "foo.foo-bar-pi"}
+
+test log-3.12 {multiple channels (crash test)} {
+
+    web::logdest delete
+    web::logfilter delete
+    web::logdest add *.-debug channel stdout
+    web::logdest add *.-debug channel stdout
+    web::logdest add *.-debug channel stdout
+    web::logdest add *.-debug channel stdout
+    web::logdest names
+    web::logfilter add *.-debug
+    web::log debug test
+    web::logdest names
+
+} {logdest2 *.alert-debug
+logdest3 *.alert-debug
+logdest0 *.alert-debug
+logdest1 *.alert-debug}
+
+# cleanup
+::tcltest::cleanupTests

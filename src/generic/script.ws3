@@ -1,0 +1,178 @@
+#
+# script.ws3 -- the commands of websh3 that are implemented as Tcl scripts
+# nca-073-9
+# 
+# Copyright (C) 1996-2000 by Netcetera AG.
+# All rights reserved.
+# 
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+# 
+# @(#) $Id$
+#
+
+#-----------------------------------------------------------------------------
+# namespace init (make sure web:: exists)
+#-----------------------------------------------------------------------------
+namespace eval web {}
+
+#-----------------------------------------------------------------------------
+# web::putxfile
+#-----------------------------------------------------------------------------
+proc web::putxfile {file {channel ""} {vmsg ""}} {
+
+    if {[string length $vmsg]} {
+	upvar $vmsg msg
+    }
+    if {[string length $channel]} {
+	# file is actually the channel and channel is the file
+	if {[web::readfile $channel content msg]} {
+	    return 1
+	}
+	return [catch {uplevel [list web::putx $file $content]} msg]
+    } else {
+	if {[web::readfile $file content msg]} {
+	    return 1
+	}
+	return [catch {uplevel [list web::putx $content]} msg]
+    }
+}
+
+#-----------------------------------------------------------------------------
+# web::readfile
+#-----------------------------------------------------------------------------
+proc web::readfile {name vtarget {vmsg ""}} {
+
+    upvar $vtarget target
+    if {[string length $vmsg]} {
+	upvar $vmsg msg
+    }
+    return [catch {
+	set fh [open $name r]
+	set target [read $fh]
+	close $fh
+    } msg]
+}
+
+#-----------------------------------------------------------------------------
+# web_include
+#-----------------------------------------------------------------------------
+proc web::include {name {vmsg ""}} {
+
+    if {[string length $vmsg]} {
+	upvar $vmsg msg
+    }
+    if {![file exists $name]} {
+	set so "$name[info sharedlibextension]"
+	if {[file exists $so]} {
+	    return [catch {uplevel load $so} msg]
+	}
+    }
+    return [catch {uplevel source $name} msg]
+}
+
+#-----------------------------------------------------------------------------
+# web::match
+# 1: string to be returned if $val exists in $list
+# 2: list to be searched for $val
+# 3: string to search
+#-----------------------------------------------------------------------------
+proc web::match {res list val} {
+
+    if {[lsearch -exact $list $val] >= 0} {
+	return $res
+    }
+    return ""
+}
+
+#-----------------------------------------------------------------------------
+# web::list2uri
+#-----------------------------------------------------------------------------
+proc web::list2uri {list} {
+
+    if {[llength $list] % 2} {
+	error "list must have even number of elems"
+    }
+
+    set pairs {}
+    foreach {k v} $list {
+	lappend pairs [join [list [uriencode $k] [uriencode $v] ] = ]
+    }
+    return [join $pairs &]
+}
+
+#-----------------------------------------------------------------------------
+# web::uri2list
+#-----------------------------------------------------------------------------
+proc web::uri2list {string} {
+
+    # special case: must return a list with an even # of elements
+    set res ""
+    foreach item [split $string &] {
+	set kv [split $item =]
+	if [llength $kv] {
+	    lappend res [uridecode [lindex $kv 0]] [uridecode [lindex $kv 1]]
+	}
+    }
+    return $res
+}
+
+#-----------------------------------------------------------------------------
+# mod_websh and CGI stuff
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+# per request init and cleanup for mod_websh
+
+namespace eval web::ap {}
+
+proc web::ap::perReqInit {} {
+
+    # reset request data
+    web::request -reset
+    # reset response channels
+    web::response -resetall
+    # reset url data
+    web::cmdurlcfg -reset
+}
+
+proc web::ap::perReqCleanup {} {
+
+    web::logdest delete
+    web::logfilter delete
+}
+
+#-----------------------------------------------------------------------------
+# setup environment for cgi mode
+
+namespace eval web::cgi {}
+
+proc web::cgi::copyenv {} {
+
+    set cgienv {
+	SERVER_SOFTWARE 
+	SERVER_NAME 
+	GATEWAY_INTERFACE 
+	SERVER_PROTOCOL 
+	SERVER_PORT 
+	REQUEST_METHOD 
+	PATH_INFO 
+	PATH_TRANSLATED 
+	SCRIPT_NAME 
+	QUERY_STRING 
+	REMOTE_HOST 
+	REMOTE_ADDR 
+	AUTH_TYPE 
+	REMOTE_USER 
+	REMOTE_IDENT 
+	CONTENT_TYPE 
+	CONTENT_LENGTH 
+    }
+
+    foreach e [array names ::env] {
+	if {![string match HTTP_* $e]} {
+	    if {[lsearch -exact $cgienv $e] == -1} continue
+	}
+	web::request -set $e $::env($e)
+    }
+}

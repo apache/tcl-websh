@@ -1,0 +1,125 @@
+#
+# filecounter.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# creation and 'normal' usage
+# -----------------------------------------------------------------------------
+
+set filename [web::tempfile]
+
+test filecounter-1.0 {web::filecounter create a filecounter} {
+    web::filecounter handle1 -filename $filename -min 0 -max 3 -seed 2 -incr 1
+
+} {handle1}
+
+test filecounter-1.1 {web::filecounter get a value} {
+    handle1 nextval
+} {2}
+
+test filecounter-1.2 {web::filecounter with various number args} {
+    catch {web::filecounter handleX -filename afile -max 3 -seed 1 -incr 1} msg
+    set msg
+} {handleX}
+
+test filecounter-1.3 {web::filecounter with various number args and negative values} {
+    catch {web::filecounter handleXX -filename afile -max -3 -seed -10 -min -100 -incr 1 -wrap} msg
+    set msg
+} {handleXX}
+
+# -----------------------------------------------------------------------------
+# abuse
+# -----------------------------------------------------------------------------
+test filecounter-2.1 {web::filecounter use same handle again} {
+    catch {web::filecounter handle1 -filename afile -min 0 -max 3 -seed 2 -incr 1} msg
+    set msg
+} {web::filecounter: handle already exists}
+
+test filecounter-2.2 {web::filecounter use invalid values} {
+    catch {web::filecounter handle2 -filename afile -min 0 -max 3 -seed 5 -incr 1} msg
+    set msg
+} {web::filecounter: invalid or inconsistent arguments}
+
+test filecounter-2.3 {web::filecounter use invalid values} {
+    catch {web::filecounter handle2 -filename afile -min 3 -max 3 -seed 1 -incr 1} msg
+    set msg
+} {web::filecounter: invalid or inconsistent arguments}
+
+
+test filecounter-2.5 {web::filecounter handle at wrong position} {
+    catch {web::filecounter  -filename afile -min 3 -max 3 -seed 1 -incr 1 handle2} msg
+    set msg
+} {wrong # args: should be "web::filecounter handle -filename filename ?options?"}
+
+
+test filecounter-2.6 {web::filecounter overflow} {
+    handle1 nextval
+    catch {handle1 nextval} msg
+    set msg
+} {counter overflow}
+
+test filecounter-2.7 {web::filecounter with wrap} {
+    if {[file exists $filename]} {
+	file delete $filename
+    }
+    web::filecounter handle3 -filename $filename -max 3 -min 2 -seed 2 -incr 1 -wrap
+    handle3 nextval
+    handle3 nextval
+    handle3 nextval
+    
+} {2}
+
+test filecounter-2.8 {get config of previous filecounter} {
+    set res [handle3 config]
+    string compare $res "file $filename handle handle3 seed 2 min 2 max 3 incr 1 wrap true curr 2"
+} {0}
+
+test filecounter-2.9 {use invalid param/switch} {
+    set msg ""
+    catch {web::filecounter bla -filename af -false option} msg
+    set msg
+} {bad option "-false": must be -filename, -seed, -min, -max, -incr, or -wrap}
+
+test filecounter-2.10 {backwards} {
+    web::filecounter fc2_10 -filename [web::tempfile] -seed 10000 -incr -1000
+    set res [fc2_10 nextval]
+    append res "-[fc2_10 nextval]"
+    append res "-[fc2_10 nextval]"
+    append res "-[fc2_10 nextval]"
+    append res "-[fc2_10 nextval]"
+    append res "-[fc2_10 nextval]"
+    set res
+} {10000-9000-8000-7000-6000-5000}
+
+test filecounter-2.11 {forwards} {
+    web::filecounter fc2_11 -filename [web::tempfile] -seed 0 -incr 1000
+    set res [fc2_11 nextval]
+    append res "-[fc2_11 nextval]"
+    append res "-[fc2_11 nextval]"
+    append res "-[fc2_11 nextval]"
+    append res "-[fc2_11 nextval]"
+    append res "-[fc2_11 nextval]"
+    set res
+} {0-1000-2000-3000-4000-5000}
+
+file delete $filename
+
+# cleanup
+::tcltest::cleanupTests

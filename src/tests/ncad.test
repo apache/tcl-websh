@@ -1,0 +1,155 @@
+#
+# ncad.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+#------------------------------------------------------------------------------
+# tcltest package
+#------------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+test ncad-1.1 {wrong num args} {
+    catch {web::encryptd} msg
+    set msg
+} {wrong # args: should be "web::encryptd msg"}
+
+test ncad-1.2 {missing string} {
+    catch {web::decryptd} msg
+    set msg
+} {wrong # args: should be "web::decryptd msg"}
+
+test ncad-1.3 {too many args} {
+    catch {web::decryptd "a" "b" "c"} msg
+    set msg
+} {wrong # args: should be "web::decryptd msg"}
+
+test ncad-1.4 {unknown type} {
+    set res ""
+    set tmp [catch {set res [web::decryptd "XZnca"]} msg]
+    lappend res $tmp $msg
+    set res
+    ## 3 is TCL_BREAK
+    ## 4 is TCL_CONTINUE --> unknown type
+} {4 {}}
+
+# -----------------------------------------------------------------------------
+# normal operation
+# -----------------------------------------------------------------------------
+test ncad-2.1 {set key} {
+
+    web::cryptdkey
+    set res [web::encryptd "Hello È‡Ë!"]
+    web::cryptdkey 1234567890
+    lappend res [web::encryptd "Hello È‡Ë!"]
+    web::cryptdkey
+    lappend res [web::encryptd "Hello È‡Ë!"]
+    set res
+
+} {XDIVAhkgYnDaThxIKkSwhFLko9Z XD4SyV6uJBYHoare6wH8mUow1GS XDIVAhkgYnDaThxIKkSwhFLko9Z}
+
+test ncad-2.2 {normal operation} {
+
+    web::encryptd "¸ˆ‰ dsds aaaa ‰‰È GHGHGH"
+
+} {XDz40BSuEkgYeZJDDTIdbjoPjBCwu2CqjGef2jSNUfClk0lrQzPW}
+
+
+test ncad-2.3 {empty string} {
+
+    web::encryptd ""
+
+} {}
+
+test ncad-3.4 {empty string} {
+
+    catch {web::decryptd ""}
+
+} {4}
+
+test ncad-2.5 {symmetry} {
+
+    set msg "This is a international message ‰¸ˆ Ë \uFF01 \uFFF1"
+    string compare $msg [web::decryptd [web::encryptd $msg]]
+
+} {0}
+
+test ncad-2.6 {encryptd long string} {
+
+    set tmp "cmd=test id=0 t=941012649 "
+    append tmp [string repeat "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#\"*%&+<>-_.,;" 13]
+    web::encryptd $tmp
+
+} {XDZuRDLA6ByKztGaqIUXOwKYQNShjVmulMJC9xJ5sA52R7KsqmlK9bP6HAQckLg9BoVEmcyvqIUpKzRaHlfc2HfoZfovAhOpHlxalsrwrRiATLH9FE0qE7LKJ4b8tMP52w7YQazn9bJMT0D4jGhCM8HfcwqUjZrronssci5K6Akv4kAjSL1OJ1gWjs59lnqOZmfpWY0QtwFBTeJgQ6ULwfxqGapFGmKK6UX0y6GunKjQnUD8HOcVCd5dpScpoton4WpdZRX1nd1YmlkZ41lZaNJXgLCsFDYUCBIn01jHiHRKT2ZjFeX860chWTz6HUWqg7WS8xw5F6VhqArUBjpLsuZGPpm4mSeIIolVni2lhMTBwzOIWOOSynZxzomu4mfCaNkRAUdkynUvNQcFPGFKFIXPhqkjocMQnq2B9SxqaMNKJYhQH4RaVHbL6MFAXBMsoifCzPBqzq4E6RkBBmR8eSmha0ATwZz6lDcCcqEM7CMwBvcqJalbm0zxtBRBVE9AHzkrGANLLPv9vJL64CMZSzNoBsbz6dq0fDe1B2BYVkeBQEWdXgodNVs2EY6FM0OvcT7SL1eSdkvxXXY4DO1vaa0Opq71HQ3O6k6vUBRIDAPopKsreVYEC7IjbLkYvVFs0PeO4e7OZTesquq8OXraVSZH2e3xAmmqMeOCDJFUdA1m96RI0szSfnSAe2C7Gkh7bypOKCmpcX16FQQiWvICqdahbCZjq8nO3Zd7ccFu1PKaGubssNK3LFamiahCyoCJXWWT0XIy1hev6XPDcQmSCpxl0kQwPgrGRfdLHZp2KTNfkZJFckw42GlXH1262RdB2rEIdfxfOcTMhJSwqid8tH1elamuk36HFoR6aMeXOmuBcDbgJj6eZQovgkuTjwd4XbnQa1051CTvEFB390mc0BPONQxUFKN30DOph0PDZtdGOGTdI9ay8r0SPdXzEvDICSXWJGdp1GEdiKgBqfHaR5gSbgppNLKov4fXwg4Qpo3v9GrAqSmZ6lzohcMOPtRPC26FDLWkdAYZwdNt29NP6XzPbEOtsxs9QsBbXPVI4uIyCBArOvgpqwsQZ7yby0LBtgn9MS7wNv8s1XUpjMBicS01mf7AHQOeQn80cNINFovpuAnMzTVxQOzch3wAoQ5Kpxucun8JGbiQCpE8LXXb8YKikigoyYRyMRoVEqz6KlStLhtWggfkfarJc60INVFCZZlyw9eL5ijlhDM4ycz5QN53kwlcvVc4wmf8rDvWbOYeSjktbuV8aKaRGcixMvHKvJeA3slVGJT1HTB5Yp1Rcqo62KbwGzu4Bted2w9PPTzVHfh42AKqjGeEbI1HQXlGvmDu4oxHEXRs7j1zt7CI29Zam31Lqi2V8vVmbDmWdgnlHDAchoNDaIQWtq3t5Aj0eEWHmPbOF8qqMT1ylaemlMXyrBaOkeO1AAP9pY1ITFQecyuCStDwrQXF0vKERCCGmwi68ZV3C3uYvpA5nZgxA9ob2hrlxIFcW4J6ymIH0rHINUQeOj2sSB47xUZRGGrOzRRrIEnORlcoQ0dqJPrCUMhro8GRD3S9NMLc9gSjmSPp0RJzOCYWGt17M6muNepXiwulhzFKeNIv08s8VWinl3YEyWXSOs1qhVvqBAslsK7wDlqG6ulCtDtSVGOSETSZFWrEeMaPCWanAh12bxGkbOFxDt3aq1jc6q2fqrqvqLc4O0wouugWuxBA9U1YJgjPMBMnfHgUqJ3goYnXDPqXhktEBMGm1cunhotxhvITiom8dQAtCfwy}
+
+test ncad-2.7 {decryptd long string} {
+
+    web::decryptd XDZuRDLA6ByKztGaqIUXOwKYQNShjVmulMJC9xJ5sA52R7KsqmlK9bP6HAQckLg9BoVEmcyvqIUpKzRaHlfc2HfoZfovAhOpHlxalsrwrRiATLH9FE0qE7LKJ4b8tMP52w7YQazn9bJMT0D4jGhCM8HfcwqUjZrronssci5K6Akv4kAjSL1OJ1gWjs59lnqOZmfpWY0QtwFBTeJgQ6ULwfxqGapFGmKK6UX0y6GunKjQnUD8HOcVCd5dpScpoton4WpdZRX1nd1YmlkZ41lZaNJXgLCsFDYUCBIn01jHiHRKT2ZjFeX860chWTz6HUWqg7WS8xw5F6VhqArUBjpLsuZGPpm4mSeIIolVni2lhMTBwzOIWOOSynZxzomu4mfCaNkRAUdkynUvNQcFPGFKFIXPhqkjocMQnq2B9SxqaMNKJYhQH4RaVHbL6MFAXBMsoifCzPBqzq4E6RkBBmR8eSmha0ATwZz6lDcCcqEM7CMwBvcqJalbm0zxtBRBVE9AHzkrGANLLPv9vJL64CMZSzNoBsbz6dq0fDe1B2BYVkeBQEWdXgodNVs2EY6FM0OvcT7SL1eSdkvxXXY4DO1vaa0Opq71HQ3O6k6vUBRIDAPopKsreVYEC7IjbLkYvVFs0PeO4e7OZTesquq8OXraVSZH2e3xAmmqMeOCDJFUdA1m96RI0szSfnSAe2C7Gkh7bypOKCmpcX16FQQiWvICqdahbCZjq8nO3Zd7ccFu1PKaGubssNK3LFamiahCyoCJXWWT0XIy1hev6XPDcQmSCpxl0kQwPgrGRfdLHZp2KTNfkZJFckw42GlXH1262RdB2rEIdfxfOcTMhJSwqid8tH1elamuk36HFoR6aMeXOmuBcDbgJj6eZQovgkuTjwd4XbnQa1051CTvEFB390mc0BPONQxUFKN30DOph0PDZtdGOGTdI9ay8r0SPdXzEvDICSXWJGdp1GEdiKgBqfHaR5gSbgppNLKov4fXwg4Qpo3v9GrAqSmZ6lzohcMOPtRPC26FDLWkdAYZwdNt29NP6XzPbEOtsxs9QsBbXPVI4uIyCBArOvgpqwsQZ7yby0LBtgn9MS7wNv8s1XUpjMBicS01mf7AHQOeQn80cNINFovpuAnMzTVxQOzch3wAoQ5Kpxucun8JGbiQCpE8LXXb8YKikigoyYRyMRoVEqz6KlStLhtWggfkfarJc60INVFCZZlyw9eL5ijlhDM4ycz5QN53kwlcvVc4wmf8rDvWbOYeSjktbuV8aKaRGcixMvHKvJeA3slVGJT1HTB5Yp1Rcqo62KbwGzu4Bted2w9PPTzVHfh42AKqjGeEbI1HQXlGvmDu4oxHEXRs7j1zt7CI29Zam31Lqi2V8vVmbDmWdgnlHDAchoNDaIQWtq3t5Aj0eEWHmPbOF8qqMT1ylaemlMXyrBaOkeO1AAP9pY1ITFQecyuCStDwrQXF0vKERCCGmwi68ZV3C3uYvpA5nZgxA9ob2hrlxIFcW4J6ymIH0rHINUQeOj2sSB47xUZRGGrOzRRrIEnORlcoQ0dqJPrCUMhro8GRD3S9NMLc9gSjmSPp0RJzOCYWGt17M6muNepXiwulhzFKeNIv08s8VWinl3YEyWXSOs1qhVvqBAslsK7wDlqG6ulCtDtSVGOSETSZFWrEeMaPCWanAh12bxGkbOFxDt3aq1jc6q2fqrqvqLc4O0wouugWuxBA9U1YJgjPMBMnfHgUqJ3goYnXDPqXhktEBMGm1cunhotxhvITiom8dQAtCfwy
+
+} {cmd=test id=0 t=941012649 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZˆ‰¸È‡Ë÷ƒ‹…¿»@@#"*%&+<>-_.,;}
+
+test ncad-2.8 {decryptd empty string} {
+
+    web::decryptd "XD"
+
+} {}
+
+test ncad-2.9 {high unicoded} {
+
+    set in "\uFF00 \u01FF"
+    string compare $in [web::decryptd [web::encryptd $in]]
+
+} {0}
+
+test ncad-2.10 {en-/decryptd long string} {
+
+    set tmp [string repeat "a‰bˆc¸\r" 70000]
+
+    string equal [web::decryptd [web::encryptd $tmp]] $tmp
+
+} {1}
+
+
+# -----------------------------------------------------------------------------
+# error signals
+# -----------------------------------------------------------------------------
+test ncad-3.1 {error signal 1} {
+
+    catch {web::decryptd "a"} msg
+
+} {4}
+
+test ncad-3.2 {error signal 2} {
+
+    set res [catch {web::decryptd "XDfoo"} msg]
+    lappend res $msg
+
+} {1 {checksum mismatch}}
+
+
+# -----------------------------------------------------------------------------
+# symmetry
+# -----------------------------------------------------------------------------
+test ncad-4.1 {symmetry} {
+
+    set in [list {"Bildschirm Eizo 19"" "} a ¸ˆ‰ [list [list b d] e]]
+    set res [web::decryptd [web::encryptd $in]]
+    string equal $in $res
+} {1}
+
+# cleanup
+::tcltest::cleanupTests

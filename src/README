@@ -1,0 +1,150 @@
+
+                   webshell, Version 3.0.0
+                                   
+            Copyright 1996-2001, Netcetera AG, Switzerland
+                                   
+                         All rights reserved.
+
+                          
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the "Artistic License".
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Artistic License for more details.
+    
+    You should have received a copy of the Artistic License along with
+    the code (the file license.terms).
+
+    webshell is available from
+
+        http://websh.com/download
+
+Contents
+--------
+
+    1. Introduction
+    2. Documentation
+    3. Compiling and installing webshell
+    4. mod_websh: webshell as Apache Module
+    5. Support
+
+1. Introduction
+---------------
+
+webshell is a rapid development environment for building powerful and
+reliable web applications. It is a standard Tcl extension and is
+released as Open Source Software. webshell is versatile and handles
+everything from HTML generation to data-base driven one-to-one page
+customization. At Netcetera, we have been using it for years for
+virtually all our customer projects, which typically are E-commerce
+shops or electronic banking applications.
+
+webshell is maintained, enhanced, and distributed freely as a service
+to the Open Source community by Netcetera AG, Switzerland.
+
+Find more information about
+
+- webshell at: 
+
+        http://websh.com
+
+- Netcetera AG, Switzerland at
+
+        http://netcetera.ch/en
+
+- Tcl at 
+
+        http://www.scriptics.com
+
+2. Documentation
+----------------
+
+Documentation is available at
+
+        http://websh.com
+
+
+3. Compiling and installing webshell
+------------------------------------
+
+webshell is a pure Tcl extension, Tk is not required.  You need
+Tcl8.2.2 or newer to compile and install webshell 3.
+
+typically:
+
+cd unix
+./configure
+make
+make test
+make install
+make clean
+
+If you have several versions of Tcl installed on your system, you
+might want to specify which one should be used for webshell, e.g.
+
+  ./configure --with-tcl=/usr/local/tcl8.3.2/lib \
+      --with-tclinclude=/usr/local/tcl8.3.2/include/
+
+
+4. mod_websh: webshell as Apache Module
+---------------------------------------
+
+webshell applications can both run in CGI mode and in mod_websh,
+the module for Apache 1.3. In order to build mod_websh,
+you have to use the following configure option:
+
+  --with-httpdinclude=/path/to/apache/header/files
+
+After this,
+
+  make mod_websh.so
+
+will compile and build mod_websh.
+
+In order to use mod_websh in your Apache web server, you have
+to do the following:
+
+1) cp mod_websh.so somewhere where Apache can find it.
+   e.g. libexec/
+2) edit the httpd.conf file and add the following lines:
+   LoadModule websh_module /path/to/apache/libexec/mod_websh.so
+   AddHandler websh-script .ws3
+3) HUP/restart httpd
+
+From now on, httpd will pass files ending in .ws3 to mod_websh if the
+files are
+
+1) in a ScriptAlias'ed directory and
+2)  executable and readable for the user under which httpd runs
+
+5. Support
+----------
+
+Netcetera is committed to provide high-quality support for webshell.
+
+You can reach us at
+
+  support@websh.com 
+
+and
+
+  info@websh.com
+
+We edit a newsletter about webshell. You can subscribe
+to this newsletter at
+
+  http://websh.com/subscribe.html
+
+
+Or you can find more information about webshell at
+
+  http://websh.com
+
+
+
+ == Thank you for your interest in webshell ==
+
+
+@(#) $Id$

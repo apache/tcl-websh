@@ -1,0 +1,84 @@
+#
+# request.test -- test request structure (cmdurl -> dispatch)
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# util
+# -----------------------------------------------------------------------------
+proc cleanParam {} {
+    web::cmdurlcfg -unset
+    web::formvar -unset
+    web::param -unset
+}
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# request
+# -----------------------------------------------------------------------------
+test request-2.1 {gen url, parse it, access params} {
+
+    cleanParam
+
+    set url [web::cmdurl aTstCmd found 10 tried 20]
+    set url [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $url
+
+    set res [web::param -names]
+} {t cmd tried found}
+
+test request-2.2 {plain-text querystring} {
+
+    cleanParam
+
+    set qstr "cmd=subscribe&lang=de"
+    web::dispatch -cmd "" -postdata "" -querystring $qstr
+
+    set res [web::param cmd]
+} {subscribe}
+
+test request-2.3 {reset} {
+
+    cleanParam
+
+    web::formvar -set krf23 vrf23
+    web::param -set krp23 vrp23
+    web::config cmdparam "myCmd"
+    set res [web::formvar -names]
+    lappend res [web::param -names]
+    lappend res [web::config cmdparam]
+    web::request -reset
+    lappend res [web::formvar -names]
+    lappend res [web::param -names]
+    lappend res [web::config cmdparam]
+    set res
+} {krf23 krp23 myCmd {} {} cmd}
+
+test request-2.4 {defaultchannelname} {
+
+    cleanParam
+    web::request -channel
+} {stdin}
+
+
+# cleanup
+::tcltest::cleanupTests

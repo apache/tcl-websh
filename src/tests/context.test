@@ -1,0 +1,154 @@
+#
+# context.test -- test context management
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+web::context ctxa
+
+test context-1.1 {simple set} {
+
+    ctxa::cunset
+
+    ctxa::cset δ φ
+    ctxa::cget δ
+} {φ}
+
+test context-1.2 {unset} {
+
+    ctxa::cunset
+
+    ctxa::cset δ φ
+    ctxa::cunset δ
+    ctxa::cget δ
+} {}
+
+test context-1.3 {lappend} {
+
+    ctxa::cunset
+
+    ctxa::cset a [list a b c]
+    ctxa::clappend a d
+    set res [lindex [ctxa::cget a] 0][ctxa::cget a]
+} {aa b c d}
+
+test context-1.4 {lappend 2} {
+
+    ctxa::cunset
+
+    ctxa::clappend a [list a b c]
+    ctxa::clappend a d
+    lindex [ctxa::cget a] 0
+} {a b c}
+
+test context-1.5 {append} {
+
+    ctxa::cunset
+
+    ctxa::cset a 1
+    ctxa::cappend a st
+    ctxa::cget a
+} {1st}
+
+test context-1.6 {names} {
+
+    ctxa::cunset
+
+    ctxa::cset a 1
+    ctxa::cset b 2
+    set res  [ctxa::cnames]
+    lappend res [ctxa::cexists a]
+    lappend res [ctxa::cexists c]
+} {a b 1 0}
+
+test context-1.7 {array} {
+
+    ctxa::cunset
+
+    ctxa::cset aa(1st) 1
+    ctxa::carray get aa
+} {1st 1}
+
+test context-1.8 {array set} {
+
+    ctxa::cunset
+
+    ctxa::carray set aa "a 1 b 2 c 3 d 4 e 5 f 6 g 7"
+    lsort [ctxa::carray names aa]
+} {a b c d e f g}
+
+test context-1.9 {dump} {} {
+
+    ctxa::cunset
+
+    ctxa::cset c 1
+    ctxa::cset d 2
+    ctxa::cset ad(1st) 3
+    ctxa::cset ad(2nd) [list a long list]
+    set res [ctxa::dump]
+    ctxa::cunset c
+    lappend res [ctxa::dump]
+    ctxa::cunset
+    lappend res [ctxa::dump]
+
+} {carray set ad {2nd {a long list} 1st 3} cset c 1 cset d 2 {carray set ad {2nd {a long list} 1st 3}
+cset d 2} {}}
+
+test context-1.10 {dump long context} {} {
+
+    # puts "context-1.10"
+
+    web::context ctx110a
+    web::context ctx110b
+
+    set tmp mark110
+    append tmp [string repeat "φόabc\rδ
+" 5000]
+    ctx110a::cset ltst $tmp
+
+    namespace eval ::ctx110b [web::decrypt [web::encrypt [ctx110a::dump]]]
+
+    # now see if the two are identical
+    set res [string equal [ctx110a::cget ltst] [ctx110b::cget ltst]]
+} {1}
+
+# -----------------------------------------------------------------------------
+# context in subnamespace
+# -----------------------------------------------------------------------------
+
+test context-2.0 {context in namespace} {} {
+    namespace eval a {web::context b}
+    a::b::carray set foo "a 1 b 2 c 3 d 4 e 5 f 6"
+    set res [lsort [a::b::carray names foo]]
+    namespace delete a
+    set res
+} {a b c d e f}
+
+
+test context-2.1 {context in global namespace from namespace} {} {
+    namespace eval a {web::context ::b}
+    ::b::carray set foo "a 1 b 2 c 3 d 4 e 5 f 6"
+    set res [lsort [::b::carray names foo]]
+    namespace delete a b
+    set res
+} {a b c d e f}
+
+# -----------------------------------------------------------------------------
+# cleanup
+# -----------------------------------------------------------------------------
+::tcltest::cleanupTests

@@ -1,0 +1,246 @@
+#
+# formvar.test --
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# util
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# formvar
+# -----------------------------------------------------------------------------
+test formvar-2.1 {get keys} {
+
+    set data "lang=FR&type=ez&type=med"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+
+    set res [lsort [web::formvar -names]]
+} {lang type}
+
+test formvar-2.2 {get values} {
+
+    set data "type=ez&type=med"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+
+    set res [lsort [web::formvar type]]
+} {ez med}
+
+test formvar-2.2a {get values with content_type} {
+
+    set data "type=ez&type=med"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data end \
+	"application/x-www-form-urlencoded"
+
+    set res [lsort [web::formvar type]]
+} {ez med}
+
+test formvar-2.3 {unset} {
+
+    set data "type=ez&lang=EN"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    web::formvar -unset type
+    set res [lsort [web::formvar -names]]
+} {lang}
+
+
+test formvar-2.4 {unset} {
+
+    web::formvar -unset
+    set res [lsort [web::formvar -names]]
+} {}
+
+
+# -----------------------------------------------------------------------------
+# formvar
+# -----------------------------------------------------------------------------
+test formvar-3.1 {list all keys (no multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data end
+    set res [lsort [web::formvar -names]]
+} {foo k1 k2}
+
+test formvar-3.2 {list all keys (multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2&k1=v3"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set res [lsort [web::formvar -names]]
+} {foo k1 k2}
+
+test formvar-3.3 {get all values for key (no multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+
+    set res [web::formvar foo]
+} {bar}
+
+test formvar-3.4 {get all values for key (multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2&k1=v3"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set res [web::formvar k1]
+} {v1 v3}
+
+test formvar-3.5 {count distinct keys (no multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data end
+    set res [web::formvar -count k1]
+} {1}
+
+test formvar-3.6 {count distinct keys (multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2&k1=v3"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set res [web::formvar -count k1]
+} {2}
+
+test formvar-3.7 {cnt distinct vals (no multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set res [web::formvar -count k1]
+} {1}
+
+test formvar-3.8 {cnt distinct vals (multiple keys)} {
+
+    set data "k1=v1&foo=bar&k2=v2&k1=v3"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set res [web::formvar -count k1]
+} {2}
+
+test formvar-3.9 {acces default value} {
+
+    set data "k1=v1"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set res [web::formvar foo bar]
+} {bar}
+
+test formvar-3.9 {return 0} {
+
+    web::formvar -unset
+    set res [web::formvar -count foo]
+} {0}
+
+test formvar-3.10 {access value twice} {
+
+    set data "k1=v1"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set res [web::formvar k1]
+    set res [web::formvar k1]
+} {v1}
+
+test formvar-3.11 {url-encoded} {
+
+    set data "personid=&personid_fksel=382&addrext=&comments="
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set fv [lsort [web::formvar -names]]
+    if {[info exists res]} {unset res}
+    foreach tmp $fv {
+	lappend res $tmp [web::formvar $tmp]
+    }
+    set res
+} {addrext {} comments {} personid {} personid_fksel 382}
+
+test formvar-3.11a {url-encoded multiline} {
+
+    set data "personid=pid&personid_fksel=382&addrext=ab%0D%0Acd%0D%0Aef&comments=ab%0D%0Acd%0D%0Aef%0D%0A"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+    set fv [lsort [web::formvar -names]]
+    if {[info exists res]} {unset res}
+    foreach tmp $fv {
+	lappend res $tmp [web::formvar $tmp]
+    }
+    set res
+} "addrext {ab\u0d
+cd\u0d
+ef} comments {ab\u0d
+cd\u0d
+ef\u0d
+} personid pid personid_fksel 382"
+
+test formvar-3.12 {count} {
+
+    web::formvar -unset
+    web::param -unset
+    catch {set res [web::param -count]} msg1
+    catch {set res [web::formvar -count]} msg2
+    set a "$msg1 $msg2"
+} {wrong # args: should be "web::param -count key" wrong # args: should be "web::formvar -count key"}
+
+test formvar-3.13 {count} {
+
+    set data "personid="
+    web::formvar -unset
+    web::param -unset
+    web::dispatch -cmd "" -querystring "personid=" -postdata \#data end
+    set res [web::param -count personid]
+    lappend res [web::formvar -count personid]
+} {1 1}
+
+test param-3.14 {full syntax, all-in-one} {
+
+    set data "id=11&lang=DE&lang=EN"
+    web::formvar -unset
+    web::dispatch -cmd "" -querystring "" -postdata \#data
+
+    set res [lsort [web::formvar -names]]
+    lappend res [web::formvar id]
+    lappend res [lsort [web::formvar lang]]
+    lappend res [web::formvar -count id]
+    lappend res [web::formvar -count lang]
+    web::formvar -unset id
+    lappend res [lsort [web::formvar -names]]
+    web::formvar -set ordered pizza
+    lappend res [lsort [web::formvar -names]]
+    lappend res [web::formvar -count ordered]
+    web::formvar -lappend ordered pizza
+    lappend res [lsort [web::formvar -names]]
+    lappend res [web::formvar -count ordered]
+    lappend res [web::formvar ordered]
+    web::formvar -unset
+    lappend res [lsort [web::formvar -names]]
+    set res
+} {id lang 11 {DE EN} 1 2 lang {lang ordered} 1 {lang ordered} 2 {pizza pizza} {}}
+
+
+# cleanup
+::tcltest::cleanupTests

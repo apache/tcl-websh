@@ -1,0 +1,147 @@
+# =============================================================================
+# simpsess.ws3 -- example use of session
+# nca-073-9
+# $Id$
+# =============================================================================
+
+
+# =============================================================================
+# turn logging on
+# =============================================================================
+web::logfilter add simpsess.-debug
+web::logdest add simpsess.-debug file [file join .. .. logs simpsess.log]
+
+# =============================================================================
+# util
+# =============================================================================
+
+# =============================================================================
+# config
+# =============================================================================
+
+## parse query-string
+web::dispatch -cmd "" -postdata ""
+
+## create a number generator
+web::filecounter idgen -filename [file join .. .. data state.SEQNO]
+
+## and create the context
+web::filecontext statef -path [file join .. .. data]
+
+proc startPage {} {
+    return "<HTML>\n<HEAD><title>Simple Session</title>\n</HEAD>\n<BODY>\n"
+}
+
+proc finishPage {} {
+    return "</BODY></HTML>\n"
+}
+
+web::command showsessioncontext {
+
+    web::put [startPage]
+
+    if { [catch {web::statef::load [web::formvar id] } msg] == 1 } {
+
+	web::put "<b>sorry - cannot load session context</b><br>\n"
+	web::put "websh said: $msg<br>\n"
+    } else {
+
+	web::putx {
+	    <h1>Top secret session information</h1>
+	    <dl>
+	    <dt><b>Id</b>
+	    <dd>{web::put [web::statef::id]}
+	    <dt><b>Name</b>
+	    <dd>{web::put [web::statef::get name]}
+	    <dt><b>Age</b>
+	    <dd>{web::put [web::statef::get age]}
+	}
+    }
+
+    web::putx {<br><a href="{web::put [web::cmdurl ""]}">back</a>}
+
+    web::put [finishPage]
+}
+
+web::command submitsessioncontext {
+
+    web::put [startPage]
+
+    if { [catch {web::statef::new [idgen nextval] } msg] == 1 } {
+
+	web::put "<b>sorry - session exists</b><br>\n"
+	web::put "websh said: $msg<br>\n"
+	
+    } else {
+
+	web::putx {
+	    <h1>Thank you</h1>
+	    <dl>
+	    <dt><b>Id</b>
+	    <dd>{web::put [idgen curval]}
+	    <dt><b>Name</b>
+	    <dd>{web::put [web::formvar name ""]}
+	    <dt><b>Age</b>
+	    <dd>{web::put [web::formvar age ""]}
+	}
+    }
+
+    web::putx {<br><a href="{web::put [web::cmdurl ""]}">back</a>}
+
+    web::put [finishPage]
+
+    web::statef::set name [web::formvar name ""]
+    web::statef::set age [web::formvar age ""]
+
+    web::statef::commit
+}
+
+
+web::command newsessioncontext {
+
+    web::put [startPage]
+
+    web::putx {
+ 	<form method=post action="{web::put [web::cmdurl submitsessioncontext]}">
+	<dl>
+	<dt>Name
+	<dd>{web::put {<input type="text" name="name" value="Your Name">}}
+	<dt>Age
+	<dd>{web::put {<input type="text" name="age" value="Your Age">}}
+	</dl>
+ 	<input type=submit name=ok value="save">
+ 	</form>
+    }
+    web::put [finishPage]
+}
+
+web::command default {
+
+    web::put [startPage]
+
+    web::putx {
+ 	<form method=post action="{web::put [web::cmdurl showsessioncontext]}">
+ 	{
+	    web::put {<input type="text" name="id">}
+	}
+ 	<input type=submit name=ok value="show">
+ 	</form>
+    }
+    web::put "<hr>"
+    web::putx {
+	<a href="{web::put [web::cmdurl newsessioncontext]}">
+	create session</a>}
+    web::put "<hr>"
+
+    web::put [finishPage]
+}
+
+set nam [array names env]
+puts stderr $nam
+foreach tmp $nam {
+    puts stderr "$tmp $env($tmp)"
+}
+    
+
+web::dispatch -querystring ""
+

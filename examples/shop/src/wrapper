@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# wrapper - Example shop application for websh3
+# nca-073-9 
+#
+# Copyright (C) 20@@ by Netcetera AG.
+# All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property of
+# Netcetera AG, Switzerland. The program(s) may be used and/or copied
+# only with the written permission of Netcetera AG or in accordance
+# with the terms and conditions stipulated in the agreement/contract
+# under which the program(s) have been supplied.
+#
+# @(#) $Id$
+#
+#
+# \
+LD_LIBRARY_PATH=.:~/lib:/usr/lib:/usr/X11R6/lib:/usr/local/gnome/lib:/oracle/ora1/app/oracle/product/8.0.4/lib:/usr/local/lib:/usr/dt/lib:/usr/local/pgsql/lib:/usr/local/kde/lib; export LD_LIBRARY_PATH; \
+exec /usr/local/bin/websh3.0b3 "$0" "$@"
+
+web::include ../bin/shop msg

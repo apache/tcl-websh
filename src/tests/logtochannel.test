@@ -1,0 +1,59 @@
+#
+# logtochannel.test --
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# try to log to a channel (which is actually an open file)
+# -----------------------------------------------------------------------------
+test logToChannel-1.1 {websh3_weblog: add dest} {
+    web::logdest delete
+    set res [web::logdest add tochannel.-debug channel -unbuffered stdout]
+} {logdest0}
+
+test logToChannel-1.1 {websh3_weblog: use file} {
+    set res "Failed"
+    web::logfilter delete
+    web::logdest delete
+    web::logfilter add tochannel.alert-info
+    set curTim [clock seconds]
+    set fileName "tochannel-[info hostname]-$curTim-[pid].dat"
+    set fileId [open $fileName "a"]
+    set res [web::logdest add tochannel.-debug channel -unbuffered $fileId]
+    web::log tochannel.info ">>> T E S T <<< $curTim"
+    web::logfilter delete
+    web::logdest delete
+    close $fileId
+    # and see if you find it in the file
+    if {[file exists $fileName] } {
+	set fileId [open $fileName "r"]
+	while {[eof $fileId] == 0} {
+	    gets $fileId tLine
+	    set pat "*$curTim*"
+	    if { [string match $pat $tLine] == 1 } {
+		set res "Ok"
+		break
+	    }
+	}
+	## close and delete
+	close $fileId
+	file delete $fileName
+    }
+    set res
+} {Ok}
+
+# cleanup
+::tcltest::cleanupTests

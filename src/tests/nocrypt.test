@@ -1,0 +1,110 @@
+#
+# nocrypt.test -- test creation and parsing of uri-encoded querystrings
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+#------------------------------------------------------------------------------
+# tcltest package
+#------------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+test nocrypt-1.1 {wrong num args} {
+
+    catch {web::list2uri} msg
+    set msg
+
+} {no value given for parameter "list" to "web::list2uri"}
+
+test nocrypt-1.2 {uneven list} {
+
+    catch {web::list2uri "a b c"} msg
+    set msg
+
+} {list must have even number of elems}
+
+test nocrypt-1.3 {missing string} {
+
+    catch {web::uri2list} msg
+    set msg
+
+} {no value given for parameter "string" to "web::uri2list"}
+
+# -----------------------------------------------------------------------------
+# normal operation
+# -----------------------------------------------------------------------------
+test nocrypt-2.1 {empty string} {
+
+    web::list2uri ""
+
+} {}
+
+test nocrypt-2.2 {empty string} {
+
+    web::uri2list ""
+
+} {}
+
+test nocrypt-2.3 {normal operation} {
+
+    web::list2uri "üöä dsds aaaa ääé GHGHGH oops"
+
+} {%fc%f6%e4=dsds&aaaa=%e4%e4%e9&GHGHGH=oops}
+
+
+test nocrypt-2.4 {symmetry} {
+
+    set msg "This is a international message äüö è 8"
+    string compare [web::uri2list [web::list2uri $msg]] $msg
+} {0}
+
+test nocrypt-2.5 {encrypt} {
+
+    web::list2uri "äText äText"
+
+} {%e4Text=%e4Text}
+
+test nocrypt-2.6 {decrypt} {
+
+    web::uri2list %e4=%f6&%fc=%e8
+
+} {ä ö ü è}
+
+test nocrypt-2.7 {stress test} {
+
+    web::uri2list [web::list2uri "äéü wörks, bùt *ç%&/ must work too !!"]
+
+} {äéü wörks, bùt *ç%&/ must work too !!}
+
+# -----------------------------------------------------------------------------
+# special cases
+# -----------------------------------------------------------------------------
+test nocrypt-3.1 {not marked (valid URI input)} {
+
+    web::uri2list "a=b&c&d=e"
+
+} {a b c {} d e}
+
+test nocrypt-3.2 {last is single} {
+
+    web::list2uri [list k v test ""]
+
+} {k=v&test=}
+
+
+# cleanup
+::tcltest::cleanupTests

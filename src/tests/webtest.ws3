@@ -1,0 +1,109 @@
+#
+# webTest.tcl -- top-level script to run all tests for websh3
+# nca-073-9
+# 
+# Copyright (C) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+set verbose 0
+set ::tcltest::testSingleFile false 
+set ::tcltest::testsDirectory [file dir [info script]]
+
+# We need to ensure that the testsDirectory is absolute
+#
+if {[string equal relative [file pathtype $::tcltest::testsDirectory]]} {
+    set cwd [pwd]
+    cd $::tcltest::testsDirectory
+    set ::tcltest::testsDirectory [pwd]
+    cd $cwd
+    unset cwd
+}
+
+set ::tcltest::testConstraints(unixOnly) \
+    [string equal $tcl_platform(platform) "unix"]
+
+set ::tcltest::testConstraints(pcOnly) \
+    [string equal $tcl_platform(platform) "windows"]
+
+# -----------------------------------------------------------------------------
+# load websh if not done yet
+# -----------------------------------------------------------------------------
+if {![string length [info commands web::htmlify]]} {
+    if {[info exists $env(WEB_LIBRARY)] == 0} {
+	load $env(WEB_LIBRARY)
+    }
+}
+
+# -----------------------------------------------------------------------------
+# log to local file
+# -----------------------------------------------------------------------------
+## web::logfilter add *.-debug
+## web::logdest add *.-debug channel stdout
+## web::logdest add *.-debug file [file join . webtest.log]
+## web::log websh3.debug {== tests started ==}
+
+# -----------------------------------------------------------------------------
+# configuration
+# -----------------------------------------------------------------------------
+puts "Test configuration:"
+puts "+ Tcl $tcl_patchLevel"
+puts "+ [info nameofexecutable]"
+puts "+ logfile: webtest.log"
+if {$verbose} {
+    puts "+ verbose mode"
+    rename test test.unverbose
+    proc test {name args} {
+	puts "Running test $name"
+	uplevel test.unverbose $name $args
+    }
+} else {
+    puts "+ quiet mode"
+}
+puts "+ working dir: $::tcltest::testsDirectory"
+if {[llength $::tcltest::skip] > 0} {
+    puts "+ skipping tests that match: $::tcltest::skip"
+}
+if {[llength $::tcltest::match] > 0} {
+    puts "+ only running tests that match: $::tcltest::match"
+}
+if {[llength $::tcltest::skipFiles] > 0} {
+    puts "+ skipping test files that match: $::tcltest::skipFiles"
+}
+puts ""
+
+# -----------------------------------------------------------------------------
+# actual tests
+# -----------------------------------------------------------------------------
+puts "Tests began at [clock format [clock seconds]]"
+
+# source each of the specified tests
+foreach file [lsort [::tcltest::getMatchingFiles]] {
+    set tail [file tail $file]
+    if {$verbose} {
+	puts "Running test file $tail"
+    }
+    if {[string match $tail "time.test"]} {
+	if {$verbose} {
+	    puts "Skipping test file $tail"
+	}
+    } else {
+	if {[catch {source $file} msg]} {
+	    puts "Running test file $tail failed: $msg"
+	}
+    }
+}
+puts "Tests ended at [clock format [clock seconds]]\n"
+
+# cleanup
+::tcltest::cleanupTests 1

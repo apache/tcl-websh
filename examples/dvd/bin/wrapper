@@ -1,0 +1,134 @@
+#!/bin/sh
+#
+# \
+LD_LIBRARY_PATH=../lib; export LD_LIBRARY_PATH; \
+exec ../bin/websh3 "$0" "$@"
+
+## --- vvv --- config ---------------------------------------------------------
+set sdb_name dvd
+set sdb_datadir [file join .. .. data $sdb_name]
+array set sdb_perms {
+    canEdit 1
+    canDelete 1
+}
+array set sdb_items {
+    borrow {varDsc {borrower} type text size 3 showInTable 1 isLink 0}
+    title {varDsc {title} type text size 30 showInTable 0 isLink 0}
+    url  {varDsc {URL}        type text size 50 showInTable 1 isLink 1 showAsLink title}
+    sdsc {varDsc {short description} type text size 60 showInTable 1 isLink 0}
+    ldsc {varDsc {long description} type textarea rows 10 cols 80 showInTable 0 isLink 0}
+    cast {varDsc {main actors} type textarea rows 10 cols 80 showInTable 0 isLink 0}
+    director {varDsc {director} type text size 50 showInTable 0 isLink 0}
+    genre {varDsc {genre} type text size 50 showInTable 0 isLink 0}
+    ccode {varDsc {country code} type select options {1 2 3 4} showInTable 0 isLink 0}
+    format {varDsc {format} type select options {PAL/SECAM NTSC} showInTable 0 isLink 0}
+    owner {varDsc {owner} type text size 3 showInTable 1 isLink 0}
+    dvdid {varDsc {DVD Id} type text size 10 showInTable 0 isLink 0}
+    year  {varDsc {year} type text size 4 showInTable 0 isLink 0}
+    timeout {varDsc {timeout} type text size 10 viewOnly 1 showInTable 0 isLink 0 formatCode timeFormat}
+}
+
+set sdb_itemorder [list dvdid borrow timeout url title sdsc cast director genre ccode format ldsc owner]
+## --- ^^^ --- config ---------------------------------------------------------
+
+## --- vvv --- provide commands referenced above ------------------------------
+proc timeFormat {arg} {
+    if { [string length $arg] } {
+	return [clock format $arg -format "%d-%b-%y"]
+    } else {
+	return $arg
+    }
+}
+## --- ^^^ --- provide commands referenced above ------------------------------
+
+web::logfilter add *.-debug
+web::logdest add *.-debug file ../../logs/${sdb_name}.log
+
+web::include [file join .. lib sdb.ws3]
+
+## --- vvv --- local adaptions ------------------------------------------------
+web::command borrow {
+
+    set dvdid [web::param dvdid]
+    set borrower [web::param borrower]
+
+    if { [string length $borrower] && [string length $dvdid] } {
+
+	catch {
+	    set flist [glob pattern [file join $::sdb_datadir *.dsc]]
+	} msg
+    
+	if {[info exists flist]} {
+
+	    foreach dsc $flist {
+
+		set dsc [file rootname [file tail $dsc]]
+		dscc::init $dsc
+
+		set id [dscc::cget dvdid]
+
+		if { $id == $dvdid } {
+
+		    dscc::cset borrow $borrower
+		    dscc::cset timeout [clock seconds]
+		    dscc::commit
+		    
+		    break
+		}
+	    }
+	}
+    }
+
+    showOverview
+}
+web::command back {
+
+    set dvdid [web::param dvdid]
+
+    if { [string length $dvdid] } {
+
+	catch {
+	    set flist [glob pattern [file join $::sdb_datadir *.dsc]]
+	} msg
+    
+	if {[info exists flist]} {
+
+	    foreach dsc $flist {
+
+		set dsc [file rootname [file tail $dsc]]
+		dscc::init $dsc
+
+		set id [dscc::cget dvdid]
+
+		if { $id == $dvdid } {
+
+		    dscc::cset borrow ""
+		    dscc::commit
+		    
+		    break
+		}
+	    }
+	}
+    }
+
+    showOverview
+}
+web::command new {
+
+    set dvdid [web::param dvdid]
+    set owner [web::param borrower]
+
+    if { [string length $dvdid] } {
+
+	dscc::new [idgen nextval]
+	dscc::cset dvdid $dvdid
+	dscc::cset owner $owner
+	dscc::cset sdsc "new ($dvdid)"
+	dscc::commit
+    }
+    showOverview
+}
+## --- ^^^ --- local adaptions ------------------------------------------------
+
+
+web::dispatch -track id

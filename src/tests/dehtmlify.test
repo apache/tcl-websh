@@ -1,0 +1,209 @@
+#
+# dehtmlify.test --
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+#-----------------------------------------------------------------------
+# tcltest package
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+#-----------------------------------------------------------------------
+# errors
+
+test dehtmlify-1.1 {missing string} {
+    catch {web::dehtmlify} msg
+    set msg
+} {wrong # args: should be "web::dehtmlify string"}
+
+test dehtmlify-1.2 {too many args} {
+    catch {web::dehtmlify "a" "b"} msg
+    set msg
+} {wrong # args: should be "web::dehtmlify string"}
+
+#-----------------------------------------------------------------------
+# normal operation
+
+test dehtmlify-2.1 {test numeric entities} {
+    web::dehtmlify " !&#34;#\$%&#38;'()*+,-./0123456789:;&#60;=&#62;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~&#160;&#161;&#162;&#163;&#164;&#165;&#166;&#167;&#168;&#169;&#170;&#171;&#172;&#173;&#174;&#175;&#176;&#177;&#178;&#179;&#180;&#181;&#182;&#183;&#184;&#185;&#186;&#187;&#188;&#189;&#190;&#191;&#192;&#193;&#194;&#195;&#196;&#197;&#198;&#199;&#200;&#201;&#202;&#203;&#204;&#205;&#206;&#207;&#208;&#209;&#210;&#211;&#212;&#213;&#214;&#215;&#216;&#217;&#218;&#219;&#220;&#221;&#222;&#223;&#224;&#225;&#226;&#227;&#228;&#229;&#230;&#231;&#232;&#233;&#234;&#235;&#236;&#237;&#238;&#239;&#240;&#241;&#242;&#243;&#244;&#245;&#246;&#247;&#248;&#249;&#250;&#251;&#252;&#253;&#254;&#255;"
+} " !\"#\$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"
+
+test dehtmlify-2.2 {test symbolic entities} {
+    web::dehtmlify "&quot;&amp;&lt;&gt;&nbsp;&iexcl;&cent;&pound;&curren;&yen;&brvbar;&sect;&uml;&copy;&ordf;&laquo;&not;&shy;&reg;&macr;&hibar;&deg;&plusmn;&sup2;&sup3;&acute;&micro;&para;&middot;&cedil;&sup1;&ordm;&raquo;&frac14;&frac12;&frac34;&iquest;&Agrave;&Aacute;&Acirc;&Atilde;&Auml;&Aring;&AElig;&Ccedil;&Egrave;&Eacute;&Ecirc;&Euml;&Igrave;&Iacute;&Icirc;&Iuml;&ETH;&Ntilde;&Ograve;&Oacute;&Ocirc;&Otilde;&Ouml;&times;&Oslash;&Ugrave;&Uacute;&Ucirc;&Uuml;&Yacute;&THORN;&szlig;&agrave;&aacute;&acirc;&atilde;&auml;&aring;&aelig;&ccedil;&egrave;&eacute;&ecirc;&euml;&igrave;&iacute;&icirc;&iuml;&eth;&ntilde;&ograve;&oacute;&ocirc;&otilde;&ouml;&divide;&oslash;&ugrave;&uacute;&ucirc;&uuml;&yacute;&thorn;&yuml;"
+} "\"&<> \xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"
+
+test dehtmlify-2.3 {simple text with &nbsp} {
+    web::dehtmlify "some&nbsp;text"
+} "some text"
+
+test dehtmlify-2.4 {test invalid entities} {
+    web::dehtmlify "&Amp;&#32;&GT;&UUML;"
+} {&Amp; &GT;&UUML;}
+
+test dehtmlify-2.5 {test tags} {
+    web::dehtmlify "<p><b>some&nbsp;text</b><br>"
+} {some text}
+
+test dehtmlify-2.6 {test nested tags} {
+    web::dehtmlify {<p>test<tag attr=\"<b>bold</b>\">ing<p>}
+} {testbold\">ing}
+
+test dehtmlify-2.7 {comments} {
+    web::dehtmlify {<p>test<!-- this is a <b>bold</b> comment -->ing<p> and <!-- what -->more<p>}
+} {testing and more}
+
+test dehtmlify-2.8 {test unclosed tag} {
+    web::dehtmlify "<p>test<thisisalongtag"
+} {test<thisisalongtag}
+
+test dehtmlify-2.9 {test unopened tag} {
+    web::dehtmlify "thisisastrangetag>test<br>"
+} {thisisastrangetag>test}
+
+test dehtmlify-2.10 {strange nesting} {} {
+    web::dehtmlify "text<strange<tag>or<b>bold</b>"
+} {textorbold}
+
+#-----------------------------------------------------------------------
+# special cases
+
+test dehtmlify-3.1 {empty string} {
+    catch {set a [web::dehtmlify ""]} msg
+    set a
+} {}
+
+test dehtmlify-3.2 {long string > 64kByte} {
+    set arg "&gt;"
+    for {set i 0} {$i < 2000} {incr i} {
+	append arg "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXY"
+    }
+    append arg "&lt;"
+    set res [web::dehtmlify $arg]
+    list [string length $res] [string range $res 0 0] [string range $res 100001 100001]
+} {100002 > <}
+
+
+test dehtmlify-3.3 {remove HTML comment in comment-only string} {
+    web::dehtmlify "<!-- this is a <b>bold</b> comment -->"
+} {}
+
+test dehtmlify-3.4 {remove HTML comment, two comments right after each other} {
+    web::dehtmlify "<!-- this is a <b>bold</b> comment --><!-- Yet another <b>bold</b> comment2 -->"
+} {}
+
+test dehtmlify-3.5 {catch last char after comment} {
+    web::dehtmlify "<!-- this is a <b>bold</b> comment -->L"
+} {L}
+
+test dehtmlify-3.6 {catch first char before comment} {
+    web::dehtmlify "P<!-- this is a <b>bold</b> comment -->"
+} {P}
+
+test dehtmlify-3.7 {comment without end} {
+    web::dehtmlify "P<!-- this is a unfinished comment"
+} {P<!-- this is a unfinished comment}
+
+test dehtmlify-3.8 {very long (>256) &; sequence} {
+    web::dehtmlify "&aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa;"
+} {&aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa;}
+
+test dehtmlify-3.9 {test long numeric &#; sequence} {
+    web::dehtmlify "&#1234567;"
+} {&#1234567;}
+
+# -----------------------------------------------------------------------------
+# delimiter recognition
+# -----------------------------------------------------------------------------
+
+#     abc&lt;def       => "abc<def"
+#     abc&#60;def      => "abc<def"
+#     abc &lt def      => "abc < def"
+#     abc &#60 def     => "abc < def"
+#     abc & lt def     => "abc & lt def"
+#     abc &# 60 def    => "abc &# 60 def"
+
+test dehtmlify-4.1 {delimiter recognition} {
+    ## see http://www.ietf.org/rfc/rfc1866.txt
+    web::dehtmlify "abc&lt;def"
+} {abc<def}
+
+test dehtmlify-4.2 {delimiter recognition} {
+    ## see http://www.ietf.org/rfc/rfc1866.txt
+    web::dehtmlify "abc&#60;def"
+} {abc<def}
+
+test dehtmlify-4.3 {delimiter recognition} {
+    ## see http://www.ietf.org/rfc/rfc1866.txt
+    web::dehtmlify "abc &lt def"
+} {abc < def}
+
+test dehtmlify-4.4 {delimiter recognition} {
+    ## see http://www.ietf.org/rfc/rfc1866.txt
+    web::dehtmlify "abc &#60 def"
+} {abc < def}
+
+test dehtmlify-4.5 {delimiter recognition} {
+    ## see http://www.ietf.org/rfc/rfc1866.txt
+    web::dehtmlify "abc & lt def"
+} {abc & lt def}
+
+test dehtmlify-4.6 {delimiter recognition} {
+    ## see http://www.ietf.org/rfc/rfc1866.txt
+    web::dehtmlify "abc &# 60 def"
+} {abc &# 60 def}
+
+test dehtmlify-4.7 {incomplete entity at end-of-string} {
+    web::dehtmlify "abc&quo"
+} {abc&quo}
+
+test dehtmlify-4.8 {complete entity at end-of-string} {
+    web::dehtmlify "abc&auml"
+} {abcä}
+
+test dehtmlify-4.8 {complete entity at end-of-string} {
+    web::dehtmlify "<bla>&<bla>"
+    # checkme: websh2 returns empty string
+} {&}
+
+test dehtmlify-4.9 {curiosim} {
+    web::dehtmlify {P<!-- this is a unfinished comment}
+} {P<!-- this is a unfinished comment}
+
+# -----------------------------------------------------------------------------
+# special comments
+# -----------------------------------------------------------------------------
+
+test dehtmlify-5.1 {special cases for comments} {
+    web::html::removecomments "<!-- Id: html-sgml.sgm,v 1.5 1995/05/26 21:29:50 connolly Exp  -->"
+} {}
+
+test dehtmlify-5.2 {special cases for comments} {
+    web::html::removecomments "<!-- another -- -- comment -->"
+} {}
+
+test dehtmlify-5.3 {special cases for comments} {
+    web::html::removecomments "<!>"
+} {}
+    
+test dehtmlify-5.4 {special cases for comments} {
+    web::html::removecomments "<!- not a comment, just regular old data characters ->"
+} "<!- not a comment, just regular old data characters ->"
+
+test dehtmlify-5.5 {one char} {
+    set res [web::dehtmlify m]
+    lappend res [web::dehtmlify ""]
+} {m {}}
+
+# cleanup
+::tcltest::cleanupTests

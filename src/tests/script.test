@@ -1,0 +1,149 @@
+#
+# script.test -- test readfile, evalfile and other tcl procs
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+
+# -----------------------------------------------------------------------------
+# util
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# readfile
+# -----------------------------------------------------------------------------
+test script-readfile-1.1 {web::readfile (no args)} {
+
+    catch {
+	web::readfile
+    } msg
+    set msg
+} {no value given for parameter "name" to "web::readfile"}
+
+test script-readfile-1.2 {web::include (to channel)} {
+
+    ## make a temp file with a test script
+    set curTim [clock seconds]
+    set fileName $curTim-[pid]-readfile.tcl
+    set fileId [open $fileName "w"]
+    
+    set text "puts $curTim-readfile"
+
+    puts -nonewline $fileId $text
+    close $fileId
+
+    ## now read it
+    web::readfile $fileName tmp
+
+    ## remove file
+    file delete $fileName
+
+    set res [string compare $tmp $text]
+} {0}
+
+
+# -----------------------------------------------------------------------------
+# evalfile
+# -----------------------------------------------------------------------------
+test script-evalfile-1.1 {web::putxfile (no args)} {
+
+    catch {
+	web::putxfile
+    } msg
+    set msg
+} {no value given for parameter "file" to "web::putxfile"}
+
+test script-evalfile-1.2 {web::putxfile (to channel)} {
+
+    web::response -select \#ws3_test_script_evalfile
+    web::response -sendheader 0
+
+    ## make a temp file with a test script
+    set curTim [clock seconds]
+    set fileName $curTim-[pid]-evalfile.tcl
+    set fileId [open $fileName "w"]
+    
+    set text "puts $curTim"
+    puts -nonewline $fileId $text
+    close $fileId
+
+    ## now source it
+    web::putxfile \#ws3_test_script_evalfile $fileName
+
+    ## remove file
+    file delete $fileName
+
+    set res [string compare $ws3_test_script_evalfile $text]
+    if {$res != 0 } {
+        puts "expected: $text."
+        puts "found:    $ws3_test_script_evalfile."
+    }
+    set res
+} {0}
+
+
+# -----------------------------------------------------------------------------
+# readfile
+# -----------------------------------------------------------------------------
+test script-include-1.1 {web::include (no args)} {
+
+    catch {
+	web::include
+    } msg
+    set msg
+} {no value given for parameter "name" to "web::include"}
+
+test script-include-1.2 {web::include (to channel)} {
+
+    ## make a temp file with a test script
+    set curTim [clock seconds]
+    set fileName $curTim-[pid]-include.tcl
+    set fileId [open $fileName "w"]
+    
+    set value "$curTim-include"
+    puts  $fileId "[list set includevar $value]"
+    close $fileId
+
+    ## now include it
+    web::include $fileName
+
+    ## remove file
+    file delete $fileName
+
+    set res [string compare $includevar $value]
+} {0}
+
+
+# -----------------------------------------------------------------------------
+# web::match (formerly known as isselected / ischecked)
+# -----------------------------------------------------------------------------
+
+test script-match-1.1 {web::match} {
+    set res [web::match checked tv tv]
+} {checked}
+
+test script-match-1.2 {web::match} {
+    set res [web::match checked vcr tv]
+} {}
+
+test script-match-1.3 {web::match} {
+    set res [web::match checked {vcr dvd tv} tv]
+} {checked}
+
+# cleanup
+::tcltest::cleanupTests

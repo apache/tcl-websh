@@ -1,0 +1,609 @@
+# =============================================================================
+# turn logging on
+# =============================================================================
+web::logfilter  add memory.-debug
+## web::logdest add memory.alert-info file -unbuffered ../../logs/memory.log
+web::logdest add memory.-debug file /tmp/memory.log
+
+# =============================================================================
+# utils
+# =============================================================================
+
+# -- doc ----------------------------------------------------------------------
+# extract two letters from string, starting at position $pos
+# -----------------------------------------------------------------------------
+proc getImageFromArray {aString pos} {
+
+    set res [string range $aString [expr $pos*2] [expr $pos*2 + 1]]
+    return $res
+}
+
+# -- doc ----------------------------------------------------------------------
+# count image name in array
+# -----------------------------------------------------------------------------
+proc countImageNameInArray {aString aName} {
+
+    set cnt 0
+
+    for {set i 0} {$i < [expr [string length $aString] / 2]} {incr i} {
+
+	set cur [getImageFromArray $aString $i]
+
+	if { [string compare $cur $aName] == 0 } {
+
+	    incr cnt
+	}
+    }
+    return $cnt
+}
+
+
+# -- doc ----------------------------------------------------------------------
+# new random number, ensuring that it has not yet been used more than twice
+# -----------------------------------------------------------------------------
+proc newRandomNr {aString max} {
+
+    set rnd [expr round(rand() * $max)]
+    set nam [format "%2.2d" $rnd]
+    while { [countImageNameInArray $aString $nam] > 1 } {
+
+	set rnd [expr round(rand() * $max)]
+	set nam [format "%2.2d" $rnd]
+    }
+
+    return $nam
+}
+
+# -- doc ----------------------------------------------------------------------
+# get status from status string. 0: closed. 1: open. 2: permanently open.
+# -----------------------------------------------------------------------------
+proc getStat {aString pos} {
+
+    set res [string index $aString $pos]
+    return $res
+}
+
+# -- doc ----------------------------------------------------------------------
+# set status in status string. 0: closed. 1: open. 2: permanently open.
+# -----------------------------------------------------------------------------
+proc setStat {aString pos {new 0}} {
+
+    set res [string range $aString 0 [expr $pos - 1]]
+    set res $res$new
+    set res $res[string range \
+		     $aString [expr $pos + 1] [string length $aString]]
+    return $res
+}
+
+# -- doc ----------------------------------------------------------------------
+# toggle status: switch 0->1 or 1->0, but keep 2 at 2
+# -----------------------------------------------------------------------------
+proc toggleStat {aString pos} {
+
+    set cur [getStat $aString $pos]
+    if {$cur == 0} {
+        set res [setStat $aString $pos 1]
+    } elseif { $cur == 1 } {
+        set res [setStat $aString $pos 0]
+    } elseif { $cur == 2 } {
+        set res [setStat $aString $pos 2]
+    } else {
+        set res [setStat $aString $pos 0]
+    }
+    return $res
+}
+
+
+# -- doc ----------------------------------------------------------------------
+# count all pictures that are currently open (status == 1)
+# -----------------------------------------------------------------------------
+proc countStat {aString {val 1}} {
+
+    set len [string length $aString]
+    set cnt 0
+
+    for {set i 0} {$i < $len} {incr i} {
+
+	if {[getStat $aString $i] == $val} {
+	    incr cnt
+	}
+    }
+    return $cnt
+}
+
+# -- doc ----------------------------------------------------------------------
+# return positions of currently open pictures as list
+# -----------------------------------------------------------------------------
+proc listOpen {aString} {
+
+    set len [string length $aString]
+
+    for {set i 0} {$i < $len} {incr i} {
+
+	if { [getStat $aString $i] == 1 } {
+
+	    lappend res $i
+	}
+    }
+    return $res
+}
+
+# -- doc ----------------------------------------------------------------------
+# check status for matching images. If found: change status to 2.
+# -----------------------------------------------------------------------------
+proc doMatch {aString imgArr} {
+
+    if { [countStat $aString] > 1 } {
+
+	set opens [listOpen $aString]
+
+	set img1 [getImageFromArray $imgArr [lindex $opens 0]]
+	set img2 [getImageFromArray $imgArr [lindex $opens 1]]
+
+	if {[string compare $img1 $img2] == 0} {
+
+	    set res [list 1]
+	    lappend res [lindex $opens 0]
+	    lappend res [lindex $opens 1]
+
+	} else {
+
+	    set res [list 0]
+	    lappend res [lindex $opens 0]
+	    lappend res [lindex $opens 1]
+	}
+    }
+    return $res
+}
+
+
+# -- doc ----------------------------------------------------------------------
+# pickFromList
+# -----------------------------------------------------------------------------
+proc pickFromList {aList} {
+
+    set len [llength $aList]
+    set rnd [expr round(rand() * $len)]
+    if {$rnd < 0 } {set rnd 0}
+    set tmp [expr $len - 1]
+    if {$rnd > $tmp } {set rnd $tmp}
+
+    ## web::log memory.info "pickFromList: $rnd $aList"
+
+    return [lindex $aList $rnd]
+}
+
+
+
+# -- doc ----------------------------------------------------------------------
+# all images open
+# -----------------------------------------------------------------------------
+proc congratulate {curLevel} {
+
+    set lev1 [list "Ok, that one was easy."]
+    set lev2 [list \
+"Cool !" \
+"Super. Hey, let's do the next level."]
+    set lev3 [list \
+"Not many are as fast as you are." \
+"You <i>are</i> used to play." \
+"Super. Let's do the next level now." \
+]
+    set lev4 [list \
+"Wait. This one <i>is</i> difficult. Congratulation." \
+"It is not easy to impress you." \
+"This is playing at the speed of light. I'm impressed" \
+"Cool ! Not many did it before." \
+		 ]
+    set lev5 [list \
+"Congratulation. I think you like this game." \
+"I am impressed." \
+"Now you know what kind of a bear Winnie-the-Pooh is. <i>This</i> kind of a bear." \
+"Super ! There are two more levels for you. Enjoy." \
+"Cool ! Not many did it before." \
+		 ]
+
+    set lev6 [list \
+"Congratulation !" \
+"Congratulation. I think you like this game." \
+"I am impressed." \
+"Now you know what kind of a bear Winnie-the-Pooh is. <i>This</i> kind of a bear." \
+"Super ! There are two more levels for you. Enjoy." \
+"Cool ! Not many did it before." \
+"Wait. This one <i>is</i> difficult. Congratulation." \
+"It is not easy to impress you." \
+"This is playing at the speed of light. I'm impressed" \
+"Cool ! Not many did it before." \
+		 ]
+
+    set lev7 [list \
+"You can't go higher from here. Congratulation." \
+"Wait. This one <i>is</i> difficult. Congratulation." \
+"It is not easy to impress you." \
+"This is playing at the speed of light. I'm impressed" \
+"Cool ! Not many did it before." \
+		 ]
+
+    set levlst [list none $lev1 $lev2 $lev3 $lev4 $lev5 $lev6 $lev7 none]
+
+    set msg [pickFromList [lindex $levlst $curLevel]]
+
+    web::put "<p>$msg</p>"
+}
+
+# -- doc ----------------------------------------------------------------------
+# display table with memory
+# -----------------------------------------------------------------------------
+proc showMemory {status imgArr numX numY} {
+
+    web::putx {
+
+<table border="0" cellspacing="0" cellpadding="0">
+
+{for {set i 0} {$i < $numX} {incr i} {
+
+    web::put "<tr>\n"
+
+    for {set j 0} {$j < $numY} {incr j} {
+
+        set tmpCnt [expr $i * $numY + $j]
+
+        ## web::put "<td valign=\"middle\">"
+        web::put "<td>"
+
+        set img [getImageFromArray $imgArr $tmpCnt]
+
+	## web::log memory.debug "image at $tmpCnt: $img"
+
+	set curImgStat [getStat $status $tmpCnt]
+        if {$curImgStat == 1} {
+	    web::put "<a href=[web::cmdurl "" hit $tmpCnt]>"
+            web::put "<img src=\"/hefti/nca-073-9/examples/memory/img/$img.jpg\" width=\"50\" height=\"50\" vspace=0 hspace=0 border=1 ALIGN=middle></a>"
+        } elseif {$curImgStat == 0} {
+	    web::put "<a href=[web::cmdurl "" hit $tmpCnt]>"
+            web::put "<img src=\"/hefti/nca-073-9/examples/memory/img/back.gif\" width=\"50\" height=\"50\" vspcae=0 hspace=0 border=1 align=middle></a>"
+        } elseif {$curImgStat == 2} {
+            web::put "<img src=\"/hefti/nca-073-9/examples/memory/img/$img.jpg\" width=\"50\" height=\"50\" vspace=0 hspace=0 border=1 ALIGN=middle>"
+	} else {
+	    web::put "<a href=[web::cmdurl "" hit $tmpCnt]>"
+            web::put "<img src=\"/hefti/nca-073-9/examples/memory/img/back.gif\" width=\"50\" height=\"50\" vspcae=0 hspace=0 border=1 align=middle></a>"
+	}
+    }
+    web::put "</tr>\n"
+}
+}
+</table>
+}
+}
+
+
+# -- doc ----------------------------------------------------------------------
+# increase level up to ceiling
+# -----------------------------------------------------------------------------
+proc incrLevel {curLevel {increment 1} {floor 1} {ceiling 7}} {
+
+    set loc $curLevel
+    set res [incr loc $increment]
+
+    if { $res < $floor } { set res $floor}
+    if { $res > $ceiling } { set res $ceiling}
+
+    return $res
+}
+    
+
+# -- doc ----------------------------------------------------------------------
+# generate links for options
+# -----------------------------------------------------------------------------
+proc showOptions {curLevel} {
+
+    web::log memory.debug "show options. curLevel: $curLevel"
+
+    web::putx {
+{
+    web::log memory.debug "curLevel: $curLevel."
+    set tmp [incrLevel $curLevel -1]
+
+    web::put "|&nbsp;<a href=[web::cmdurl "" doReset $tmp]>"
+    web::put "&lt;</a>&nbsp;|"
+
+    set tmp [incrLevel $curLevel 1]
+
+    web::put "&nbsp;<a href=[web::cmdurl "" doReset $tmp]>"
+    web::put "&gt;</a>&nbsp;|"
+
+    web::put "&nbsp;<a href=[web::cmdurl "" doReset $curLevel]>"
+    web::put "new</a>&nbsp;|"
+
+    web::put "&nbsp;<a href=[web::cmdurl "" -urlformat scriptname]>"
+    web::put "&times;</a>&nbsp;|"
+
+    web::put "&nbsp;<a href=[web::cmdurl showHelp]>"
+    web::put "?</a>&nbsp;|"
+
+    web::put "&nbsp;<a href=[web::cmdurl "" refreshChange 2]>"
+    web::put "+</a>&nbsp;|"
+
+    web::put "&nbsp;<a href=[web::cmdurl "" [list refreshChange -2]]>"
+    web::put "-</a>&nbsp;|"
+}}
+}
+
+# -- doc ----------------------------------------------------------------------
+# getNumForLevel -- return NumX, NumY for level
+# -----------------------------------------------------------------------------
+proc getNumForLevel {level} {
+
+    if { $level < 1 } {
+	return [getNumForLevel 1]
+    }
+    if { $level > 7 } {
+	return [getNumForLevel 7]
+    }
+
+    if { $level == 7 } {
+	set res {6 9}
+    } elseif { $level == 6} {
+	set res {5 8}
+    } elseif { $level == 5} {
+	set res {4 7}
+    } elseif { $level == 4} {
+	set res {3 6}
+    } elseif { $level == 3} {
+	set res {2 5}
+    } elseif { $level == 2} {
+	set res {1 4}
+    } elseif { $level == 1} {
+	set res {1 2}
+    } else {
+	set res {6 9}
+    }
+    return $res
+}
+
+# =============================================================================
+# set-up array of images
+# =============================================================================
+set _numY 9
+set _numX 6
+set _num [expr $_numX * $_numY]
+set _half [expr $_num / 2]
+set _img   ""
+set _stat  ""
+set _doReset 0
+set _curLevel 5
+set _refreshTime 2
+
+# =============================================================================
+# commands
+# =============================================================================
+web::command showHelp {
+
+    web::putx {<html>
+<head>
+<title>websh3 memory Help Text</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+
+<body bgcolor="#FFFFFF">
+    }
+
+
+    web::put "<tt>"
+    web::put "Memory -- find the matching images."
+    web::put "<p>"
+    web::put "You can see the hidden image by clicking on its back side. "
+    web::put "When you found two matching images, they will remain open "
+    web::put "from then on. If two images do not match, they will be "
+    web::put "closed again."
+    web::put "<p>"
+    web::put "If the images close again too quickly on your system, "
+    web::put "you can make the images stay open longer with the "
+    web::put "&quot;+&quot; command (&quot;-&quot; to close them "
+    web::put "more quickly)."
+    web::put "<p>"
+    web::put "&quot;new&quot; shuffels the images again. "
+    web::put "&quot;&times;&quot; restarts the game from the beginning."
+    web::put "</tt><p>"
+
+    showOptions 5
+    web::putx {</body>
+</html>}
+
+}
+
+web::command default {
+
+    set tim [clock seconds]
+    web::log memory.debug "Starting at: $tim."
+    web::log memory.debug "got stat: [web::param stat]"
+
+    ::global env
+    ::set envnames [array names env]
+
+    # .........................................................................
+    # show query
+    # .........................................................................
+#     ::if { [lsearch -exact $envnames QUERY_STRING] >= 0 } {
+  
+# 	set qstr $env(QUERY_STRING)
+# 	if { [string length $qstr] > 1 } {
+# 	    set qstr [web::querystring::toplaintext $qstr]
+# 	    web::log memory.debug "qstr: $qstr"
+# 	}
+#     }
+
+    # .........................................................................
+    # level
+    # .........................................................................
+    set _curLevel [web::param curLevel $_curLevel]
+    set tmp [getNumForLevel $_curLevel]
+    set _numX [lindex $tmp 0]
+    set _numY [lindex $tmp 1]
+    set _num [expr $_numX * $_numY]
+    set _half [expr $_num / 2]
+
+    web::cmdurlcfg -set curLevel $_curLevel
+
+    # .........................................................................
+    # refresh rate
+    # .........................................................................
+    set refreshChange [web::param refreshChange 0]
+    set _refreshTime [web::param refreshTime $_refreshTime]
+    set _refreshTime [incrLevel $_refreshTime $refreshChange 2 30]
+    web::log memory.debug "refreshTime: $_refreshTime"
+
+    web::cmdurlcfg -set refreshTime $_refreshTime
+
+    # .........................................................................
+    # status
+    # .........................................................................
+    set _stat [web::param stat $_stat]
+    web::log memory.debug "_stat: $_stat"
+
+    # .........................................................................
+    # images
+    # .........................................................................
+    set _img [web::param img $_img]
+
+    # .........................................................................
+    # reset (by flag or empty querystring)
+    # .........................................................................
+    set _doReset [web::param doReset $_doReset]
+    if { [lsearch -exact $envnames QUERY_STRING] >= 0 } {
+
+	if { [string length $env(QUERY_STRING)] < 1 } {
+	    web::log memory.debug "no querystring -- reset"
+	    set _doReset 5
+	}
+    }
+
+    if { $_doReset > 0 } {
+
+	set _curLevel $_doReset
+	web::log memory.debug "resetting. Level: $_curLevel"
+
+	set tmp [getNumForLevel $_doReset]
+	set _numX [lindex $tmp 0]
+	set _numY [lindex $tmp 1]
+	set _num [expr $_numX * $_numY]
+	set _half [expr $_num / 2]
+	set _img ""
+	set _stat ""
+
+	for {set i 0} {$i < $_num} {incr i} {
+
+	    set new [newRandomNr $_img [expr $_half - 1]]
+	    set _img  $_img$new
+	    set tmp 0
+	    set _stat $_stat$tmp
+	}
+
+	set _doReset 0
+
+	web::log memory.debug "images: $_img"
+	web::log memory.debug "stat:   $_stat"
+    }
+    web::cmdurlcfg -set curLevel $_curLevel
+
+
+    # .........................................................................
+    # get hitlist from cmdurl and change stat accordingly
+    # .........................................................................
+    set hitlst [web::param hit ""]
+    foreach tmp $hitlst {
+        set _stat [toggleStat $_stat $tmp]
+    }
+    web::log memory.debug "_stat: $_stat"
+    web::log memory.debug "hitlist: $hitlst"
+    web::cmdurlcfg -set stat $_stat
+    web::cmdurlcfg -set img $_img
+
+    # .........................................................................
+    # more than two open ? (no tricks !)
+    # .........................................................................
+    if { [countStat $_stat] > 2 } {
+
+	web::log memory.debug "more than two open. Close !"
+
+	set opens [listOpen $_stat]
+	foreach tmp $opens {
+	    set _stat [toggleStat $_stat $tmp]
+	}
+	web::cmdurlcfg -set stat $_stat
+    }
+
+    # .........................................................................
+    # is it the second ?
+    # .........................................................................
+    if { [countStat $_stat] == 2 } {
+
+	# .....................................................................
+	# do they match ?
+	# .....................................................................
+	set tmp [doMatch $_stat $_img]
+
+	if { [lindex $tmp 0] == 1 } {
+
+	    web::log memory.debug "match ($tmp)"
+	    
+	    # .................................................................
+	    # yes !
+	    # .................................................................
+	    set _stat [setStat $_stat [lindex $tmp 1] 2]
+	    set _stat [setStat $_stat [lindex $tmp 2] 2]
+
+	    web::cmdurlcfg -set stat $_stat
+
+	} else {
+
+	    web::log memory.debug "no match ($tmp; hit: [web::param hit])"
+	    # .................................................................
+	    # no. use the refresh feature
+	    # .................................................................
+
+	    web::cmdurlcfg -set stat $_stat
+	    set opens [listOpen $_stat]
+	    set tmp [web::cmdurl "" hit [lindex $opens 0] \
+			 hit [lindex $opens 1]]
+	    web::log memory.debug "no match: cmdurl: $tmp"
+	    web::response -lappend header "Refresh" "$_refreshTime;URL=$tmp"
+	}
+    }
+
+    web::log memory.debug "stat now: $_stat"
+    set tmp [web::cmdurl ""]
+    set tmp [web::querystring::getfromurl $tmp]
+    set tmp [web::decrypt $tmp]
+    web::log memory.debug "new cmdurl: $tmp"
+    # .........................................................................
+    # and send
+    # .........................................................................
+    web::putx {<html>
+<head>
+<title>websh3 memory H a v e  F u n</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+
+<body bgcolor="#FFFFFF">
+
+{
+    showMemory $_stat $_img $_numX $_numY
+    # at the end: say something
+    if {[countStat $_stat 2] == $_num} {
+	congratulate $_curLevel
+    }
+    showOptions $_curLevel
+}
+
+</body>
+</html>}
+
+set timd [expr [clock seconds] - $tim]
+web::log memory.debug "memory. Used: $timd seconds."
+
+}
+
+web::dispatch

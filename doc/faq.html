@@ -1,0 +1,140 @@
+<h1><a name="generic">Generic Questions</a></h1>
+
+<h2><a name="whatis">What is webshell ?</a></h2>
+
+webshell is a rapid development environment for building powerful and
+reliable web applications. It is a standard Tcl extension and is
+released as Open Source Software. webshell is versatile and handles
+everything from HTML generation to data-base driven one-to-one page
+customization. At Netcetera, we have been using it for years for
+virtually all our customer projects, which typically are E-commerce
+shops or electronic banking applications.
+
+<h2><a name="version">What is the current version ?</a></h2>
+
+Currently, we are finalizing version 3 of webshell. webshell 3 will be
+available for download starting Mar 1, 2000.
+
+<h2><a name="price">What does webshell cost ?</a></h2>
+
+Nothing. It's free. webshell is released as Open Source.
+
+<h2><a name="download">Where can I download webshell ?</a></h2>
+
+webshell will be available for download starting 
+Mar 1, 2000 at the &lt;a href=&quot;download.html&quot;&gt;download area&lt;/a&gt; of this site.
+
+<h2><a name="netcetera">Who is Netcetera ?</a></h2>
+
+Netcetera is a software company which mainly focuses on Internet
+services, particularly in the area of electronic commerce. Netcetera
+is located in Zurich, Switzerland. We offer a wide range of services,
+including consulting and conceptual design, project management, and
+software development for Internet technologies. It is our goal to
+deliver high-quality products at the forefront of technological
+development. Netcetera is focused on developing and maintaining its
+core technical competence. In order to offer high quality in all
+aspects of our products, we cooperate with the main players in the
+field. For example, the look-and-feel of our applications and web
+pages is designed by communication experts.  Netcetera cares for its
+customers.
+
+Find more information about Netcetera at our 
+&lt;a href=&quot;http://netcetera.ch&quot;&gt;homepage&lt;/a&gt;.
+
+<h2><a name="why">Why should I use webshell ?</a></h2>
+
+In today's E-commerce environment, flexibility and short
+time-to-market are key characteristics for successful
+business. E-commerce, in other words, calls for a solid basis on which
+applications can be built. For exactly this purpose we have designed
+webshell.
+
+<br><br>
+webshell helps you to create high-quality web applications with light
+time constraints. It is fast, versatile, scalable, and easy to learn.
+With webshell, you have a win-win situation for developers and
+customers.
+
+<h2><a name="mailinglist">Is there a mailing list ?</a></h2>
+
+Yes, Netcetera edits a quarterly newsletter for webshell.  You can
+subscribe to the newsletter from www.websh.com/subscribe.html, or by
+sending an e-mail to majordomo@netcetera.ch with &quot;subscribe
+websh-news&quot; in the body of the message.
+
+If at any time you would like to unsubscribe from this newsletter, you
+may do so at www.websh.com/unsubscribe.html, or by sending an e-mail
+to majordomo@netcetera.ch with &quot;unsubscribe websh-news&quot; in the body of
+the message.
+
+<h1><a name="technical">Technical Questions</a></h1>
+
+<h2><a name="convert">I am  websh2 wizard. How do I switch to websh3 ?</a></h2>
+
+Converting to websh3 is straight forward:
+
+<ul>
+<li>change all command nmes from wpp_ to web::
+<li>change a few comans where the syntax differs from websh2 (see quickref):
+ - wpp_isselected
+ - wpp_ischecked (both with web::match)
+ - wpp_loglevel is web::logfilter
+ - wpp_logrule is web::logdest
+ Note that web::log evaluates the messge. Thus, you should write it in {}
+ - check syntax of web::config
+<li>add web::dispatch at the end of you script
+</ul>
+
+Netcetera AG has written a compatibilty layer for websh2. This allows
+you to run entire websh2 applications with websh3 without changing a
+single line of your code.
+
+<br><br>
+<h2><a name="logging">How do I use the logging facility ?</a></h2>
+
+Before webshell sends a message to a log destination, the message
+needs to pass two filters. That's why you need to specify a level when
+you issue a log message. First, webshell decides whether or not to
+handle the log message. Then, it scrolls through the list of
+registered log destinations and compares the log message level against
+the filter of each log destination. The message is sent to the log
+destination only if the message passes the second filter.
+
+<br><br>
+A log level consists of a tag and a level, separated by a dot.
+Possible levels are
+<ul>
+<li>alert
+<li>error
+<li>warning
+<li>info
+<li>debug
+</ul>
+The tag is free text. Typically, it is the name of the application, 
+say &quot;foo&quot;.
+
+<br><br>
+Before log messages can reach their destination, you have to
+&quot;open up&quot; the log destination, in two steps:
+<pre>
+
+web::logfilter add foo.warning-debug
+web::logdest add foo.warning-info file foo_warn.log
+web::logdest add foo.debug file foo_dbg.log
+
+</pre>
+
+This sequence of commands tells webshell to handle all messages
+in the range &quot;warning&quot; to &quot;debug&quot;, if the level string is
+&quot;foo&quot;, and to discard any other messages. Messages of level
+&quot;debug&quot; are then written to file &quot;foo_dbg.log&quot;, while
+the other messages end up in file &quot;foo_warn.log&quot;.
+
+<br><br>
+Issuing a message is easy:
+<pre>
+
+web::log foo.info &quot;Hello, world !&quot;
+
+</pre>

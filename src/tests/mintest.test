@@ -1,0 +1,45 @@
+#
+# mintest.test -- multiple interpreter tests
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# 
+# -----------------------------------------------------------------------------
+test mintest-1.1 {create an interpreter, load websh3} {unixOnly} {
+    set fn "mintest1_1.tcl"
+    set fh [open $fn "w"]
+    puts $fh {catch {web::copyright} msg}
+    puts $fh {set res $msg}
+    puts $fh {load $env(WEB_LIBRARY)}
+    puts $fh {catch {web::encrypt test} msg}
+    puts $fh {lappend res $msg}
+    puts $fh {puts $res}
+    close $fh
+    set res ""
+    catch {
+	##  fixme: use variable for tclsh8.3
+	set res [exec tclsh8.3 $fn]
+    }
+    file delete -force $fn
+    set res
+} {invalid command name web::copyright XDq3pUAU8b}
+
+# cleanup
+::tcltest::cleanupTests

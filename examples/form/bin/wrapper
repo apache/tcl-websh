@@ -1,0 +1,4 @@
+#!/bin/sh
+# \
+LD_LIBRARY_PATH=/lib:/usr/lib:../lib; export LD_LIBRARY_PATH; \
+exec ../bin/websh3 ../bin/tutorial.ws3

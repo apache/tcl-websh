@@ -1,0 +1,263 @@
+#
+# param.test -- tests for web::param
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# util
+# -----------------------------------------------------------------------------
+proc cleanParam {} {
+    web::cmdurlcfg -unset
+    web::formvar -unset
+    web::param -unset
+}
+
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------
+# param
+# -----------------------------------------------------------------------------
+test param-2.1 {get keys} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "lang=FR&type=ez&type=med"
+
+    set res [lsort [web::param -names]]
+} {lang type}
+
+test param-2.2 {get values} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "type=ez&type=med"
+
+    set res [web::param type]
+} {ez med}
+
+test param-2.3 {unset} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "type=ez&lang=EN"
+    web::param -unset type
+    set res [lsort [web::param -names]]
+} {lang}
+
+
+test param-2.4 {unset} {
+
+    cleanParam
+    set res [lsort [web::param -names]]
+} {}
+
+
+test param-2.5 {- syntax} {
+
+    cleanParam
+    web::param -set -- dash
+    web::param -set -count foo
+    web::param -set -unset bar
+    web::param -set -set hocker
+    set res [list [web::param -set --] [web::param -set -count] [web::param -set -unset] [web::param -set -set] [web::param -count --]]
+} {dash foo bar hocker 1}
+
+test param-2.6 {-- syntax} {
+
+    cleanParam
+    web::param -set -oops ImAValue
+    web::param -set -- ImTheValue
+    set res [list [web::param -set -oops] [web::param -set --]]
+} {ImAValue ImTheValue}
+
+
+# -----------------------------------------------------------------------------
+# param
+# -----------------------------------------------------------------------------
+test param-3.1 {list all keys (no multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2"
+
+    set res [lsort [web::param -names]]
+} {foo k1 k2}
+
+test param-3.2 {list all keys (multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2&k1=v3"
+
+    set res [lsort [web::param -names]]
+} {foo k1 k2}
+
+test param-3.3 {get all values for key (no multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2"
+
+    set res [web::param foo]
+} {bar}
+
+test param-3.4 {get all values for key (multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2&k1=v3"
+    set res [lsort [web::param k1]]
+} {v1 v3}
+
+test param-3.5 {count distinct keys (no multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2"
+
+    catch {set res [web::param -count]} msg
+    set msg
+} {wrong # args: should be "web::param -count key"}
+
+test param-3.6 {count distinct keys (multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2&k1=v3"
+
+    catch {set res [web::param -count]} msg
+    set msg
+} {wrong # args: should be "web::param -count key"}
+
+test param-3.7 {cnt distinct vals (no multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2"
+
+    set res [web::param -count k1]
+} {1}
+
+test param-3.8 {cnt distinct vals (multiple keys)} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1&foo=bar&k2=v2&k1=v3"
+
+    set res [web::param -count k1]
+} {2}
+
+test param-3.9 {acces default value} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1"
+
+    set res [web::param foo bar]
+} {bar}
+
+test param-3.10 {default is negative number} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" \
+	-querystring "k1=v1"
+
+    set res [web::param foo -1]
+} {-1}
+
+test param-3.11 {full syntax, all-in-one} {
+
+    cleanParam
+    web::dispatch -cmd "" -postdata "" -querystring "id=11&lang=DE&lang=EN"
+    set res [web::param -names]
+    lappend res [web::param id]
+    lappend res [lsort [web::param lang]]
+    lappend res [web::param -count id]
+    lappend res [web::param -count lang]
+    web::param -unset id
+    lappend res [lsort [web::param -names]]
+    web::param -set ordered pizza
+    lappend res [lsort [web::param -names]]
+    lappend res [web::param -count ordered]
+    web::param -lappend ordered pizza
+    lappend res [lsort [web::param -names]]
+    lappend res [web::param -count ordered]
+    lappend res [web::param ordered]
+    web::param -unset
+    lappend res [web::param -names]
+    set res
+} {id lang 11 {DE EN} 1 2 lang {lang ordered} 1 {lang ordered} 2 {pizza pizza} {}}
+
+test param-3.12 {weird string} {
+
+    cleanParam
+
+    set tst {"Bildschirm Eizo 19"" "}
+    web::param -set k $tst
+    web::param k
+} {"Bildschirm Eizo 19"" "}
+    
+test param-3.13 {still weird string} {
+
+    cleanParam
+
+    set tst {"Bildschirm Eizo 19"" "}
+    web::param -set k $tst
+    set res [web::param -names]
+    lappend res [web::param -count k]
+} {k 1}
+
+test param-3.14 {again weird string} {
+
+    cleanParam
+
+    set tst {"Bildschirm Eizo 19"" "}
+    web::param k $tst
+} $tst
+
+test param-3.15 {-set and -append} {
+
+    cleanParam
+
+    web::param -set k1 [list a b c]
+    web::param -lappend k1 d
+    lindex [web::param k1] 0
+} {a b c}
+
+test param-3.16 {-set returns current value} {
+
+    cleanParam
+
+    web::param -set k v
+    web::param -set k
+} {v}
+
+test param-3.17 {-unset unexisting key} {
+
+    cleanParam
+
+    catch {web::param -unset k}
+} {0}
+
+# cleanup
+::tcltest::cleanupTests

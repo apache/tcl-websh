@@ -1,0 +1,111 @@
+#
+# htmlify.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+#-----------------------------------------------------------------------
+# tcltest package
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+#-----------------------------------------------------------------------
+# errors
+
+test htmlify-1.1 {websh3_htmlify: missing string} {
+    catch {web::htmlify} msg
+    set msg
+} {usage: ?-numeric? string}
+
+test htmlify-1.2 {websh3_htmlify: too many args} {
+    catch {web::htmlify "a" "b"} msg
+    set msg
+} {usage: ?-numeric? string}
+
+
+#-----------------------------------------------------------------------
+# normal operation
+
+test htmlify-1.3 {websh3_htmlify: test complete charset} {
+    set in " !\"#\$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ"
+    set out [web::htmlify -numeric $in]
+} " !&#34;#\$%&#38;'()*+,-./0123456789:;&#60;=&#62;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~&#160;&#161;&#162;&#163;&#164;&#165;&#166;&#167;&#168;&#169;&#170;&#171;&#172;&#173;&#174;&#175;&#176;&#177;&#178;&#179;&#180;&#181;&#182;&#183;&#184;&#185;&#186;&#187;&#188;&#189;&#190;&#191;&#192;&#193;&#194;&#195;&#196;&#197;&#198;&#199;&#200;&#201;&#202;&#203;&#204;&#205;&#206;&#207;&#208;&#209;&#210;&#211;&#212;&#213;&#214;&#215;&#216;&#217;&#218;&#219;&#220;&#221;&#222;&#223;&#224;&#225;&#226;&#227;&#228;&#229;&#230;&#231;&#232;&#233;&#234;&#235;&#236;&#237;&#238;&#239;&#240;&#241;&#242;&#243;&#244;&#245;&#246;&#247;&#248;&#249;&#250;&#251;&#252;&#253;&#254;&#255;"
+
+
+#-----------------------------------------------------------------------
+# special cases
+
+test htmlify-1.4 {websh3_htmlify: empty string} {
+    set a [web::htmlify ""]
+} {}
+
+test htmlify-1.5 {websh3_htmlify: long string > 64kByte} {
+    set arg ">"
+    for {set i 0} {$i < 2000} {incr i} {
+	append arg "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXY"
+    }
+    append arg "<"
+    set res [web::htmlify -numeric $arg]
+    list [string length $res] [string range $res 0 4] [string range $res 100005 100009]
+} {100010 {&#62;} {&#60;}}
+
+
+# -----------------------------------------------------------------------------
+# normal operation, using forward hash
+# -----------------------------------------------------------------------------
+test htmlify-2.1 {websh3_htmlify: test complete charset, non-numeric} {
+    set in    " !\"#\$%&'()*+,-./0123456789:;<=>?@"
+    append in "ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz"
+    append in "{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ"
+    append in "×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ"
+    set out [web::htmlify $in]
+} " !&quot;#\$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~&nbsp;&iexcl;&cent;&pound;&curren;&yen;&brvbar;&sect;&uml;&copy;&ordf;&laquo;&not;&shy;&reg;&macr;&deg;&plusmn;&sup2;&sup3;&acute;&micro;&para;&middot;&cedil;&sup1;&ordm;&raquo;&frac14;&frac12;&frac34;&iquest;&Agrave;&Aacute;&Acirc;&Atilde;&Auml;&Aring;&AElig;&Ccedil;&Egrave;&Eacute;&Ecirc;&Euml;&Igrave;&Iacute;&Icirc;&Iuml;&ETH;&Ntilde;&Ograve;&Oacute;&Ocirc;&Otilde;&Ouml;&times;&Oslash;&Ugrave;&Uacute;&Ucirc;&Uuml;&Yacute;&THORN;&szlig;&agrave;&aacute;&acirc;&atilde;&auml;&aring;&aelig;&ccedil;&egrave;&eacute;&ecirc;&euml;&igrave;&iacute;&icirc;&iuml;&eth;&ntilde;&ograve;&oacute;&ocirc;&otilde;&ouml;&divide;&oslash;&ugrave;&uacute;&ucirc;&uuml;&yacute;&thorn;&yuml;"
+
+test htmlify-2.2 {"websh3_htmlify: is deHtmlify(htmlify(in)) == in ?, except for nbsp"} {
+    set in    " !\"#\$%&'()*+,-./0123456789:;<=>?@"
+    append in "ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]^_`abcdefghijklmnopqrstuvwxyz"
+    append in "{|}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ"
+    append in "×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ"
+    string compare [web::dehtmlify [web::htmlify $in]] $in
+} {0}
+
+# -----------------------------------------------------------------------------
+# look for memory problems
+# -----------------------------------------------------------------------------
+test htmlify-3.1 {start and stop interpreter (without use of htmlify)} {unixOnly} {
+    interp create htmlify3_1
+    htmlify3_1 eval "load $env(WEB_LIBRARY)"
+    interp delete htmlify3_1
+    set res ""
+} {}
+
+test htmlify-3.2 {start interp, use htmlify, and stop again} {unixOnly} {
+    interp create htmlify3_2
+    htmlify3_2 eval "load $env(WEB_LIBRARY)"
+    set res [htmlify3_2 eval web::htmlify " !\"#\$%&'()*+"]
+    interp delete htmlify3_2
+    set res
+} "!&quot;#$%&amp;'()*+"
+
+# -----------------------------------------------------------------------------
+# -- syntax
+# -----------------------------------------------------------------------------
+test htmlify-4.1 {--syntax} {
+
+    set res [web::htmlify -test]
+    append res [web::htmlify -- -test]
+    set res
+} {-test-test}
+
+# cleanup
+::tcltest::cleanupTests

@@ -1,0 +1,155 @@
+#========================================
+# all the HTML stuff for the forms
+#========================================
+
+
+# header
+set header {<html>
+<head>
+<title>{web::put $completeTitle}</title>
+</head>
+
+<body bgcolor="#ffffff" text="#000000">
+
+<h2><hr noshade size=1>
+{web::put $completeTitle}
+<hr noshade size=1></h2>
+
+}
+
+
+# footer
+set footer {<hr noshade size=1>
+<a href="{putURL default}">[{web::put $text(home)}]</a>
+<a href="{putURL about}">[{web::put $text(about)}]</a>
+<a href="{putURL default [lindex $text(otherlang) 1]}">[{web::put [lindex $text(otherlang) 0]}]</a>
+<hr noshade size=1>
+
+</body>
+</html>
+}
+
+
+
+# page templates
+
+# error
+set template-error {{putHeader $type}
+
+<h3>{web::put $text(errtitle)}</h3>
+
+{web::put $text(errtext)}
+
+{putFooter}}
+
+
+# form template
+set template-form {{putHeader $type}
+
+<form method=post action="{putURL submit}">
+
+<dl>
+ <dt><b>{web::put $text(name)}:</b>
+ <dd><input type=text name=name value="{putField name}" size=30><p>
+ <dt><b>{web::put $text(addr)}:</b>
+ <dd><textarea name=addr rows=4 cols=30 wrap=auto>{putField addr 1}</textarea><p>
+ <dt><b>{web::put $text(email)}: {
+    if {$error} {
+        web::put "<font color=\"\#990000\">$text(errmsg)</font>"
+    }
+}</b>
+ <dd><input type=text name=email value="{putField email}" size=30><p>
+</dl>
+
+<input type=reset name=cancel value="{web::put $text(reset)}">
+<input type=submit name=ok value="{web::put $text(submit)}">
+
+</form>
+
+{putFooter}}
+
+
+# confirmation template
+set template-confirmation {{putHeader $type}
+
+<h3>{web::put $msg}</h3>
+
+<dl>
+ <dt><b>{web::put $text(name)}:</b>
+ <dd>{putField name}<p>
+ <dt><b>{web::put $text(addr)}:</b>
+ <dd>{putField addr}<p>
+ <dt><b>{web::put $text(email)}:</b>
+ <dd>{putField email}<p>
+</dl>
+
+{putFooter}}
+
+# about template
+set template-about {{putHeader $type}
+
+<h3>{web::put $text(about)}</h3>
+
+<dl>
+ <dt><b>{web::put $text(copy)}:</b>
+ <dd>{web::put $text(right)}<p>
+ <dt><b>{web::put $text(browser)}:</b>
+ <dd>{web::put [getBrowser]}<p>
+ <dt><b>{web::put [web::copyright]}</b>
+ <dd><p>
+</dl>
+
+{putFooter}}
+
+
+# language stuff
+
+proc initTexts {} {
+    global text
+    if {"[getLang]" == "de"} {
+
+        # german texts
+        set text(name)          Name
+        set text(addr)          Adresse
+        set text(email)         E-Mail
+        set text(home)          Formular
+        set text(about)         "&Uuml;ber"
+        set text(info)          Information
+        set text(reset)         "Zur&uuml;cksetzen"
+        set text(submit)        "Abschicken"
+        set text(copy)          "Das Kopierrecht"
+        set text(right)         "&copy Netcetera AG 1998"
+        set text(browser)       "Ihr Web Browser"
+        set text(errmsg)        "Bitte geben Sie ein g&uuml;ltige E-Mail Adresse ein!"
+        set text(header-form)           Formular
+        set text(header-error)          Fehler
+        set text(header-confirmation)   "Best&auml;tigung"
+        set text(header-about)          Information
+        set text(otherlang)     [list Englisch en]
+        set text(errtitle)      {Ihre Anfrage konnte nicht bearbeitet werden. Bitte versuchen Sie es erneut}
+        set text(errtext)       {Falls das Problem wiederholt auftreten sollte, kantaktieren Sie bitte den Webmaster: <a href="mailto:webmaster@netcetera.ch">webmaster@netcetera.ch</a>}
+
+    } else {
+
+        # english texts (default)
+        set text(name)          Name
+        set text(addr)          Address
+        set text(email)         E-Mail
+        set text(home)          Home
+        set text(about)         About
+        set text(info)          Information
+        set text(reset)         Reset
+        set text(submit)        Send
+        set text(copy)          Copyright
+        set text(right)         "&copy Netcetera AG 1998"
+        set text(browser)       "Your Browser"
+        set text(errmsg)        "Please enter a valid e-mail address!"
+        set text(header-form)           Form
+        set text(header-error)          Error
+        set text(header-confirmation)   Confirmation
+        set text(header-about)          About
+        set text(otherlang)     [list German de]
+        set text(errtitle)      {Your request could not be processed. Please try again.}
+        set text(errtext)       {If the problem persists, please contact the Webmaster: <a href="mailto:webmaster@netcetera.ch">webmaster@netcetera.ch</a>}
+    }
+}

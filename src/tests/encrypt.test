@@ -1,0 +1,157 @@
+#
+# encrypt.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+#------------------------------------------------------------------------------
+# tcltest package
+#------------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# cfg
+# -----------------------------------------------------------------------------
+web::config uploadfilesize 0
+
+web::config encryptchain web::encryptd
+web::config decryptchain web::decryptd
+
+
+# -----------------------------------------------------------------------------
+# success, standard cryption type (D)
+# -----------------------------------------------------------------------------
+test crypt-1.1 {crypt and decrypt correct} {
+    web::decrypt  [web::encrypt "Hallo È‡Ë!"]
+} {Hallo È‡Ë!}
+
+
+#------------------------------------------------------------------------------
+# errors
+#------------------------------------------------------------------------------
+test encrypt-1.1 {missing string} {
+    catch {web::encrypt} msg
+    set msg
+} {wrong # args: should be "web::encrypt string"}
+
+test encrypt-1.2 {too many args} {
+    catch {web::encrypt "a" "b" "c"} msg
+    set msg
+} {wrong # args: should be "web::encrypt string"}
+
+
+#==============================================================================
+# decrypt
+#==============================================================================
+
+#------------------------------------------------------------------------------
+# errors
+#------------------------------------------------------------------------------
+
+test decrypt-1.1 {websh3_decrypt: missing string} {
+    catch {web::decrypt} msg
+    set msg
+} {wrong # args: should be "web::decrypt string"}
+
+test decrypt-1.2 {websh3_decrypt: too many args} {
+    catch {web::decrypt "a" "b" "c"} msg
+    set msg
+} {wrong # args: should be "web::decrypt string"}
+
+test decrypt-1.3 {decrypt: empty string} {
+
+    if { [info exists res] } {unset res}
+    set tmp [catch {set res [web::decrypt ""]} msg]
+    lappend res $tmp $msg
+    set res
+
+} {0 {}}
+
+test decrypt-1.4 {normal operation} {
+
+    set res [web::encrypt "Hello È‡Ë!"]
+    lappend res [web::decrypt $res]
+
+} {XDIVAhkgYnDaThxIKkSwhFLko9Z {Hello È‡Ë!}}
+
+test decrypt-1.5 {cryptlist symmetry} {
+
+    set res [list [list a b c] "Hallo È‡Ë!"]
+    string equal $res [web::decrypt [web::encrypt $res]]
+
+} {1}
+
+test decrypt-1.6 {string with spaces} {emptyTest } {
+
+    ## fixme: think about this one
+
+    web::config decryptchain web::decryptd
+    set res [catch {web::decrypt [web::uridecode "a+b"]} msg]
+    web::config decryptchain web::decryptd
+    set res
+} {0}
+
+# -----------------------------------------------------------------------------
+# error signaling
+# -----------------------------------------------------------------------------
+test decrypt-2.1 {error signals 1} {
+
+    web::config decryptchain web::decryptd
+    set res [catch {web::decrypt "a"} msg]
+    lappend res $msg
+
+} {0 a}
+
+test decrypt-2.2 {error signals 2} {
+
+    web::config decryptchain web::decryptd
+    catch {web::decrypt "a"} msg
+
+} {0}
+
+test decrypt-2.3 {error signals 3} {
+
+    web::config decryptchain web::decryptd
+    catch {web::decrypt "a"} msg
+
+} {0}
+
+test decrypt-2.4 {error signals 4} {
+
+    set res [catch {web::decrypt "XDfoo"} msg]
+    lappend res $msg
+
+} {1 {decrypt method "web::decryptd": checksum mismatch}}
+
+#     ## fixme: think about this one
+
+#     web::config decryptchain [list web::decryptd]
+
+#     set res [web::decrypt "X0abc"]
+#     lappend res [web::decrypt "Xaabc"]
+#     lappend res [web::decrypt "XZabc"]
+#     lappend res [web::decrypt "YCa"]
+#     lappend res [web::decrypt "fˆˆ"]
+#     lappend res [web::decrypt "b‰r"]
+#     set tmp "\u60\u70\u300\u400\u2000"
+#     lappend res [string compare $tmp [web::decrypt [web::encrypt $tmp]]]
+
+#     web::config decryptchain web::decryptd
+
+#     set res
+# } {X0abc Xaabc XZabc YCa fˆˆ b‰r 0}
+
+
+# cleanup
+::tcltest::cleanupTests

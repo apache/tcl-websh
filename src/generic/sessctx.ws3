@@ -1,0 +1,286 @@
+#
+# sessctx.ws3 -- Session Context
+# nca-073-9
+# 
+# Copyright (C) 1999 by Netcetera AG.
+# All rights reserved.
+# 
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# =============================================================================
+# Common part of Context Manager
+# =============================================================================
+
+proc web::sessioncontextfactory {ctxmgrname} {
+ 
+    # correct namespace (relative to caller)
+    if {![string match ::* $ctxmgrname]} {
+	set ctxmgrname [uplevel namespace current]::$ctxmgrname
+    }
+
+    # setup a generic context
+    web::context $ctxmgrname
+
+    # add our additional methods
+
+    # protected method to parse args for this 'base class'
+    proc ${ctxmgrname}::_parseargs {argList} {
+
+	set argc [llength $argList]
+	for {set i 0} {$i < $argc} {incr i} {
+	    set arg [lindex $argList $i]
+	    # currently to options that just set namespace vars
+	    set found 0
+	    foreach opt {idgen attachto} {
+		if {[string equal $arg -$opt]} {
+		    variable _$opt
+		    if {[incr i]>$argc} {
+			error "argument -$opt needs a value."
+		    }
+		    set _$opt [lindex $argList $i]
+		    set found 1
+		    break
+		}
+	    }
+	    if {!$found} {
+		error "unknown argument $arg."
+	    }
+	}
+    }
+    
+    # init a session context
+    proc ${ctxmgrname}::init {{id ""} {create 0}} {
+	# 1st: delete any data
+	cunset
+	# if an id is given, then just load it
+	if {[string length $id]} {
+	    _load $id $create
+	} else {
+	    
+	    # we assume we have an -attachto given
+	    variable _attachto
+	    if {![info exists _attachto]} {
+		error "no param to get session id from specified. Use -attachto."
+	    }
+	    set c [web::param -count $_attachto] 
+	    if { $c == 1 } {
+		# simple case: we have such a param
+		set id 
+		_load [web::param $_attachto] $create
+	    } elseif { $c > 1} {
+		# uh-oh: multiple params
+		error "multiple params of \"$_attachto\""
+	    } else {
+		# a new session, with agenerated id
+		new
+	    }
+	}
+    }
+    
+    # create a new session context
+    proc ${ctxmgrname}::new {{id ""}} {
+	cunset
+	variable _id
+	if {[string length $id]} {
+	    set _id $id
+	} else {
+	    variable _idgen
+	    if {![info exists _idgen]} {
+		error "no idgen for new session id. Use -idgen."
+	    }
+	    set _id [eval $_idgen]
+	}
+	commit
+    }
+    
+    # save a context to a context storage manager
+    proc ${ctxmgrname}::commit {} {
+	variable _id
+	variable _attachto
+	if {[info exists _id]} {
+	    save $_id
+	} else {
+	    error "no context to commit."
+	}
+	# and add to static params
+	if { [info exists _attachto] } {
+	    web::cmdurlcfg -set $_attachto $_id
+	}
+    }
+    
+    # accessor to id
+    proc ${ctxmgrname}::id {} {
+	variable _id
+	if {[info exists _id]} {
+	    return $_id
+	} else {
+	    error "no current id."
+	}
+    }
+    
+    # private method to load id from storage manager and
+    # set current id
+    proc ${ctxmgrname}::_load {id {create 0}} {
+	variable _id
+	# first load, so if we fail there is no current id
+	load $id $create
+	set _id $id
+    }
+    
+    # place holder for a session context storage manager
+    proc ${ctxmgrname}::load {id {create 0}} {
+	error "no load method defined."
+	
+    }
+    # place holder for a session context storage manager
+    proc ${ctxmgrname}::save {id} {
+	error "no save method defined."
+    }
+    # place holder for a session context storage manager
+    proc ${ctxmgrname}::invalidate {} {
+	error "no invalidate method defined."
+    }
+}
+
+# =============================================================================
+# File-specific part of Context Manager
+# =============================================================================
+
+proc web::filecontext {ctxmgrname args} {
+    
+    # correct namespace (relative to caller)
+    if {![string match ::* $ctxmgrname]} {
+	set ctxmgrname [uplevel namespace current]::$ctxmgrname
+    }
+
+    web::sessioncontextfactory $ctxmgrname
+    
+    # set default values for some properties
+    # permission for files
+    namespace eval ::$ctxmgrname {
+	variable _perm 0666
+	# path format. file path is created by passing this to format
+	variable _path %d
+	# if to save/load values crypted
+	variable _crypt 1
+    }
+    
+    # parse args for this
+    set argc [llength $args]
+    set baseargs {}
+    for {set i 0} {$i < $argc} {incr i} {
+	set arg [lindex $args $i]
+	set found 0
+	foreach opt {path perm crypt} {
+	    if {[string equal $arg -$opt]} {
+		if {[incr i]>$argc} {
+		    error "argument -$opt needs a value."
+		}
+		set ${ctxmgrname}::_$opt [lindex $args $i]
+		set found 1
+		break
+	    }
+	}
+	if {!$found} {
+	    lappend baseargs $arg
+	}
+    }
+
+    # now eat up remaining args
+    ${ctxmgrname}::_parseargs $baseargs
+ 
+    # _checkID - checks whether the id is 'safe'
+    proc ${ctxmgrname}::_checkID {id} {
+	set notok 0
+	if { [string compare [file dirname $id] "."] != 0 } {
+	    set notok 1
+	} elseif {[string match "\.*" $id] == 1} {
+	    set notok 1
+	} elseif {[regexp {^[a-zA-Z0-9\._\-]+$} $id] == 0} {
+	    set notok 1
+	}
+	if {$notok} {
+	    error "id \"$id\" is not safe, rejected."
+	}
+	return
+    }
+   
+    # Load - context from a file
+    proc ${ctxmgrname}::load {id {create 0}} {
+	set filename [_getFileName $id]
+        if { [string equal $create "-create"] } {
+            set fh [open $filename {RDWR CREAT}]
+        } else {
+            set fh [open $filename {RDWR}]
+        }
+	web::lockfile $fh
+
+	if {[catch {
+	    variable _crypt
+	    if {$_crypt} {
+		namespace eval [namespace current] [web::decrypt [read $fh]]
+	    } else {
+		namespace eval [namespace current] [read $fh]
+	    }
+	} msg]} {
+	    web::unlockfile $fh
+	    close $fh
+	    error $msg
+	}
+	web::unlockfile $fh
+	close $fh
+    }
+
+    # Save context to a file
+    proc ${ctxmgrname}::save {id} {
+	variable _perm
+	set filename [_getFileName $id]
+	set fh [open $filename {CREAT WRONLY} $_perm]
+	web::lockfile $fh
+
+	# now that we have the lock: truncate
+	web::truncatefile $fh
+ 	seek $fh 0 start
+	
+	if {[catch {
+	    variable _crypt
+
+	    if {$_crypt} {
+		puts  -nonewline $fh [web::encrypt [dump]]
+	    } else {
+		puts $fh [dump]
+	    }
+	} msg]} {
+	    web::unlockfile $fh
+	    close $fh
+	    error $msg
+	}
+
+	web::unlockfile $fh
+	
+	close $fh
+    }
+
+    # invalidate context
+    proc ${ctxmgrname}::invalidate {} {
+	variable _perm
+ 
+	# delete in namespace
+	cunset
+ 
+	# delete on file system
+	set filename [_getFileName [id]]
+	file delete -force $filename
+    }
+
+    # Get Filename
+    proc ${ctxmgrname}::_getFileName {id} {
+	variable _path
+	_checkID $id
+	return [format $_path $id]
+    }
+}

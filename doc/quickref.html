@@ -1,0 +1,1303 @@
+
+<h1><a name="toc">Table of contents</a></h1>
+0 &nbsp;
+<a href="#over">overview</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#gene">general remarks</a><br>
+1 &nbsp;
+<a href="#reqdatamgt">request data management</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webp">web::param </a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webf">web::formvar </a><br>
+2 &nbsp;
+<a href="#dispatch">command dispatching</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webd">web::dispatch</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webc">web::command</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webg">web::getcommand</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webcm">web::cmdurl</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webcmd">web::cmdurlcfg</a><br>
+3 &nbsp;
+<a href="#resp">response data management</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webpu">web::put</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webput">web::putx</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webputx">web::putxfile</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webr">web::response</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#Exam">Examples</a><br>
+4 &nbsp;
+<a href="#cont">context management</a><br>
+5 &nbsp;
+<a href="#file">file-based context</a><br>
+6 &nbsp;
+<a href="#cook">cookie-based sessions</a><br>
+7 &nbsp;
+<a href="#== conversion">uri-/html- en-/decoding</a><br>
+8 &nbsp;
+<a href="#msg">inter-process/-system communication</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webs">web::send</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webre">web::recv</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webm">web::msgflag</a><br>
+9 &nbsp;
+<a href="#crypt">data encryption</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webe">web::encrypt</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webde">web::decrypt</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#encr">encryption plugIn D</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#weben">web::encryptd</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webdec">web::decryptd</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webcr">web::cryptdkey</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#encry">encryption plugIn interface </a><br>
+10 &nbsp;
+<a href="#log">logging</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webl">web::log</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#weblo">web::logfilter</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#weblog">web::logdest</a><br>
+11 &nbsp;
+<a href="#logp">log plugins</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#file7">file</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#sysl">syslog</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#comm">command</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#chan">channel</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#aplo">aplog</a><br>
+12 &nbsp;
+<a href="#cfg">configuration</a><br>
+13 &nbsp;
+<a href="#misc">misc commands</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webt">web::tempfile</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webi">web::include</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webrea">web::readfile</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webfi">web::filecounter</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webco">web::copyright</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webge">web::getcgivar</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webma">web::match</a><br>
+&nbsp;&nbsp;&nbsp; -
+<a href="#webloc">web::lockfile and web::unlockfile</a><br>
+14 &nbsp;
+<a href="#Copy">Copyright</a><br>
+
+<h1><a name="over">overview</a></h1>
+
+The webshell Command Reference gives a brief description of all webshell
+3.0 commands. It is not intended to replace a technical reference of
+webshell. It is organized along webshell 3 topics, in the following
+order:
+
+<ul>
+<li>request data management
+<li>command dispatching
+<li>response data management
+<li>context management
+<li>persistent contexts
+<li>session management
+<li>uri-/html- en-/decoding
+<li>interprocess-/system-communication
+<li>data encryption
+<li>logging
+</ul>
+
+webshell 3.0 embeds a Tcl 8.3 interpreter, and all Tcl 8.3 commands
+are available, too.
+
+<h2><a name="gene">general remarks</a></h2>
+
+Typically, webshell commands have the following syntax:
+<i>web::acommand ?options? ?subcommands ? ?arguments?</i>.
+Options start with a dash (&quot;-&quot;). As usual, dash-dash (&quot;--&quot;) indicates
+the &quot;end-of-options&quot;. Thus, <i>web::acommand -o1 a1 -- -o2</i>
+takes &quot;-o2&quot; as the first argument.
+
+<br><br>
+In difference to the normal &quot;set&quot; behaviour of tcl and webshell,
+configuration commands of webshell normally return the previously
+used value when a new value is set.
+
+<h1><a name="reqdatamgt">request data management</a></h1>
+
+<h2><a name="webp">web::param </a></h2>
+
+<dl>
+<dt><b>syntax</b>
+<dd>
+ <b>web::param</b> ?options? ?&lt;key&gt;? ?&lt;value&gt;?<br>
+ Options are: <tt>-count</tt>, <tt>-set</tt>, <tt>-lappend</tt>, and <tt>-unset</tt>
+</dl>
+
+web::param is an accessor to state information from the querystring. 
+Suppose the querystring is &quot;lang=EN&quot;.  After web::dispatch has parsed the
+querystring, <tt>web::param lang</tt> will report <tt>EN</tt>.  Additionaly,
+web::param can manage this data and add, append, and delete parameters as
+needed. 
+
+<dl>
+<dt><b>web::param</b>
+<dd>
+ returns a list of all known keys
+<dt><b>web::param &lt;key&gt; ?&lt;default&gt;?</b>
+<dd>
+ returns the value for &lt;key&gt;. Can be a list. In case
+ that &lt;key&gt; does not exist, return &lt;default&gt;, if it is
+ given, or an empty string.
+<dt><b>web::param -count &lt;key&gt;</b>
+<dd>
+ returns number of items in list
+<dt><b>web::param -set &lt;key&gt; &lt;value&gt;</b>
+<dd>
+ add the parameter &lt;key&gt; to the web::param data.
+ Any existing parameters with &lt;key&gt; are overwritten
+<dt><b>web::param -lappend &lt;key&gt; &lt;value&gt;</b>
+<dd>
+ append parameters with the same &lt;key&gt; to the web::param data.  In
+ this case the existing &lt;value&gt; is not overwritten
+<dt><b>web::param -unset &lt;key&gt;</b>
+<dd>
+ delete a parameter from the web::param data
+<dt><b>web::param -unset</b>
+<dd>
+ delete all web::param data
+</dl>
+
+<h2><a name="webf">web::formvar </a></h2>
+
+<dl>
+<dt><b>syntax</b>
+<dd>
+ <b>web::formvar</b> ?options? ?&lt;key&gt;? ?&lt;value&gt;?<br>
+ Exactly like <tt>web::param</tt>
+</dl>
+
+web::formvar is an accessor to HTML &lt;FORM&gt; data.  After web::dispatch has
+parsed the POST data, you can access all form fields using web::formvar.
+
+<h1><a name="dispatch">command dispatching</a></h1>
+
+webshell provides a command dispatching mechanism to produce, for example,
+different HTML pages within one application.  The name of the command to be
+used is encoded in the querystring (see <tt>web::cmdurl</tt> for details on how
+to produce such querystrings).  Command dispatching is initiated with the
+command <tt>web::dispatch</tt>.  Commands are defined with <tt>web::command</tt>. 
+
+<h2><a name="webd">web::dispatch</a></h2>
+
+<dl>
+<dt><b>syntax</b>
+<dd>
+ <b>web::dispatch</b> ?options?<br>
+ Options are: <tt>-cmd</tt>, =%-querystring=%, <tt>-postdata</tt>,
+ <tt>-track</tt> and <tt>-hook</tt>
+</dl>
+
+Parse information and call a command.
+
+<br><br>
+<dl>
+<dt><b>web::dispatch -cmd &lt;cmdName&gt;</b>
+<dd>
+ switch into command &lt;cmdName&gt;. If &lt;cmdName&gt; is an empty string,
+ no command is called. By default, &lt;cmdName&gt; is taken from
+ the querystring.
+<dt><b>web::dispatch -querystring &lt;string&gt;</b>
+<dd>
+ parse &lt;string&gt; as querystring. If &lt;string&gt; is an empty string,
+ querystring parsing is turned off. By default, querystring is
+ taken from the request data (CGI environment or apache module
+ request object).
+<dt><b>web::dispatch -postdata &lt;string&gt; ?&lt;content_type&gt;?</b>
+<dd>
+ parse &lt;string&gt; as POST data input with type &lt;content_type&gt;.
+ &lt;content_type&gt; can be <tt>application/x-www-form-urlencoded</tt> or
+ <tt>multipart/form-data; boundary=xxx</tt>. In the second case,
+ &lt;content-type&gt; must specify the boundary as well. By default,
+ POST data is taken from the request data.<br>
+ If &lt;string&gt; is an empty string, postdata parsing is turned off.
+<dt><b>web::dispatch -postdata &lt;channelName&gt; &lt;content_type&gt; &lt;content_length&gt;</b>
+<dd>
+ As above, but reads the POST data from channel &lt;channelName&gt;.
+<dt><b>web::dispatch -track &lt;paramKeyList&gt;</b>
+<dd>
+ Track a parameter: register it as &quot;static&quot; for the generation of
+ URLs with web::cmdurl. Thus, each parameter with the key in
+ &lt;paramKeyList&gt; will be repeated in every URL generated with
+ web::cmdurl. See the documentation of web::cmdurl for details.
+<dt><b>web::dispatch -hook &lt;code&gt;</b>
+<dd>
+ Causes web::dispatch to eval &lt;code&gt; just before the command (from
+ any source) is evaluated. When &lt;code&gt; is evaluated, the full
+ request information has been parsed.  That is, web::param,
+ web::formvar etc. will have up-to-date information when
+ &lt;code&gt; is evaluated.
+</dl>
+
+<b>Note</b> that, if no command is passed to web::dispatch either in the
+querystring or with the -cmd option, web::dispatch will call the
+command &quot;default&quot;.
+
+Examples:
+<pre>
+---------------------------------------------------------------------------
+set tst {puts &quot;On the hook&quot;}
+web::command acmd {  puts &quot;this is acmd&quot; }
+web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
+==&gt; this is acmd
+web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
+==&gt; On the hook
+==&gt; this is acmd
+---------------------------------------------------------------------------
+</pre>
+
+<h2><a name="webc">web::command</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::command</b> ?&lt;cmdName&gt;? &lt;cmdBody&gt;
+</dl>
+
+Registers &lt;cmdBody&gt; as &lt;cmdName&gt;. If &lt;cmdName&gt; is
+omitted, &quot;default&quot; is used.
+
+<h2><a name="webg">web::getcommand</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::getcommand</b> ?&lt;cmdName&gt;?
+</dl>
+
+Retrieves the body of the command &lt;commandName&gt; or of the command &quot;default&quot;
+if &lt;cmdName&gt; is omitted.
+
+<br><br>
+<h2><a name="webcm">web::cmdurl</a></h2>
+
+<dl>
+<dt><b>syntax</b>
+<dd>
+ <b>web::cmdurl</b> ?options? &lt;cmdName&gt; ?&lt;key-value-list&gt;?<br>
+ <b>web::cmdurl</b> ?options? &lt;cmdName&gt; &lt;k1&gt; &lt;v1&gt; ... &lt;kN&gt; &lt;vN&gt;<br>
+ Options are: <tt>-notimestamp</tt>, and %=urlformat%=
+</dl>
+
+Generate URLs including querystring.  By default, URLs are
+self-referencing, but the exact output is subject to configuration.  The
+querystring is encrypted, using the encryption method specified by
+configuration (see <tt>web::config</tt>). 
+
+<dl>
+<dt><b>-notimestamp</b>
+<dd>
+ do not add a timestamp to the URL
+<dt><b>-urlformat &lt;list&gt;</b>
+<dd>
+ specify what items will be used to format just this URL.
+ Default is: <tt>{scriptname querystring}</tt><br>
+ Use <tt>web::cmdurlcfg</tt> to define the url format for all
+ URLs produced by <tt>web::cmdurl</tt> in one request.<br>
+ ==D protocol
+     use the protocol, like &quot;http&quot;
+ ==D servername
+     use the servername, like &quot;websh.com&quot;
+ ==D serverport
+     use the port like &quot;80&quot;
+     Trying to set this item, without servername, will throw
+     an error
+ ==D scriptname
+     use scriptname, like &quot;websh3&quot;
+ ==D pathinfo
+     use pathinfo, like &quot;home&quot;
+ ==D querystring
+     use the querystring, like &quot;select=download&quot;
+</dl>
+
+Examples:
+<pre>
+---------------------------------------------------------------------------
+web::cmdurl -notimestamp -urlformat [list protocol querystring] &quot;test&quot;
+==&gt; http://?XDZuRD2rnsfHjFH
+---------------------------------------------------------------------------
+</pre>
+
+Note that there are two more commands that control the output of
+<tt>web::cmdurl</tt>: <tt>web::config cmdparam</tt> and <tt>web::config timeparam</tt>. 
+
+<h2><a name="webcmd">web::cmdurlcfg</a></h2>
+
+<dl>
+<dt><b>syntax</b>
+<dd>
+ <b>web::cmdurlcfg</b> ?options? ?&lt;key&gt;? ?&lt;value&gt;?<br>
+ Exactly like <tt>web::param</tt><br>
+ <b>web::cmdurlcfg</b> option ?&lt;value&gt;?<br>
+ Options are <b>-protocol</b>, <b>-servername</b>, <b>-port</b>,
+ <b>-pathinfo</b>, <b>-urlformat</b><br>
+ If &lt;value&gt; is omitted, the current value is returned.
+ Otherwise, the &lt;value&gt; is stored.
+</dl>
+
+Configuration for web::cmdurl.  This command serves two purposes:
+<ol>
+<li>management of static parameters
+<li>configuration for <tt>web::cmdurl</tt>
+</ol>
+
+<h2>management of static parameters</h2>
+
+In order to set, retrieve, append or unset static parameters,
+use the syntax of the <tt>web::param</tt> command, for example:
+<dl>
+<dt><b>web::cmdurlcfg -set &lt;key&gt; &lt;value&gt;</b>
+<dd>
+ add the static parameter &lt;key&gt;
+<dt><b>web::cmdurlcfg</b>
+<dd>
+ returns a list of all known static parameters
+</dl>
+
+<br><br>
+<b>Important</b>: <tt>web::cmdurl</tt> compares every key from the static
+parameters (see <tt>web::cmdurlcfg</tt>) against the keys from the command
+line. The static parameter is only used if there is no parameter given
+on the command line.
+
+<h2>configuration for <tt>web::cmdurl</tt></h2>
+
+<dl>
+<dt><b>web::cmdurlcfg -protocol ?&lt;value&gt;?</b>
+<dd>
+ protocol to be used. Default: http.
+<dt><b>web::cmdurlcfg -servername ?&lt;value&gt;?</b>
+<dd>
+ server name to be used. Default: taken from request.
+<dt><b>web::cmdurlcgf -port </b>
+<dd>
+ port number to be used. Default: 80.
+<dt><b>-scriptname</b>
+<dd>
+ name of CGI executable. Default: taken from request.
+<dt><b>-pathinfo</b>
+<dd>
+ path info (path after scriptname). Default: taken from request.
+<dt><b>-urlformat &lt;list&gt;</b>
+<dd>
+ changes the urlformat permanently. See web::cmdurl for the
+ description of this option
+</dl>
+
+In all cases, &quot;web::cmdurlcfg -option &lt;value&gt;&quot; sets the value of
+the given option and returns the value that was used before the change,
+while &quot;web::cmdurlcfg -option&quot; returns the current value.  If no value
+has been set using web::cmdurlcfg, but is requested for the URL
+generation, the value from the request will be used.  This value,
+however, can not be retrieved using web::cmdurlcfg.
+
+<br><br>
+Note that setting a value to an empty string amounts to &quot;unset&quot;.
+
+Examples:
+<pre>
+---------------------------------------------------------------------------
+% web::cmdurl
+==&gt; ?XD8Fseb6tjYQsBUWZ9
+% web::cmdurlcfg -scriptname bin/test_script
+% web::cmdurl
+==&gt; bin/test_script?XD8Fseb6tjYRl1M9Fl
+% web::cmdurlcfg -scriptname &quot;&quot;
+% web::cmdurl
+==&gt; ?XD8Fseb6tjYQsBUWZ9
+---------------------------------------------------------------------------
+</pre>
+
+<b>Important</b>: web::cmdurl compares every key from the static
+parameters see --&gt;(web::cmdurlcfg) against the keys from the command
+line. The static parameter is only used if there is no parameter on
+the command line.
+
+<h1><a name="resp">response data management</a></h1>
+
+webshell can send output to any Tcl channel and to global
+variables (=%web::put=%). Optionally, data is scanned for Tcl code before it is
+output to a channel (<tt>web::putx</tt>). 
+webshell manages <i>response objects</i> that are
+related to Tcl channels and are identified using the name of the
+corresponding Tcl channel. Configuration with <tt>web::response</tt>.
+
+<h2><a name="webpu">web::put</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::put</b> ??#?&lt;channel&gt;? &lt;text&gt;
+</dl>
+
+Send output to a Tcl channel.
+No newline is added to output.
+
+<h2><a name="webput">web::putx</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::putx</b> ?options? ??#?&lt;channel&gt;? &lt;text&gt;
+ Options are: <tt>-tag</tt> and <tt>-tagisdefault</tt>
+</dl>
+
+Writes &lt;text&gt; to the specified channel. Code in curly brackets is
+executed, unless the brackets are escaped by &quot;\&quot;.
+
+<dl>
+<dt><b>web::putx -tag ??#?&lt;channel&gt;? &lt;text&gt;</b>
+<dd>
+ for this call, use =%&lt;%%= and =%%&gt;%= instead of
+ <tt>{</tt> and <tt>{</tt> as marker for code
+<dt><b>web::putx -tagisdefault ?&lt;boolean&gt;?</b>
+<dd>
+ for all subsequent calls, use the =%&lt;%%= and =%%&gt;%= 
+ as marker for code (default is 0).
+ If &lt;boolean&gt; is omitted, the current setting is returned.
+</dl>
+
+<h2><a name="webputx">web::putxfile</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::putxfile</b> ??#?&lt;channel&gt;? &lt;file&gt; ?&lt;msg&gt;?
+</dl>
+
+As web::putx, but takes input from a file.
+
+Returns 0 on success, 1 otherwise. If an error occurs, an error
+message is written to &lt;msg&gt;. If only two arguments are passed, then
+&lt;channel&gt; takes precedence.
+
+<h2><a name="webr">web::response</a></h2>
+
+<dl>
+<dt><b>Syntax</b>
+<dd>
+ <b>web::response</b><br>
+ <b>web::response</b> ?option?<br>
+ <b>web::response</b> ??#?&lt;channel&gt;? ?subcommand? args<br>
+ Subcommands are <b>-select</b>, <b>-set</b>, <b>-lappend</b>,
+ <b>-names</b>, <b>-exists</b>, <b>-unset</b>, and <b>-reset</b>,
+ Options are <b>-sendheader</b>, and <b>-bytessent</b>.<br>
+ If &lt;channel&gt; is omitted, the command operates on the
+ currently selected channel. If &lt;channel&gt; is prepended
+ by a #, it refers too a global variable.
+</dl>
+
+Selects the default response object, sets and accesses properties
+of the response object, and returns the name of the response
+object. 
+
+<dl>
+<dt><b>web::response</b>
+<dd>
+ returns the name of the currently selected response object
+<dt><b>web::response ??#?&lt;channel&gt;? -select</b>
+<dd>
+ makes &lt;channel&gt; the new default response object
+<dt><b>web::response ??#?&lt;channel&gt;? -set &lt;key&gt; ?&lt;value&gt;?</b>
+<dd>
+ sets property &lt;key&gt; to &lt;value&gt;, or returns current
+ value if &lt;value&gt; is omitted.<br>
+ Two property names are reseved: <b>httpresonse</b> and
+ <b>header</b>. httpresonse is the status message to be sent
+ back to the client. It is not set by default.
+ header is a key-value list consisting of HTTP Headers
+ (like Content-Type) and their values (like text/html).
+<dt><b>web::response ??#?&lt;channel&gt;? -names</b>
+<dd>
+ returns the list of known keys
+<dt><b>web::response ??#?&lt;channel&gt;? -exists &lt;key&gt;</b>
+<dd>
+ true if &lt;key&gt; exists in list
+<dt><b>web::response -unset ?&lt;key&gt;?</b>
+<dd>
+ delete the value of &lt;key&gt;, if &lt;key&gt; is given, or
+ all keys.
+<dt><b>web::response ??#?&lt;channel&gt;? -sendheader ?&lt;boolean&gt;?</b>
+<dd>
+ Sets the sendheader flag which indicates and controls
+ whether the HTTP headers have been or should be sent.
+ It is initially set to 1 and set to 0 after the first
+ call of <tt>web::put</tt> or <tt>web::putx</tt>. If &lt;boolean&gt; is
+ omitted, returns the current value.
+<dt><b>web::response ??#?&lt;channel&gt;? -bytessent</b>
+<dd>
+ returns the number of bytes that have already been sent to this
+ channel.
+</dl>
+
+<h2><a name="Exam">Examples</a></h2>
+<pre>
+---------------------------------------------------------------------------
+web::response
+==&gt; stdout
+web::response stderr -select
+==&gt; stdout
+web::response -sendheader
+==&gt; 1
+web::response -set header
+==&gt; Content-Type text/html Generator {websh 3.0}
+web::response -bytessent
+==&gt; 0
+web::response -lappend header &quot;Set-Cookie&quot; &quot;mycookie&quot;
+web::put &quot;Hello, world&quot;
+==&gt;Content-Type: text/html
+
+---------------------------------------------------------------------------
+</pre>
+
+<h1><a name="cont">context management</a></h1>
+
+<dl>
+<dt><b>Creation  </b>
+<dd>
+ <b>web::context</b> &lt;name&gt;
+</dl>
+
+Creates a namespace &lt;name&gt; with the following commands:
+
+<dl>
+<dt><b>Syntax</b>
+<dd>
+ <b>&lt;name&gt;</b>::&lt;subcommand&gt; &lt;args&gt;<br>
+Subcommands are: <tt>cset</tt>, <tt>cappend</tt>, <tt>clappend</tt>,
+<tt>cget</tt>, <tt>cexists</tt>,  <tt>cunset</tt>, <tt>carray</tt>,
+<tt>cnames</tt>, and <tt>dump</tt>.  
+</dl>
+
+Manages data of the context. The subcommands have their
+familiar behaviour of the Tcl commands with similar
+names.
+
+<dl>
+<dt><b>&lt;name&gt;::cset &lt;key&gt; &lt;value&gt;</b>
+<dd>
+ store &lt;value&gt;
+<dt><b>&lt;name&gt;::cappend &lt;key&gt; &lt;value&gt;</b>
+<dd>
+ append &lt;value&gt; to existing value for &lt;key&gt;
+<dt><b>&lt;name&gt;::clappend &lt;key&gt; &lt;value&gt;</b>
+<dd>
+ append &lt;value&gt; to existing list of values for &lt;key&gt;
+<dt><b>&lt;name&gt;::cget &lt;key&gt; ?&lt;default&gt;?</b>
+<dd>
+ access the value for key &lt;key&gt;, or return &lt;default&gt;
+ if &lt;key&gt; does not exist in the context. If &lt;default&gt;
+ is omitted, an empty string is returned if &lt;key&gt;
+ is unknown.
+<dt><b>&lt;name&gt;::cexists &lt;key&gt;</b>
+<dd>
+ returns true (1) if &lt;key&gt; exists in context, false (0)
+ otherwise.
+<dt><b>&lt;name&gt;::cunset &lt;key&gt;</b>
+<dd>
+ remove &lt;key&gt; from context
+<dt><b>&lt;name&gt;::carray &lt;option&gt; &lt;key&gt; &lt;arg&gt;</b>
+<dd>
+ array manipulation as known from the Tcl command
+ <i>array</i>
+<dt><b>&lt;name&gt;::cnames ?&lt;pattern&gt;?</b>
+<dd>
+ lists existing keys of context matching &lt;pattern&gt;
+<dt><b>&lt;name&gt;::dump</b>
+<dd>
+ serialize context
+</dl>
+
+Example:
+<pre>
+---------------------------------------------------------------------------
+% web::context sc
+% sc::cset lang FR
+... some code ...
+set lang [sc::cget lang EN]
+==&gt; FR
+---------------------------------------------------------------------------
+</pre>
+
+<h1><a name="file">file-based context</a></h1>
+
+<dl>
+<dt><b>Creation:</b>
+<dd>
+ <b>web::filecontext</b> &lt;name&gt; ?options?<br>
+ Options are: <tt>-perm</tt>, <tt>-path</tt>, <tt>-crypt</tt>,
+ <tt>-idgen</tt>, and <tt>-attachto</tt>.
+</dl>
+
+Creates a namespace &lt;name&gt; to manage file-based context data:
+
+<dl>
+<dt><b>Syntax</b>
+<dd>
+ <b>&lt;name&gt;</b>::&lt;subcommand&gt; &lt;args&gt;<br>
+Subcommands are: <tt>cset</tt>, <tt>cappend</tt>, <tt>clappend</tt>,
+<tt>cget</tt>, <tt>cexists</tt>,  <tt>cunset</tt>, <tt>carray</tt>,
+<tt>cnames</tt>, <tt>init</tt>, <tt>new</tt>, <tt>commit</tt>, and <tt>id</tt>.
+</dl>
+
+Manages file-based context data. The subcommands have their familiar
+behaviour of the Tcl commands with similar names. Please refer to the
+section <tt>context management</tt> for a description of the commands
+<tt>cset</tt>, <tt>cappend</tt>, <tt>clappend</tt>, <tt>cget</tt>, <tt>cexists</tt>,
+<tt>cunset</tt>, <tt>carray</tt>, and <tt>cnames</tt>.
+
+<dl>
+<dt><b>&lt;name&gt;::init ?&lt;id&gt;?</b>
+<dd>
+ load an existing session context with id &lt;id&gt;, or create a new one,
+ possible. Automation depends on the settings of the actual
+ context manager settings, see below.
+<dt><b>&lt;name&gt;::new ?&lt;id&gt;?</b>
+<dd>
+ create a new session context. Automation depends on the settings of the
+ actual context manager settings, see below.
+<dt><b>&lt;name&gt;::commit</b>
+<dd>
+ make session context persistent
+<dt><b>&lt;name&gt;::id</b>
+<dd>
+ return id of session
+</dl>
+
+Options:
+
+<dl>
+<dt><b>web::filecontext &lt;name&gt; -perm &lt;perm&gt;</b>
+<dd>
+ set the file permissions of the session context files
+ &lt;perm&gt; is an unix-like octal value like 0644.
+<dt><b>web::filecontext &lt;name&gt; -path &lt;path&gt;</b>
+<dd>
+ specify where to store session context files and
+ how to name them. Suppose that the session id is 99.
+ <i>-path [file join .. data s%d.dat]</i> would then
+ cause filecontext to save the session context
+ as <tt>../data/s99.dat</tt>
+<dt><b>web::filecontext &lt;name&gt; -crypt &lt;boolean&gt;</b>
+<dd>
+ Flag to turn crypting of session context on and off.
+ Default is on.
+<dt><b>web::filecontext &lt;name&gt; -idgen &lt;idgen&gt;</b>
+<dd>
+ Use &lt;idgen&gt; to find a new session id. See doc of
+ <i>web::filecounter</i> below for an implementation
+ provided with webshell.<br>
+ &lt;idgen&gt; is used in case that now &lt;id&gt; argument
+ has been passed to <i>init</i> or <i>new</i>.
+<dt><b>web::filecontext &lt;name&gt; -attachto &lt;idparam&gt;</b>
+<dd>
+ Use <tt>web::param &lt;idparam&gt;</tt> to access current session id.
+ This option is only used if <i>init</i> has been called
+ without &lt;id&gt; argument.<br>
+ webshell passes session Ids from one HTML request to
+ the next using the querystring (this is one reason why
+ the querystring is encrypted). After web::dispatch
+ has parsed the querystring, web::param will report the
+ current session id, if any. <i>Note</i> that you can 
+ maintain several sessions in parallel, and attach every
+ session to its own &lt;idparam&gt;.<br>
+ Using <i>web::dispatch -track</i> further automates the
+ passing of session Ids from request to request.
+</dl>
+
+<b>Note:</b> Whenever you create a new file-based context, the context is
+initialized and you loose whatever information that you might have
+stored in the context before you initialized it as a file-based
+session context.
+
+<h1><a name="cook">cookie-based sessions</a></h1>
+
+<dl>
+<dt><b>Creation:</b>
+<dd>
+ <b>web::cookiecontext</b> &lt;name&gt; ?options?<br>
+ Options are: <tt>-expires</tt>, <tt>-path</tt>, <tt>-domain</tt>,
+ <tt>-secure</tt>, and <tt>-channel</tt>.
+</dl>
+
+Creates a namespace &lt;name&gt; to manage cookie-based context data:
+
+<dl>
+<dt><b>&lt;name&gt;::init ?&lt;id&gt;?</b>
+<dd>
+ load an existing session context (cookie must have been sent by the
+ client).
+<dt><b>&lt;name&gt;::new ?&lt;id&gt;?</b>
+<dd>
+ create a new session context.
+<dt><b>&lt;name&gt;::commit</b>
+<dd>
+ send a cookie
+<dt><b>&lt;name&gt;::id</b>
+<dd>
+ return id of session
+</dl>
+
+Options:
+
+<dl>
+<dt><b>web::cookiecontext &lt;name&gt; -expires &lt;time&gt;</b>
+<dd>
+ set the expiration date of the cookie. Possible values for &lt;time&gt;
+ are <i>day</i> (lifetime: one day), <i>week</i>, <i>today</i>, <i>seconds</i>
+ (time in seconds since 1-1-1970) or <i>date-string</i>.
+<dt><b>web::cookiecontext &lt;name&gt; -path &lt;path&gt;</b>
+<dd>
+ set the <i>path</i> property of the cookie
+<dt><b>web::cookiecontext &lt;name&gt; -domain  &lt;domain&gt;</b>
+<dd>
+ set the <i>domain</i> property of the cookie
+<dt><b>web::cookiecontext &lt;name&gt; -secure &lt;boolean&gt;</b>
+<dd>
+ set the <i>secure</i> property of the cookie
+<dt><b>web::cookiecontext &lt;name&gt; -channel &lt;channelName&gt;</b>
+<dd>
+ The response object to send the cookie to (see also
+ <tt>web::response</tt>).
+</dl>
+
+Because cookies are client-based, in principle no id is
+needed. webshell uses &lt;id&gt; to name the cookie, however, and the
+<tt>new</tt>, <tt>init</tt>, and <tt>load</tt> commands still require the &lt;id&gt;
+argument.
+
+<br><br>
+<h1><a name="== conversion">uri-/html- en-/decoding</a></h1>
+
+<ul>
+<li><b>web::htmlify</b> ?-options? &lt;text&gt;<br>
+ Options is: <tt>-numeric</tt>.<br>
+ Return  HTML-compliant &lt;text&gt; 
+<li><b>web::dehtmlify</b> &lt;text&gt;<br>
+ Remove all HTML-specifics of &lt;text&gt;
+<li><b>web::uriencode</b> &lt;text&gt;<br>
+ Return URI-compliant &lt;text&gt;.
+<li><b>web::uridecode</b> &lt;text&gt;<br>
+ Decode URI-compliant &lt;text&gt;.
+</ul>
+
+Examples:
+<pre>
+---------------------------------------------------------------------------
+% web::htmlify &auml;
+==&gt; &amp;auml;
+% web::htmlify -numeric &auml;
+==&gt; &amp;#228;
+% web::dehtmlify &amp;auml;
+==&gt; &auml;
+% web::uriencode &quot;Hello, world!&quot;
+==&gt; Hello,+world%21
+% web::uridecode %21
+==&gt; !
+---------------------------------------------------------------------------
+</pre>
+
+<h1><a name="msg">inter-process/-system communication</a></h1>
+
+Send to and receive from sockets.
+
+<h2><a name="webs">web::send</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::send</b> &lt;channel&gt; &lt;cmdNr&gt; &lt;message&gt; ??#?&lt;flags&gt;?
+</dl>
+
+Send the command &lt;cmdNr&gt; and the message &lt;message&gt; to channel
+&lt;channelName&gt; using the flags &lt;flags&gt;. The command numbers are
+application specific. If #&lt;flags&gt; is used, flags is the numeric
+(integer) representation of the flags is to be set. If the # is
+omitted, &lt;flags&gt; is a list of symbolic flags. Currently, there is only
+one flag: &quot;multiple&quot;, indicating that there is more to follow.
+
+<h2><a name="webre">web::recv</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::recv</b> &lt;channel&gt; &lt;cmdVarName&gt; &lt;msgVarName&gt; &lt;flagVarName&gt;
+</dl>
+
+Receives a message from &lt;channelName&gt;. The other arguments are the
+names of the corresponding variables which will contain the message.
+The flags are returned numeric. (To handle these flags, use the
+web::msgflag function).
+
+<h2><a name="webm">web::msgflag</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::msgflag</b> ?&lt;flags&gt;? ?&lt;testflags&gt;?
+</dl>
+
+Set or test flags.
+
+<dl>
+<dt><b>web::msgflag</b>
+<dd>
+ returns a list of all known message flags
+<dt><b>web::msgflag &lt;flags&gt;</b>
+<dd>
+ returns the integer representation of the flags listed in &lt;flags&gt; 
+<dt><b>web::msgflag &lt;flags&gt; &lt;testflags&gt;</b>
+<dd>
+ returns 1, if the flags in &lt;testflags&gt; are set in &lt;flags&gt;
+</dl>
+
+<h1><a name="crypt">data encryption</a></h1>
+
+Encrypt (<tt>web::encrypt</tt>) and decrypt (<tt>web::decrypt</tt>) data. By
+default, the built-in, weak encryption is used. encryption is
+extensible by plug-Ins.  The encryption module tries all plug-Ins from
+a list until the first plug-In was able to en-/decrypt the input.  See
+<tt>web::config</tt> for the configuration of the plug-Ins to be used.
+
+<h2><a name="webe">web::encrypt</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::encrypt</b> &lt;data&gt;
+</dl>
+
+Returns encrypted data.
+
+<h2><a name="webde">web::decrypt</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::decrypt</b> &lt;data&gt;
+</dl>
+
+Returns decrypted data.
+
+Examples:
+<pre>
+---------------------------------------------------------------------------
+% web::encrypt &quot;Hello, world!&quot;
+==&gt; XDaL9T6OqaqUXVJVKDAKQU
+%  web::decrypt [web::encrypt &quot;Hello, world!&quot;]
+==&gt; Hello, world!
+---------------------------------------------------------------------------
+</pre>
+
+<h2><a name="encr">encryption plugIn D</a></h2>
+
+By default, webshell uses this plug-In for weak data encryption for
+encryption (<tt>web::encryptd</tt>) and decryption (<tt>web::decryptd</tt>).
+The encryption key is managed with <tt>web::crpytdkey</tt>.
+
+<h2><a name="weben">web::encryptd</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::encryptd</b> &lt;data&gt;
+</dl>
+
+Returns encrypted data.
+
+<h2><a name="webdec">web::decryptd</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::decryptd</b> &lt;data&gt;
+</dl>
+
+Decryption.
+
+<h2><a name="webcr">web::cryptdkey</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::cryptdkey</b> ?&lt;key&gt;?
+</dl>
+
+Sets the new key for encryption. If no argument is given, resets to
+the default key. This command does not return the currently active
+key, in difference to other configuration commands of webshell 3.
+
+Commands:
+
+<dl>
+<dt><b>web::encryptd &lt;message&gt;</b>
+<dd>
+ encrypts list
+<dt><b>web::decryptd &lt;message&gt;</b>
+<dd>
+ decryption
+<dt><b>web::cryptdkey ?&lt;key&gt;?</b>
+<dd>
+</dl>
+
+<h2><a name="encry">encryption plugIn interface </a></h2>
+
+<i>For plug-In developers only</i><br>
+
+The encryption plug-In is required to implement the interface
+described below:
+
+<ul>
+<li>web::yourencrypt accepts one argument
+ web::yourencrypt takes a string as input and generates a string which
+ must be URI compliant
+<li>web::yourdecrypt accepts one argument
+ web::yourdecrypt takes a string as input and returns a string
+<li>symmetry: <i>$in == [web::yourdecrypt [web::yourencrypt $in]]</i>
+<li>error messaging:
+ <i>TCL_OK</i> for success<br>
+ <i>TCL_ERROR</i> for any error during en-/decryption<br>
+ <i>TCL_CONTINUE</i> for unknown encryption type (pass on to next method)
+</ul>
+
+<h1><a name="log">logging</a></h1>
+
+Logging consists of two parts. <tt>web::log</tt> issues a logging message,
+while <tt>web::logfilter</tt> and <tt>web::logdest</tt> determine where to send
+a message. webshell uses a two-step filtering. First, webshell
+determines whether it should handle a message, or not, using
+the filters configured with &quot;web::logfilter&quot;. Then, webshell
+determines which message is to be sent where, using the filters
+configured with <tt>web::logdest</tt>.
+
+A filter consists of a tag and a level, separated
+by a &quot;.&quot;. The tag is free text. Typically, it is the name of the application, 
+say &quot;foo&quot;. Example: &quot;ws3.debug&quot;. Levels are, in order:
+
+<ul>
+<li>alert
+<li>error
+<li>warning
+<li>info
+<li>debug
+</ul>
+
+<h2><a name="webl">web::log</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::log</b> ?options? &lt;level&gt; &lt;msg&gt;
+ Option is: <tt>-nosubst</tt>.
+</dl>
+
+Issue a log message.  <i>Note</i> that, for performance reasons,
+variables and command names &lt;msg&gt; will be substituted by the log
+module and you should put &lt;msg&gt; in curly braces to prevent Tcl from
+substituting the string as well. This ensures that webshell only
+spends time on messages which actually pass all filters, and debug
+messages that contain variable names and commands will not slow down
+the productive system, where no debug messages pass the filters.
+
+Options:
+
+<dl>
+<dt><b><b>web::log</b> -nosubst &lt;level&gt; &lt;msg&gt;</b>
+<dd>
+ prevent the log module from substituting &lt;msg&gt;
+</dl>
+
+<br><br>
+<h2><a name="weblo">web::logfilter</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::logfilter</b> subcommand args<br>
+ Subcommands are: <tt>add</tt>, <tt>delete</tt>, and <tt>names</tt>.
+</dl>
+
+Add a filter to the list.
+
+<dl>
+<dt><b>web::logfilter add &lt;level&gt;</b>
+<dd>
+ add a &lt;level&gt; to the list
+<dt><b>web::logfilter delete ?&lt;name&gt;?</b>
+<dd>
+ remove a &lt;name&gt; from list, or remove all filters if &lt;name&gt; is omitted.
+<dt><b>web::logfilter names</b>
+<dd>
+ list all filters that have been set
+</dl>
+
+<h2><a name="weblog">web::logdest</a></h2>
+
+web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ <b>web::logdest</b> subcommand ?options? &lt;level&gt; &lt;plugin&gt;<br>
+ Subcommands are: <tt>add</tt>, <tt>delete</tt>, and <tt>names</tt>.<br>
+ Options are: <tt>-maxchar</tt>, and <tt>-format</tt>.<br>
+ Known plugins are:  <tt>file</tt>, <tt>syslog</tt>, <tt>command</tt>,
+ <tt>channel</tt>, and <tt>aplog</tt>.
+</dl>
+
+The format string consits of format specifications for <tt>fprintf()</tt>
+plus: <tt>p</tt> (process id), <tt>t</tt> (thread id), <tt>n</tt> (log level),
+<tt>f</tt> (log type), and <tt>m</tt> (the message).
+
+<h1><a name="logp">log plugins</a></h1>
+
+<h2><a name="file7">file</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ web::logdest add *.-debug <b>file</b> ?options? &lt;file&gt;<br>
+ Option is: <tt>-unbuffered</tt>
+</dl>
+
+<h2><a name="sysl">syslog</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ web::logdest add *.-debug <b>syslog</b> &lt;level&gt;<br>
+</dl>
+
+See the man page for syslog for levels on your system. Typical: 10.
+
+<h2><a name="comm">command</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ web::logdest add *.-debug <b>command</b> &lt;cmdName&gt;
+</dl>
+
+<h2><a name="chan">channel</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ web::logdest add *.-debug <b>channel</b> ?options? &lt;channe&gt;
+ Option is: <tt>-unbuffered</tt>
+</dl>
+
+<h2><a name="aplo">aplog</a></h2>
+
+Available in mod_websh only.
+
+Examples:
+<pre>
+---------------------------------------------------------------------------
+web::logfilter add *.-debug
+web::logdest add *.-debug channel stdout
+web::log info {websh is cool}
+==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
+web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
+web::log info {websh is cool}
+==&gt; --&gt; websh is cool
+web::logdest add -maxchar 5 *.-debug channel stdout
+web::log info {websh is cool}
+==&gt; 03/01/00 00:00:00 [111] user.info: websh
+---------------------------------------------------------------------------
+</pre>
+
+<h1><a name="cfg">configuration</a></h1>
+
+The are a few configuration options for websh. Use web::config &lt;tag&gt;
+to access the current value of &lt;tag&gt;, and web::config &lt;tag&gt; &lt;value&gt; to
+set it. Possible tags are:
+
+<dl>
+<dt><b>uploadfilesize</b>
+<dd>
+ Sets the maximum number of bytes allowed to be uploaded.
+ Default: 0.
+<dt><b>cmdparam</b>
+<dd>
+ Name of the parameter to store reference to a web::command command
+ in the URL. Default: &quot;cmd&quot;.
+<dt><b>timeparam</b>
+<dd>
+ Name of the parameter to store reference to the timestamp
+ in the URL. Default: &quot;t&quot;.
+<dt><b>encryptchain &lt;list&gt;</b>
+<dd>
+ defines which commands should be tried, in sequence, to encrypt
+ a message. Default: &quot;web::encryptd&quot;
+<dt><b>decryptchain &lt;list&gt;</b>
+<dd>
+ defines which commands should be tried, in sequence, to decrypt
+ a message. Default: [list web::decryptd web::nullencrypt]
+</dl>
+
+<h1><a name="misc">misc commands</a></h1>
+
+<h2><a name="webt">web::tempfile</a></h2>
+
+Returns a unique name of a temporary file. The maximum of guaranteed
+unique names per application is system dependent.  This command just
+returns the name of a file. It is the programmers job to handle the
+file, for example to open it. Note that webshell keeps an internal
+list of all file names generated with web::tempfile and will attempt
+to delete all files when the interpreter dies.
+
+<h2><a name="webi">web::include</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ web_include &lt;fileName&gt; ?&lt;msg&gt;?
+</dl>
+
+If the file &lt;fileName&gt; exists, it is sourced (must be a
+script). Otherwise if the library fileName+&quot;shared lib extension&quot;
+exists, it is loaded (must be a shared library). Returns 0 on success,
+1 otherwise. If an error occurs, an error message is written to &lt;msg&gt;.
+
+<h2><a name="webrea">web::readfile</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ web::readfile &lt;file&gt; &lt;varName&gt; &lt;msg&gt;
+</dl>
+
+&lt;file&gt; is read and written to &lt;varName&gt;. Returns 0 on success, 1
+otherwise. If an error occurs, an error message is written to the
+variable &lt;msg&gt;.
+
+<h2><a name="webfi">web::filecounter</a></h2>
+
+This is a sequence-number generator which stores its state
+in a file. Basic usage:
+
+<dl>
+<dt><b>nextval</b>
+<dd>
+ return the next value
+<dt><b>curval</b>
+<dd>
+ return the current value, that is, the value that
+ the last call to &quot;nextval&quot; reported (as opposed
+ to the current value in the file)
+</dl>
+
+Options:
+
+<ul>
+<li>-seed &lt;seed&gt;
+<li>-min &lt;min&gt;
+<li>-max &lt;max&gt;
+<li>-incr &lt;increment&gt;
+<li>-wrap &lt;1|0&gt;
+</ul>
+
+Examples:
+<pre>
+---------------------------------------------------------------------------
+web::filecounter handleName -filename &quot;test.dat&quot;
+==&gt; from now on, use handleName &lt;curval|nextval&gt;
+web::filecounter handleName -filename &quot;test.dat&quot; \
+  -min 1 -max 10 -seed 1 -incr 2 -wrap 1
+---------------------------------------------------------------------------
+</pre>
+
+<h2><a name="webco">web::copyright</a></h2>
+
+returns copyright and version/build information
+
+<h2><a name="webge">web::getcgivar</a></h2>
+
+Data-source independent accessor to CGI variables. In the CGI mode,
+webshell will return environment variables, and in the Apache module
+mode, web::getcgivar will return data from the Apache request object.
+
+<h2><a name="webma">web::match</a></h2>
+
+<dl>
+<dt><b>Syntax:</b>
+<dd>
+ web::match &lt;result&gt; &lt;listToBeSearched&gt; &lt;searchFor&gt;
+</dl>
+
+In case &lt;searchFor&gt; exists in &lt;listToBeSearched&gt;, web::match returns
+&lt;result&gt;, otherwise an empty string.
+
+<br><br>
+For websh2 wizards:<br>
+
+wpp_isselected v1 v2 would now be:
+web::match &quot;selected&quot; v1 v2
+
+<br><br>
+web::match treats v1 as a list. Thus, <i>web::match &quot;ok&quot; {tv dvd vcr} dvd</i>
+will return <i>ok</i>.
+
+<h2><a name="webloc">web::lockfile and web::unlockfile</a></h2>
+
+Interface to lockf(). lockf() works best on local filesystems.  Please
+read the documentation of lockf on your system to learn about the
+problems and limitations of file locking. Note that web::lockfile also
+performs a seek() and resets the file cursor to the beginning of the
+file.
+
+<i>Note</i> that the file needs to be open for writing.
+
+<h1><a name="Copy">Copyright</a></h1>
+
+Copyright (C) 2000 by Netcetera AG.<br>
+All rights reserved.
+
+<br><br>
+<b>Note</b>: We try to keep this quick reference up-to-date and hope that
+it will be useful. We do not guarantee that it is suitable for any
+particular purpose whatsoever. The authors accept no liability in
+respect to this information or its use.
+
+<br><br>
+The original version of this document can always be found
+at <a href="http://websh.com">http://websh.com</a>.
+
+<pre>
+
+$Id$
+
+</pre>

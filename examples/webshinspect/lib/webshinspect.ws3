@@ -1,0 +1,328 @@
+
+# web::logfilter add inspect.-debug
+web::logfilter add *.-debug
+web::logdest add *.-debug file /tmp/webinspect.log
+
+# work with cookies
+web::cookiecontext context -idtag sessionid -expires "today"
+
+# work also with a file-based context
+web::filecontext f_context
+
+# id-generator file
+set idgenfn /tmp/idgen.dat
+web::filecounter idgen -filename $idgenfn
+
+# =============================================================================
+# commands
+# =============================================================================
+web::command default {
+    
+    # ------------------------------------------------------------------------
+    # setup
+    # ------------------------------------------------------------------------
+    if {[catch {web::context::init} msg ] == 1 } {
+	web::context::new [idgen nextval]
+	web::context::set numberVisits 0
+    }
+    set res [catch { web::context::init } msg]
+    
+    # calculate the visit number
+    set tmp [web::context::get numberVisits "0"]
+    web::context::set numberVisits [incr tmp]
+
+    # set the output to a variable named 'text'. this way we can commit
+    # the cookie at the end (Note that we set 'sendheader' to 0!)
+    web::output \#text
+    web::output sendheader 0
+
+    set url3 [web::cmdurl whatWeKnow]
+    set url4 [web::cmdurl ascii]
+
+    # ------------------------------------------------------------------------
+    # write the content
+    # ------------------------------------------------------------------------
+    web::put [header]
+    web::put "<h1>Hello, this is your visit \#[web::context::get numberVisits]</h1>"
+    
+    showAll
+
+    web::put "<br><br><hr>"
+    web::put "<a href=$url4> View this page as ascii file <br></a>"
+    web::put "<a href=$url3> What we know about you ... </a>"
+
+    web::put [footer]
+    
+    #web::log inspect.info $text
+
+    # the new state is committed (i.e. written as a cookie into 'text')
+    web::output stdout
+
+    if {[catch {web::context::commit} msg] == 0} {
+	web::put $text
+    } else {
+	web::put "HALLO"
+	#fixme: do something smart!
+    }
+}
+
+web::command ascii {
+    showAll "" -ascii
+}
+
+web::command testWebshCommand {
+    # ------------------------------------------------------------------------
+    # setup
+    # ------------------------------------------------------------------------
+    set webcmd [web::param webcmd]    
+    set url1 [web::cmdurl result webcmd $webcmd]
+    set url2 [web::cmdurl ""]
+
+    # ------------------------------------------------------------------------
+    # write the content
+    # ------------------------------------------------------------------------
+    web::put [header]
+    web::put "<h2>Test the command:</h2><br>\n"
+
+    web::put "<form method=post ACTION=$url1>"
+    web::put "$webcmd\n"
+    web::put "<INPUT TYPE=\"text\" SIZE=30 NAME=\"arguments\"><br>\n"
+
+    web::put "<INPUT TYPE=SUBMIT  value=\"submit me\">"
+    web::put "</form>"
+    web::put "<br><br><hr>"
+    web::put "<a href=$url2> back to main </a>"
+    web::put [footer]
+}
+
+web::command result {
+    
+    # ------------------------------------------------------------------------
+    # setup
+    # ------------------------------------------------------------------------
+
+    if {[catch {web::context::init} msg ] == 1 } {
+	web::context::new [idgen nextval]
+	web::context::set numberVisits 0
+    }	
+
+    set webcmd [web::param webcmd]
+    set argument [web::formvar arguments]
+    
+    set request "$webcmd $argument"
+    set url1 [web::cmdurl testWebshCommand webcmd $webcmd]
+    set url2 [web::cmdurl ""]
+
+    # ------------------------------------------------------------------------
+    # do the action
+    # ------------------------------------------------------------------------
+    
+    # we redirect the output in case a command writes or modifies our channel
+    set tmp ""
+    set outchannel [web::output \#tmp]
+    # avoid commands that affect us
+    if {[string match "*dispatch" $webcmd] == 1} {
+	set res 1
+	set msg "Not allowed"
+    } else {
+	set res [catch {eval $request } msg]
+    }
+    # we reset the output
+    web::output $outchannel
+
+    # we test whether the command succeded
+    if {$res } {
+	set color "<font color=red>"
+    } else {
+	set color "<font color=green>"
+    }
+    # ------------------------------------------------------------------------
+    # do some state stuff
+    # ------------------------------------------------------------------------
+    if {$res} {
+	set failures [web::context::get failures 0]
+	incr failures
+	web::context::set failures $failures -crypt
+	set id [web::context::id]
+
+	set resload [catch {web::f_context::init -id $id} loadmsg] 
+	if {$resload} {
+	    web::f_context::new $id
+	}
+	set arguments "[web::formvar arguments] [web::f_context::get wrongargs \"\"]"
+	web::f_context::set wrongargs $arguments -crypt
+    } else {
+	set success [web::context::get success 0]
+	incr success
+	web::context::set success $success -crypt
+    }
+    catch {web::f_context::commit} commitmsg 
+    web::context::commit
+    # ------------------------------------------------------------------------
+    # write the content
+    # ------------------------------------------------------------------------
+    web::put [header]
+    web::put "<h2>Your request produced the following result</h2><br>"
+    
+    web::put "<table>"
+    web::put "<th>"
+    web::put "Request"
+    web::put "<th>"
+    web::put "Response"
+    web::put "<th>"
+    web::put "Written to a channel"
+    web::put "<tr>"
+    web::put "<td>$request</td>"
+    
+    # we print the result of the command
+    # this is either in msg and/or in tmp
+    web::put "<td> $color $msg </font></td>"
+    web::put "<td> $color  $tmp </font></td>"
+    web::put "</table>"
+    web::put "<br><br><hr>"
+    web::put "<a href=$url1> back to $webcmd </a><br>"    
+    web::put "<a href=$url2> back to main </a>"
+    
+    web::put [footer]
+}
+
+web::command whatWeKnow {
+    # ------------------------------------------------------------------------
+    # setup
+    # ------------------------------------------------------------------------
+    set res [catch { web::context::load } msg]
+    
+    if {$res == 0} {
+	# yes, got a cookie, try to load the file-based info
+	web::f_context::init -id [web::context::id]
+    } else {
+	# no, have to create a new one
+	web::context::new [idgen nextval]
+	web::context::set numberVisits 0
+	web::f_context::new [idgen currval]
+    }
+    set fails [web::context::get failures 0]
+    set succ [web::context::get success 0]
+    set fail_text [web::f_context::get wrongargs ""]
+    set url2 [web::cmdurl ""]
+    
+    # ------------------------------------------------------------------------
+    # write the content
+    # ------------------------------------------------------------------------
+    web::put [header]
+    
+    web::put "<h2>So you want to know what we know about you ...</h2>"
+    web::put "<p>"
+    web::put "Well .... "
+    
+    if {$fails > $succ} {
+	web::put "you produced a lot of failures, but what do you want when you write humbug like $fail_text"
+    } else {
+	web::put "You seem to be a smart person who knows how to handle an incredible piece of software! Congratulations!"
+    }
+    web::put "<br><br><hr>"
+    web::put "<a href=$url2> back to main </a>"
+    web::put [footer]
+}
+
+proc webcmd {namespace} {
+    set a "::*"
+    info commands $namespace$a
+}
+
+proc childrennamespaces {{parent ""}} {
+    return [namespace children $parent]
+}
+
+proc showAll {{parent ""} {type -html}} {
+
+    set kids [childrennamespaces $parent]
+ 
+    if {[llength $kids]} {
+	foreach namesp $kids {
+	    printCommands $namesp $type
+	    showAll $namesp $type
+	}
+    } else {
+	
+    }
+}
+
+proc printCommands {namespace {type -html}} {
+    if {[string match "*context*" $namespace] == 1} {
+	#nothing!
+	return
+    } 
+    if {$type == "-html"} {
+	web::put "<h2>$namespace<br>\n"
+	web::put "<table border>\n"
+	web::put "<th>WEBSH-COMMAND</th>\n"
+	web::put "<th>RESPONSE</th>\n"
+    } else {
+	#web::put "$namespace\n"
+    }
+
+    foreach cmd [lsort [webcmd $namespace]] {
+	if {$type == "-html"} {
+	    web::put "<tr>\n"	
+	    web::put "<td><b>\n"
+	    set url [web::cmdurl testWebshCommand webcmd $cmd]
+	    web::put "<a href=$url> $cmd </a>"
+	    web::put "</b></td>"
+	
+	    if {[string compare $cmd "::web::getcommand"] == 0} {
+		#nothing
+	    } elseif {[string compare $cmd "::web::dispatch"] == 0} {
+		#nothing!
+	    } else {
+		catch {set response [eval $cmd]} msg
+		if {[info exists msg]} {
+		    web::put "<td>\n"
+		    web::put $msg
+		    web::put "</td>"
+		}
+	    }
+	} else {
+	    web::put "$cmd\n"
+	}
+
+	if {[string compare $cmd "::web::file_context"] == 0} {
+	    eval [$cmd your_context]
+	    eval [web::your_context::new 1]
+
+	    if {$type == "-html"} {
+		web::put "<tr><td>-</td><td>\n"
+		web::put "<table>\n"
+		foreach subcmd [lsort [info commands web::your_context::*]] {
+		    web::put "<tr>\n"
+		    web::put "<td>\n"
+		    web::put "$subcmd"
+		    web::put "</td>"
+		    web::put "</tr>\n"
+		}
+		web::put "</table>\n"
+		web::put "</td>\n"
+		web::put "</tr>";
+		namespace delete web::your_context
+	    }
+	}
+	if {$type == "-html"} {
+	    web::put "</tr>\n"
+	}
+    }
+    if {$type == "-html" } {
+	web::put "</table>" 
+    }
+}
+
+proc header {} {
+    return "<html><body bgcolor=\"FFFFFF\">\n"
+}
+proc footer {} {
+    return "</body></html>\n"
+}
+
+# =============================================================================
+# 
+# =============================================================================
+web::dispatch

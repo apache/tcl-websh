@@ -1,0 +1,71 @@
+webshell 3.0b3 Release Announcement
+Nov 14, 2000
+
+Netcetera AG is pleased to announce Webshell.
+
+This is the beta-3 release of Webshell. Final API, stable code. Check
+out http://websh.com to find the online documentation as well as a lot
+of example code. Some minor issues open (search for potential memory
+leaks to be completed, Windows Port do be finished). Please help us
+improve Webshell by reporting any glitches you may encounter.
+
+What is Webshell?
+-----------------
+
+Webshell is a development environment for web applications reduced to
+the max. It is a standard Tcl extension and is released as Open Source
+Software. Webshell is versatile and handles everything from HTML
+generation to data-base driven one-to-one page customization. Webshell
+applications can be deployed in a standard CGI environment or using
+mod_websh, the Apache Module for Webshell.
+
+At Netcetera, we have been using Webshell for years for virtually all
+our customer projects, which typically are E-commerce shops or
+electronic banking applications.
+
+Webshell is maintained, enhanced, and distributed freely as a service
+to the Open Source community by Netcetera AG, Switzerland.
+
+Where to get Webshell?
+----------------------
+
+Webshell is available for download from
+
+http://websh.com/download
+
+To compile Webshell you need Tcl 8.2 (or newer).
+
+
+Additional Information
+----------------------
+
+Find more information about
+
+- Webshell: 
+
+        http://websh.com
+
+- Netcetera AG, Switzerland:
+
+        http://netcetera.ch/en
+
+- Tcl:
+
+        http://www.scriptics.com
+
+- documentation of Webshell, with example code
+
+        http://websh.com
+
+
+Open issues for final release
+-----------------------------
+
+- Use Apache 2.0 API as soon as it is stable
+- a few performance optimizations
+- a comparison with AOL webserver, cgi.tcl, tclHttpd and
+  other Tcl-based web application frameworks
+- a comparison with non-Tcl Web application frameworks (ASP,
+  ColdFusion, Java Servlets and JSP, you-name-it).
+
+Thank you for your interest in Webshell.

@@ -1,0 +1,48 @@
+#
+# logtocmd.test --
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# a log handler
+# -----------------------------------------------------------------------------
+proc testLogHandler {msg} {
+    return "testLogHandler -- T E S T -- ok"
+}
+
+# -----------------------------------------------------------------------------
+# try to log to a command
+# -----------------------------------------------------------------------------
+test logToCmd-1.1 {websh3_logToCmd: logdest add returns id} {
+    web::logdest delete
+    set res [web::logdest add info2.-debug command dummy]
+} {logdest0}
+
+test logToCmd-1.2 {websh3_logToCmd: test log to command} {
+    web::logdest delete
+    web::logfilter delete
+    web::logdest add info2.-debug command testLogHandler
+    web::logfilter add info2.-debug
+    set curTim [clock seconds]
+    set res [web::log info2.info $curTim]
+} {testLogHandler -- T E S T -- ok}
+
+# cleanup
+::tcltest::cleanupTests

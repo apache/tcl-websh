@@ -1,0 +1,95 @@
+2001-03-14  Simon Hefti <simon.hefti@netcetera.ch>
+	
+	* webutl.c: fixed setting global var for web::response command
+	* web::response error messages improved
+	* quickref updated
+	* web::dehtmlify bug fix
+
+2001-01-21  Simon Hefti <simon.hefti@netcetera.ch>
+
+	* sessctx.ws3 supports web::init 1 -create
+	  which creates the session file, if it does not exists yet,
+	  whithout throwing an error. Also, allow capitals in
+	  session id's.
+
+	* varchannel.c: let Tcl handle the global variables, especially
+	  when ref counter > 0, Also, suppress error message which
+	  Tcl leavs in the interp if a channel does not exist yet,
+	  if we could create it successfully.
+
+	* filecontext.test:  test "valid id" checker, and "-create" option
+	  of filecontext
+
+	* webout.test: test channel switching
+
+	* args.c: new function argdbg to write out arguments
+
+	* cookie.ws3: new init prototype requires additional,
+	  optional argument (-create). Added, even thouh it is unused here.
+
+	* log.c: better check of valid options in web::logdest
+
+2001-01-01  Simon Hefti <simon.hefti@netcetera.ch>
+
+	* used -DTCL_MEM_DEBUG to find the last memory leaks. 2 found amd
+ 	fixed. A lot of "potentially leaked" (as indicated by purify)
+ 	disappear if test suite is run in a seperate interp
+	(using interp create) and interp is deleted afterwards. In other
+ 	words: this is housekeeping data that is properly freed when the
+ 	interp is destroyed.
+
+	* parsing of multipart/formdata: more indicative log messages
+ 	hinting to the prominent boundary problem (a boundary with lots of
+ 	dashes makes it easy to overlook the first two).
+
+	* varchannel: solved encoding problem by using Tcl_GetByteArray
+ 	instead of Tcl_GetString
+
+	* web::dispatch tests: since bad postdata do not throw errors any
+ 	longer (websh tries to answer the request even in case of bad
+ 	postdata) we had to rewrite the tests which checked those
+ 	errors. log entry is checked now instead.
+	
+
+2000-11-14  Simon Hefti <simon.hefti@netcetera.ch>
+
+	3.0b3 release
+
+	This is a test release - some stuff needs to be finished.
+	Particularly: search for potential memory leaks, and Windows
+	stuff.
+
+	The API is final. mod_websh builds and runs on Linux and Solaris
+	using apach 1.3.x.
+
+2000-04-27  Simon Hefti <simon.hefti@netcetera.ch>
+
+	3.0b2 beta-2 release of webshell 3
+
+	The Apache Module added - is known to build and run
+	on SunOs-5.6 and on Linux.
+
+	Several minor bug fixes - at Netcetera, this webshell is in
+	productive use since beta-1.
+
+2000-03-20  Simon Hefti <simon.hefti@netcetera.ch>
+
+	3.0b1 beta-1 release of webshell 3
+
+	This release is known to compile and run on SunOs-5.5.1 and Linux
+ 	and should do so on most UNIX variants.
+
+	The Apache Module is missing in this release.
+
+2000-03-07  Simon Hefti <simon.hefti@netcetera.ch>
+
+	3.0a1 alpha-1 release of webshell 3
+
+	first release
+
+	This release is known to compile and run on SunOs-5.5.1.
+	A couple of tests of the test suite are marked as "empty" and
+ 	skipped.
+	The session management module is missing in this release.
+	The Apache Module is missing in this release.
+	

@@ -1,0 +1,620 @@
+#
+# webout.test --  test output handling
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# =============================================================================
+# eval
+# =============================================================================
+test putx-1.0a {make sure we don't have an error message here} {
+    set res [web::put \#_foo foo]
+    unset _foo
+    set res
+} {}
+
+test putx-1.0b {web::put to global var} {
+    web::response -select #_tmp
+    web::response -sendheader 0
+    web::put 1
+    web::put #_tmp 2
+    web::put 3
+    web::putx #_tmp 4
+    web::response -reset
+    set res $_tmp
+    unset _tmp
+    set res
+} {1234}
+
+# -----------------------------------------------------------------------------
+# errors
+# -----------------------------------------------------------------------------
+test putx-1.1 {websh3_eval: missing string} {
+    catch {web::putx} msg
+    set msg
+} {wrong # args: should be "web::putx ?channel|#globalvar? extendedstring"}
+
+test putx-1.2 {websh3_eval: to many args} {
+    catch {web::putx "a" "b" "c"} msg
+    set msg
+} {wrong # args: should be "web::putx ?channel|#globalvar? extendedstring"}
+
+
+
+# -----------------------------------------------------------------------------
+# normal operation
+# -----------------------------------------------------------------------------
+test putx-2.1 {web::putx Test} {
+    if {[info exists bVar]} {unset bVar}
+    web::response -select #bVar
+    web::response -set Generator something
+    catch {web::putx #bVar Test} msg
+    # and destoy varchannel
+    web::response -reset
+    set bVar
+} "Content-Type: text/html\u0D
+Generator: something\u0D
+\u0D
+Test"
+
+test putx-2.2 {web::putx with command} {
+    if {[info exists bVar]} {unset bVar}
+    web::response -select #bVar
+    web::response -sendheader 0
+
+    set tmp2 "try this {web::put Test} here"
+    catch {web::putx #bVar $tmp2} msg
+    # and destoy varchannel
+    web::response -reset
+    set bVar
+} {try this Test here}
+
+
+test putx-2.3 {web::putx nested} {
+    if {[info exists bVar]} {unset bVar}
+    web::response -select #bVar
+    web::response -sendheader 0
+
+    catch {
+web::putx {test
+{
+for {set i 0} {$i < 10} {incr i} {
+  web::put $i
+} 
+web::put end_for
+}}
+web::put end
+}
+    # and destoy varchannel
+    web::response -reset
+
+    set bVar
+} {test
+0123456789end_forend}
+
+test putx-2.4 {special syntax} {
+    web::response -select #eval2_4
+    web::response -sendheader 0
+    web::putx #eval2_4 {*{web::put "\}"; web::put hallo}*}
+    set eval2_4
+} "*\}hallo*"
+
+test putx-2.5 {escaping} {
+    web::response -select #eval2_5
+    web::response -sendheader 0
+    web::putx {*\{noeval\}{web::put "eval this"}*}
+    set eval2_5
+} {*{noeval}eval this*}
+## no longer true (todo 010) {*\{noeval\}eval this*}
+
+test putx-2.6 {escaped paren} {
+    web::response -select #eval2_6
+    web::response -sendheader 0
+    web::putx {\{ bla \}}
+    set eval2_6
+} "{ bla }"
+
+test putx-3.0 {<% %> syntax} {
+    web::response -select #putx3_0
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {*{noeval}<%web::put "eval this"%>*}
+    web::config putxmarkup brace
+    set putx3_0
+} {*{noeval}eval this*}
+
+test putx-3.1 {nested <% %> syntax} {
+    web::response -select #putx3_1
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {pre<%web::put {<%bla%>};
+	web::putx {{noeval}<%web::put "<a href=\"this\">"%>}%>post}
+    web::config putxmarkup brace
+    set putx3_1
+} {pre<%bla%>{noeval}<a href="this">post}
+
+test putx-3.2 {gloabally switch to tag syntax} {
+    web::response -select #putx3_2
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {pre<%web::put {<%bla%>};
+	web::putx {{noeval}<%web::put "<a href=\"this\">"%>}%>post}
+    web::config putxmarkup brace
+    set putx3_2
+} {pre<%bla%>{noeval}<a href="this">post}
+
+test putx-3.3 {gloabally switch back to normal eval syntax} {
+    web::response -select #putx3_3
+    web::response -sendheader 0
+    web::putx {pre{web::put {<%bla%>};
+	web::putx {\{noeval\}{web::put "<a href=\"this\">"}}}post}
+    set putx3_3
+} {pre<%bla%>{noeval}<a href="this">post}
+
+test putx-3.3a {putx -foo} {
+    catch {
+	web::putx -foo foo bar
+    } msg
+    set msg
+} {wrong # args: should be "web::putx ?channel|#globalvar? extendedstring"}
+
+test putx-3.3b {putx -foo} {
+    web::response -select #putx3_3b
+    web::response -sendheader 0
+    web::putx -foo
+    set putx3_3b
+} {-foo}
+
+# test putx-3.3d {putx -config} {
+#     web::putx -tagisdefault 0
+#     set res [web::putx -tagisdefault]
+#     web::putx -tagisdefault 1
+#     lappend res [web::putx -tagisdefault]
+#     web::putx -tagisdefault 0
+#     lappend res [web::putx -tagisdefault]
+#     set res
+# } {0 1 0}
+
+test putx-3.4 {putx tag stuff (all-in-one} {
+    web::config putxmarkup brace
+    web::response -select #putx3_4
+    web::response -sendheader 0
+    web::putx {Pre{web::put Hello}Post}
+    web::config putxmarkup tag
+    web::putx {Pre<%web::put Hello%>Post}
+    set res [web::config putxmarkup tag]
+    web::putx {Pre{web::put Hello}Post}
+    lappend res [web::config putxmarkup brace]
+    web::putx {Pre{web::put Hello}Post}
+    lappend putx3_4 $res
+    web::response -select stdout
+    set putx3_4
+} {PreHelloPostPreHelloPostPre\{web::put Hello\}PostPreHelloPost {tag tag}}
+
+test putx-3.5 {putx = syntax} {
+    web::response -select #putx3_5
+    web::response -sendheader 0
+    set a "Hello, world"
+    web::putx {Pre{=$a}Post}
+    set res $putx3_5
+    web::response -select stdout
+    unset putx3_5
+    set res
+} {PreHello, worldPost}
+
+test putx-3.6 {putx of empty string before first brace does not send headers} {
+    web::response -select #buf-putx-36
+    set res [web::putx {{web::response -sendheader 0}}]
+    set ::buf-putx-36
+} {}
+
+test putx-3.7 {putx of empty string before first brace does not send headers} {
+    web::response -select #buf-putx-37
+    web::config putxmarkup tag
+    set res [web::putx {<%web::response -sendheader 0%>}]
+    web::config putxmarkup brace
+    set ::buf-putx-37
+} {}
+
+
+# =============================================================================
+# web::put
+# =============================================================================
+
+test put-1.1 {websh3_puts: wrong num args} {
+	catch {web::put pi pa po} msg
+	set msg
+} {wrong # args: should be "web::put ?channel|#globalvar? string"}
+
+test put-1.2 {websh3_puts: invalid channel} {
+    catch {web::put pi pa} msg
+    set msg
+} {error getting channel "pi"}
+
+#test put-1.3 {websh3_puts: write to stderr} {
+#	web::put stderr ""
+#	web::put stderr "yeah"
+#	web::response stderr sendheader 1
+#} {yeah}
+
+#test put-1.4 {websh3_puts: write to stdout} {
+#	web::put stdout ""
+#	web::put stdout "yeah"
+#	web::response stdout sendheader 1
+#} {yeah}
+
+test put-1.5 {websh3 put: write to a file with implicit channel creation} {
+    set fn blablalbla
+    set fh [open $fn w]
+    catch {web::put $fh yeah} msg
+    close $fh
+    file delete $fn
+    string compare $msg ""
+} {0}
+
+test put-2.0 {websh3_puts: writing to a global variable} {
+    web::response -select #output2_0
+    web::response -unset Generator
+    web::put #output2_0 "pipapo"
+    web::put #output2_0 "more pipapo"
+    web::response -set myHeader "this is my header"
+    web::response -unset Generator
+    web::response -sendheader yes
+    web::put #output2_0 "do we see the header?"
+    set output2_0
+} "Content-Type: text/html\u0D
+\u0D
+pipapomore pipapoContent-Type: text/html\u0D
+myHeader: this is my header\u0D
+\u0D
+do we see the header?"
+
+#test output-2.1 (websh3_puts: writing to a file} {
+#	set a a
+#	puts a
+#} {bla}
+
+test put-3.0 {websh3_puts: write a long string to a global var} {
+    web::response -select #puts_3_0
+    web::response -sendheader 0
+    set a "a"
+    for {set i 0} {$i < 10} {incr i} {lappend a $a}
+    web::put #puts_3_0 $a
+    string length $puts_3_0
+} {3069}
+
+test put-3.1 {הצü (and test for global)} {
+    web::response -select #web_output_test_3_1
+    web::response -sendheader 0
+    web::put #web_output_test_3_1 הצü
+    set res [info global web_output_test_3_1]
+    append res $web_output_test_3_1
+} {web_output_test_3_1הצü}
+
+test put-3.2 {open file, put, close, open new} {unixOnly} {
+
+    ## make sure that web::put does NOT buffer the Tcl_Channel
+
+    set out1 [open [web::tempfile]  w]
+    web::response -select $out1
+    web::response -sendheader 0
+    web::put $out1 {out1-text}
+    close $out1
+
+    set out2 [open [web::tempfile]  w]
+    web::response -select $out2
+    web::response -sendheader 0
+    web::put $out2 {out2-text}
+    close $out2
+
+    set res [string compare $out1 $out2]
+} {0}
+
+test put-3.3 {put to file} {
+
+    set fn [web::tempfile]
+    set fh [open $fn w]
+    web::response  -select $fh
+    web::response -sendheader 0
+    set tim "put-3.3[pid][clock seconds]"
+    web::put $fh $tim
+    close $fh
+
+    ## now read it from the file
+    set fh [open $fn r]
+    gets $fh res
+    close $fh
+
+    string compare $res $tim
+} {0}
+
+
+# =============================================================================
+# output
+# =============================================================================
+test output-4.1 {reset a default header} {
+
+    web::response -set header "Generator webshell"
+    web::response -set header
+
+} {Generator webshell}
+
+test output-4.2 {httpresponse} {
+    web::response -resetall
+    web::response -set httpresponse
+} {}
+
+test output-4.3 {reset a httpresponse} {
+    web::response -select #output4_3
+    web::response -unset Generator
+    web::response -httpresponse "HTTP/1.1 200 OK (my httpresponse)"
+    web::put #output4_3 "Hello, World !"
+    set output4_3
+
+} "HTTP/1.1 200 OK (my httpresponse)\u0D
+Content-Type: text/html\u0D
+\u0D
+Hello, World !"
+
+test output-4.4 {test Generator} {
+    web::response -select #output4_4
+    web::put #output4_4 "Hello, World !"
+    regsub -all {websh[^ ]*} $output4_4 websh output4_4
+    set output4_4
+
+} "Content-Type: text/html\u0D
+Generator: websh (c) Netcetera AG, http://netcetera.ch\u0D
+\u0D
+Hello, World !"
+
+
+test output-4.7 {reset single channel} {
+    
+    web::response -resetall
+    set fh [open [set fn [web::tempfile]] w]
+    web::response -select $fh
+    web::response -set Generator webshell
+    web::put Test
+    set res1 [web::response -bytessent]
+    flush $fh
+    set fs1 [file size $fn]
+    web::response -reset
+    web::put Test2
+    set res2 [web::response -bytessent]
+    flush $fh
+    set fs2 [file size $fn]
+    close $fh
+    set tmp 1
+    if { $res1 != $fs1 } { set tmp 0 }
+    if { $res2 != [expr $fs2 - $fs1] } { set tmp 0 }
+    set tmp
+} {1}
+
+test output-4.8 {bytes sent} {
+
+    set fn [web::tempfile]
+    set fh [open $fn w]
+    web::response -select $fh
+    web::response -reset
+    web::response -sendheader no
+    web::put "12345"
+    close $fh
+    expr [web::response -bytessent] == [file size $fn]
+} {1}
+
+test output-4.9 {bytes sent to var} {
+
+    web::response -resetall
+    web::response -select #output4_9
+    web::response -sendheader no
+    web::put "12345"
+    expr [web::response -bytessent] == [string length $output4_9]
+} {1}
+
+test output-4.10 {-lappend} {
+
+    web::response -resetall
+    web::response -select #output4_10
+    web::response -set "USER_AGENT" {browser/1.0 [lang] (system info; and more)}
+    web::response -unset Content-Type
+    web::response -unset Generator
+
+    web::put "12345"
+    set output4_10
+} "USER_AGENT: browser/1.0 \[lang\] (system info; and more)\u0D
+\u0D
+12345"
+
+test output-4.11 {-select} {
+
+    web::response -resetall
+    set res [web::response -select #output4_11]
+    lappend res [web::response]
+
+} {stdout #output4_11}
+
+test output-4.12 {-set returns new value} {
+
+    web::response -resetall
+    web::response -select #output4_12
+    web::response -set ה צ
+} {צ}
+
+test output-5.0 {-names} {
+
+    web::response -resetall
+    web::response -set aheader 1
+    web::response -set bheader 2
+    web::response -set cheader 3
+    lsort [web::response -names]
+
+} {Content-Type Generator aheader bheader cheader}
+
+test output-5.1 {-exists} {
+
+    web::response -resetall
+    web::response -set apache_usessl 3
+    set res [web::response -count apache_usessl]
+    lappend res [web::response -count foo]
+
+} {1 0}
+
+test output-5.2 {-unset} {
+
+    web::response -resetall
+    web::response -set {"funny} {value"""}
+    web::response -set normal value
+    set res [lsort [web::response -names]]
+    web::response -unset normal
+    lappend res [lsort [web::response -names]]
+    lappend res [web::response -set \"funny]
+
+} "{\"funny} Content-Type Generator normal {{\"funny} Content-Type Generator} value\\\"\\\"\\\""
+
+test output-5.3 {default channel name} {
+
+    web::response -resetall
+    web::response
+
+} {stdout}
+
+
+test output-6.1 {variable vs. channel names} {
+    web::response -select \#stdout
+    web::response -sendheader 0
+    web::put foo
+    set stdout
+} {foo}
+
+
+test output-6.2 {error message -select} {
+    catch {
+	web::response -select
+    } msg
+    set msg
+} {wrong # args: should be "web::response -select channelName"}
+
+test output-6.2 {error message -bytessent} {
+    catch {
+	web::response -bytessent foo
+    } msg
+    set msg
+} {wrong # args: should be "web::response -bytessent"}
+
+# =============================================================================
+# var channel
+# =============================================================================
+test varchannel-1.1 {create} {emptyTest} {
+
+    set tst [web::varopen vct1_1]
+    puts $tst "hello, world"
+    puts $tst "international: הצü"
+    puts $tst "third line"
+    close $tst
+    set vct1_1
+} {hello, world
+international: הצü
+third line
+}
+
+test varchannel-1.2 {use variable inbetween} {emptyTest} {
+
+    set tst [web::varopen vct1_2]
+    puts $tst "international: הצü"
+    append vct1_2 "my own contribution\n"
+    puts $tst "third line"
+    close $tst
+    set vct1_2
+} {my own contribution
+international: הצü
+third line
+}
+
+test varchannel-1.3 {have a couple of "varchannels"} {emptyTest} {
+
+    set v1 [web::varopen vct1_3a]
+    set v2 [web::varopen vct1_3b]
+    set v3 [web::varopen vct1_3c]
+    puts -nonewline $v1 "a"
+    puts -nonewline $v2 "b"
+    puts -nonewline $v3 "c"
+    puts -nonewline $v1 "d"
+    puts -nonewline $v2 "e"
+    puts -nonewline $v3 "f"
+    puts -nonewline $v1 "g"
+    puts -nonewline $v2 "h"
+    puts -nonewline $v3 "i"
+    flush $v1
+    flush $v2
+    flush $v3
+    set res ${vct1_3a}${vct1_3b}${vct1_3c}
+    close $v1
+    close $v2
+    close $v3
+    set res
+} {adgbehcfi}
+
+# =============================================================================
+# varchannel
+# =============================================================================
+test varchannel-1.0 {juggle channels} {
+
+    web::response -select \#_vc10_1
+    web::response -sendheader 0
+    
+    web::response -select \#_vc10_2
+    web::response -sendheader 0
+
+    web::response -select \#_vc10_3
+    web::response -sendheader 0
+
+    web::put \#_vc10_1 [string repeat 1 10]
+    web::put \#_vc10_2 [string repeat 2 10]
+    web::put \#_vc10_3 [string repeat 3 10]
+
+    set ::_vc10_1 ${::_vc10_1}_[string repeat 4 10]
+    set ::_vc10_2 ${::_vc10_2}_[string repeat 5 10]
+    set ::_vc10_3 ${::_vc10_3}_[string repeat 6 10]
+
+    set tmp $::_vc10_1
+    
+    web::put \#_vc10_1 _[string repeat 7 10]
+    web::put \#_vc10_2 _[string repeat 8 10]
+    web::put \#_vc10_3 _[string repeat 9 10]
+
+    set ::_vc10_1 ${::_vc10_1}_[string repeat a 10]
+    set ::_vc10_2 ${::_vc10_2}_[string repeat b 10]
+    set ::_vc10_3 ${::_vc10_3}_[string repeat c 10]
+
+    web::putx \#_vc10_1 _[string repeat d 10]
+    web::putx \#_vc10_2 _[string repeat e 10]
+    web::putx \#_vc10_3 _[string repeat f 10]
+
+    set res ${::_vc10_1}${::_vc10_2}${::_vc10_3}
+
+    web::response -resetall
+
+    unset ::_vc10_1
+    unset ::_vc10_2
+    unset ::_vc10_3
+
+    set res
+} {1111111111_4444444444_7777777777_aaaaaaaaaa_dddddddddd2222222222_5555555555_8888888888_bbbbbbbbbb_eeeeeeeeee3333333333_6666666666_9999999999_cccccccccc_ffffffffff}
+
+# cleanup
+::tcltest::cleanupTests

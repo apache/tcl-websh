@@ -1,0 +1,196 @@
+#================================================================
+# @(#) WshTut 5: websh tutorial - step 5
+#================================================================
+
+# global vars
+set _datafile /tmp/ws3-lang.dat
+
+set _defaultlang en
+set _languages {en de}
+
+# =============================================================================
+# turn logging on
+# =============================================================================
+web::logfilter  add *.-debug
+web::logdest add *.-debug file /tmp/ws3-tutorial.log
+
+# =============================================================================
+# config
+# =============================================================================
+## web::configcmdurl prefix set "http://www3/bin/hefti/tutorial.ws3"
+
+
+# =============================================================================
+# register commands
+# =============================================================================
+
+# default command
+web::command default {
+
+    initTexts
+    showForm form
+
+    web::log ws3.debug "show form done"
+#     set tmp [web::configcmdurl prefix get]
+#     web::log ws3.debug $tmp
+}
+
+
+# about command
+web::command about {
+    initTexts
+    showForm about
+}
+
+
+# submit command
+web::command submit {
+
+    initTexts
+    # check the e-mail address
+    set email [string trim [web::formvar email]]
+    if {![regexp  {^[^@]+@[^@][^@]+\.[^@][^@]+$} $email] || [regexp " \t\r\n,;" $email]} {
+        # the email has an invalid format
+        showForm form "" 1
+        exit
+    } 
+    # email format is ok
+
+    if {[catch {
+        if {![file exists $_datafile]} {
+            # create the data file
+            web::log step5.info "creating file $_datafile"
+            set fh [open $_datafile w]
+            puts $fh "Name,Address,E-Mail,Language"
+        } else {
+            # file exists, just open to append
+            set fh [open $_datafile a]
+        }
+    } msg]} {
+        # something went wrong: file is not open
+        showForm error "error opening file: $msg"
+    }
+
+    # the file is open: append data
+    set line ""
+    foreach var {name addr email} {
+        regsub -all {\\} [web::formvar $var] {\\\\} content
+        regsub -all "\"" $content "\\\"" content
+        regsub -all "\r\n" $content "\\n" content
+        if {[regexp "," $content]} {
+            lappend line "\"$content\""
+        } else {
+            lappend line "$content"
+        }
+    }
+    lappend line [getLang]
+    puts $fh [join $line ","]
+    close $fh
+    web::log step5.info "successfully appended data to file $_datafile"
+
+    showForm confirmation
+}
+
+
+proc putHeader {type} {
+
+    global header text
+    set completeTitle "Websh Tutorial - Step 5 - [set text(header-$type)]"
+    web::putx $header
+}
+
+proc putFooter {} {
+
+
+    global footer text
+
+    web::log ws3.debug "Got $footer"
+
+    foreach var [array names text] {
+        set $var $text($var)
+	## web::log ws3.debug "Got $var"
+    }
+    web::putx $footer
+}
+
+proc showForm {{type form} {msg ""} {error 0}} {
+
+    global template-$type
+    web::log step5.info "sending the $type (language [getLang]) ..."
+    global text
+    web::putx [set template-$type]
+    if {"$type" == "error"} {
+        web::log step5.error "$msg"
+        exit
+    } else {
+        web::log step5.info "successfully sent the $type"
+    }
+}
+
+
+proc getLang {} {
+
+    # improved: now we use a cache type thing to remember
+    # the language if we calculated it before
+    global _languages _defaultlang _lang
+    if {[info exists _lang]} {
+        return $_lang
+    }
+    set lang [string tolower [web::param lang $_defaultlang]]
+    if {[lsearch -exact $_languages $lang] == -1} {
+        set lang $_defaultlang
+    }
+    set _lang $lang
+    return $lang
+}
+
+
+proc putURL {cmd {lang ""}} {
+
+    web::log ws3putURL.debug "Got $cmd"
+
+    if {![string length $lang]} {
+        set lang [getLang]
+    }
+    set test [web::cmdurl $cmd lang $lang]
+    set tmp [web::querystring::getfromurl $test]
+    web::log ws3putURL.debug "qstr1: $test"
+    web::log ws3putURL.debug "qstr2: $tmp"
+    ## set tmp [web::querystring::toplaintext $tmp]
+    web::log ws3putURL.debug "qstr3: $tmp"
+
+    web::put $test
+}
+
+# introduced to reduce redundancy in templates and enhance readability
+proc putField {field {linebreaks 0}} {
+    set var [web::htmlify [web::formvar $field]]
+    if {$linebreaks} {
+        # take care of linebreaks in address
+        regsub -all "\r\n" $var "<br>" var
+    }
+    web::put $var
+}
+
+
+proc getBrowser {} {
+
+    global env
+    if {[info exists env(HTTP_USER_AGENT)]} {
+        return $env(HTTP_USER_AGENT)
+    } else {
+        return "n/a"
+    }
+}
+
+
+# immediate execution (source, evaluate the config file)
+# if {[::web::include [file join . "" "[file rootname [file tail $argv0]].con3"] msg]} {
+#     showForm error "config error: $msg"
+# }
+
+if {[::web::include "../bin/tutorial.con3" msg]} {
+    showForm error "config error: $msg"
+}
+
+web::dispatch

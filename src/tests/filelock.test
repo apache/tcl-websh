@@ -1,0 +1,117 @@
+#
+# filelock.test -- 
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+# -----------------------------------------------------------------------------
+# truncatefile
+# -----------------------------------------------------------------------------
+test truncatefile-1.1 {create file, truncate it, and test size} {
+
+    set fh [open [set fn [web::tempfile]] w]
+    puts $fh [string repeat "a" 10000]
+    flush $fh
+    set res [file size $fn]
+    web::truncatefile $fh
+    close $fh
+
+    lappend res [file size $fn]
+} {10001 0}
+
+test truncatefile-1.2 {wrong args} {
+
+    catch {
+	web::truncatefile
+    } msg
+    set msg
+} {wrong # args: should be "web::truncatefile channel"}
+
+set fn [web::tempfile]
+test truncatefile-1.3 {called with a file name} {
+
+    catch {
+	web::truncatefile $fn
+    } msg
+    set msg
+} "can not find channel named \"$fn\""
+
+# -----------------------------------------------------------------------------
+# test the actual locking
+# -----------------------------------------------------------------------------
+
+set processes 10
+set tests 100
+set expect [expr $processes * $tests]
+
+
+test filelock-1.3 {test file locking (mulitple processes)} {unixOnly} {
+    
+    set script locktest.tcl
+    set seqno  locktest.SEQNO
+
+    # temporary test script
+    set fh [open $script "w"]
+    global argv0
+    puts $fh "#!$argv0"
+    puts $fh {set c [lindex $argv 0]}
+    puts $fh {puts "starting [pid] for $c"}
+    puts $fh "if {\$c < $processes} {exec \$argv0 \[incr c\] &}"
+    puts $fh "web::filecounter idgen -filename $seqno -seed 0 -incr 1"
+    puts $fh "for {set i 0} {\$i < $tests} {incr i} {"
+    puts $fh "    set a \[idgen nextval\]"
+    puts $fh "}"
+    close $fh
+    file attributes $script -permissions 0755
+
+    ## re-open/truncate hack (advisory lock)
+    set fh [open $seqno {CREAT WRONLY}]
+    web::lockfile $fh
+    flush $fh
+    set fh2 [open $seqno {CREAT WRONLY TRUNC}]
+    close $fh2
+    seek $fh 0 start
+    puts $fh "0"
+    web::unlockfile $fh
+    close $fh
+
+    # exec some concurrent processes (script is recursive)
+    puts "testing file locking: $processes concurrent processes with $tests file locks each"
+    puts -nonewline "(this may take a while...) "
+    flush stdout
+    exec "./$script" 1
+
+    # test result
+    web::readfile $seqno result
+
+    # cleanup
+    file delete -force -- $script $seqno
+
+    puts "done"
+
+    set result
+} "$expect
+"
+
+unset processes tests expect
+
+
+
+
+# cleanup
+::tcltest::cleanupTests

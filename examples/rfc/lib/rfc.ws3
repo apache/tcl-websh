@@ -1,0 +1,159 @@
+#
+# rfc.ws3 -- example use of sessions with websh
+# nca-073-9
+# 
+# Copyright (C) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+web::filecounter idgen -filename [file join .. .. data rfc state.SEQNO]
+web::filecontext dscc -path [file join .. .. data rfc %d.dsc] \
+    -idgen idgen
+
+
+proc startPage {} {
+    return "<HTML>\n<HEAD><title>RFC index</title>\n</HEAD>\n<BODY>\n"
+}
+
+proc finishPage {} {
+    return "
+	<hr>
+	[web::copyright -version]<br>
+	</BODY></HTML>
+    "
+}
+
+proc formatLink {url {show ""}} {
+
+    if {$show == ""} { set show $url }
+    return "<a href=\"$url\">$show</a>"
+}
+
+proc putLink {url {show ""}} {
+
+    web::put [formatLink $url $show]
+}
+
+web::command delete {
+
+    file delete [file join .. .. data rfc [web::param dscid].dsc]
+    web::dispatch -cmd default -querystring "" -postdata ""
+}
+
+web::command submit {
+
+    if { [web::param -count dscid] } {
+	dscc::init [web::param dscid]
+    } else {
+	dscc::new [idgen nextval]
+    }
+    foreach nam [web::formvar] {
+	web::log info {$nam}
+	dscc::cset $nam [web::formvar $nam]
+    }
+    dscc::commit
+    web::dispatch -cmd default -querystring "" -postdata ""
+}
+
+web::command edit {
+
+    if { [web::param -count dscid] } {
+	dscc::init [web::param dscid]
+	set action [web::cmdurl submit [list dscid [web::param dscid]]]
+	set rfc [dscc::cget rfc]
+	set url [dscc::cget url]
+	set sdsc [dscc::cget sdsc]
+    } else {
+	set action [web::cmdurl submit]
+	set rfc ""
+	set url ""
+	set sdsc ""
+    }
+
+    web::put [startPage]
+
+    web::putx {
+ 	<form method=post action="{web::put $action}">
+	<dl>
+	<dt>RFC number
+	<dd>{web::putx {<input type="text" name="rfc" size="4" value={=$rfc}>}}
+	<dt>URL
+	<dd>{web::putx {<input type="text" name="url" size="30" value={=$url}>}}
+	<dt>short description
+	<dd>{web::putx {<input type="text" name="sdsc" size="40" value={=\"$sdsc\"}>}}
+	</dl>
+ 	<input type=submit name=ok value="save">
+ 	</form>
+    }
+
+    web::put [finishPage]
+
+
+    
+}
+
+proc doToggle {aTog} {
+    upvar $aTog tog
+    if {$tog == 1} {set tog 0} else {set tog 1}
+    return $tog
+}
+
+web::command default {
+
+    set toggle 1
+
+    web::put [startPage]
+    putLink [web::cmdurl edit] new
+
+    web::put "<br><hr><br>"
+
+    catch {
+ 	set flist [glob pattern [file join .. .. data rfc *.dsc]]
+    } msg
+    if {[info exists flist]} {
+
+	web::put "
+<table>
+"
+
+	foreach dsc $flist {
+
+	    if {$toggle == 0 } {
+		web::put {
+<tr VALIGN="top" BGCOLOR="#FFFFFF">
+}
+	    } else {
+		web::put {
+<tr VALIGN="top" BGCOLOR="#99CCCC">
+}
+	    }
+	    doToggle toggle
+
+	    set dsc [file rootname [file tail $dsc]]
+
+	    dscc::init $dsc
+
+	    web::put "<td>[formatLink [web::cmdurl edit [list dscid $dsc]] {o}]</td>"
+	    web::put "<td>[formatLink [web::cmdurl delete [list dscid $dsc]] {x}]</td>"
+	    web::put "<td>[formatLink [dscc::cget url] [dscc::cget rfc]]</td>"
+	    web::put "<td>[dscc::cget sdsc]</td>"
+	    
+	    web::put "
+</tr>
+"
+	}
+
+    }
+	web::put "
+</table>
+"
+	
+    web::put [finishPage]
+}
+
+web::dispatch -track id

@@ -1,0 +1,256 @@
+#
+# filecontext.test -- file-based sessions
+# nca-073-9
+# 
+# Copyright (c) 1996-2000 by Netcetera AG.
+# All rights reserved.
+#
+# See the file "license.terms" for information on usage and
+# redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# @(#) $Id$
+#
+
+# -----------------------------------------------------------------------------
+# tcltest package
+# -----------------------------------------------------------------------------
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import ::tcltest::*
+}
+
+test filecontext-1.1 {simple set} {
+
+    web::filecontext ctxb
+
+    ctxb::new 113
+    ctxb::cset a 1
+    ctxb::commit
+    set res [file exists 113]
+    set fh [open 113 r]
+    set tmp [read $fh]
+    close $fh
+    lappend res [web::decrypt $tmp]
+    file delete 113
+    set res
+} {1 {cset a 1}}
+
+test filecontext-1.2 {option -path} {
+
+    web::filecontext ctxb -path [file join . fc12%d.dat]
+
+    ctxb::new 113
+    ctxb::cset a 1
+    ctxb::commit
+    set res [file exists fc12113.dat]
+    file delete fc12113.dat
+    set res
+} {1}
+
+test filecontext-1.3 {option -crypt} {
+
+    web::filecontext ctxb -crypt no
+
+    ctxb::new 113
+    ctxb::cset a 1
+    ctxb::commit
+    set res [file exists 113]
+    set fh [open 113 r]
+    lappend res [read $fh]
+    close $fh
+    file delete 113
+    set res
+} {1 {cset a 1
+}}
+
+test filecontext-1.4 {option -attachto} {
+
+    web::filecontext ctxb
+
+    ctxb::new 113
+    ctxb::cset a 1
+    ctxb::commit
+
+    web::param -unset
+    web::param -set testid 113
+    web::filecontext ctxb -attachto testid
+
+    ctxb::init
+    ctxb::cset b 2
+    ctxb::commit
+    set res [file exists 113]
+    file delete 113
+    set res
+} {1}
+
+test filecontext-1.5 {option -idgen} {
+
+    web::filecounter fc1 -filename [web::tempfile] -seed 99
+
+    web::filecontext ctxb -idgen "fc1 nextval" -path [file join . fc15%d.dat]
+
+    ctxb::new
+    set res [ctxb::id]
+    file delete fc1599.dat
+    set res
+} {99}
+
+test filecontext-1.6 {read someone others ctx} {
+
+    web::filecontext ctxb
+
+    ctxb::new 113
+    ctxb::cset a 1
+    ctxb::commit
+
+    web::filecontext ctxc
+    ctxc::load 113
+
+    file delete 113
+
+    ctxc::dump
+} {cset a 1}
+
+test filecontext-1.7 {test truncation of old file context} {
+    
+    set filename [web::tempfile]
+    set fh [open $filename {CREAT WRONLY}]
+    web::lockfile $fh
+    puts $fh "longmessage and more"
+    web::unlockfile $fh
+    close $fh
+
+    ## without truncation
+    set fh [open $filename {CREAT WRONLY}]
+    web::lockfile $fh
+    puts $fh "shortmsg"
+    web::unlockfile $fh
+    close $fh
+    # test read
+    set fh [open $filename r]
+    set res [read $fh]
+    close $fh
+    append res " - "
+
+    ## with truncation
+    set fh [open $filename {CREAT WRONLY}]
+    web::lockfile $fh
+    flush $fh
+    set fh2 [open $filename {CREAT WRONLY TRUNC}]
+    close $fh2
+    seek $fh 0 start
+
+    puts $fh "shortmsg"
+    web::unlockfile $fh
+    close $fh
+
+    # test read
+    set fh [open $filename r]
+    append res [read $fh]
+    close $fh
+
+    set res
+} {shortmsg
+ge and more
+ - shortmsg
+}
+
+test filecontext-1.7a {id in static params ?} {
+
+    web::cmdurlcfg -unset
+
+    web::filecounter fc17 -filename [web::tempfile] -seed 99
+    web::filecontext ctx17 -idgen "fc17 nextval" -path [file join . fc17%d.dat] -attachto id
+
+    ctx17::init
+    set res [web::cmdurlcfg -names]
+    file delete fc1799.dat
+    set res
+} {id}
+
+test filecontext-1.8 {long context} {
+
+    web::cmdurlcfg -unset
+
+    web::filecounter fc18 -filename [web::tempfile] -seed 99
+    web::filecontext ctx18 -idgen "fc18 nextval" -path [file join . fc18%d.dat] -attachto id
+
+    ctx18::init
+    set tmp mark18
+    append tmp [string repeat "öüabc\rä
+" 200]
+    ctx18::cset ltst $tmp
+    ctx18::commit
+
+    web::filecontext ctx18b -path [file join . fc18%d.dat]
+    ctx18b::init 99
+    set res [string equal [ctx18b::cget ltst] [ctx18::cget ltst]]
+    file delete fc1899.dat
+    set res
+
+} {1}
+
+test filecontext-1.9 {short context} {
+
+    web::cmdurlcfg -unset
+
+    web::filecounter fc19 -filename [web::tempfile] -seed 99
+    web::filecontext ctx19 -idgen "fc19 nextval" -path [file join . fc19%d.dat] -attachto id
+
+    ctx19::init
+    set tmp mark19
+    append tmp [string repeat "öüabc\rä
+" 10]
+    ctx19::cset ltst $tmp
+    ctx19::commit
+
+    web::filecontext ctx19b -path [file join . fc19%d.dat]
+    ctx19b::init 99
+    set res [string equal [ctx19b::cget ltst] [ctx19::cget ltst]]
+    file delete fc1999.dat
+    set res
+
+} {1}
+
+test filecontext-1.10 {try puts -nonewline} {
+
+    set fh [open [set fn [web::tempfile]] w]
+    set tmp mark
+    append tmp [string repeat "äöüabc" 500]
+    puts -nonewline $fh $tmp
+    close $fh
+    set fh [open $fn r]
+    set res [read $fh 10]
+    close $fh
+    set res
+} {markäöüabc}
+
+test filecontext-1.11 {try rejected ids} {
+
+    set res ""
+
+    web::filecontext ctx111 -path [file join . %s]
+
+    catch {
+        ctx111::init /a/b/c
+    } msg
+    append res $msg
+
+    catch {
+        ctx111::init _ctx111ABC -create
+    } msg
+    append res $msg
+    file delete -force _ctx111ABC
+
+    catch {
+        ctx111::init 123454321 -create
+    } msg
+    append res $msg
+    file delete -force 123454321
+
+    set res
+
+} {id "/a/b/c" is not safe, rejected._ctx111ABC123454321}
+
+# cleanup
+::tcltest::cleanupTests
