@@ -1,14 +1,14 @@
 #
 # script.ws3 -- the commands of websh3 that are implemented as Tcl scripts
 # nca-073-9
-# 
+#
 # Copyright (C) 1996-2000 by Netcetera AG.
 # Copyright (C) 2001 by Apache Software Foundation.
 # All rights reserved.
-# 
+#
 # See the file "license.terms" for information on usage and
 # redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-# 
+#
 # @(#) $Id$
 #
 
@@ -151,23 +151,23 @@ namespace eval web::cgi {}
 proc web::cgi::copyenv {} {
 
     set cgienv {
-	SERVER_SOFTWARE 
-	SERVER_NAME 
-	GATEWAY_INTERFACE 
-	SERVER_PROTOCOL 
-	SERVER_PORT 
-	REQUEST_METHOD 
-	PATH_INFO 
-	PATH_TRANSLATED 
-	SCRIPT_NAME 
-	QUERY_STRING 
-	REMOTE_HOST 
-	REMOTE_ADDR 
-	AUTH_TYPE 
-	REMOTE_USER 
-	REMOTE_IDENT 
-	CONTENT_TYPE 
-	CONTENT_LENGTH 
+	SERVER_SOFTWARE
+	SERVER_NAME
+	GATEWAY_INTERFACE
+	SERVER_PROTOCOL
+	SERVER_PORT
+	REQUEST_METHOD
+	PATH_INFO
+	PATH_TRANSLATED
+	SCRIPT_NAME
+	QUERY_STRING
+	REMOTE_HOST
+	REMOTE_ADDR
+	AUTH_TYPE
+	REMOTE_USER
+	REMOTE_IDENT
+	CONTENT_TYPE
+	CONTENT_LENGTH
 	HTTPS
     }
 

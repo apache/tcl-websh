@@ -1,7 +1,7 @@
 /*
  * log.c - logging  module of websh 3
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -642,9 +642,11 @@ int Web_LogFilter(ClientData clientData,
     LogData *logData;
     int idx;
 
-    static char *subCommands[] = { WEB_LOG_SUBCMD_ADD,
+    static char *subCommands[] = {
+	WEB_LOG_SUBCMD_ADD,
 	WEB_LOG_SUBCMD_DELETE,
-	WEB_LOG_SUBCMD_NAMES, NULL
+	WEB_LOG_SUBCMD_NAMES,
+	NULL
     };
     enum subCommands
     { ADD, DELETE, NAMES };
@@ -711,9 +713,8 @@ int Web_LogFilter(ClientData clientData,
 	    /* ------------------------------------------------------------------------
 	     * and add to list
 	     * --------------------------------------------------------------------- */
-	    if (appendToHashTable
-		(logData->listOfFilters, name,
-		 (ClientData) logLevel) == TCL_ERROR) {
+	    if (appendToHashTable(logData->listOfFilters, name,
+				  (ClientData) logLevel) == TCL_ERROR) {
 		Tcl_SetResult(interp, "cannot append \"", NULL);
 		Tcl_AppendResult(interp, name, "\" to list", NULL);
 		destroyLogLevel(logLevel, NULL);

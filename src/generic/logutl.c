@@ -106,7 +106,7 @@ int logImpl(Tcl_Interp * interp, LogData * logData,
 }
 
 /* ----------------------------------------------------------------------------
- * sendMsgToDestList -- 
+ * sendMsgToDestList --
  * ------------------------------------------------------------------------- */
 void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 		       LogLevel * logLevel, Tcl_Obj * msg)
@@ -266,8 +266,8 @@ char *getSeverityName(Severity aSeverity)
 
 
 /* ----------------------------------------------------------------------------
- * parseLogLevel -- 
- *   given input like "aFacility.info-alert" create LogLevel struc
+ * parseLogLevel --
+ *   given input like "aFacility.info-alert" create LogLevel struct
  *   from Andrej (logutil.c::parseLogLevel)
  *   definition      -> like "websh.info"
  *   defaultfacility -> like "user" (in case websh was ommitted above)
@@ -402,7 +402,7 @@ int doesPassFilters(LogLevel * logLevel, Tcl_HashTable * hash)
 
 /* ----------------------------------------------------------------------------
  * formatMessage --
- * 
+ *
  * ------------------------------------------------------------------------- */
 Tcl_Obj *formatMessage(LogLevel * level, char *fmt,
 		       long maxCharInMsg, Tcl_Obj * msg)

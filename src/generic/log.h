@@ -104,6 +104,7 @@ typedef struct LogLevel
     Severity maxSeverity;	/* only used for filter */
 }
 LogLevel;
+
 LogLevel *createLogLevel();
 int destroyLogLevel(void *level, void *dum);
 
