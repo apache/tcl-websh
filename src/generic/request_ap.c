@@ -39,7 +39,7 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 {
 
     int res = 0;
-    Tcl_Obj *reso = NULL;
+    /*Tcl_Obj *reso = NULL;*/
     request_rec *r = NULL;
 #ifndef APACHE2
     array_header *hdrs_arr = NULL;
@@ -64,7 +64,7 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 	return TCL_ERROR;
     }
 
-    reso = Tcl_NewObj();
+    /*reso = Tcl_NewObj();*/
 
 #ifndef APACHE2
     hdrs_arr = ap_table_elts(r->subprocess_env);
