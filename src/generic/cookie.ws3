@@ -143,29 +143,28 @@ proc web::cookiecontext {ctxmgrname args} {
 	    } else {
 
 		# write the expiry-date
-		set expsec [clock seconds]
 		if {[regexp {^[0-9]+$} $_expires]} {
-		    ## is a number
+		    # expiry given as epoch seconds
 		    set expsec $_expires
-		} else {
-		    if {[string equal $_expires "day"]} {
-			incr expsec 86400
-		    } elseif { [string equal $_expires "week"] } {
-			incr expsec 604800
-		    }
+		} elseif {[string length $_expires] && ![catch {clock scan $_expires} msg] } {
+		    # expiry given in tcl scannable date-time string
+		    # incl. "day", "tomorrow", "week" ...
+		    set expsec $msg
 		}
-		if { [catch {clock scan $_expires} msg] } {
-		    
-		    set expstr $_expires
-		} else {
-		    
-		    if {[string equal $_expires "today"]} {
-			set expstr $_expires
+
+		if {[info exists expsec]} {
+		    # we have an (optional) expiry
+		    global env
+		    if {[info exists env(LC_TIME)]} {
+			set LC_TIME $env(LC_TIME)
+		    }
+		    set env(LC_TIME) C
+		    set expstr [clock format $expsec -format "%a, %d-%b-%Y %H:%M:%S %Z" -gmt true]
+		    if {[info exists LC_TIME]} {
+			set env(LC_TIME) $LC_TIME
 		    } else {
-			set expstr [clock format $expsec -format "%a, %d-%b-%Y %H:%M:%S %Z" -gmt true]
+			unset env(LC_TIME)
 		    }
-		}
-		if { [string length $expstr] } {
 		    append cookie "; expires=$expstr"
 		}
 	    }

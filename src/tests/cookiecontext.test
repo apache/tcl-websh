@@ -34,11 +34,111 @@ test cookiecontext-1.1 {create a cookie-context} {
     cctx::cset somekey somevalue
     cctx::commit
     web::put "Websh"
+    namespace delete cctx
 
     set text
-} "Content-Type: text/html\u0D
-Set-Cookie: myTestCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=today; path=/some/app\u0D
+
+    set now [clock seconds]
+
+    # expected cookie pattern
+    set pattern "Content-Type: text/html\u0D
+Set-Cookie: myTestCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=(.*); path=/some/app\u0D
 Generator: cookiecontext-1.1\u0D
+\u0D
+Websh"
+
+    if {[regexp $pattern $text dummy timestring]} {
+	set time [clock scan $timestring]
+	set result [expr {($now - $time) < 2}]
+    } else {
+	set result 0
+    }
+
+} 1
+
+test cookiecontext-1.1a {create a cookie-context expiry tomorrow} {
+
+    if {[info exists text1a]} {unset text1a}
+
+    web::response -select #text1a
+    web::response -set Generator "cookiecontext-1.1a"
+    web::cookiecontext cctx -path "/some/app" -expires "day" -channel #text1a
+    cctx::new myTestCookie
+    cctx::cset somekey somevalue
+    cctx::commit
+    web::put "Websh"
+    namespace delete cctx
+
+    set text1a
+
+    set now [clock seconds]
+
+    # expected cookie pattern
+    set pattern "Content-Type: text/html\u0D
+Set-Cookie: myTestCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=(.*); path=/some/app\u0D
+Generator: cookiecontext-1.1a\u0D
+\u0D
+Websh"
+
+    if {[regexp $pattern $text1a dummy timestring]} {
+	set time [clock scan $timestring]
+	set result [expr {($now + 86400 - $time) < 2}]
+    } else {
+	set result 0
+    }
+
+} 1
+
+test cookiecontext-1.1a1 {create a cookie-context expiry default} {
+
+    if {[info exists text1a1]} {unset text1a1}
+
+    web::response -select #text1a1
+    web::response -set Generator "cookiecontext-1.1a1"
+    web::cookiecontext cctx -path "/some/app" -channel #text1a1
+    cctx::new myTestCookie
+    cctx::cset somekey somevalue
+    cctx::commit
+    web::put "Websh"
+    namespace delete cctx
+
+    set text1a1
+
+    set now [clock seconds]
+
+    # expected cookie pattern
+    set pattern "Content-Type: text/html\u0D
+Set-Cookie: myTestCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=(.*); path=/some/app\u0D
+Generator: cookiecontext-1.1a1\u0D
+\u0D
+Websh"
+
+    if {[regexp $pattern $text1a1 dummy timestring]} {
+	set time [clock scan $timestring]
+	set result [expr {($now + 86400 - $time) < 2}]
+    } else {
+	set result 0
+    }
+
+} 1
+
+test cookiecontext-1.1b {create a cookie-context no expiry} {
+
+    if {[info exists text1b]} {unset text1b}
+
+    web::response -select #text1b
+    web::response -set Generator "cookiecontext-1.1b"
+    web::cookiecontext cctx -path "/some/app" -expires "" -channel #text1b
+    cctx::new myTestCookie
+    cctx::cset somekey somevalue
+    cctx::commit
+    web::put "Websh"
+    namespace delete cctx
+
+    set text1b
+} "Content-Type: text/html\u0D
+Set-Cookie: myTestCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; path=/some/app\u0D
+Generator: cookiecontext-1.1b\u0D
 \u0D
 Websh"
 
@@ -75,7 +175,7 @@ test cookiecontext-1.3 {create a cookie-context} {
     web::response -select #cctx1_3
     web::response -set Generator "cookiecontext-1.3"
     web::cookiecontext cctx -path "/some/app13" \
-	-expires "Wed, 15-03-2000 00:00:00 MET" -channel #cctx1_3 \
+	-expires "Wed, 15-Mar-2000 00:00:00 MET" -channel #cctx1_3 \
 	-secure 1 -domain "www.websh.com"
     cctx::new myThirdCookie
     cctx::cset somekey somevalue
@@ -84,14 +184,14 @@ test cookiecontext-1.3 {create a cookie-context} {
 
     set cctx1_3 
 } "Content-Type: text/html\u0D
-Set-Cookie: myThirdCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=Wed, 15-03-2000 00:00:00 MET; path=/some/app13; domain=www.websh.com; secure\u0D
+Set-Cookie: myThirdCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=Tue, 14-Mar-2000 23:00:00 GMT; path=/some/app13; domain=www.websh.com; secure\u0D
 Generator: cookiecontext-1.3\u0D
 \u0D
 Websh"
 
 test cookiecontext-1.4 {create an uncrypted cookie-context} {
     web::response -select \#cctx1_4
-    web::cookiecontext c -crypt 0 -expires "Wed, 15-03-2000 00:00:00 MET"
+    web::cookiecontext c -crypt 0 -expires "Wed, 15-Mar-2000 00:00:00 MET"
     web::response -set Generator "cookiecontext-1.4"
     c::init cname
     c::cset foo bar
@@ -101,7 +201,7 @@ test cookiecontext-1.4 {create an uncrypted cookie-context} {
     web::put "show me the cookie"
     set cctx1_4
 } "Content-Type: text/html\u0D
-Set-Cookie: cname=cset+1%3d2+false%0acset+foo+bar%0acset+im+tired; expires=Wed, 15-03-2000 00:00:00 MET\u0D
+Set-Cookie: cname=cset+1%3d2+false%0acset+foo+bar%0acset+im+tired; expires=Tue, 14-Mar-2000 23:00:00 GMT\u0D
 Generator: cookiecontext-1.4\u0D
 \u0D
 show me the cookie"

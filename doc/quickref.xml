@@ -1257,7 +1257,7 @@ $Id$
 	    % web::put &quot;Hello, world\n&quot;
 	    Content-Type: text/html
 	    Set-Cookie: my cookie that contains data
-	    Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
+	    Generator: websh3.5.1
 
 	    Hello, world
 	    %
@@ -1993,11 +1993,16 @@ $Id$
 	    <listitem>
 	      <para>
 		set the expiration date of the cookie. Possible values
-		for <option>time</option> are <emphasis>day</emphasis>
-		(lifetime: one day), <emphasis>week</emphasis>,
-		<emphasis>today</emphasis>,
+		for <option>time</option> are
 		<emphasis>seconds</emphasis> (time in seconds since
-		1-1-1970) or <emphasis>date-string</emphasis>.
+		1970-01-01) or <emphasis>date-string</emphasis> (any
+                time string that Tcl can scan. Note that therefore many 
+                relative times, such as <emphasis>day</emphasis>, 
+		<emphasis>week</emphasis>, <emphasis>2 weeks</emphasis>,
+		<emphasis>tomorrow</emphasis>, etc.
+		are possible. Default is <emphasis>day</emphasis> (i.e. cookie
+		expires in 24 hours. Use <emphasis>-expires ""</emphasis> to 
+		send a cookie without an expires parameter.
 	      </para>
 	    </listitem>
 	  </varlistentry>
