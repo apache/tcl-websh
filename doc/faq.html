@@ -1,6 +1,6 @@
-<h1><a name="generic">Generic Questions</a></h1>
+<a name=" generic"><a href="#toc"><h1>1 Generic Questions</h1></a>
 
-<h2><a name="whatis">What is webshell ?</a></h2>
+<a name=" whatis"><a href="#toc"><h2>1.1 What is webshell ?</h2></a>
 
 webshell is a rapid development environment for building powerful and
 reliable web applications. It is a standard Tcl extension and is
@@ -10,21 +10,21 @@ customization. At Netcetera, we have been using it for years for
 virtually all our customer projects, which typically are E-commerce
 shops or electronic banking applications.
 
-<h2><a name="version">What is the current version ?</a></h2>
+<a name=" version"><a href="#toc"><h2>1.2 What is the current version ?</h2></a>
 
-Currently, we are finalizing version 3 of webshell. webshell 3 will be
-available for download starting Mar 1, 2000.
+Currently, we are finalizing version 3 of webshell. The beta-2
+release of webshell is available for download.
 
-<h2><a name="price">What does webshell cost ?</a></h2>
+<a name=" price"><a href="#toc"><h2>1.3 What does webshell cost ?</h2></a>
 
 Nothing. It's free. webshell is released as Open Source.
 
-<h2><a name="download">Where can I download webshell ?</a></h2>
+<a name=" download"><a href="#toc"><h2>1.4 Where can I download webshell ?</h2></a>
 
-webshell will be available for download starting 
-Mar 1, 2000 at the &lt;a href=&quot;download.html&quot;&gt;download area&lt;/a&gt; of this site.
+The beta-2 release of webshell is available for download at the 
+<a href="download.html">download area</a> of this site.
 
-<h2><a name="netcetera">Who is Netcetera ?</a></h2>
+<a name=" netcetera"><a href="#toc"><h2>1.5 Who is Netcetera ?</h2></a>
 
 Netcetera is a software company which mainly focuses on Internet
 services, particularly in the area of electronic commerce. Netcetera
@@ -40,9 +40,9 @@ pages is designed by communication experts.  Netcetera cares for its
 customers.
 
 Find more information about Netcetera at our 
-&lt;a href=&quot;http://netcetera.ch&quot;&gt;homepage&lt;/a&gt;.
+<a href="http://netcetera.ch">homepage</a>.
 
-<h2><a name="why">Why should I use webshell ?</a></h2>
+<a name=" why"><a href="#toc"><h2>1.6 Why should I use webshell ?</h2></a>
 
 In today's E-commerce environment, flexibility and short
 time-to-market are key characteristics for successful
@@ -56,7 +56,7 @@ time constraints. It is fast, versatile, scalable, and easy to learn.
 With webshell, you have a win-win situation for developers and
 customers.
 
-<h2><a name="mailinglist">Is there a mailing list ?</a></h2>
+<a name=" mailinglist"><a href="#toc"><h2>1.7 Is there a mailing list ?</h2></a>
 
 Yes, Netcetera edits a quarterly newsletter for webshell.  You can
 subscribe to the newsletter from www.websh.com/subscribe.html, or by
@@ -68,30 +68,9 @@ may do so at www.websh.com/unsubscribe.html, or by sending an e-mail
 to majordomo@netcetera.ch with &quot;unsubscribe websh-news&quot; in the body of
 the message.
 
-<h1><a name="technical">Technical Questions</a></h1>
+<a name=" technical"><a href="#toc"><h1>2 Technical Questions</h1></a>
 
-<h2><a name="convert">I am  websh2 wizard. How do I switch to websh3 ?</a></h2>
-
-Converting to websh3 is straight forward:
-
-<ul>
-<li>change all command nmes from wpp_ to web::
-<li>change a few comans where the syntax differs from websh2 (see quickref):
- - wpp_isselected
- - wpp_ischecked (both with web::match)
- - wpp_loglevel is web::logfilter
- - wpp_logrule is web::logdest
- Note that web::log evaluates the messge. Thus, you should write it in {}
- - check syntax of web::config
-<li>add web::dispatch at the end of you script
-</ul>
-
-Netcetera AG has written a compatibilty layer for websh2. This allows
-you to run entire websh2 applications with websh3 without changing a
-single line of your code.
-
-<br><br>
-<h2><a name="logging">How do I use the logging facility ?</a></h2>
+<a name=" logging"><a href="#toc"><h2>2.1 How do I use the logging facility ?</h2></a>
 
 Before webshell sends a message to a log destination, the message
 needs to pass two filters. That's why you need to specify a level when
@@ -105,11 +84,11 @@ destination only if the message passes the second filter.
 A log level consists of a tag and a level, separated by a dot.
 Possible levels are
 <ul>
-<li>alert
-<li>error
-<li>warning
-<li>info
-<li>debug
+<li>alert</li>
+<li>error</li>
+<li>warning</li>
+<li>info</li>
+<li>debug</li>
 </ul>
 The tag is free text. Typically, it is the name of the application, 
 say &quot;foo&quot;.
