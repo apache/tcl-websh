@@ -1,3 +1,27 @@
+2002-07-30  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/web.c (Websh_Init):
+	provide package websh
+	
+	* ChangeLog: 
+	incorporated file "changes", which is now removed
+	
+2002-07-29  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* INSTALL: 
+	added hint for threads
+
+2002-07-28  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* quickref.xml: 
+	added explanation of # to web::put*
+
+2002-07-27  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* quickref.xml, quickref.xsl: 
+	fixed links to examples
+	formal cleanup
+	
 2002-07-25  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* generic/cfg.c, generic/cfg.h (cfg_Init):
@@ -499,26 +523,49 @@
 
 2000-04-27  Simon Hefti <simon.hefti@netcetera.ch>
 
-	3.0b2 beta-2 release of webshell 3
+	3.0b2 beta-2 release of Websh 3
 
 	The Apache Module added - is known to build and run
 	on SunOs-5.6 and on Linux.
 
-	Several minor bug fixes - at Netcetera, this webshell is in
+	Several minor bug fixes - at Netcetera, this Websh is in
 	productive use since beta-1.
+
+	* mod_websh commands introduced:
+	  web::interpclass
+	  web::initializer
+	  web::finalizer
+	  web::dofinalize
+	  web::maineval
+	  web::interpid
+	  web::interppool
+	* log plugin for apache added (aplog)
+	* web::setupcontext renamed to web::context
+	* web::request -channel introduced
+	* lencrypt, ldecrypt removed
+	* web::asciify85, web::asciify64 removed
+
 
 2000-03-20  Simon Hefti <simon.hefti@netcetera.ch>
 
-	3.0b1 beta-1 release of webshell 3
+	3.0b1 beta-1 release of Websh 3
 
-	This release is known to compile and run on SunOs-5.5.1 and Linux
+	This release is known to compile and run on SunOS-5.5.1 and Linux
  	and should do so on most UNIX variants.
 
 	The Apache Module is missing in this release.
 
+	* session management built-in
+	* by default, the log module subsitutues vaiable and command names of
+	  the log message
+	* lencrypt, ldecrypt introduced
+	* web::response replaces command web::output
+	* web::request provides access to the request object
+	  (CGI environment vars or Apache Module data)
+
 2000-03-07  Simon Hefti <simon.hefti@netcetera.ch>
 
-	3.0a1 alpha-1 release of webshell 3
+	3.0a1 alpha-1 release of Websh 3
 
 	first release
 
