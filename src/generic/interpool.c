@@ -484,14 +484,6 @@ void poolReleaseWebInterp(WebInterp * webInterp)
  * ------------------------------------------------------------------------- */
 int initPool(websh_server_conf * conf)
 {
-    static called = 0;
-
-    if (called == 1) {
-	return 1;
-    } else {
-	called = 1;
-    }
-
     Tcl_FindExecutable(NULL);
 
     if (conf->mainInterp != NULL || conf->webshPool != NULL) {
@@ -502,8 +494,7 @@ int initPool(websh_server_conf * conf)
 	ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, conf->server,
 		     "initPool: mainInterp or webshPool not NULL\n");
 #endif /* APACHE2 */
-	destroyPool(conf);
-return 0;
+	return 0;
     }
 
     /* create a single main interpreter */
