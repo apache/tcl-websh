@@ -1,3 +1,46 @@
+2002-02-14  David N. Welton  <davidw@dedasys.com>
+
+	* generic/weboutint.c (webout_eval_tag): Workaround to avoid
+	printing headers if the very first thing in putx is an opening
+	tag, starting a block of Tcl code.
+
+2002-02-12  David N. Welton  <davidw@dedasys.com>
+
+	* generic/url.c (Web_CmdUrlCfg): Change to use two variables for
+	'scheme' - one as a config, and one to hold the actual value.
+
+2002-02-05  David N. Welton  <davidw@dedasys.com>
+
+	* websh.spec: Fix-ups to make websh.spec work better - generates
+	RPM's now on my system.
+
+	* unix/Makefile.in (install-doc): Moved install doc to be near
+	  other 'install' targets.  Make install-doc use DESTDIR instead
+	  of prefix variable.
+
+2001-12-28  David N. Welton  <davidw@dedasys.com>
+
+	* generic/uricode.c (uriDecode): Fixed comparisons to work with
+	'char *' instead of specifying signed/unsigned.
+
+2001-12-12  David N. Welton  <davidw@dedasys.com>
+
+	* generic/webout.c (Web_Response): Add web::response -select
+	default to get set channel for both web and CGI.
+
+	* generic/request.h: Add requestGetDefaultOutChannelName.
+
+	* tests/webout.test: Add test for web::response -select default.
+
+2001-12-03  David N. Welton  <davidw@dedasys.com>
+
+	* generic/cfg.c (Web_Cfg): Create a "web::config reset" command,
+	which resets cmdurltimestamp, uploadfilesize, timeparam and
+	cmdparam.
+
+	* generic/request.c (resetRequestData): #if out resetting of
+	variables configured via web::config.
+
 2001-11-30  David N. Welton  <davidw@dedasys.com>
 
 	* webshinspect.ws3 (web): Added -path to filecontext.

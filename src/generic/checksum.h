@@ -1,7 +1,7 @@
 /*
  * checksum.h -- utils to add Cyclic-Redundancy-Checksums to Tcl_Obj
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.

@@ -166,6 +166,12 @@ test log-1.11 {websh3_weblog: try to delete non-existing logfilter} {
     set msg
 } {no such log filter "filter10"}
 
+test log-1.12 {web::logfilter bad format} {
+    catch {web::logfilter add test.} msg
+    set msg
+} {wrong log level "test."}
+
+
 # -----------------------------------------------------------------------------
 # manage logdests (or "rules" or "destinations")
 # -----------------------------------------------------------------------------

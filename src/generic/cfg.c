@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
  * cfg.c -- websh configuration
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -124,22 +124,23 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	NULL
     };
 
-    static char *subCmd1[] = { "uploadfilesize",			       
-			       "encryptchain",
-			       "decryptchain",
-			       "cmdparam",
-			       "timeparam",
-			       "putxmarkup",
-			       "logsubst",
-			       "version",
-			       "copyright",
-			       "cmdurltimestamp",
-			       "reset",
-			       NULL
+    static char *subCmd1[] = {
+	"uploadfilesize",
+	"encryptchain",
+	"decryptchain",
+	"cmdparam",
+	"timeparam",
+	"putxmarkup",
+	"logsubst",
+	"version",
+	"copyright",
+	"cmdurltimestamp",
+	"reset",
+	NULL
     };
 
     enum subCmd1
-    { 
+    {
 	UPLOADFILESIZE,
 	ENCRYPTCHAIN,
 	DECRYPTCHAIN,
@@ -412,7 +413,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	int tmpbool = 1;
 	WebAssertData(interp, cfgData->requestData,
 		      "web::config cmdurltimestamp", TCL_ERROR);
-	
+
 	WebAssertData(interp, cfgData->requestData->cmdUrlTimestamp,
 			  "web::config cmdurltimestamp", TCL_ERROR);
 	Tcl_SetObjResult(interp,
@@ -448,13 +449,13 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->upLoadFileSize);
 	cfgData->requestData->upLoadFileSize = Tcl_NewLongObj(0);
-	
+
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->timeTag);
 	WebNewStringObjFromStringIncr(cfgData->requestData->timeTag, "t");
-	
+
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->cmdTag);
 	WebNewStringObjFromStringIncr(cfgData->requestData->cmdTag, "cmd");
-	
+
 	Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, 1);
 
 	return TCL_OK;
