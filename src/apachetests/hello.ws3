@@ -2,7 +2,11 @@
 # hello world websh code.
 
 web::command default {
-    web::put "Hello, World"
+    web::put "Hello, World\n"
+    web::put "script: [web::config script]\n"
+    web::put "server_root: [web::config server_root]\n"
+    web::put "document_root: [web::config document_root]\n"
+    web::put "interpclass: [web::config interpclass]\n"
 }
 
 web::dispatch

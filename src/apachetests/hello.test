@@ -2,12 +2,20 @@
 
 # hello world test
 
-set testfilename1 "hello.ws3"
+set testfilename    "my_script_hello.ws3"
+set testinterpclass "hello.ws3"
+
+set CWD [pwd]
+set response "Hello, World\n"
+append response "script: $CWD/$testfilename\n"
+append response "server_root: $CWD\n"
+append response "document_root: $CWD\n"
+append response "interpclass: $CWD/$testinterpclass\n"
 
 ::tcltest::test hello-1.1 {hello world test} {
     apachetest::start {} {
-	set page [ ::http::geturl "${urlbase}$testfilename1" ]
+	set page [::http::geturl "${urlbase}$testfilename/path_info_dummy" ]
 	set match [::http::data $page]
     }
     set match
-} {Hello, World}
+} $response
