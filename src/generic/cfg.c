@@ -196,7 +196,6 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    switch (objc) {
 	    case 2:
 		return TCL_OK;
-		break;
 	    case 3:
 		/* --------------------------------------------------------------------
 		 * only accept integers
@@ -213,14 +212,12 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 		WebDecrOldIncrNew(cfgData->requestData->upLoadFileSize,
 				  Tcl_DuplicateObj(objv[2]));
 		return TCL_OK;
-		break;
 	    default:
 		LOG_MSG(interp, WRITE_LOG | SET_RESULT,
 			__FILE__, __LINE__,
 			"web::config uploadfilesize", WEBLOG_INFO,
 			"usage: web::config uploadfilesize ?size?.", NULL);
 		return TCL_ERROR;
-		break;
 	    }
 	    break;
 	}
@@ -238,13 +235,11 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 		    WebDecrOldIncrNew(cfgData->requestData->cmdTag,
 				      Tcl_DuplicateObj(objv[2]));
 		    return TCL_OK;
-		    break;
 		default:
 		    LOG_MSG(interp, WRITE_LOG | SET_RESULT, __FILE__,
 			    __LINE__, "web::config cmdtag", WEBLOG_INFO,
 			    "usage: web::config cmdtag ?tag?.", NULL);
 		    return TCL_ERROR;
-		    break;
 		}
 	    }
 	    else {
@@ -268,13 +263,11 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 		    WebDecrOldIncrNew(cfgData->requestData->timeTag,
 				      Tcl_DuplicateObj(objv[2]));
 		    return TCL_OK;
-		    break;
 		default:
 		    LOG_MSG(interp, WRITE_LOG | SET_RESULT, __FILE__,
 			    __LINE__, "web::config timetag", WEBLOG_INFO,
 			    "usage: web::config timetag ?tag?.", NULL);
 		    return TCL_ERROR;
-		    break;
 		}
 	    }
 	    else {
@@ -421,7 +414,6 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	switch (objc) {
 	case 2:
 	    return TCL_OK;
-	    break;
 	case 3:
 	    if (Tcl_GetBooleanFromObj(interp, objv[2], &tmpbool) ==
 		TCL_ERROR) {
@@ -434,7 +426,6 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    }
 	    Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, tmpbool);
 	    return TCL_OK;
-	    break;
 	default:
 	    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
 		    __FILE__, __LINE__,
@@ -442,7 +433,6 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 		    "usage: web::config cmdurltimestamp ?boolean?", NULL);
 	    return TCL_ERROR;
 	}
-	return TCL_OK;
     }
     case RESET: {
 	WebAssertObjc(objc != 2, 2, NULL);
@@ -459,7 +449,6 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, 1);
 
 	return TCL_OK;
-	break;
     }
     default:
 	break;
