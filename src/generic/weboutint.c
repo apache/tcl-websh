@@ -1,7 +1,7 @@
 /*
  * weboutint.c --- output handler of websh3
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -80,8 +80,7 @@ ResponseObj *getResponseObj(Tcl_Interp * interp, OutData * outData,
 
 	responseObj = outData->defaultResponseObj;
 
-    }
-    else {
+    } else {
 
 	/* ------------------------------------------------------------------------
 	 * do we have it ?
@@ -285,7 +284,7 @@ int destroyResponseObjHash(OutData * outData, Tcl_Interp * interp)
 }
 
 /* ----------------------------------------------------------------------------
- * createOutData 
+ * createOutData
  * ------------------------------------------------------------------------- */
 OutData *createOutData(Tcl_Interp * interp)
 {
@@ -369,320 +368,175 @@ int destroyOutData(ClientData clientData, Tcl_Interp * interp)
     return TCL_OK;
 }
 
+/* --------------------------------------------------------------------------
+ * quote_append (quote Tcl syntax characters and append to Tcl_DString)
+ * ----------------------------------------------------------------------- */
 
-/* ----------------------------------------------------------------------------
- * webout_eval_brace (code in {})
- * ------------------------------------------------------------------------- */
-int webout_eval_brace(Tcl_Interp * interp, ResponseObj * responseObj,
-		      Tcl_Obj * in)
+int quote_append(Tcl_DString *str, char *in, int len)
 {
-
-    Tcl_Obj *tclo = NULL;
-
-    char *utf = NULL;
-    char *prev = NULL;
-    char *cur = NULL;
-    char *next = NULL;
-
-    char *rbrace = NULL;
-
-    int inLen;
-    int cntOpen;
-    int doPut = TCL_ERROR;
-    int res = 0;
-
-    if ((responseObj == NULL) || (in == NULL))
-	return TCL_ERROR;
-
-    utf = Tcl_GetStringFromObj(in, &inLen);
-    inLen = Tcl_GetCharLength(in);
-    prev = utf;
-    cur = utf;
-
-    if (inLen == 0)
-	return TCL_OK;
-
-    while (*cur != 0) {
-
-	next = Tcl_UtfNext(cur);
-
-	switch (cur[0]) {
+    int i = 0;
+    while (i < len) {
+	switch (*in)
+	{
 	case '{':
-	    if (prev[0] == '\\') {
-
-		tclo = Tcl_NewStringObj(utf, prev - utf);
-		Tcl_AppendToObj(tclo, "{", 1);
-
-		putsCmdImpl(interp, responseObj, tclo);
-
-		Tcl_DecrRefCount(tclo);
-		utf = next;
-
-	    }
-	    else {
-
-		/* output stuff before brace */
-
-		/* do nothing if string is empty */
-		if (cur - utf) {
-
-		    tclo = Tcl_NewStringObj(utf, cur - utf);
-		    putsCmdImpl(interp, responseObj, tclo);
-		    Tcl_DecrRefCount(tclo);
-		}
-
-		/* is it "{=" ? */
-		doPut = TCL_ERROR;
-		if (next[0] == '=') {
-
-		    /* move cursor */
-		    prev = cur;
-		    cur = next;
-		    next = Tcl_UtfNext(next);
-
-		    doPut = TCL_OK;
-		}
-
-		/* start search now */
-
-		utf = next;
-
-		prev = cur;
-		cur = next;
-
-		cntOpen = 1;
-		rbrace = NULL;
-
-		while (cur != NULL) {
-
-		    next = Tcl_UtfNext(cur);
-
-		    if (cur[0] == '{') {
-			if (prev[0] != '\\')
-			    cntOpen++;
-		    }
-		    if (cur[0] == '}') {
-			if (prev[0] != '\\') {
-			    cntOpen--;
-			    if (cntOpen == 0) {
-				rbrace = cur;
-				break;
-			    }
-			}
-		    }
-		    prev = cur;
-		    cur = next;
-		}
-
-		if (rbrace != NULL) {
-
-		    Tcl_Obj *tclo1 = NULL;
-		    Tcl_Obj *tclo2 = NULL;
-
-		    if (doPut == TCL_OK) {
-
-			tclo1 = Tcl_NewStringObj("web::put ", 9);
-		    }
-		    else {
-
-			tclo1 = Tcl_NewObj();
-		    }
-
-		    tclo2 = Tcl_NewStringObj(utf, rbrace - utf);
-		    Tcl_AppendObjToObj(tclo1, tclo2);
-		    Tcl_DecrRefCount(tclo2);
-
-		    Tcl_IncrRefCount(tclo1);
-		    res = Tcl_EvalObjEx(interp, tclo1, TCL_EVAL_DIRECT);
-		    Tcl_DecrRefCount(tclo1);
-
-		    if (res != TCL_OK) {
-
-			char *errorInfo =
-			    Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
-			if (errorInfo == NULL) {
-			    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
-				    __FILE__, __LINE__, "web::putx",
-				    WEBLOG_ERROR,
-				    Tcl_GetStringResult(interp), NULL);
-			}
-			else {
-			    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
-				    __FILE__, __LINE__, "web::putx",
-				    WEBLOG_ERROR, errorInfo, NULL);
-			}
-			return TCL_ERROR;
-		    }
-		    next = Tcl_UtfNext(rbrace);
-		    utf = next;
-		}
-	    }
+	    Tcl_DStringAppend(str, "\\{", -1);
 	    break;
 	case '}':
-
-	    if (prev[0] == '\\') {
-
-		tclo = Tcl_NewStringObj(utf, prev - utf);
-		Tcl_AppendToObj(tclo, "}", 1);
-		putsCmdImpl(interp, responseObj, tclo);
-		Tcl_DecrRefCount(tclo);
-		utf = next;
-
-	    }
-	    else {
-		/* error */
-	    }
+	    Tcl_DStringAppend(str, "\\}", -1);
 	    break;
+	case '$':
+	    Tcl_DStringAppend(str, "\\$", -1);
+	    break;
+	case '[':
+	    Tcl_DStringAppend(str, "\\[", -1);
+	    break;
+	case ']':
+	    Tcl_DStringAppend(str, "\\]", -1);
+	    break;
+	case '"':
+	    Tcl_DStringAppend(str, "\\\"", -1);
+	    break;
+/* 	    case '\\':
+	    Tcl_DStringAppend(str, "\\\\", -1);
+	    break;  */
 	default:
+	    Tcl_DStringAppend(str, in, 1);
 	    break;
 	}
-
-	prev = cur;
-	cur = next;
+	in ++;
+	i ++;
     }
-
-    if (utf != NULL) {
-
-	tclo = Tcl_NewStringObj(utf, -1);
-
-	putsCmdImpl(interp, responseObj, tclo);
-
-	Tcl_DecrRefCount(tclo);
-    }
-
-    /* --------------------------------------------------------------------------
-     * done
-     * ----------------------------------------------------------------------- */
-    return TCL_OK;
+    return 0;
 }
 
 
 /* ----------------------------------------------------------------------------
- * webout_eval_tag (code in <% %>)
+ * webout_eval_tag (code in <? ?>)
  * ------------------------------------------------------------------------- */
 int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
-		    Tcl_Obj * in)
+		    Tcl_Obj * in, const char *strstart, const char *strend)
 {
-
+    Tcl_DString dstr;
+    Tcl_DString convdstr;
     Tcl_Obj *tclo = NULL;
 
-    char *utf = NULL;
-    char *prev = NULL;
-    char *cur = NULL;
-    char *next = NULL;
-
-    char *rbrace = NULL;
-
     int inLen;
-    int cntOpen;
+    char *cur = NULL;
+    char *prev = NULL;
+    int cntOpen = 0;
     int res = 0;
+    int startmatch = 0;
+    int endmatch = 0;
+
+    int begin = 1;
+    char *start;
+
+/*     const char *strstart = START_TAG;
+    const char *strend = END_TAG;  */
+/*     int endseqlen = strlen(END_TAG);
+    int startseqlen = strlen(START_TAG);
+  */
+    int endseqlen = strlen(strstart);
+    int startseqlen = strlen(strend);
 
     if ((responseObj == NULL) || (in == NULL))
 	return TCL_ERROR;
 
-    utf = Tcl_GetStringFromObj(in, &inLen);
-    prev = utf;
-    cur = utf;
+    Tcl_DStringInit(&dstr);
+
+    cur = Tcl_GetStringFromObj(in, &inLen);
+    prev = cur;
+    start = cur;
 
     if (inLen == 0)
 	return TCL_OK;
 
     while (*cur != 0) {
-
-	next = Tcl_UtfNext(cur);
-
-	switch (cur[0]) {
-	case '%':
-	    if (prev[0] == '<') {
-
-		/* do nothing if string is empty */
-		if (prev - utf) {
-
-		    tclo = Tcl_NewStringObj(utf, prev - utf);
-		    putsCmdImpl(interp, responseObj, tclo);
-		    Tcl_DecrRefCount(tclo);
-		}
-
-		utf = next;
-
-		/* start search now */
-
-		prev = cur;
-		cur = next;
-
-		cntOpen = 1;
-		rbrace = NULL;
-
-		while (cur != NULL) {
-
-		    next = Tcl_UtfNext(cur);
-
-		    if (cur[0] == '%') {
-			if (prev[0] == '<')
-			    cntOpen++;
+	if (*cur == strstart[startmatch])
+	{
+	    if (*prev == '\\') {
+		Tcl_DStringAppend(&dstr, cur, 1);
+	    } else if ((++startmatch) == startseqlen) {
+		/* We have matched the starting sequence. */
+		if (cntOpen < 1) {
+		    if (!((cur - (startseqlen - 1)) - start)) {
+			begin = 0;
+		    } else {
+			Tcl_DStringAppend(&dstr, "\"\n", 2);
 		    }
-		    if (cur[0] == '>') {
-			if (prev[0] == '%') {
-			    cntOpen--;
-			    if (cntOpen == 0) {
-				rbrace = prev;
-				break;
-			    }
-			}
-		    }
-		    prev = cur;
-		    cur = next;
+		} else {
+		    Tcl_DStringAppend(&dstr, strstart, -1);
 		}
-
-		if (rbrace != NULL) {
-
-		    tclo = Tcl_NewStringObj(utf, rbrace - utf);
-		    Tcl_IncrRefCount(tclo);
-		    res = Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
-		    Tcl_DecrRefCount(tclo);
-
-		    if (res != TCL_OK) {
-			char *errorInfo =
-			    Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
-			if (errorInfo == NULL) {
-			    LOG_MSG(interp,
-				    WRITE_LOG | INTERP_ERRORINFO | SET_RESULT,
-				    __FILE__, __LINE__, "web::putx",
-				    WEBLOG_ERROR, Tcl_GetStringResult(interp),
-				    NULL);
-			}
-			else {
-			    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
-				    __FILE__, __LINE__, "web::putx",
-				    WEBLOG_ERROR, errorInfo, NULL);
-			}
-			return TCL_ERROR;
-		    }
-		    next = Tcl_UtfNext(cur);
-		    utf = next;
-		}
+		cntOpen ++;
+		startmatch = 0;
 	    }
-	    break;
-	default:
-	    break;
+	    prev = cur;
+	    cur ++;
+	    continue;
+	} else if (*cur == strend[endmatch]) {
+	    if (*prev == '\\') {
+		Tcl_DStringAppend(&dstr, cur, 1);
+	    } else if ((++endmatch) == endseqlen)
+	    {
+		/* We have matched the ending sequence. */
+		if (cntOpen == 1) {
+		    /* build up the command with the name of the channel. */
+		    Tcl_DStringAppend(&dstr, "\n web::put \"", -1);
+		} else {
+		    Tcl_DStringAppend(&dstr, strend, -1);
+		}
+		cntOpen --;
+		endmatch = 0;
+	    }
+	    prev = cur;
+	    cur ++;
+	    continue;
+	} else if (startmatch) {
+	    if (cntOpen < 1) {
+		quote_append(&dstr, (char *)strstart, startmatch);
+	    } else {
+		Tcl_DStringAppend(&dstr, (char *)strstart, startmatch);
+	    }
+	    startmatch = 0;
+	} else if (endmatch) {
+	    if (cntOpen < 1) {
+		quote_append(&dstr, (char *)strend, endmatch);
+	    } else {
+		Tcl_DStringAppend(&dstr, (char *)strend, endmatch);
+	    }
+	    endmatch = 0;
 	}
-
+	/* Put the current character in the output.  If we are in Tcl
+	       code, then don't escape Tcl characters. */
+	if (cntOpen < 1) {
+	    quote_append(&dstr, cur, 1);
+	} else {
+	    Tcl_DStringAppend(&dstr, cur, 1);
+	}
 	prev = cur;
-	cur = next;
+	cur ++;
     }
 
-    if (utf != NULL) {
+    Tcl_ExternalToUtfDString(NULL,
+			     Tcl_DStringValue(&dstr),
+			     Tcl_DStringLength(&dstr),
+			     &convdstr);
 
-	tclo = Tcl_NewStringObj(utf, -1);
-
-	putsCmdImpl(interp, responseObj, tclo);
-	Tcl_DecrRefCount(tclo);
+    /* build up the web::put with the name of the channel. */
+    if (begin) {
+	tclo = Tcl_NewStringObj("web::put \"", -1);
+    } else {
+	tclo = Tcl_NewStringObj("", -1);
     }
 
-    /* --------------------------------------------------------------------------
-     * done
-     * ----------------------------------------------------------------------- */
-    return TCL_OK;
+    Tcl_AppendToObj(tclo, Tcl_DStringValue(&convdstr),
+		    Tcl_DStringLength(&convdstr));
+
+    if (cntOpen < 1) {
+	Tcl_AppendToObj(tclo, "\"\n", 2);
+    }
+
+    return Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
 }
 
 /* ----------------------------------------------------------------------------

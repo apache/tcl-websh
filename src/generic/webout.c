@@ -74,10 +74,11 @@ int webout_Init(Tcl_Interp * interp)
 int Web_Eval(ClientData clientData,
 	     Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
-
+    ResponseObj *savedObj = NULL;
     ResponseObj *responseObj = NULL;
     OutData *outData = NULL;
     Tcl_Obj *code = NULL;
+    int retval = 0;
 
     /* --------------------------------------------------------------------------
      * sanity
@@ -93,13 +94,13 @@ int Web_Eval(ClientData clientData,
 		  || (objc > 3), 1, "?channel|#globalvar? extendedstring");
 
     if (objc == 2) {
-
 	responseObj = outData->defaultResponseObj;
+	savedObj = responseObj;
 	code = objv[1];
 
     }
     else {
-
+	savedObj = outData->defaultResponseObj;
 	responseObj = getResponseObj(interp, outData, Tcl_GetString(objv[1]));
 	code = objv[2];
     }
@@ -111,6 +112,7 @@ int Web_Eval(ClientData clientData,
 		"error accessing response object", NULL);
 	return TCL_ERROR;
     }
+    outData->defaultResponseObj = responseObj;
 
     /* --------------------------------------------------------------------------
      * call eval
@@ -118,15 +120,18 @@ int Web_Eval(ClientData clientData,
 
     switch (outData->putxMarkup) {
     case brace:
-	return webout_eval_brace(interp, responseObj, code);
+	retval = webout_eval_tag(interp, responseObj, code, "{", "}");
+	break;
     case tag:
-	return webout_eval_tag(interp, responseObj, code);
+	retval = webout_eval_tag(interp, responseObj, code, "<?", "?>");
+	break;
     default:
 	LOG_MSG(interp, WRITE_LOG | SET_RESULT, __FILE__, __LINE__,
 		"web::putx", WEBLOG_ERROR, "unknown putxmarkup type", NULL);
-	return TCL_ERROR;
+	retval = TCL_ERROR;
+	break;
     }
-
+    return retval;
 }
 
 
@@ -343,7 +348,8 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		    if (old->name != NULL)
 			Tcl_SetObjResult(interp, old->name);
 		    return TCL_OK;
-		    /* fixme: same error msg as above if there's no name, but preferably at one place */
+		    /* fixme: same error msg as above if there's no
+		     * name, but preferably at one place */
 		    break;
 		}
 
@@ -361,7 +367,7 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 			Tcl_SetObjResult(interp, current);
 		    if (objc == 3) {
 			/* if length = 0 we reset
-			 * if equal to "default", take from HTTP_RESPONSE 
+			 * if equal to "default", take from HTTP_RESPONSE
 			 * otherwise take value */
 			int len;
 			char *response = Tcl_GetStringFromObj(objv[2], &len);

@@ -21,6 +21,10 @@
 
 #define WEB_OUT_ASSOC_DATA "web::weboutData"
 
+/* Tags to be used with webout_eval_tag */
+#define START_TAG "<?"
+#define END_TAG "?>"
+
 #define HTTP_RESPONSE "HTTP/1.0 200 OK"
 #define HEADER "Content-Type","text/html",\
                "Generator",WEBSH VERSION " (c) " NETCETERA
@@ -86,7 +90,7 @@ int putsCmdImpl(Tcl_Interp * interp, ResponseObj * responseObj,
 int webout_eval_brace(Tcl_Interp * interp, ResponseObj * responseObj,
 		      Tcl_Obj * in);
 int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
-		    Tcl_Obj * in);
+		    Tcl_Obj * in, const char *strstart, const char *strend);
 
 /* need this for all "real channel based" (vs apache) output */
 int objectHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,

@@ -1,7 +1,7 @@
 #
 # webout.test --  test output handling
 # nca-073-9
-# 
+#
 # Copyright (c) 1996-2000 by Netcetera AG.
 # Copyright (c) 2001 by Apache Software Foundation.
 # All rights reserved.
@@ -96,7 +96,7 @@ web::putx {test
 {
 for {set i 0} {$i < 10} {incr i} {
   web::put $i
-} 
+}
 web::put end_for
 }}
 web::put end
@@ -130,42 +130,42 @@ test putx-2.6 {escaped paren} {
     set eval2_6
 } "{ bla }"
 
-test putx-3.0 {<% %> syntax} {
+test putx-3.0 {<? ?> syntax} {
     web::response -select #putx3_0
     web::response -sendheader 0
     web::config putxmarkup tag
-    web::putx {*{noeval}<%web::put "eval this"%>*}
+    web::putx {*{noeval}<?web::put "eval this"?>*}
     web::config putxmarkup brace
     set putx3_0
 } {*{noeval}eval this*}
 
-test putx-3.1 {nested <% %> syntax} {
+test putx-3.1 {nested <? ?> syntax} {
     web::response -select #putx3_1
     web::response -sendheader 0
     web::config putxmarkup tag
-    web::putx {pre<%web::put {<%bla%>};
-	web::putx {{noeval}<%web::put "<a href=\"this\">"%>}%>post}
+    web::putx {pre<?web::put {<?bla?>};
+	web::putx {{noeval}<?web::put "<a href=\"this\">"?>}?>post}
     web::config putxmarkup brace
     set putx3_1
-} {pre<%bla%>{noeval}<a href="this">post}
+} {pre<?bla?>{noeval}<a href="this">post}
 
 test putx-3.2 {gloabally switch to tag syntax} {
     web::response -select #putx3_2
     web::response -sendheader 0
     web::config putxmarkup tag
-    web::putx {pre<%web::put {<%bla%>};
-	web::putx {{noeval}<%web::put "<a href=\"this\">"%>}%>post}
+    web::putx {pre<?web::put {<?bla?>};
+	web::putx {{noeval}<?web::put "<a href=\"this\">"?>}?>post}
     web::config putxmarkup brace
     set putx3_2
-} {pre<%bla%>{noeval}<a href="this">post}
+} {pre<?bla?>{noeval}<a href="this">post}
 
 test putx-3.3 {gloabally switch back to normal eval syntax} {
     web::response -select #putx3_3
     web::response -sendheader 0
-    web::putx {pre{web::put {<%bla%>};
+    web::putx {pre{web::put {<?bla?>};
 	web::putx {\{noeval\}{web::put "<a href=\"this\">"}}}post}
     set putx3_3
-} {pre<%bla%>{noeval}<a href="this">post}
+} {pre<?bla?>{noeval}<a href="this">post}
 
 test putx-3.3a {putx -foo} {
     catch {
@@ -197,7 +197,7 @@ test putx-3.4 {putx tag stuff (all-in-one} {
     web::response -sendheader 0
     web::putx {Pre{web::put Hello}Post}
     web::config putxmarkup tag
-    web::putx {Pre<%web::put Hello%>Post}
+    web::putx {Pre<?web::put Hello?>Post}
     set res [web::config putxmarkup tag]
     web::putx {Pre{web::put Hello}Post}
     lappend res [web::config putxmarkup brace]
@@ -227,7 +227,7 @@ test putx-3.6 {putx of empty string before first brace does not send headers} {
 test putx-3.7 {putx of empty string before first brace does not send headers} {
     web::response -select #buf-putx-37
     web::config putxmarkup tag
-    set res [web::putx {<%web::response -sendheader 0%>}]
+    set res [web::putx {<?web::response -sendheader 0?>}]
     web::config putxmarkup brace
     set ::buf-putx-37
 } {}
@@ -610,7 +610,7 @@ test varchannel-1.0 {juggle channels} {
     web::putx \#_vc10_2 _[string repeat e 10]
     web::putx \#_vc10_3 _[string repeat f 10]
 
-    set res ${::_vc10_1}${::_vc10_2}${::_vc10_3}
+    set res "${::_vc10_1} ${::_vc10_2} ${::_vc10_3}"
 
     web::response -resetall
 
@@ -619,7 +619,7 @@ test varchannel-1.0 {juggle channels} {
     unset ::_vc10_3
 
     set res
-} {1111111111_4444444444_7777777777_aaaaaaaaaa_dddddddddd2222222222_5555555555_8888888888_bbbbbbbbbb_eeeeeeeeee3333333333_6666666666_9999999999_cccccccccc_ffffffffff}
+} {1111111111_4444444444_7777777777_aaaaaaaaaa_dddddddddd 2222222222_5555555555_8888888888_bbbbbbbbbb_eeeeeeeeee 3333333333_6666666666_9999999999_cccccccccc_ffffffffff}
 
 # cleanup
 ::tcltest::cleanupTests
