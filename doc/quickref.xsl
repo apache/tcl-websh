@@ -23,7 +23,7 @@
   <!-- ==================================================================== -->
 
   <xsl:import
-    href="http://docbook.sourceforge.net/release/xsl/1.49/html/chunk.xsl"
+    href="http://docbook.sourceforge.net/release/xsl/1.52.1/html/chunk.xsl"
   />
   <!-- local alternatives to the network URL for faster processing 
   <xsl:import
@@ -38,11 +38,9 @@
 
   <xsl:variable name="arg.choice.opt.open.str">?</xsl:variable>
   <xsl:variable name="arg.choice.opt.close.str">?</xsl:variable>
-  <xsl:variable name="arg.choice.req.open.str"></xsl:variable>
-  <xsl:variable name="arg.choice.req.close.str"></xsl:variable>
 
-  <xsl:variable name="arg.choice.def.open.str"></xsl:variable>
-  <xsl:variable name="arg.choice.def.close.str"></xsl:variable>
+  <xsl:variable name="arg.choice.req.open.str" xml:space="preserve"> </xsl:variable>
+  <xsl:variable name="arg.choice.req.close.str"></xsl:variable>
 
   <xsl:template name="inline.underlineseq">
     <xsl:param name="content">
@@ -100,7 +98,9 @@
   </xsl:template>
 
   <xsl:template match="option">
+    <xsl:value-of select="$arg.choice.req.open.str"/>
     <xsl:call-template name="inline.monounderlineseq"/>
+    <xsl:value-of select="$arg.choice.req.close.str"/>
   </xsl:template>
 
   <xsl:template match="command">
@@ -144,69 +144,6 @@
     <div style="margin-bottom:6">
       <xsl:apply-templates/>
     </div>
-  </xsl:template>
-
-  <xsl:template match="arg">
-    <xsl:variable name="choice" select="@choice"/>
-    <xsl:variable name="rep" select="@rep"/>
-    <xsl:variable name="sepchar">
-      <xsl:choose>
-	<xsl:when test="ancestor-or-self::*/@sepchar">
-	  <xsl:value-of select="ancestor-or-self::*/@sepchar"/>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:text> </xsl:text>
-	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:if test="position()>1"><xsl:value-of select="$sepchar"/></xsl:if>
-    <xsl:choose>
-      <xsl:when test="$choice='plain'">
-	<xsl:value-of select="$arg.choice.plain.open.str"/>
-      </xsl:when>
-      <xsl:when test="$choice='req'">
-	<xsl:value-of select="$arg.choice.req.open.str"/>
-      </xsl:when>
-      <xsl:when test="$choice='opt'">
-	<xsl:value-of select="$arg.choice.opt.open.str"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:value-of select="$arg.choice.def.open.str"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:choose>
-      <xsl:when test="$choice='plain'">
-	<xsl:call-template name="inline.monoseq"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:call-template name="inline.monounderlineseq"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:choose>
-      <xsl:when test="$rep='repeat'">
-	<xsl:value-of select="$arg.rep.repeat.str"/>
-      </xsl:when>
-      <xsl:when test="$rep='norepeat'">
-	<xsl:value-of select="$arg.rep.norepeat.str"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:value-of select="$arg.rep.def.str"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:choose>
-      <xsl:when test="$choice='plain'">
-	<xsl:value-of select="$arg.choice.plain.close.str"/>
-      </xsl:when>
-      <xsl:when test="$choice='req'">
-	<xsl:value-of select="$arg.choice.req.close.str"/>
-      </xsl:when>
-      <xsl:when test="$choice='opt'">
-	<xsl:value-of select="$arg.choice.opt.close.str"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:value-of select="$arg.choice.def.close.str"/>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="programlisting|screen|synopsis">
