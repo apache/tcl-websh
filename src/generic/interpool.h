@@ -57,6 +57,7 @@ typedef struct WebInterp
     long numrequests;		/* number of current request */
     long starttime;		/* start time (Tcl does not handle time_t */
     long lastusedtime;		/* last used time */
+    long id;                    /* id of the interpreter */
 
     /* we double-link this list so it's easier to remove elements */
     struct WebInterp *next;
@@ -77,6 +78,7 @@ typedef struct WebInterpClass
     long maxttl;
     long maxidletime;
     long mtime;
+    long nextid;                /* counter for ids of interpreters */
 
     Tcl_Obj *code;		/* per-request code (=file content) */
 

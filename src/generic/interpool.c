@@ -25,6 +25,9 @@
 #include "mod_websh.h"
 #include "request.h"
 #include <time.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 
 /* init script for main interpreter */
 
@@ -49,6 +52,8 @@ WebInterpClass *createWebInterpClass(websh_server_conf * conf, char *filename,
 	webInterpClass->maxidletime = 0L;
 
 	webInterpClass->mtime = mtime;
+
+	webInterpClass->nextid = 0;
 
 	webInterpClass->first = NULL;
 	webInterpClass->last = NULL;
@@ -103,8 +108,12 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 
     if (webInterp->interp == NULL) {
 	Tcl_Free((char *) webInterp);
-	ap_log_error(APLOG_MARK, APLOG_ERR, conf->server,
-		     "createWebInterp: Could not create interpreter\n");
+#ifndef APACHE2
+	ap_log_printf(conf->server, "createWebInterp: Could not create interpreter (id %ld, class %s)\n", webInterpClass->nextid, filename);
+#else /* APACHE2 */
+	ap_log_error(APLOG_MARK, APLOG_ERR, 0, conf->server,
+		     "createWebInterp: Could not create interpreter (id %ld, class %s)\n", webInterpClass->nextid, filename);
+#endif /* APACHE2 */
 	return NULL;
     }
 
@@ -126,7 +135,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 
     logtoap->constructor = createLogToAp;
     logtoap->destructor = destroyLogToAp;
-    logtoap->handler = logToAp;
+    logtoap->handler = (int (*)(Tcl_Interp *, ClientData, char *)) logToAp;
     registerLogPlugIn(webInterp->interp, APCHANNEL, logtoap);
 
     /* ------------------------------------------------------------------------
@@ -169,7 +178,8 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     webInterp->starttime = (long) r->request_time;
     webInterp->lastusedtime = (long) r->request_time;
     webInterp->interpClass = webInterpClass;
-
+    webInterp->id = webInterpClass->nextid++;
+    
     /* add to beginning of list of webInterpClass */
     webInterp->next = webInterpClass->first;
     webInterpClass->first = webInterp;
@@ -193,9 +203,15 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 	}
 	else {
 	    webInterp->code = NULL;
-	    ap_log_error(APLOG_MARK, APLOG_ERR, r->server,
-			 "Could not readWebInterpCode from '%s': %s\n",
-			 filename, Tcl_GetStringResult(webInterp->interp));
+#ifndef APACHE2
+	    ap_log_printf(r->server, 
+			  "Could not readWebInterpCode (id %ld, class %s): %s\n",
+			  webInterp->id, filename, Tcl_GetStringResult(webInterp->interp));
+#else /* APACHE2 */
+	    ap_log_error(APLOG_MARK, APLOG_ERR, 0, r->server,
+			 "Could not readWebInterpCode (id %ld, class %s): %s\n",
+			 webInterp->id, filename, Tcl_GetStringResult(webInterp->interp));
+#endif /* APACHE2 */
 	}
     }
     return webInterp;
@@ -216,9 +232,15 @@ void destroyWebInterp(WebInterp * webInterp)
 
 	if (result != TCL_OK) {
 	    r = (request_rec *) Tcl_GetAssocData(webInterp->interp, WEB_AP_ASSOC_DATA, NULL);
-	    ap_log_error(APLOG_MARK, APLOG_ERR, r->server,
+#ifndef APACHE2
+	    ap_log_printf(r->server,
 			 "web::finalize error: %s\n",
 			 Tcl_GetStringResult(webInterp->interp));
+#else /* APACHE2 */
+	    ap_log_error(APLOG_MARK, APLOG_ERR, 0, r->server,
+			 "web::finalize error: %s\n",
+			 Tcl_GetStringResult(webInterp->interp));
+#endif /* APACHE2 */
 	}
 
 	Tcl_ResetResult(webInterp->interp);
@@ -328,10 +350,8 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	    webInterp = webInterpClass->first;
 	    while (webInterp != NULL) {
 
-	      /* fixme: make expiring message easy to understand (add
-	       * WebInterpClass.filename, times ...) */
 		logToAp(webInterp->interp, NULL,
-			"interpreter expired (source changed)");
+			"interpreter expired: source changed (id %ld, class %s)", webInterp->id, webInterp->interpClass->filename);
 		if (webInterp->state == WIP_INUSE)
 		    webInterp->state = WIP_EXPIREDINUSE;
 		else
@@ -351,14 +371,11 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	while (webInterp != NULL) {
 
 	    if ((webInterp->state) == WIP_FREE) {
-		/* fixme: make expiring message easy to understand
-		 * (add WebInterpClass.filename, times ...) */
-		/* check for expiry */
 		if (webInterpClass->maxidletime
 		    && (r->request_time - webInterp->lastusedtime) >
 		    webInterpClass->maxidletime) {
 		    logToAp(webInterp->interp, NULL,
-			    "interpreter expired (idle time reached)");
+			    "interpreter expired: idle time reached (id %ld, claa %s)", webInterp->id, webInterp->interpClass->filename);
 		    webInterp->state = WIP_EXPIRED;
 
 		}
@@ -367,7 +384,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 			&& (r->request_time - webInterp->starttime) >
 			webInterpClass->maxttl) {
 			logToAp(webInterp->interp, NULL,
-				"interpreter expired (time to live reached)");
+				"interpreter expired: time to live reached (id %ld, class %s)", webInterp->id, webInterp->interpClass->filename);
 			webInterp->state = WIP_EXPIRED;
 		    }
 		    else {
@@ -398,9 +415,13 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 
 	    Tcl_MutexUnlock(&(conf->webshPoolLock));
 	    Tcl_DecrRefCount(idObj);
-	    /* fixme: log to apache *somehow* */
-	    /* logToAp(webInterp->interp,NULL,"panic - cannot create webInterpClass '%s'", id); */
-
+#ifndef APACHE2
+	    ap_log_printf(conf->server, 
+			  "panic - cannot create webInterpClass '%s'\n", id);
+#else /* APACHE2 */
+	    ap_log_error(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, conf->server,
+			 "panic - cannot create webInterpClass '%s'\n", id);
+#endif /* APACHE2 */
 	    return NULL;
 	}
     }
@@ -443,10 +464,9 @@ void poolReleaseWebInterp(WebInterp * webInterp)
 
 	    /* check for num requests */
 
-	    /* fixme: add interp id to log */
 	    if (webInterpClass->maxrequests && (webInterp->numrequests >= webInterpClass->maxrequests)) {
 		logToAp(webInterp->interp, NULL,
-			"interpreter expired (request count reached)");
+			"interpreter expired: request count reached (id %ld, class %s)", webInterp->id, webInterp->interpClass->filename);
 		webInterp->state = WIP_EXPIRED;
 	    }
 	}
@@ -484,10 +504,10 @@ int initPool(websh_server_conf * conf)
     if (conf->mainInterp == NULL) {
 	errno = 0;
 #ifndef APACHE2
-	ap_log_printf(conf->server, "could'nt create main interp");
+	ap_log_printf(conf->server, "could'nt create main interp\n");
 #else /* APACHE2 */
 	ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, conf->server,
-		     "could'nt create main interp");
+		     "could'nt create main interp\n");
 #endif /* APACHE2 */
 	return 0;
     }
@@ -563,7 +583,7 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
     }
     logtoap->constructor = createLogToAp;
     logtoap->destructor = destroyLogToAp;
-    logtoap->handler = logToAp;
+    logtoap->handler = (int (*)(Tcl_Interp *, ClientData, char *)) logToAp;
     registerLogPlugIn(mainInterp, APCHANNEL, logtoap);
 
     /* eval init code */
@@ -637,14 +657,12 @@ void cleanupPool(websh_server_conf * conf)
 		/* NOTE: check on max requests is done by poolReleaseWebInterp */
 		if ((webInterp->state) == WIP_FREE) {
 
-		    /* fixme: put id in log (for easier debugging) */
-
 		    /* check for expiry */
 		    if (webInterpClass->maxidletime
 			&& (t - webInterp->lastusedtime) >
 			webInterpClass->maxidletime) {
 			logToAp(webInterp->interp, NULL,
-				"interpreter expired (idle time reached)");
+				"interpreter expired: idle time reached (id %ld, class %s)", webInterp->id, webInterp->interpClass->filename);
 			webInterp->state = WIP_EXPIRED;
 
 		    }
@@ -653,7 +671,7 @@ void cleanupPool(websh_server_conf * conf)
 			    && (t - webInterp->starttime) >
 			    webInterpClass->maxttl) {
 			    logToAp(webInterp->interp, NULL,
-				    "interpreter expired (time to live reached)");
+				    "interpreter expired: time to live reached (id %ld, class %s)", webInterp->id, webInterp->interpClass->filename);
 			    webInterp->state = WIP_EXPIRED;
 			}
 		    }
