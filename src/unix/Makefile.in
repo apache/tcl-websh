@@ -332,12 +332,8 @@ $(web_LIB_FILE): $(web_OBJECTS)
 # generic
 script.o: ../generic/script.c ../generic/script.h
 
-../generic/script.h: ../generic/script.ws3 ../generic/cookie.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/tcldecmt.tcl initcode
-	cat ../generic/script.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/cookie.ws3  > script1.tmp
-	$(TCLSH_PROG) ../generic/tcldecmt.tcl script1.tmp > script2.tmp
-	./initcode script2.tmp script.h
-	mv script.h ../generic
-	rm -f script1.tmp script2.tmp
+../generic/script.h: ../generic/script.ws3 ../generic/cookie.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/tcldecmt.tcl
+	$(TCLSH_PROG) ../generic/tcldecmt.tcl ../generic/script.ws3 ../generic/context.tcl ../generic/sessctx.ws3 ../generic/cookie.ws3  > ../generic/script.h
 
 initcode: ../generic/initcode.c
 	$(CC) -o initcode $<

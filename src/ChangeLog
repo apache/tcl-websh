@@ -1,3 +1,15 @@
+2001-11-07  David N. Welton  <davidw@dedasys.com>
+
+	* generic/tcldecmt.tcl: Extend functionality to do multiple files,
+	and properly quote \ and " characters for use in a C string.
+
+	* unix/Makefile.in: Replaced shell commands with more
+	functionality in tcldecmt.tcl script.
+
+2001-11-05  David N. Welton  <davidw@dedasys.com>
+
+	* unix/configure.in: Moved to this directory from src/.
+
 2001-03-14  Simon Hefti <simon.hefti@netcetera.ch>
 	
 	* webutl.c: fixed setting global var for web::response command
