@@ -71,10 +71,9 @@ int destroyLogToCmd(Tcl_Interp * interp, ClientData clientData)
  * ------------------------------------------------------------------------- */
 int logToCmd(Tcl_Interp * interp, ClientData clientData, char *msg)
 {
-
     LogToCmdData *logToCmdData = NULL;
     int res = TCL_ERROR;
-    Tcl_DString ds;
+    Tcl_Obj *cmdlist;
 
     if ((interp == NULL) || (clientData == NULL) || (msg == NULL))
 	return TCL_ERROR;
@@ -84,17 +83,14 @@ int logToCmd(Tcl_Interp * interp, ClientData clientData, char *msg)
     /* ----------------------------------------------------------------------
      * gonna call cmdName msg
      * ------------------------------------------------------------------- */
+    cmdlist = Tcl_NewObj();
+    Tcl_IncrRefCount(cmdlist);
+    Tcl_ListObjAppendElement(interp, cmdlist, Tcl_NewStringObj(logToCmdData, -1));
+    Tcl_ListObjAppendElement(interp, cmdlist, Tcl_NewStringObj(msg, -1));
 
-    /* fixme: ouch! create a proper list to eval here!! */
-    Tcl_DStringInit(&ds);
-    Tcl_DStringAppend(&ds, (char *) logToCmdData, -1);
-    Tcl_DStringAppend(&ds, " {", -1);
-    Tcl_DStringAppend(&ds, msg, -1);
-    Tcl_DStringAppend(&ds, "}", -1);
+    res = Tcl_EvalObjEx(interp, cmdlist, 0);
 
-    res = Tcl_Eval(interp, Tcl_DStringValue(&ds));
-
-    Tcl_DStringFree(&ds);
+    Tcl_DecrRefCount(cmdlist);
 
     return res;
 }
