@@ -24,8 +24,10 @@ int Web_Initializer(ClientData clientData,
 
     int res = 0;
 
-    if (objc != 2)
-	return TCL_ERROR;
+    if (objc != 2) {
+      Tcl_WrongNumArgs(interp, 1, objv, "code");
+      return TCL_ERROR;
+    }
 
     Tcl_IncrRefCount(objv[1]);
     res = Tcl_EvalObjEx(interp, objv[1], 0);
@@ -43,8 +45,10 @@ int Web_Finalizer(ClientData clientData,
 
     int res = 0;
 
-    if (objc != 2)
-	return TCL_ERROR;
+    if (objc != 2) {
+      Tcl_WrongNumArgs(interp, 1, objv, "code");
+      return TCL_ERROR;
+    }
 
     Tcl_IncrRefCount(objv[1]);
     res = Tcl_EvalObjEx(interp, objv[1], 0);
