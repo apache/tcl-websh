@@ -89,7 +89,7 @@ int destroyWebInterpClass(WebInterpClass * webInterpClass)
  * ------------------------------------------------------------------------- */
 WebInterp *createWebInterp(websh_server_conf * conf,
 			   WebInterpClass * webInterpClass, char *filename,
-			   long mtime)
+			   long mtime, request_rec *r)
 {
 
     int result = 0;
@@ -103,9 +103,8 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 
     if (webInterp->interp == NULL) {
 	Tcl_Free((char *) webInterp);
-	/* fixme: some logging needed?
-	   log to apache
-	*/
+	ap_log_error(APLOG_MARK, APLOG_ERR, conf->server,
+		     "createWebInterp: Could not create interpreter\n");
 	return NULL;
     }
 
@@ -167,12 +166,8 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     webInterp->dtor = NULL;
     webInterp->state = WIP_FREE;
     webInterp->numrequests = 0;
-
-    /* checkme: set correct starttime */
-    /* fixme: use request_rec.request_time */
-    time(&t);
-    webInterp->starttime = (long) t;
-    webInterp->lastusedtime = (long) t;
+    webInterp->starttime = (long) r->request_time;
+    webInterp->lastusedtime = (long) r->request_time;
     webInterp->interpClass = webInterpClass;
 
     /* add to beginning of list of webInterpClass */
@@ -197,8 +192,10 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 	    webInterpClass->mtime = mtime;
 	}
 	else {
-	    /* fixme: BIG EXCEPTION. log webInterp.interp.result to apache */
 	    webInterp->code = NULL;
+	    ap_log_error(APLOG_MARK, APLOG_ERR, r->server,
+			 "Could not readWebInterpCode from '%s': %s\n",
+			 filename, Tcl_GetStringResult(webInterp->interp));
 	}
     }
     return webInterp;
@@ -209,6 +206,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
  * ------------------------------------------------------------------------- */
 void destroyWebInterp(WebInterp * webInterp)
 {
+    request_rec *r;
 
     if (webInterp->dtor != NULL) {
 
@@ -217,7 +215,10 @@ void destroyWebInterp(WebInterp * webInterp)
 	result = Tcl_Eval(webInterp->interp, "web::finalize");
 
 	if (result != TCL_OK) {
-	    /* fixme: log the message to apache */
+	    r = (request_rec *) Tcl_GetAssocData(webInterp->interp, WEB_AP_ASSOC_DATA, NULL);
+	    ap_log_error(APLOG_MARK, APLOG_ERR, r->server,
+			 "web::finalize error: %s\n",
+			 Tcl_GetStringResult(webInterp->interp));
 	}
 
 	Tcl_ResetResult(webInterp->interp);
@@ -319,8 +320,6 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	/* yes, we have such a class */
 	WebInterp *webInterp = NULL;
 
-	time_t t;
-
 	webInterpClass = (WebInterpClass *) Tcl_GetHashValue(entry);
 
 	/* check if mtime is ok */
@@ -329,8 +328,8 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	    webInterp = webInterpClass->first;
 	    while (webInterp != NULL) {
 
-	      /* fixme: make expiring message easy to understand (add WebInterpClass.filename, times ...) */
-
+	      /* fixme: make expiring message easy to understand (add
+	       * WebInterpClass.filename, times ...) */
 		logToAp(webInterp->interp, NULL,
 			"interpreter expired (source changed)");
 		if (webInterp->state == WIP_INUSE)
@@ -347,8 +346,6 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	}
 
 	/* search a free interp */
-	/* fixme: use request_req.request_time */
-	time(&t);
 	webInterp = webInterpClass->first;
 
 	while (webInterp != NULL) {
@@ -358,7 +355,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 		 * (add WebInterpClass.filename, times ...) */
 		/* check for expiry */
 		if (webInterpClass->maxidletime
-		    && (t - webInterp->lastusedtime) >
+		    && (r->request_time - webInterp->lastusedtime) >
 		    webInterpClass->maxidletime) {
 		    logToAp(webInterp->interp, NULL,
 			    "interpreter expired (idle time reached)");
@@ -367,7 +364,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 		}
 		else {
 		    if (webInterpClass->maxttl
-			&& (t - webInterp->starttime) >
+			&& (r->request_time - webInterp->starttime) >
 			webInterpClass->maxttl) {
 			logToAp(webInterp->interp, NULL,
 				"interpreter expired (time to live reached)");
@@ -410,7 +407,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 
     if (found == NULL) {
 	/* we have to create one */
-	found = createWebInterp(conf, webInterpClass, id, mtime);
+	found = createWebInterp(conf, webInterpClass, id, mtime, r);
     }
 
     if (found != NULL) {
