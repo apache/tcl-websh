@@ -149,7 +149,27 @@ test modwebsh-1.3 {maineval} {
 test modwebsh-1.4 {interpclass} {
 
     web::interpcfg {foo}
+
 } {}
+
+test modwebsh-1.5 {interpclasscfg} {
+
+    web::interpclasscfg {foo}
+
+} {}
+
+test modwebsh-1.6 {web::config mod_websh vars} {
+    global env
+    set env(SERVER_ROOT) SeRo
+    set env(DOCUMENT_ROOT) DoRo
+    set env(SCRIPT_FILENAME) ScFn
+    set res {}
+    lappend res [web::config script]
+    lappend res [web::config server_root]
+    lappend res [web::config document_root]
+    lappend res [web::config interpclass]
+    set res
+} {ScFn SeRo DoRo ScFn}
 
 # cleanup
 ::tcltest::cleanupTests
