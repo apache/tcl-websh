@@ -350,10 +350,10 @@ test put-3.3 {put to file} {
 # =============================================================================
 test output-4.1 {reset a default header} {
 
-    web::response -set header "Generator webshell"
-    web::response -set header
+    web::response -set Generator Websh
+    web::response -set Generator
 
-} {Generator webshell}
+} {Websh}
 
 test output-4.2 {httpresponse} {
     web::response -resetall
@@ -375,11 +375,11 @@ Hello, World !"
 test output-4.4 {test Generator} {
     web::response -select #output4_4
     web::put #output4_4 "Hello, World !"
-    regsub -all {websh[^ ]*} $output4_4 websh output4_4
+    regsub -all {Websh[0-9\.]*} $output4_4 "Websh<VERSION>" output4_4
     set output4_4
 
 } "Content-Type: text/html\u0D
-Generator: websh (c) Netcetera AG, http://netcetera.ch\u0D
+Generator: Websh<VERSION>\u0D
 \u0D
 Hello, World !"
 
