@@ -76,9 +76,11 @@ $Id$
       <emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
       &lt;key&gt;: <emphasis>uploadfilesize</emphasis>, <emphasis>cmdparam</emphasis>, <emphasis>timeparam</emphasis>,
       <emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>,
-      <emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis></para><para>
-      If &lt;value&gt; is ommitted, the current value of &lt;key&gt; is returned.
+      <emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis>
       -->
+      <para>
+      If <arg choice="opt"><replaceable>value</replaceable></arg> is ommitted, the current value of <arg><replaceable>key</replaceable></arg> is returned.
+      </para>
 
       <variablelist>
 	<varlistentry>
@@ -148,7 +150,7 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>encryptchain</option> <option><replaceable>list</replaceable></option></term>
+	  <term><option>encryptchain</option> <optional><option><replaceable>list</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
 	      defines which commands should be tried, in sequence, to
@@ -157,7 +159,7 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>decryptchain</option> <option><replaceable>list</replaceable></option></term>
+	  <term><option>decryptchain</option> <optional><option><replaceable>list</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
 	      defines which commands should be tried, in sequence, to
@@ -269,7 +271,7 @@ $Id$
 		  querystring}</command>.
 	      </para>
 	      <para>
-		Use <command>web::cmdurlcfg</command> to define the
+		Note: Use <command>web::cmdurlcfg</command> to define the
 		url format for all URLs produced by
 		<command>web::cmdurl</command> in one request.
 	      </para>
@@ -356,8 +358,6 @@ $Id$
     <section id="web::cmdurlcfg">
       <title>web::cmdurlcfg</title>
       <para>
-
-
 	<cmdsynopsis>
 	  <command>web::cmdurlcfg</command>
 	  <arg choice="opt"><replaceable>options</replaceable></arg>
@@ -370,8 +370,10 @@ $Id$
 	<command>web::param</command>.
       </para>
       <para>
+           <cmdsynopsis>
 	<command>web::cmdurlcfg</command> <option><replaceable>option</replaceable></option>
 	<optional><option><replaceable>value</replaceable></option></optional>
+           </cmdsynopsis>
       </para>
       <para>
 	Options are <option>-scheme</option>,
@@ -721,7 +723,7 @@ $Id$
 	Examples:
 
 	See <ulink
-	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
+	  url="http://tcl.apache.org/websh/examples/">http://tcl.apache.org/websh/examples/</ulink>
 	for several sample application demonstrating Websh's
 	session management facilities.
 
@@ -1322,8 +1324,6 @@ $Id$
       <title>web::logdest</title>
       <para>
 
-	web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest
-
 	<cmdsynopsis>
 	  <command>web::logdest</command>
 	  <arg><replaceable>subcommand</replaceable></arg> <arg
@@ -1354,6 +1354,11 @@ $Id$
 	  remap="tt">m</literal> (the message).
 
       </para>
+      <para>
+      <programlisting>
+	web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest</programlisting>
+      </para>
+
     </section>
     <section id="web::logfilter">
       <title>web::logfilter</title>
@@ -2191,6 +2196,8 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::lockfile</command> <arg><replaceable>fh</replaceable></arg>
+           </cmdsynopsis>
+           <cmdsynopsis>
 	  <command>web::unlockfile</command> <arg><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
@@ -2303,7 +2310,7 @@ $Id$
 	  <command>web::encryptd</command> <arg><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
-	Returns encrypted data.
+	Returns encrypted <arg><replaceable>data</replaceable></arg>.
 
       </para>
     </section>
@@ -2316,7 +2323,7 @@ $Id$
 	  <command>web::decryptd</command> <arg><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
-	Returns decrypted data.
+	Returns decrypted <arg><replaceable>data</replaceable></arg>.
 
       </para>
     </section>
@@ -2334,37 +2341,6 @@ $Id$
 	currently active key, in difference to other configuration
 	commands of Websh.
 
-	Commands:
-
-	<variablelist>
-	  <varlistentry>
-	    <term><command>web::encryptd</command>
-	      <option><replaceable>message</replaceable></option></term>
-	    <listitem>
-	      <para>
-		encrypts <option>message</option>.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><command>web::decryptd
-	      </command><option><replaceable>message</replaceable></option></term>
-	    <listitem>
-	      <para>
-		decrypts <option>message</option>.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><command>web::cryptdkey</command>
-	      <optional><option><replaceable>key</replaceable></option></optional></term>
-	    <listitem>
-	      <para>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
       </para>
     </section>
     <section id="encryption_plug-in_interface_">
@@ -2374,7 +2350,7 @@ $Id$
       </para>
       <para>
 	The encryption plug-in is required to implement the interface
-	described below:
+	described below (note that to activate your plugin, use <command>web::config encryptchain</command> and <command>web::config decryptchain</command> respectively):
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -2391,9 +2367,9 @@ $Id$
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para>symmetry: <emphasis>$in ==
+	    <para>symmetry: <emphasis><command>$in ==
 		[web::yourdecrypt [web::yourencrypt
-		$in]]</emphasis>
+		$in]]</command></emphasis>
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -2413,62 +2389,52 @@ $Id$
     <section id="web::htmlify">
       <title>web::htmlify</title>
       <para>
+           <cmdsynopsis>
+	      <command>web::htmlify</command>
+	      <optional><option>-options</option></optional>
+	      <option><replaceable>text</replaceable></option>.
+           </cmdsynopsis>
+	    </para>
+	    <para>
+	      Options: <option>-numeric</option>.
+	    </para>
+	    <para>
+	      Return HTML-compliant <option>text</option> with HTML
+	      encoded entities in mnemonic form (e.g. &amp;auml;) or in numeric form (e.g. &amp;#228;) if the option <option>-numeric</option> is specified.
       </para>
     </section>
     <section id="web::dehtmlify">
       <title>web::dehtmlify</title>
       <para>
+           <cmdsynopsis>
+              <command>web::dehtmlify</command>
+	      <option><replaceable>text</replaceable></option>
+           </cmdsynopsis>
+	    </para>
+	    <para>
+	      Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding ISO-8859-1 characters.
       </para>
     </section>
     <section id="web::uriencode">
       <title>web::uriencode</title>
-      <para>
+	    <para>
+           <cmdsynopsis>
+            <command>web::uriencode</command>
+	      <option><replaceable>text</replaceable></option>
+           </cmdsynopsis>
+	    </para>
+	    <para>
+	      Return URI-compliant <option>text</option>.
       </para>
     </section>
     <section id="web::uridecode">
       <title>web::uridecode</title>
       <para>
-
-	<itemizedlist>
-	  <listitem>
-	    <para>
-	      <command>web::htmlify</command>
-	      <optional><option>-options</option></optional>
-	      <option><replaceable>text</replaceable></option>.
-	    </para>
-	    <para>
-	      Options is: <option>-numeric</option>.
-	    </para>
-	    <para>
-	      Return HTML-compliant <option>text</option> with HTML
-	      encoded entities in mnemonic form (e.g. &amp;auml;) or -
-	      with option -numeric - numeric form (e.g. &amp;#228;).
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><command>web::dehtmlify</command>
-	      <option><replaceable>text</replaceable></option>
-	    </para>
-	    <para>
-	      Remove all HTML-specifics of <option>text</option>.
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para><command>web::uriencode</command>
-	      <option><replaceable>text</replaceable></option>
-	    </para>
-	    <para>
-	      Return URI-compliant <option>text</option>.
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para>
-	      <command>web::uridecode</command> <option><replaceable>text</replaceable></option>
+           <cmdsynopsis>
+	    <command>web::uridecode</command> <option><replaceable>text</replaceable></option>
+           </cmdsynopsis>
 	    </para>
 	    <para>Decode URI-compliant <option>text</option>.
-	    </para>
-	  </listitem>
-	</itemizedlist>
       </para>
     </section>
     <section id="Examples11">
@@ -2655,9 +2621,9 @@ $Id$
 	  <programlisting>
 	    rename web::finalize web::finalize.orig
 	    proc web::myFinalize {} {
-	    # code to eval before finalize.orig
-	    finalize.orig
-	    # code to eval after finalize.orig
+	        # code to eval before finalize.orig
+	        finalize.orig
+	        # code to eval after finalize.orig
 	    }
 	  </programlisting>
 	</example>
@@ -2851,12 +2817,12 @@ $Id$
 	  <programlisting>
 	    proc web::interpmap {filename} {
 	    if {[string match "/path/to/myApp" $filename]} {
-	    # this is my special app
-	    return /real/path/to/myApp
+	        # this is my special app
+	        return /real/path/to/myApp
 	    }
 	    if {[string match "*.ws3"]} {
-	    # scripts have their own interp class
-	    return $filename
+	        # scripts have their own interp class
+	        return $filename
 	    }
 	    # default: all templates are handled by my handler
 	    return /my/special/template/handler
