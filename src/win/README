@@ -1,0 +1,19 @@
+Websh 3.5 Windows version
+=========================
+
+Please note that the Windows version is not being maintained properly at 
+this time. Any volunteers?
+
+
+Compiling Websh3.5
+------------------
+
+Websh3.5 needs a file src\win\script.h which is not in the distribution.
+This file is created from some tcl sources in the src\generic directory.
+
+To create this file, open your favorite command shell ;-) and change to 
+the directory src\win. The command
+
+tclsh83.exe ..\generic\tcldecmt.tcl ..\generic\context.tcl ..\generic\script.ws3 ..\generic\cookie.ws3 ..\generic\sessctx.ws3 > script.h
+
+will do the trick.
