@@ -364,7 +364,7 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::cmdurlcfg</command>
-	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg choice="opt"><replaceable>option</replaceable></arg>
 	  <arg choice="opt"><replaceable>key</replaceable></arg>
 	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	</cmdsynopsis>
@@ -402,10 +402,13 @@ $Id$
     <section id="management_of_static_parameters">
       <title>Management of static parameters</title>
       <para>
+        In addition to the easy way of tracking parameters using 
+        <command>web::dispatch -track ...</command>, specific values
+        for parameters can be set using <command>web::cmdurlcfg</command>:
 
-	In order to set, retrieve, append or unset static parameters,
-	use the syntax of the <command>web::param</command> command,
-	for example:
+	In order to explicitly set, retrieve, append or unset static 
+        parameters, use the syntax of the <command>web::param</command>
+        command, for example:
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::cmdurlcfg</command> -set
@@ -418,7 +421,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command>web::cmdurlcfg</command></term>
+	    <term><command>web::cmdurlcfg</command> -names</term>
 	    <listitem>
 	      <para>
 		returns a list of all known static parameters.
@@ -766,7 +769,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><command>web::request</command></term>
+	    <term><command>web::request</command> <option>-names</option></term>
 	    <listitem>
 	      <para>
 		returns a list of all known keys.
@@ -815,8 +818,8 @@ $Id$
 	    <listitem>
 	      <para>
 		adds the parameter <option>key</option> to the
-		web::request data.  Any existing parameters with
-		<option>key</option> are overwritten.
+		<command>web::request</command> data. Any existing parameters 
+                with <option>key</option> are overwritten.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -887,7 +890,7 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::param</command>
-	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg choice="opt"><replaceable>option</replaceable></arg>
 	  <arg choice="opt"><replaceable>key</replaceable></arg>
 	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	  <arg choice="opt"><replaceable>...</replaceable></arg>
