@@ -80,7 +80,7 @@ test filecounter-2.7 {web::filecounter with wrap} {
     if {[file exists $filename]} {
 	file delete $filename
     }
-    web::filecounter handle3 -filename $filename -max 3 -min 2 -seed 2 -incr 1 -wrap
+    web::filecounter handle3 -filename $filename -max 3 -min 2 -seed 2 -incr 1 -wrap true
     handle3 nextval
     handle3 nextval
     handle3 nextval
@@ -89,14 +89,14 @@ test filecounter-2.7 {web::filecounter with wrap} {
 
 test filecounter-2.8 {get config of previous filecounter} {
     set res [handle3 config]
-    string compare $res "file $filename handle handle3 seed 2 min 2 max 3 incr 1 wrap true curr 2"
+    string compare $res "file $filename handle handle3 seed 2 min 2 max 3 incr 1 perms 0644 wrap true curr 2"
 } {0}
 
 test filecounter-2.9 {use invalid param/switch} {
     set msg ""
     catch {web::filecounter bla -filename af -false option} msg
     set msg
-} {bad option "-false": must be -filename, -seed, -min, -max, -incr, or -wrap}
+} {bad option "-false": must be -filename, -seed, -min, -max, -incr, -perms, or -wrap}
 
 test filecounter-2.10 {backwards} {
     web::filecounter fc2_10 -filename [web::tempfile] -seed 10000 -incr -1000
