@@ -9,5 +9,8 @@ html/index.html: quickref.xml quickref.xsl
 #quickref.txt: quickref.html
 #	links -dump quickref.html > quickref.txt
 
+check:
+	nsgmls -s -wxml quickref.xml
+
 clean:
 	rm -f *.html html/*.html *.txt
