@@ -168,6 +168,7 @@ proc web::cgi::copyenv {} {
 	REMOTE_IDENT 
 	CONTENT_TYPE 
 	CONTENT_LENGTH 
+	HTTPS
     }
 
     foreach e [array names ::env] {
