@@ -53,7 +53,7 @@ $Id$
       <para>
 	The original version of this document can always be found at
 	<ulink
-	  url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh/</ulink>.
+	url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh/</ulink>.
       </para>
       <note>
 	<para>
@@ -435,7 +435,7 @@ $Id$
 	compares every key from the static parameters (see
 	<command>web::cmdurlcfg</command>) against the keys from the
 	command line. The static parameter is only used if there is no
-	parameter given on the command line.
+	parameter of the same name given on the command line.
       </para>
     </section>
     <section id="configuration_for_web_cmdurl">
@@ -447,7 +447,9 @@ $Id$
 	    <term><option>-protocol</option> <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
-		protocol to be used. Default: http.
+		protocol to be used. Defaults to the scheme used to
+		access the page, which is overridden if the user gives
+		sets a value.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -479,7 +481,8 @@ $Id$
 	    <term><option>-pathinfo</option></term>
 	    <listitem>
 	      <para>
-		path info (path after scriptname). Default: taken from request.
+		path info (path after scriptname). Default: taken from
+		request.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -487,19 +490,22 @@ $Id$
 	    <term><option>-urlformat</option> <option>list</option></term>
 	    <listitem>
 	      <para>
-		changes the urlformat permanently. See <command>web::cmdurl </command>for the
-		description of this option.
+		changes the urlformat permanently. See
+		<command>web::cmdurl</command> for the description of
+		this option.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
-	In all cases, &quot;web::cmdurlcfg -option <option>value</option>&quot; sets the value of
-	the given option and returns the value that was used before the change,
-	while &quot;web::cmdurlcfg -option&quot; returns the current value.  If no value
-	has been set using web::cmdurlcfg, but is requested for the URL
-	generation, the value from the request will be used.  This value,
-	however, can not be retrieved using web::cmdurlcfg.
+	In all cases, &quot;web::cmdurlcfg -option
+	<option>value</option>&quot; sets the value of the given
+	option and returns the value that was used before the change,
+	while &quot;web::cmdurlcfg -option&quot; returns the current
+	value.  If no value has been set using web::cmdurlcfg, but is
+	requested for the URL generation, the value from the request
+	will be used.  This value, however, can not be retrieved using
+	web::cmdurlcfg.
 
       </para>
       <para>
@@ -543,9 +549,9 @@ $Id$
 	Options are: <option>-cmd</option>,
 	<option>-querystring</option>, <option>-postdata</option>,
 	<option>-track</option> and <option>-hook</option>
-
+      </para>
 	Parse information and call a command.
-
+      <para>
 	<variablelist>
 	  <varlistentry>
 	    <term><option>-cmd</option> <option>cmdName</option></term>
@@ -800,7 +806,8 @@ $Id$
 	      <option>-set</option> <option>key</option></term>
 	    <listitem>
 	      <para>
-		does the same as 'web::request <option>key</option>'
+		does the same as <command>web::request</command>
+		<option>key</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1002,13 +1009,14 @@ $Id$
 	  <arg choice="opt">key</arg>
 	  <arg choice="opt">value</arg>
 	</cmdsynopsis>
-
-	Exactly like <command>web::param</command>
+      </para>
+      Exactly like <command>web::param</command>.
+      <para>
 
 	<command>web::formvar</command> is an accessor to HTML FORM
 	data.  After <command>web::dispatch</command> has parsed the
 	POST data, you can access all form fields using
-	<command>web::formvar</command>.
+	<command>web::formvar</command> .
 
       </para>
     </section>
@@ -2610,10 +2618,14 @@ $Id$
   </section>
   <section id="Apache_module_specific_commands">
     <title>Apache module specific commands</title>
-    <para>Note that these commands are implemented as dummies in the CGI
+
+    <para>
+      Note that these commands are implemented as dummies in the CGI
       version of Webshell only. They don't do anything except for
-      web::initializer and web::finalizer, which just evaluate the code
-      provided in the argument.
+      web::initializer and web::finalizer, which just evaluate the
+      code provided in the argument.
+    </para>
+
     <section id="web::initializer">
       <title>web::initializer</title>
       <para>
@@ -2655,12 +2667,14 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::finalize</command>
 	</cmdsynopsis>
+
 	Execute finalizer code that has been registerd using
 	<command>web::finalizer</command>, starting with the most
-	recently added <option>code</option>.
-        Note that this command is executed automatically and does not have 
-        to be called manually. However, it can be used as a hook, when the
-        interpreter is deleted:
+	recently added <option>code</option>.  Note that this command
+	is executed automatically and does not have to be called
+	manually. However, it can be used as a hook, when the
+	interpreter is deleted:
+
 	<programlisting>
 	  rename web::finalize web::finalize.orig
 	  proc web::myFinalize {} {
@@ -2746,7 +2760,6 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-      </para><para>
       </para>
     </section>
     <section id="web::interpcfg">
@@ -2854,7 +2867,7 @@ $Id$
 
 	web::match treats v1 as a list. Thus, <emphasis>web::match
 	  &quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
-	<emphasis>ok</emphasis>.
+	  <emphasis>ok</emphasis>.
 
       </para>
     </section>
