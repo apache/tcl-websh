@@ -1,3 +1,69 @@
+2002-03-07  David N. Welton  <davidw@dedasys.com>
+
+	* unix/Makefile.in: Avoid the final link step if it's already been
+	performed, for websh, and mod_websh.so.
+
+2002-03-05  David N. Welton  <davidw@dedasys.com>
+
+	* generic/request.c (removeTempFiles): Log error on failure of
+	'remove'.
+
+	* generic/paramlist.c (paramGetIndexFromObj): stopgap fix to make
+	sure we don't overflow.
+	(paramGet): 'default' in switch statement returns error, but we
+	should never arrive there.
+
+	* generic/mod_websh.c (websh_init_child): Create Apache log entry
+	if initPool doesn't return an OK.
+
+	* generic/modwebsh_ap.c (Web_InterpClassCfg): Pass mtime to
+	createWebInterpClass after fetching it with Tcl_Stat.
+
+	* generic/interpool.c (createWebInterp): Fixed fixme - log error
+	to Apache.
+	(poolGetWebInterp): Switched to request_rec.request_time.
+	(createWebInterp): Use request_rec.request_time, and also add
+	request_rec as a parameter to createWebInterp.
+	(createWebInterp): Log readWebInterpCode failure via Apache.
+	(destroyWebInterp): Log web::finalize errors to Apache logs.
+
+2002-02-27  David N. Welton  <davidw@dedasys.com>
+
+	* unix/configure.in: Changed version to 3.5.
+
+	* generic/request.c (createRequestData): Removed
+	handleToSpecificReqData here and elsewhere - it's handled in other
+	ways (through set/get assocdata).
+
+	* generic/mod_websh.c: We *don't* check for files' existance,
+	because they might be mapped with interpmap, and might not even
+	really exist.
+
+	* generic/interpool.c (poolGetWebInterp): Use Tcl_Stat instead of
+	'file mstat' called with Tcl_Eval to get mtime.
+
+	* apachetests/template.conf.tcl: Change port to 8081, instead of
+	8080, because some people already use that for a test server.
+
+	* apachetests/runtests.tcl: We no longer start the server
+	automatically.
+
+	* Added headers.ws3 and headers.test files, to be used for header
+	testing.
+
+	* apachetests/mod_websh.test (server::start): Created
+	server::start and server::stop commands for use in tests.
+
+2002-02-19  David N. Welton  <davidw@dedasys.com>
+
+	* tests/webout.test: Removed test for {= tags.
+
+	* generic/mod_websh.c (exit_websh_pool): Added this as a
+	registered cleanup.
+
+	* generic/mod_websh.c (websh_handler): Do correct checks for
+	Apache2.
+
 2002-02-14  David N. Welton  <davidw@dedasys.com>
 
 	* generic/weboutint.c (webout_eval_tag): Workaround to avoid
