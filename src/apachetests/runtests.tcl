@@ -4,7 +4,6 @@
 
 package require tcltest
 package require http 2.1
-package require Tclx
 
 proc getbinname { } {
     global argv
@@ -23,7 +22,7 @@ makeconf $binname server.conf
 
 puts "$binname -X -f [file join [pwd] server.conf]"
 
-# we do this to keep tcltest happy
+# we do this to keep tcltest happy - it reads argv...
 set commandline [lindex $argv 1]
 set argv {}
 

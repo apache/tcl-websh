@@ -17,18 +17,19 @@ namespace eval server {
 
 set server::binname $binname
 
-proc server::start { {options ""} } {
+proc server::start { options code } {
     variable serverpid 0
     variable binname
+    after 200
     set serverpid [eval exec $binname -X -f "[file join [pwd] server.conf]" $options &]
     puts "Apache started as PID $serverpid"
-    after 100
-}
+    after 200
+    catch {
+	uplevel $code
+    }
 
-proc server::stop { } {
-    variable serverpid
     after 100
-    kill $serverpid
+    exec kill $serverpid
 }
 
 # Test stanzas are created by giving the test a name and a

@@ -6,24 +6,21 @@ set testfilename1 "pool.ws3"
 set testfilename2 "pool2.ws3"
 
 ::tcltest::test pool-1.1 {interp pool test} {
-    server::start
-    set page [ ::http::geturl "${urlbase}$testfilename1" ]
-    set page [ ::http::geturl "${urlbase}$testfilename1" ]
-    set page [ ::http::geturl "${urlbase}$testfilename1" ]
-    server::stop
+    server::start {} {
+	set page [ ::http::geturl "${urlbase}$testfilename1" ]
+	set page [ ::http::geturl "${urlbase}$testfilename1" ]
+	set page [ ::http::geturl "${urlbase}$testfilename1" ]
+    }
     set match [::http::data $page]
     set match
 } {Counter is 1}
 
 ::tcltest::test pool-1.2 {interp pool test} {
-    server::start
-    catch {
-    set page [ ::http::geturl "${urlbase}$testfilename2" ]
-    set page [ ::http::geturl "${urlbase}$testfilename2" ]
-    set page [ ::http::geturl "${urlbase}$testfilename2" ]
-    } err
-    puts $err
-    server::stop
+    server::start {} {
+	set page [ ::http::geturl "${urlbase}$testfilename2" ]
+	set page [ ::http::geturl "${urlbase}$testfilename2" ]
+	set page [ ::http::geturl "${urlbase}$testfilename2" ]
+    }
     set match [::http::data $page]
     set match
-} {Counter is 3}
+} {Counter is 3, maxrequests is 10}

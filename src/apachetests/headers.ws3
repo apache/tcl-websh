@@ -3,6 +3,9 @@
 
 web::command default {
     web::response -set foo bar
+    web::response -set bee bop
+    web::response -set doo wah
+    web::response -lappend doo dah
     web::put "Hello, World"
 }
 

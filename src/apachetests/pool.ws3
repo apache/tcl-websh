@@ -1,5 +1,5 @@
 # $Id$
-# hello world websh code.
+# interp pool testing code.
 
 web::command default {
     if { [info exists counter] } {
