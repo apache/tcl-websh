@@ -121,7 +121,8 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     /* now register here all websh modules */
     result = Tcl_Init(webInterp->interp);
     /* checkme: test result */
-    result = Websh_Init(webInterp->interp);
+
+    result = Websh_Init(webInterp->interp, 0);
 
     /* also register the destrcutor, etc. functions, passing webInterp as
        client data */
@@ -214,6 +215,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 #endif /* APACHE2 */
 	}
     }
+
     return webInterp;
 }
 
@@ -297,10 +299,11 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 
     /* get interpreter id for filename */
 
-    mapCmd = Tcl_NewStringObj("web::interpmap ", -1);
-    Tcl_AppendToObj(mapCmd, filename, -1);
-    Tcl_IncrRefCount(mapCmd);
     Tcl_MutexLock(&(conf->mainInterpLock));
+
+    mapCmd = Tcl_NewStringObj("web::interpmap ", -1);
+    Tcl_IncrRefCount(mapCmd);
+    Tcl_AppendToObj(mapCmd, filename, -1);
 
     res = Tcl_EvalObjEx(conf->mainInterp, mapCmd, 0);
 
@@ -324,6 +327,8 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	if (Tcl_Access(id, R_OK) != 0 ||
 	    Tcl_Stat(id, &statPtr) != TCL_OK)
 	{
+	    Tcl_MutexUnlock(&(conf->mainInterpLock));
+	    Tcl_DecrRefCount(mapCmd);
 	    return NULL;
 	}
 	mtime = statPtr.st_mtime;
@@ -345,6 +350,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	webInterpClass = (WebInterpClass *) Tcl_GetHashValue(entry);
 
 	/* check if mtime is ok */
+
 	if (mtime > webInterpClass->mtime) {
 	    /* invalidate all interpreters, code must be loaded from scratch */
 	    webInterp = webInterpClass->first;
@@ -475,6 +481,7 @@ void poolReleaseWebInterp(WebInterp * webInterp)
 	cleanupPool(webInterpClass->conf);
 
 	Tcl_MutexUnlock(&(webInterpClass->conf->webshPoolLock));
+
     }
 }
 
@@ -511,6 +518,27 @@ int initPool(websh_server_conf * conf)
 	return 0;
     }
 
+    /* create one interp to initialize the exit handlers properly */
+    {
+      Tcl_Interp* interp = NULL;
+      interp = Tcl_CreateInterp();
+      if (interp != NULL) {
+	/* checkme: we should really check the results here ... */
+	Tcl_Init(interp);
+	Websh_Init(interp, 1);
+	Tcl_DeleteInterp(interp);
+      } else {
+	errno = 0;
+#ifndef APACHE2
+	ap_log_printf(conf->server, "could'nt create initial interp\n");
+#else /* APACHE2 */
+	ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, conf->server,
+		     "could'nt create initial interp\n");
+#endif /* APACHE2 */
+	return 0;
+      }
+    }
+    
     /* create our table of interp classes */
     HashUtlAllocInit(conf->webshPool, TCL_STRING_KEYS);
 
