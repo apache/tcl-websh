@@ -50,7 +50,7 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
     requestData->requestIsInitialized = 1;
 
     if (interp == NULL)
-	return NULL;
+	return TCL_ERROR;
 
     /* fetch request object */
     r = (request_rec *) Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
@@ -58,7 +58,7 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
     /* r = (request_rec *)(requestData->handleToSpecificReqData); */
     if (r == NULL) {
 	Tcl_SetResult(interp, "error accessing httpd request object", NULL);
-	return NULL;
+	return TCL_ERROR;
     }
 
     reso = Tcl_NewObj();
