@@ -115,7 +115,6 @@
   </xsl:template>
 
   <xsl:template match="cmdsynopsis/command">
-    <br/>
     <span style="font-weight:bold">
       <xsl:call-template name="inline.monoseq"/>
     </span>
@@ -130,7 +129,7 @@
       </span>
     </dt>
     <dd>
-      <div style="background:#dddddd ; padding:4 ; margin-top:3 ;
+      <div style="padding:4 ; margin-top:3 ;
 	margin-bottom:3 ; width:75%" >
 	<xsl:apply-templates select="listitem"/>
       </div>
