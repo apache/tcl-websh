@@ -170,9 +170,9 @@ $Id$
       <para>
 
 	<programlisting>
-	% web::config decryptchain
-	web::encryptd
-	%
+	  % web::config decryptchain
+	  web::encryptd
+	  %
 	</programlisting>
 
       </para>
@@ -350,9 +350,9 @@ $Id$
       <para>
 
 	<programlisting>
-	% web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
-	http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
-	%
+	  % web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
+	  http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
+	  %
 	</programlisting>
 
       </para>
@@ -511,15 +511,15 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	% web::cmdurl &quot;&quot;
-	?XDqPtk34XvyPh41gUBo
-	% web::cmdurlcfg -scriptname bin/test_script
-	% web::cmdurl &quot;&quot;
-	bin/test_script?XDqPtk34XvyPh41gUBo
-	% web::cmdurlcfg -scriptname &quot;&quot;
-	% web::cmdurl &quot;&quot;
-	?XDqPtk34XvyPh41gUBo
-	%
+	  % web::cmdurl &quot;&quot;
+	  ?XDqPtk34XvyPh41gUBo
+	  % web::cmdurlcfg -scriptname bin/test_script
+	  % web::cmdurl &quot;&quot;
+	  bin/test_script?XDqPtk34XvyPh41gUBo
+	  % web::cmdurlcfg -scriptname &quot;&quot;
+	  % web::cmdurl &quot;&quot;
+	  ?XDqPtk34XvyPh41gUBo
+	  %
 	</programlisting>
 
       </para>
@@ -650,15 +650,15 @@ $Id$
       <para>
 
 	<programlisting>
-	% set tst {puts &quot;On the hook&quot;}
-	puts &quot;On the hook&quot;
-	% web::command acmd {puts &quot;this is acmd&quot;}
-	% web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
-	this is acmd
-	% web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
-	On the hook
-	this is acmd
-	%
+	  % set tst {puts &quot;On the hook&quot;}
+	  puts &quot;On the hook&quot;
+	  % web::command acmd {puts &quot;this is acmd&quot;}
+	  % web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
+	  this is acmd
+	  % web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
+	  On the hook
+	  this is acmd
+	  %
 	</programlisting>
 
       </para>
@@ -1011,17 +1011,17 @@ $Id$
       <para>
 
 	<programlisting>
-	% web::request CONTENT_LENGTH
-	% web::dispatch -querystring &quot;cmd=default&amp;t=100&quot; -postdata &quot;&quot; -cmd &quot;&quot;
-	% web::param -names
-	t cmd
-	% web::param cmd
-	default
-	% web::param -set k v
-	v
-	% web::param -names
-	t cmd k
-	%
+	  % web::request CONTENT_LENGTH
+	  % web::dispatch -querystring &quot;cmd=default&amp;t=100&quot; -postdata &quot;&quot; -cmd &quot;&quot;
+	  % web::param -names
+	  t cmd
+	  % web::param cmd
+	  default
+	  % web::param -set k v
+	  v
+	  % web::param -names
+	  t cmd k
+	  %
 	</programlisting>
 
       </para>
@@ -1267,28 +1267,28 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	% web::response
-	stdout
-	% web::response -select stderr
-	stdout
-	% web::response
-	stderr
-	% web::response -sendheader
-	1
-	% web::response -names
-	Content-Type Generator
-	% web::response Content-Type
-	text/html
-	% web::response -bytessent
-	0
-	% web::response -set Set-Cookie &quot;my cookie that contains data&quot;
-	% web::put &quot;Hello, world\n&quot;
-	Content-Type: text/html
-	Set-Cookie: my cookie that contains data
-	Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
+	  % web::response
+	  stdout
+	  % web::response -select stderr
+	  stdout
+	  % web::response
+	  stderr
+	  % web::response -sendheader
+	  1
+	  % web::response -names
+	  Content-Type Generator
+	  % web::response Content-Type
+	  text/html
+	  % web::response -bytessent
+	  0
+	  % web::response -set Set-Cookie &quot;my cookie that contains data&quot;
+	  % web::put &quot;Hello, world\n&quot;
+	  Content-Type: text/html
+	  Set-Cookie: my cookie that contains data
+	  Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
 
-	Hello, world
-	%
+	  Hello, world
+	  %
 	</programlisting>
 
       </para>
@@ -1504,22 +1504,22 @@ $Id$
       <para>
 
 	<programlisting>
-	% web::logfilter add *.-debug
-	logfilter0
-	% web::logdest add *.-debug channel stdout
-	logdest0
-	% web::log info {Webshell is cool}
-	03/01/00 00:00:00 [111] user.info: Webshell is cool
-	% web::logdest delete logdest0
-	% web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
-	logdest1
-	% web::log info {Webshell is cool}
-	--&gt; Webshell is cool
-	% web::logdest delete logdest1
-	% web::logdest add -maxchar 5 *.-debug channel stdout
-	% web::log info {Webshell is cool}
-	03/01/00 00:00:00 [111] user.info: Websh
-	%
+	  % web::logfilter add *.-debug
+	  logfilter0
+	  % web::logdest add *.-debug channel stdout
+	  logdest0
+	  % web::log info {Webshell is cool}
+	  03/01/00 00:00:00 [111] user.info: Webshell is cool
+	  % web::logdest delete logdest0
+	  % web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
+	  logdest1
+	  % web::log info {Webshell is cool}
+	  --&gt; Webshell is cool
+	  % web::logdest delete logdest1
+	  % web::logdest add -maxchar 5 *.-debug channel stdout
+	  % web::log info {Webshell is cool}
+	  03/01/00 00:00:00 [111] user.info: Websh
+	  %
 	</programlisting>
 
       </para>
@@ -1530,18 +1530,10 @@ $Id$
     <section id="web::context">
       <title>web::context</title>
       <para>
-
-	<variablelist>
-	  <varlistentry>
-	    <term>Creation</term>
-	    <listitem>
-	      <para>
-		<command>web::context</command> <option>name</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
+	Creation
+	<cmdsynopsis>
+	  <command>web::context</command> <arg>name</arg>
+	</cmdsynopsis>
 	Creates a namespace <option>name</option> with the following
 	commands:
 
@@ -1562,7 +1554,7 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::cset</command>
-	    <option>key</option> <option>value</option></term>
+	      <option>key</option> <option>value</option></term>
 	    <listitem>
 	      <para>
 		store <option>value</option>
@@ -1571,9 +1563,9 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::cappend</command>
-	    <option>key</option> <option>value</option>
-	    <optional><option>value</option></optional>
-	    <optional><option>...</option></optional></term>
+	      <option>key</option> <option>value</option>
+	      <optional><option>value</option></optional>
+	      <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
 		append <option>value</option> to existing value for
@@ -1583,9 +1575,9 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::clappend</command>
-	    <option>key</option> <option>value</option>
-	    <optional><option>value</option></optional>
-	    <optional><option>...</option></optional></term>
+	      <option>key</option> <option>value</option>
+	      <optional><option>value</option></optional>
+	      <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
 		append <option>value</option> to existing list of
@@ -1595,8 +1587,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::cget</command>
-	    <option>key</option>
-	    <optional><option>default</option></optional></term>
+	      <option>key</option>
+	      <optional><option>default</option></optional></term>
 	    <listitem>
 	      <para>
 		access the value for key <option>key</option>, or
@@ -1609,7 +1601,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::cexists</command>
-	    <option>key</option></term>
+	      <option>key</option></term>
 	    <listitem>
 	      <para>
 		returns true (1) if <option>key</option> exists in
@@ -1619,7 +1611,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::cunset</command>
-	    <option>key</option></term>
+	      <option>key</option></term>
 	    <listitem>
 	      <para>
 		remove <option>key</option> from context
@@ -1628,8 +1620,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::carray</command>
-	    <option>option</option> <option>key</option>
-	    <option>arg</option></term>
+	      <option>option</option> <option>key</option>
+	      <option>arg</option></term>
 	    <listitem>
 	      <para>
 		array manipulation as known from the Tcl command
@@ -1639,7 +1631,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::cnames</command>
-	    <optional><option>pattern</option></optional></term>
+	      <optional><option>pattern</option></optional></term>
 	    <listitem>
 	      <para>
 		lists existing keys of context matching
@@ -1659,13 +1651,13 @@ $Id$
 
 	Example:
 	<programlisting>
-	% web::context sc
-	% sc::cset lang FR
-	FR
-	% # ... some code ...
-	% set lang [sc::cget lang EN]
-	FR
-	%
+	  % web::context sc
+	  % sc::cset lang FR
+	  FR
+	  % # ... some code ...
+	  % set lang [sc::cget lang EN]
+	  FR
+	  %
 	</programlisting>
 
       </para>
@@ -1674,65 +1666,76 @@ $Id$
       <title>web::filecontext</title>
       <para>
 
+	Creation:
+	<cmdsynopsis>
+	  <command>web::filecontext</command>
+	  <arg>name</arg>
+	  <arg choice="opt">options</arg>
+	</cmdsynopsis>
+
+	Options are: <option>-perm</option>, <option>-path</option>,
+	<option>-crypt</option>, <option>-idgen</option>, and
+	<option>-attachto</option>.
+
+	Creates a namespace <option>name</option> to manage file-based
+	context data:
+
+	Syntax:
+	<cmdsynopsis>
+	  <command><varname>name</varname>::subcommand</command>
+	  <arg>args</arg>
+	</cmdsynopsis>
+
+	Subcommands are: <option>cset</option>,
+	<option>cappend</option>, <option>clappend</option>,
+	<option>cget</option>, <option>cexists</option>,
+	<option>cunset</option>, <option>carray</option>,
+	<option>cnames</option>, <option>init</option>,
+	<option>new</option>, <option>commit</option>,
+	<option>invalidate</option>, and <option>id</option>.
+
+	Manages file-based context data. The subcommands have their
+	familiar behaviour of the Tcl commands with similar
+	names. Please refer to the section <link
+	  linkend="context_handling">context management</link> for a
+	description of the commands <option>cset</option>,
+	<option>cappend</option>, <option>clappend</option>,
+	<option>cget</option>, <option>cexists</option>,
+	<option>cunset</option>, <option>carray</option>, and
+	<option>cnames</option>.
+
 	<variablelist>
 	  <varlistentry>
-	    <term>Creation:</term>
+	    <term>
+	      <command><varname>name</varname>::init</command>
+	      <optional><option>id</option></optional>
+	    </term>
 	    <listitem>
 	      <para>
-		<command>web::filecontext</command> <option>name</option> ?options?</para><para>
-		Options are: <option>-perm</option>, <option>-path</option>, <option>-crypt</option>,
-		<option>-idgen</option>, and <option>-attachto</option>.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
-	Creates a namespace <option>name</option> to manage file-based context data:
-
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax</term>
-	    <listitem>
-	      <para>
-		<emphasis><varname>name</varname></emphasis>::<option>subcommand</option> <option>args</option></para><para>
-		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
-		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
-		<option>cnames</option>, <option>init</option>, <option>new</option>, <option>commit</option>, <option>invalidate</option>, and <option>id</option>.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
-	Manages file-based context data. The subcommands have their familiar
-	behaviour of the Tcl commands with similar names. Please refer to the
-	section <literal remap="tt">context management</literal> for a description of the commands
-	<option>cset</option>, <option>cappend</option>, <option>clappend</option>, <option>cget</option>, <option>cexists</option>,
-	<option>cunset</option>, <option>carray</option>, and <option>cnames</option>.
-
-	<variablelist>
-	  <varlistentry>
-	    <term><option><varname>name</varname>::init</option> <optional><option>id</option></optional></term>
-	    <listitem>
-	      <para>
-		load an existing session context with id <option>id</option>, or create a new one,
-		if possible. Automation depends on the settings of the actual
-		context manager settings, see below.</para><para>
-		If you specify an <option>id</option>, you must decide when to create
-		a new file and when to use the old one, if any, by yourself.
+		load an existing session context with id
+		<option>id</option>, or create a new one, if
+		possible. Automation depends on the settings of the
+		actual context manager settings, see
+		below.</para><para> If you specify an
+		<option>id</option>, you must decide when to create a
+		new file and when to use the old one, if any, by
+		yourself.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option><varname>name</varname>::new</option> <optional><option>id</option></optional></term>
+	    <term><command><varname>name</varname>::new</command>
+	      <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
-		create a new session context. Automation depends on the settings of the
-		actual context manager settings, see below.
+		create a new session context. Automation depends on
+		the settings of the actual context manager settings,
+		see below.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><varname>name</varname>::commit</term>
+	    <term><command><varname>name</varname>::commit</command></term>
 	    <listitem>
 	      <para>
 		make session context persistent
@@ -1740,7 +1743,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><varname>name</varname>::id</term>
+	    <term><command><varname>name</varname>::id</command></term>
 	    <listitem>
 	      <para>
 		return id of session
@@ -1748,7 +1751,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><varname>name</varname>::invalidate</term>
+	    <term><command><varname>name</varname>::invalidate</command></term>
 	    <listitem>
 	      <para>
 		delete session in memory and on file system
@@ -1758,31 +1761,37 @@ $Id$
 	</variablelist>
 
 	Options:
+	<cmdsynopsis>
+	  <command>web::filecontext</command>
+	  <arg>name</arg>
+	  <arg>-perm</arg>
+	  <arg>perm</arg>
+	</cmdsynopsis>
+
+	set the file permissions of the session context files
+	<option>perm</option> is an unix-like octal value like 0644.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::filecontext <option>name</option> -perm <option>perm</option></term>
+	    <term><command>web::filecontext</command>
+	      <option>name</option> <option>-path</option>
+	      <option>path</option>
+	    </term>
 	    <listitem>
 	      <para>
-		set the file permissions of the session context files
-		<option>perm</option> is an unix-like octal value like 0644.
+		specify where to store session context files and how
+		to name them. Suppose that the session id is 99.
+		<emphasis>-path [file join .. data s%d.dat]</emphasis>
+		would then cause filecontext to save the session
+		context as <literal
+		remap="tt">../data/s99.dat</literal>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::filecontext <option>name</option> -path <option>path</option></term>
-	    <listitem>
-	      <para>
-		specify where to store session context files and
-		how to name them. Suppose that the session id is 99.
-		<emphasis>-path [file join .. data s%d.dat]</emphasis> would then
-		cause filecontext to save the session context
-		as <literal remap="tt">../data/s99.dat</literal>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term>web::filecontext <option>name</option> -crypt <option>boolean</option></term>
+	    <term><command>web::filecontext</command>
+	      <option>name</option> <option>-crypt</option>
+	      <option>boolean</option></term>
 	    <listitem>
 	      <para>
 		Flag to turn crypting of session context on and off.
@@ -1791,42 +1800,51 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::filecontext <option>name</option> -idgen <option>idgen</option></term>
+	    <term><command>web::filecontext</command>
+	      <option>name</option> <option>-idgen</option>
+	      <option>idgen</option></term>
 	    <listitem>
 	      <para>
-		Sets command <option>idgen</option> to find a new session id. See doc of
-		<command>web::filecounter</command> below for an implementation
-		provided with Webshell.</para><para>
-		<option>idgen</option> is used in case that no <option>id</option> argument
-		has been passed to <emphasis>init</emphasis> or <emphasis>new</emphasis>.
+		Sets command <option>idgen</option> to find a new
+		session id. See doc of
+		<command>web::filecounter</command> below for an
+		implementation provided with webshell.
+	      </para>
+	      <para>
+		<option>idgen</option> is used in case that no
+		<option>id</option> argument has been passed to
+		<option>init</option> or <option>new</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::filecontext <option>name</option> -attachto <option>idparam</option></term>
+	    <term><command>web::filecontext</command>
+	      <option>name</option> <option>-attachto</option>
+	      <option>idparam</option>
+	    </term>
 	    <listitem>
 	      <para>
-		Use <literal remap="tt">web::param <option>idparam</option></literal> to access current session id.
-		This option is only used if <emphasis>init</emphasis> has been called
-		without <option>id</option> argument.</para><para>
-		Webshell passes session ids from one HTML request to
 		the next using the querystring (this is one reason why
-		the querystring is encrypted). After web::dispatch
-		has parsed the querystring, web::param will report the
-		current session id, if any. <emphasis>Note</emphasis> that you can 
-		maintain several sessions in parallel, and attach every
-		session to its own <option>idparam</option>.</para><para>
-		Using <emphasis>web::dispatch -track</emphasis> further automates the
-		passing of session ids from request to request.
+		the querystring is encrypted). After web::dispatch has
+		parsed the querystring, web::param will report the
+		current session id, if any. <emphasis>Note</emphasis>
+		that you can maintain several sessions in parallel,
+		and attach every session to its own
+		<option>idparam</option>.
+	      </para>
+	      <para>
+		Using <emphasis>web::dispatch -track</emphasis>
+		further automates the passing of session ids from
+		request to request.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
-	<emphasis>Note:</emphasis> Whenever you create a new file-based context, the context is
-	initialized and you loose whatever information that you might have
-	stored in the context before you initialized it as a file-based
-	session context.
+	<emphasis>Note:</emphasis> Whenever you create a new
+	file-based context, the context is initialized and you loose
+	whatever information that you might have stored in the context
+	before you initialized it as a file-based session context.
 
       </para>
     </section>
@@ -1834,30 +1852,36 @@ $Id$
       <title>web::cookiecontext</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Creation:</term>
-	    <listitem>
-	      <para>
-		<command>web::cookiecontext</command> <option>name</option> ?options?</para><para>
-		Options are: <option>-expires</option>, <option>-path</option>, <option>-domain</option>,
-		<option>-secure</option>, <option>-crypt</option>, and <option>-channel</option>.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Creation:
 
-	Creates a namespace <option>name</option> to manage cookie-based context data:
+	<cmdsynopsis>
+	  <command>web::cookiecontext</command> <arg>name</arg> <arg
+	  choice="opt">options</arg>
+      </cmdsynopsis>
+
+	Options are: <option>-expires</option>,
+	<option>-path</option>, <option>-domain</option>,
+	<option>-secure</option>, <option>-crypt</option>, and
+	<option>-channel</option>.
+
+	Creates a namespace <option>name</option> to manage
+	cookie-based context data:
 
 	<variablelist>
 	  <varlistentry>
 	    <term>Syntax</term>
 	    <listitem>
 	      <para>
-		<emphasis><varname>name</varname></emphasis>::&lt;subcommand&gt; <option>args</option></para><para>
-		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
-		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
-		<option>cnames</option>, <option>init</option>, <option>new</option>, <option>commit</option>, <option>invalidate</option>, and <option>id</option>.
+		<command><varname>name</varname>::subcommand</command>
+		<option>args</option></para>
+	      <para>
+		Subcommands are: <option>cset</option>,
+		<option>cappend</option>, <option>clappend</option>,
+		<option>cget</option>, <option>cexists</option>,
+		<option>cunset</option>, <option>carray</option>,
+		<option>cnames</option>, <option>init</option>,
+		<option>new</option>, <option>commit</option>,
+		<option>invalidate</option>, and <option>id</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1865,16 +1889,18 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><option><varname>name</varname>::init</option> <optional><option>id</option></optional></term>
+	    <term><command><varname>name</varname>::init</command>
+	    <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
-		load an existing session context (cookie must have been sent by the
-		client).
+		load an existing session context (cookie must have
+		been sent by the client).
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option><varname>name</varname>::new</option> <optional><option>id</option></optional></term>
+	    <term><command><varname>name</varname>::new</command>
+	    <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context.
@@ -1882,7 +1908,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><varname>name</varname>::commit</term>
+	    <term><command><varname>name</varname>::commit</command></term>
 	    <listitem>
 	      <para>
 		send a cookie
@@ -1890,7 +1916,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><varname>name</varname>::id</term>
+	    <term><command><varname>name</varname>::id</command></term>
 	    <listitem>
 	      <para>
 		return id of session
@@ -1898,7 +1924,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><varname>name</varname>::invalidate</term>
+	    <term><command><varname>name</varname>::invalidate</command></term>
 	    <listitem>
 	      <para>
 		delete session in memory and on client side
@@ -1911,17 +1937,23 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::cookiecontext <option>name</option> -expires <option>time</option></term>
+	    <term><command>web::cookiecontext</command>
+	      <option>name</option> <option>-expires</option>
+	      <option>time</option></term>
 	    <listitem>
 	      <para>
-		set the expiration date of the cookie. Possible values for <option>time</option>
-		are <emphasis>day</emphasis> (lifetime: one day), <emphasis>week</emphasis>, <emphasis>today</emphasis>, <emphasis>seconds</emphasis>
-		(time in seconds since 1-1-1970) or <emphasis>date-string</emphasis>.
+		set the expiration date of the cookie. Possible values
+		for <option>time</option> are <emphasis>day</emphasis>
+		(lifetime: one day), <emphasis>week</emphasis>,
+		<emphasis>today</emphasis>,
+		<emphasis>seconds</emphasis> (time in seconds since
+		1-1-1970) or <emphasis>date-string</emphasis>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cookiecontext <option>name</option> -path <option>path</option></term>
+	    <term><command>web::cookiecontext</command>
+	    <option>name</option> -path <option>path</option></term>
 	    <listitem>
 	      <para>
 		set the <emphasis>path</emphasis> property of the cookie
@@ -2079,16 +2111,16 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	% web::filecounter handleName -filename &quot;test.dat&quot;
-	handleName
-	% # from now on, use handleName &lt;curval|nextval|config&gt;
-	% handleName config
-	file test.dat handle handleName seed 0 min 0 max 2147483647 incr 1 wrap false curr {not valid}
-	% web::filecounter otherHandleName -filename &quot;othertest.dat&quot; -min 1 -max 10 -seed 1 -incr 2 -wrap 1
-	otherHandleName
-	% otherHandleName config
-	file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
-	%
+	  % web::filecounter handleName -filename &quot;test.dat&quot;
+	  handleName
+	  % # from now on, use handleName &lt;curval|nextval|config&gt;
+	  % handleName config
+	  file test.dat handle handleName seed 0 min 0 max 2147483647 incr 1 wrap false curr {not valid}
+	  % web::filecounter otherHandleName -filename &quot;othertest.dat&quot; -min 1 -max 10 -seed 1 -incr 2 -wrap 1
+	  otherHandleName
+	  % otherHandleName config
+	  file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
+	  %
 	</programlisting>
 
       </para>
@@ -2250,11 +2282,11 @@ $Id$
 
 	Examples:
 	<programlisting>
-	% web::encrypt &quot;Hello, world!&quot;
-	XDIVAhkgkxRjcfA7UTwpD7
-	% web::decrypt [web::encrypt &quot;Hello, world!&quot;]
-	Hello, world!
-	%
+	  % web::encrypt &quot;Hello, world!&quot;
+	  XDIVAhkgkxRjcfA7UTwpD7
+	  % web::decrypt [web::encrypt &quot;Hello, world!&quot;]
+	  Hello, world!
+	  %
 	</programlisting>
 
       </para>
@@ -2461,17 +2493,17 @@ $Id$
       <title>Examples</title>
       <para>
 	<programlisting>
-	% web::htmlify &lt;
-	&amp;lt;
-	% web::htmlify -numeric &lt;
-	&amp;#60;
-	% web::dehtmlify &quot;&amp;lt; &amp;#60;&quot;
-	&lt; &lt;
-	% web::uriencode &quot;Hello, world!&quot;
-	Hello%2c+world%21
-	% web::uridecode &quot;Hello%2c+world%21&quot;
-	Hello, world!
-	%
+	  % web::htmlify &lt;
+	  &amp;lt;
+	  % web::htmlify -numeric &lt;
+	  &amp;#60;
+	  % web::dehtmlify &quot;&amp;lt; &amp;#60;&quot;
+	  &lt; &lt;
+	  % web::uriencode &quot;Hello, world!&quot;
+	  Hello%2c+world%21
+	  % web::uridecode &quot;Hello%2c+world%21&quot;
+	  Hello, world!
+	  %
 	</programlisting>
 
       </para>
