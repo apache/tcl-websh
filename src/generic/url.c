@@ -649,7 +649,7 @@ int Web_CmdUrl(ClientData clientData,
 		if (schemeObj != NULL)
 		    scheme = Tcl_GetString(schemeObj);
 	    }
-	    if (!strcmp(scheme, "on")) {
+	    if (scheme != NULL && !strcmp(scheme, "on")) {
 		Tcl_AppendObjToObj(res, Tcl_NewStringObj("https", -1));
 		Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
 	    } else {
