@@ -122,7 +122,7 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 #ifndef APACHE2
 	ap_send_http_header(r);
 #else /* APACHE2 */
-	/* fixme: wher is this call in ap 2.0 API? */
+	/* not needed in ap 2.0 anymore (according to Justin Erenkrantz) */
 	/* ap_send_http_header(r); */
 #endif /* APACHE2 */
 	responseObj->sendHeader = 0;
