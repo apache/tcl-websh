@@ -122,8 +122,11 @@ int Websh_Init(Tcl_Interp * interp)
     if (modwebsh_createcmd(interp) == TCL_ERROR)
 	return TCL_ERROR;
 
-    /* --------------------------------------------------------------------------
-     * done
-     * ----------------------------------------------------------------------- */
-    return TCL_OK;
+    /* ------------------------------------------------------------------------
+     * we provide the websh package
+     * --------------------------------------------------------------------- */
+
+    /* fixme: dynamic version for [package provide]*/
+    return Tcl_PkgProvide(interp, WEBSH, "3.5.0");
+
 }
