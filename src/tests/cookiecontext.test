@@ -33,14 +33,14 @@ test cookiecontext-1.1 {create a cookie-context} {
     cctx::new myTestCookie
     cctx::cset somekey somevalue
     cctx::commit
-    web::put "webshell"
+    web::put "Websh"
 
     set text
 } "Content-Type: text/html\u0D
 Set-Cookie: myTestCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=today; path=/some/app\u0D
 Generator: cookiecontext-1.1\u0D
 \u0D
-webshell"
+Websh"
 
 # -----------------------------------------------------------------------------
 # test to remove (i.e. forget) a state
@@ -59,14 +59,14 @@ test cookiecontext-1.2 {remove cookie-context} {
     ccontext::cunset
     ccontext::commit
 
-    web::put "webshell"
+    web::put "Websh"
 
     set avar1
 } "Content-Type: text/html\u0D
-Set-Cookie: mySecondCookie=; expires=Sat, 01-01-2000 00:00:00 MET\u0D
+Set-Cookie: mySecondCookie=; expires=Sat, 01-Jan-2000 00:00:00 GMT\u0D
 Generator: cookiecontext-1.2\u0D
 \u0D
-webshell"
+Websh"
 
 test cookiecontext-1.3 {create a cookie-context} {
 
@@ -80,14 +80,14 @@ test cookiecontext-1.3 {create a cookie-context} {
     cctx::new myThirdCookie
     cctx::cset somekey somevalue
     cctx::commit
-    web::put "webshell"
+    web::put "Websh"
 
     set cctx1_3 
 } "Content-Type: text/html\u0D
 Set-Cookie: myThirdCookie=XDZ0YDSy89ppeUCWTjjya38uY4Kn88; expires=Wed, 15-03-2000 00:00:00 MET; path=/some/app13; domain=www.websh.com; secure\u0D
 Generator: cookiecontext-1.3\u0D
 \u0D
-webshell"
+Websh"
 
 test cookiecontext-1.4 {create an uncrypted cookie-context} {
     web::response -select \#cctx1_4
