@@ -217,24 +217,6 @@ int tclGetListLength(Tcl_Interp * interp, Tcl_Obj * list)
 }
 
 /* ----------------------------------------------------------------------------
- * tclMyConcat -- concat objects, but retain empty objects
- * ------------------------------------------------------------------------- */
-Tcl_Obj *tclMyConcat(int objc, Tcl_Obj * CONST objv[])
-{
-
-    Tcl_Obj *out = NULL;
-    int i = -1;
-
-    out = Tcl_NewObj();
-
-    for (i = 0; i < objc; i++)
-	if (objv[i] != NULL)
-	    Tcl_ListObjAppendElement(NULL, out, objv[i]);
-
-    return out;
-}
-
-/* ----------------------------------------------------------------------------
  * tclSetEnv -- set/get environment variables via Tcl
  * ------------------------------------------------------------------------- */
 Tcl_Obj *tclSetEnv(Tcl_Interp * interp, char *key, Tcl_Obj * val)
@@ -271,30 +253,6 @@ Tcl_Obj *tclSetEnv(Tcl_Interp * interp, char *key, Tcl_Obj * val)
     Tcl_DecrRefCount(keyObj);
 
     return res;
-}
-
-/* --------------------------------------------------------------------------
- * Web_IntIncrObj -- ++ implementaion for Tcl_Obj (uses Int)
- * interp for error messages
- * obj    to be incremented
- * incr   amount to increment by
- * ------------------------------------------------------------------------*/
-int Web_IntIncrObj(Tcl_Interp * interp, Tcl_Obj * obj, int incr)
-{
-
-    int tmp = 0;
-
-    if (obj == NULL)
-	return TCL_ERROR;
-
-    if (Tcl_GetIntFromObj(interp, obj, &tmp) == TCL_ERROR)
-	return TCL_ERROR;
-
-    tmp += incr;
-
-    Tcl_SetIntObj(obj, tmp);
-
-    return TCL_OK;
 }
 
 /* ----------------------------------------------------------------------------

@@ -33,10 +33,8 @@ int handleConfig(Tcl_Interp * interp, Tcl_Obj ** tclo, Tcl_Obj * newValue,
 		 int deleteIfEmpty);
 int tclGetListLength(Tcl_Interp * interp, Tcl_Obj * list);
 
-Tcl_Obj *tclMyConcat(int objc, Tcl_Obj * CONST objv[]);
 Tcl_Obj *tclSetEnv(Tcl_Interp * interp, char *key, Tcl_Obj * val);
 
-int Web_IntIncrObj(Tcl_Interp * interp, Tcl_Obj * obj, int incr);
 int deleteTclObj_fnc(void *tclo, void *dum);
 
 Tcl_Obj *Web_GetOrCreateGlobalVar(Tcl_Interp * interp, Tcl_Obj * name,
