@@ -5,10 +5,25 @@
 set testfilename1 "headers.ws3"
 
 ::tcltest::test header-1.1 {websh header test} {
-    server::start {} {
+    apachetest::start {} {
 	set page [ ::http::geturl "${urlbase}$testfilename1" ]
     }
     upvar 0 $page state
     array set meta $state(meta)
     array get meta
-} {FIXME}
+} {HTTP/1.1 200 OK   Date: Wed, 06 Mar 2002 17:44:15 GMT
+>     Server: Apache/1.3.12 (Unix)
+>     Foo: bar
+>     Foo: bla
+>     Foo: que
+>     Header1: bar
+>     Header2: Foo
+>     Header2: Bar
+>     Generator: websh3.50 (c) Netcetera AG, http://netcetera.ch
+>     Connection: close
+>     Content-Type: text/html
+> 
+>     hi world
+
+
+}

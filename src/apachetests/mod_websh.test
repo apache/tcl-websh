@@ -10,27 +10,8 @@
 
 set urlbase "http://localhost:8081/"
 
-# Use this stuff to start and stop the server between tests.
-
-namespace eval server {
-}
-
-set server::binname $binname
-
-proc server::start { options code } {
-    variable serverpid 0
-    variable binname
-    after 200
-    set serverpid [eval exec $binname -X -f "[file join [pwd] server.conf]" $options &]
-    puts "Apache started as PID $serverpid"
-    after 200
-    catch {
-	uplevel $code
-    }
-
-    after 100
-    exec kill $serverpid
-}
+package require tcltest
+package require http
 
 # Test stanzas are created by giving the test a name and a
 # description.  The code is then executed, and the results

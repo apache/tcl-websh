@@ -2,33 +2,28 @@
 # the next line restarts using tclsh \
 	exec tclsh "$0" "$@"
 
-package require tcltest
-package require http 2.1
+source [file join apachetest apachetest.tcl]
 
-proc getbinname { } {
-    global argv
-    set binname [lindex $argv 0]
-    if { $binname == "" || ! [file exists $binname] } {
-	puts stderr "Please supply the full name and path of the Apache executable on the command line!"
-	exit 1
-    }
-    return $binname
+apachetest::getbinname $argv
+
+apachetest::makeconf server.conf {
+    LoadModule websh_module [file join $CWD .. unix "mod_websh3.10[info sharedlibextension]"]
+    <IfModule mod_mime.c>
+    AddLanguage en .en
+    AddLanguage it .it
+    AddLanguage es .es
+    AddLanguage de .de
+    AddHandler websh .ws3
+    </IfModule>
 }
-
-set binname [ getbinname ]
-
-source makeconf.tcl
-makeconf $binname server.conf
-
-puts "$binname -X -f [file join [pwd] server.conf]"
 
 # we do this to keep tcltest happy - it reads argv...
 set commandline [lindex $argv 1]
 set argv {}
 
-switch -exact -- $commandline {
+switch -exact $commandline {
     startserver {
-	set apachepid [exec $binname -X -f "[file join [pwd] server.conf]" &]
+	apachetest::startserver
     }
     default {
 	source [file join . mod_websh.test]

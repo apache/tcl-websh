@@ -3,20 +3,16 @@
 
 # Parsed by makeconf.tcl
 
-ServerType standalone
-
 ServerRoot "$CWD"
 
-PidFile "[file join $CWD httpd.pid]"
+PidFile "$CWD/httpd.pid"
 
-# ScoreBoardFile "$CWD/apache_runtime_status"
-
-ResourceConfig [file join $CWD srm.conf]
-AccessConfig [file join $CWD access.conf]
+ResourceConfig "$CWD/srm.conf"
+AccessConfig "$CWD/access.conf"
 
 Timeout 300
 
-MaxRequestsPerChild 100
+MaxRequestsPerChild 0
 
 $LOADMODULES
 
@@ -41,7 +37,7 @@ AccessFileName .htaccess
 
 HostnameLookups Off
 
-ErrorLog [file join $CWD error_log]
+ErrorLog $CWD/error_log
 
 LogLevel debug
 

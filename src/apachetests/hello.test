@@ -5,7 +5,7 @@
 set testfilename1 "hello.ws3"
 
 ::tcltest::test hello-1.1 {hello world test} {
-    server::start {} {
+    apachetest::start {} {
 	set page [ ::http::geturl "${urlbase}$testfilename1" ]
 	set match [::http::data $page]
     }

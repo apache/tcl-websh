@@ -2,11 +2,12 @@
 # headers test code
 
 web::command default {
-    web::response -set foo bar
-    web::response -set bee bop
-    web::response -set doo wah
-    web::response -lappend doo dah
-    web::put "Hello, World"
+    web::response -set Foo bar bla que
+    web::response -set Header1 foo
+    web::response -set Header1 bar
+    web::response -set Header2 Foo
+    web::response -lappend Header2 Bar
+    web::put "hi world"
 }
 
 web::dispatch
