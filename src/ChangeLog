@@ -1,3 +1,13 @@
+2001-11-30  David N. Welton  <davidw@dedasys.com>
+
+	* webshinspect.ws3 (web): Added -path to filecontext.
+
+	* filecontext.tests: Added -path elements to filecontexts.
+
+	* generic/sessctx.ws3: Make -join a mandatory argument for filecontext.
+
+	* generic/mod_websh.c: move initPool to Child Init function.
+
 2001-11-23  David N. Welton  <davidw@dedasys.com>
 
 	* generic/tcldecmt.tcl: Add newlines/newline quoting backslashes
