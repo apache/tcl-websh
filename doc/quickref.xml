@@ -74,12 +74,12 @@ $Id$
 	<arg choice="opt">value</arg>
       </cmdsynopsis>
       <!--
-	<emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
-	&lt;key&gt;: <emphasis>uploadfilesize</emphasis>, <emphasis>cmdparam</emphasis>, <emphasis>timeparam</emphasis>,
-	<emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>,
-	<emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis></para><para>
-	If &lt;value&gt; is ommitted, the current value of &lt;key&gt; is returned.
-	-->
+      <emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
+      &lt;key&gt;: <emphasis>uploadfilesize</emphasis>, <emphasis>cmdparam</emphasis>, <emphasis>timeparam</emphasis>,
+      <emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>,
+      <emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis></para><para>
+      If &lt;value&gt; is ommitted, the current value of &lt;key&gt; is returned.
+      -->
 
       <variablelist>
 	<varlistentry>
@@ -97,72 +97,72 @@ $Id$
 	    <para>
 	      Name of the parameter to store reference to a web::command command
 	      in the URL. Default: &quot;cmd&quot;.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><option>timeparam</option> <optional><option>name</option></optional></term>
-	    <listitem>
-	      <para>
-		Name of the parameter to store reference to the timestamp
-		in the URL. Default: &quot;t&quot;.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><option>logsubst</option> <optional><option>boolean</option></optional></term>
-	    <listitem>
-	      <para>
-		Turns substitution of log messages on or off. Default: on.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><option>putxmarkup</option> <optional><option>brace|tag</option></optional></term>
-	    <listitem>
-	      <para>
-		Sets the markup characters for sections to be eval'd in web::putx
-		and web::putxfile commands to either curly braces ({ ... }) or
-		special tags (&lt;% ... %&gt;). Please note that when using the tags &lt;%%&gt;,
-		they cannot be nested. Default: brace.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>timeparam</option> <optional><option>name</option></optional></term>
+	  <listitem>
+	    <para>
+	      Name of the parameter to store reference to the timestamp
+	      in the URL. Default: &quot;t&quot;.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>logsubst</option> <optional><option>boolean</option></optional></term>
+	  <listitem>
+	    <para>
+	      Turns substitution of log messages on or off. Default: on.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>putxmarkup</option> <optional><option>brace|tag</option></optional></term>
+	  <listitem>
+	    <para>
+	      Sets the markup characters for sections to be eval'd in web::putx
+	      and web::putxfile commands to either curly braces ({ ... }) or
+	      special tags (&lt;% ... %&gt;). Please note that when using the tags &lt;%%&gt;,
+	      they cannot be nested. Default: brace.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
 	  <term><option>version</option></term>
-	    <listitem>
-	      <para>
-		Returns the version info string
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
+	  <listitem>
+	    <para>
+	      Returns the version info string
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
 	  <term><option>copyright</option></term>
-	    <listitem>
-	      <para>
-		Returns a copyright message string
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
+	  <listitem>
+	    <para>
+	      Returns a copyright message string
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
 	  <term><option>encryptchain</option> <option>list</option></term>
-	    <listitem>
-	      <para>
-		defines which commands should be tried, in sequence, to encrypt
-		a message. Default: &quot;web::encryptd&quot;
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
+	  <listitem>
+	    <para>
+	      defines which commands should be tried, in sequence, to encrypt
+	      a message. Default: &quot;web::encryptd&quot;
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
 	  <term><option>decryptchain</option> <option>list</option></term>
-	    <listitem>
-	      <para>
-		defines which commands should be tried, in sequence, to decrypt
-		a message. Default: &quot;web::decryptd&quot;
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	  <listitem>
+	    <para>
+	      defines which commands should be tried, in sequence, to decrypt
+	      a message. Default: &quot;web::decryptd&quot;
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
 
     </section>
     <section id="Examples0">
@@ -271,7 +271,7 @@ $Id$
 	      <para>
 		specify what items will be used to format just this
 		URL.  Default is: <command>{scriptname pathinfo
-		querystring}</command>
+		  querystring}</command>
 	      </para>
 	      <para>
 		Use <command>web::cmdurlcfg</command> to define the
@@ -408,7 +408,7 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::cmdurlcfg</command> -set
-	    <option>key</option> <option>value</option></term>
+	      <option>key</option> <option>value</option></term>
 	    <listitem>
 	      <para>
 		add the static parameter <option>key</option>
@@ -568,15 +568,15 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><option>-postdata</option> <option>string</option>
-	    <optional><option>content_type</option></optional></term>
+	      <optional><option>content_type</option></optional></term>
 	    <listitem>
 	      <para>
 		parse <option>string</option> as POST data input with
 		type <option>content_type</option>.
 		<option>content_type</option> can be <literal
-		remap="tt">application/x-www-form-urlencoded</literal>
+		  remap="tt">application/x-www-form-urlencoded</literal>
 		or <literal remap="tt">multipart/form-data;
-		boundary=xxx</literal>. In the second case,
+		  boundary=xxx</literal>. In the second case,
 		<option>content-type</option> must specify the
 		boundary as well. By default, POST data is taken from
 		the request data.</para><para> If
@@ -694,7 +694,7 @@ $Id$
 	      Within the application, the session is initialized using
 	      <command>mgr::init</command>. <command>init</command>
 	      will find no static parameter <literal
-	      remap="tt">id</literal> (which has been specified at
+		remap="tt">id</literal> (which has been specified at
 	      creation time of the session manager using the
 	      <option>-attachto</option> option).  Now, it tries to
 	      create a new session id. This will be possible if a
@@ -723,7 +723,7 @@ $Id$
       <para>
 
 	See <ulink
-	url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
+	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
 	for several sample application demonstrating Webshell's
 	session management facilities.
 
@@ -754,20 +754,20 @@ $Id$
       </para>
       <para>
 
-      web::request is an accessor to CGI related information.
+	web::request is an accessor to CGI related information.
 
 	<variablelist>
 	  <varlistentry>
-	  <term><command>web::request</command></term>
-	  <listitem>
-	    <para>
-	      returns a list of all known keys
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
+	    <term><command>web::request</command></term>
+	    <listitem>
+	      <para>
+		returns a list of all known keys
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
 	    <term><command>web::request</command> <option>key</option>
-	    <optional><option>default</option></optional></term>
+	      <optional><option>default</option></optional></term>
 	    <listitem>
 	      <para>
 		returns the value for <option>key</option>. Can be a
@@ -779,7 +779,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	    <option>-count</option> <option>key</option></term>
+	      <option>-count</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		returns number of items in list for
@@ -790,7 +790,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	    <option>-set</option> <option>key</option></term>
+	      <option>-set</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		does the same as 'web::request <option>key</option>'
@@ -813,10 +813,10 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	    <option>-lappend</option> <option>key</option>
-	    <option>value</option>
-	    <optional><option>value</option></optional>
-	    <optional><option>...</option></optional></term>
+	      <option>-lappend</option> <option>key</option>
+	      <option>value</option>
+	      <optional><option>value</option></optional>
+	      <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
 		append parameters with the same <option>key</option>
@@ -827,7 +827,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	    <option>-unset</option></term>
+	      <option>-unset</option></term>
 	    <listitem>
 	      <para>
 		deletes all parameters from the web::request data
@@ -836,7 +836,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	    <option>-unset</option> <option>key</option></term>
+	      <option>-unset</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		deletes a parameter from the web::request data
@@ -845,7 +845,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	    <option>-reset</option></term>
+	      <option>-reset</option></term>
 	    <listitem>
 	      <para>
 		deletes all parameters from the web::request data
@@ -859,7 +859,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	    <option>-channel</option></term>
+	      <option>-channel</option></term>
 	    <listitem>
 	      <para>
 		fixme: what does it do?
@@ -908,7 +908,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command> <option>key</option>
-	    <optional><option>default</option></optional></term>
+	      <optional><option>default</option></optional></term>
 	    <listitem>
 	      <para>
 		returns the value for <option>key</option>. Can be a
@@ -920,7 +920,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command>
-	    <option>-count</option> <option>key</option></term>
+	      <option>-count</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		returns number of items in list of
@@ -930,7 +930,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command> <option>-set</option>
-	    <option>key</option></term>
+	      <option>key</option></term>
 	    <listitem>
 	      <para>
 		does the same as '<command>web::param</command> <option>key</option>'
@@ -939,9 +939,9 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command> <option>-set</option>
-	    <option>key</option> <option>value</option>
-	    <optional><option>value</option></optional>
-	    <optional><option>...</option></optional></term>
+	      <option>key</option> <option>value</option>
+	      <optional><option>value</option></optional>
+	      <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
 		add the parameter <option>key</option> to the
@@ -952,10 +952,10 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command>
-	    <option>-lappend</option> <option>key</option>
-	    <option>value</option>
-	    <optional><option>value</option></optional>
-	    <optional><option>...</option></optional></term>
+	      <option>-lappend</option> <option>key</option>
+	      <option>value</option>
+	      <optional><option>value</option></optional>
+	      <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
 		append parameters with the same <option>key</option>
@@ -974,7 +974,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command>
-	    <option>-unset</option> <option>key</option></term>
+	      <option>-unset</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		delete a parameter from the web::param data
@@ -1084,7 +1084,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-select</option>
+	      <option>-select</option>
 	      <optional>#</optional><option>channel</option></term>
 	    <listitem>
 	      <para>
@@ -1096,8 +1096,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-set</option> <option>key</option>
-	    <optional><option>value</option></optional></term>
+	      <option>-set</option> <option>key</option>
+	      <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
 		sets property <option>key</option> to
@@ -1109,13 +1109,13 @@ $Id$
 		value of the field (like Content-Type) and their
 		values (like text/html).</para><para>
 		Example:</para><para> <literal
-		remap="tt">web::response -set Status 200</literal>
+		  remap="tt">web::response -set Status 200</literal>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-names</option></term>
+	      <option>-names</option></term>
 	    <listitem>
 	      <para>
 		returns the list of known keys
@@ -1124,7 +1124,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-count</option> <option>key</option></term>
+	      <option>-count</option> <option>key</option></term>
 	    <listitem>
 	      <para>
 		returns number of items in list of <option>key</option>
@@ -1133,8 +1133,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-unset</option>
-	    <optional><option>key</option></optional></term>
+	      <option>-unset</option>
+	      <optional><option>key</option></optional></term>
 	    <listitem>
 	      <para>
 		delete the value of <option>key</option>, if
@@ -1144,8 +1144,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-sendheader</option>
-	    <optional><option>boolean</option></optional></term>
+	      <option>-sendheader</option>
+	      <optional><option>boolean</option></optional></term>
 	    <listitem>
 	      <para>
 		Sets the sendheader flag which indicates and controls
@@ -1160,8 +1160,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-httpresponse</option>
-	    <optional><option>value</option></optional></term>
+	      <option>-httpresponse</option>
+	      <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
 		Sets the HTTP response like &quot;HTTP/1.0 200
@@ -1176,7 +1176,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-bytessent</option></term>
+	      <option>-bytessent</option></term>
 	    <listitem>
 	      <para>
 		returns the number of bytes that have already been sent to this
@@ -1186,7 +1186,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-reset</option></term>
+	      <option>-reset</option></term>
 	    <listitem>
 	      <para>
 		resets the 'sendheader' flag for the channel to true,
@@ -1200,7 +1200,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	    <option>-resetall</option></term>
+	      <option>-resetall</option></term>
 	    <listitem>
 	      <para>
 		performs a 'web::response -reset' on all registered channels
@@ -1247,9 +1247,9 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::putxfile</command>
-	  ??#<optional><option>channel</option></optional>
-	  <option>file</option>
-	  <optional><option>msg</option></optional>
+	??#<optional><option>channel</option></optional>
+	<option>file</option>
+	<optional><option>msg</option></optional>
       </cmdsynopsis>
 
 	As web::putx, but takes input from a file.
@@ -1318,14 +1318,14 @@ $Id$
       </itemizedlist>
     </para>
     <section id="web::logdest">
-    <title>web::logdest</title>
-    <para>
+      <title>web::logdest</title>
+      <para>
 
 	web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest
 
 	<cmdsynopsis>
 	  <command>web::logdest</command> <arg>subcommand</arg> <arg
-	  choice="opt">options</arg> <arg>level</arg>
+								  choice="opt">options</arg> <arg>level</arg>
 	  <arg>plugin</arg>
 	</cmdsynopsis>
 
@@ -1343,19 +1343,19 @@ $Id$
 	plugins may have indiviudal options
 	(<option>-unbuffered</option>), see documentation below.
 
-      The format string consits of format specifications for
-      <function>fprintf()</function> plus: <literal
-      remap="tt">p</literal> (process id), <literal
-      remap="tt">t</literal> (thread id), <literal
-      remap="tt">n</literal> (log level), <literal
-      remap="tt">f</literal> (log type), and <literal
-      remap="tt">m</literal> (the message).
+	The format string consits of format specifications for
+	<function>fprintf()</function> plus: <literal
+	  remap="tt">p</literal> (process id), <literal
+	  remap="tt">t</literal> (thread id), <literal
+	  remap="tt">n</literal> (log level), <literal
+	  remap="tt">f</literal> (log type), and <literal
+	  remap="tt">m</literal> (the message).
 
-    </para>
-  </section>
-  <section id="web::logfilter">
-    <title>web::logfilter</title>
-    <para>
+      </para>
+    </section>
+    <section id="web::logfilter">
+      <title>web::logfilter</title>
+      <para>
 
 	Syntax:
 	<cmdsynopsis>
@@ -1370,42 +1370,42 @@ $Id$
       <para>
 	Add a filter to the list.
 	<variablelist>
-	<varlistentry>
+	  <varlistentry>
 	    <term><command>web::logfilter</command>
-	    <option>add</option> <option>level</option></term>
-	  <listitem>
-	    <para>
-	      add a level to the list
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
+	      <option>add</option> <option>level</option></term>
+	    <listitem>
+	      <para>
+		add a level to the list
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
 	    <term><command>web::logfilter</command>
-	    <option>delete</option>
-	    <optional><option>name</option></optional></term>
-	  <listitem>
-	    <para>
-	      remove a <option>name</option> from list, or remove all
-	      filters if <option>name</option> is omitted.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
+	      <option>delete</option>
+	      <optional><option>name</option></optional></term>
+	    <listitem>
+	      <para>
+		remove a <option>name</option> from list, or remove all
+		filters if <option>name</option> is omitted.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
 	    <term><command>web::logfilter</command>
-	    <option>names</option></term>
-	  <listitem>
-	    <para>
-	      list all filters that have been set
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
+	      <option>names</option></term>
+	    <listitem>
+	      <para>
+		list all filters that have been set
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
 
-    </para>
-  </section>
-  <section id="web::log">
-    <title>web::log</title>
-    <para>
+      </para>
+    </section>
+    <section id="web::log">
+      <title>web::log</title>
+      <para>
 
 	<cmdsynopsis>
 	  <command>web::log</command> <arg>level</arg>
@@ -1417,111 +1417,107 @@ $Id$
 	<command>subst</command> on its arguments.  This behaviour is
 	turned off by default, and can be turned on by doing:
 	<programlisting>web::config logsubst 1</programlisting>.
-    </para>
-  </section>
-  <section id="log_plug-ins">
-    <title>log plug-ins</title>
-  <section id="file">
-    <title>file</title>
-    <para>
-
-      <variablelist>
-	<varlistentry>
-	  <term>Syntax:</term>
-	  <listitem>
-	    <para>
-	      web::logdest add *.-debug <emphasis>file</emphasis> ?options? <option>fileName</option></para><para>
-	      Option is: <option>-unbuffered</option>
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
-
-    </para>
-  </section>
-  <section id="syslog">
-    <title>syslog</title>
-    <para>
-
-      <variablelist>
-	<varlistentry>
-	  <term>Syntax:</term>
-	  <listitem>
-	    <para>
-	      web::logdest add *.-debug <emphasis>syslog</emphasis> <option>level</option></para><para>
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
-
-      See the man page for syslog for levels on your system. Typical: 10.
-
-    </para>
-  </section>
-  <section id="command">
-    <title>command</title>
-    <para>
-
-      <variablelist>
-	<varlistentry>
-	  <term>Syntax:</term>
-	  <listitem>
-	    <para>
-	      web::logdest add *.-debug <emphasis>command</emphasis> <option>cmdName</option>
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
-
-    </para>
-  </section>
-  <section id="channel">
-    <title>channel</title>
-    <para>
-
-      <variablelist>
-	<varlistentry>
-	  <term>Syntax:</term>
-	  <listitem>
-	    <para>
-	      web::logdest add *.-debug <emphasis>channel</emphasis> ?options? <option>channel</option></para><para>
-	      Option is: <option>-unbuffered</option>
-	    </para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
-
-    </para>
-  </section>
-  <section id="apache">
-    <title>apache</title>
-    <para>
-      web::logdest add *.-debug <emphasis>apache</emphasis>
-
-      Available in mod_websh only.
-
-    </para>
-  </section>
+      </para>
     </section>
-  <section id="Examples8">
-    <title>Examples</title>
-    <para>
+    <section id="log_plug-ins">
+      <title>log plug-ins</title>
+      <section id="file">
+	<title>file</title>
+	<para>
+	  Syntax:
+	  <cmdsynopsis>
+	    <command>web::logdest</command>
+	    <arg>add</arg>
+	    <arg>destination.-level</arg>
+	    <arg>file</arg>
+	    <arg choice="opt">options</arg>
+	    <arg>filename</arg>
+	  </cmdsynopsis>
+	  Option is: <option>-unbuffered</option>
+	</para>
+      </section>
+      <section id="syslog">
+	<title>syslog</title>
+	<para>
+	  <variablelist>
+	    <varlistentry>
+	      <term>Syntax:</term>
+	      <listitem>
+		<para>
+		  web::logdest add *.-debug <emphasis>syslog</emphasis> <option>level</option></para><para>
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
 
-      <programlisting>
-	web::logfilter add *.-debug
-	web::logdest add *.-debug channel stdout
-	web::log info {websh is cool}
-	==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
-	web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
-	web::log info {websh is cool}
-	==&gt; --&gt; websh is cool
-	web::logdest add -maxchar 5 *.-debug channel stdout
-	web::log info {websh is cool}
-	==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
-      </programlisting>
+	  See the man page for syslog for levels on your system. Typical: 10.
 
-    </para>
-  </section>
+	</para>
+      </section>
+      <section id="command">
+	<title>command</title>
+	<para>
+
+	  <variablelist>
+	    <varlistentry>
+	      <term>Syntax:</term>
+	      <listitem>
+		<para>
+		  web::logdest add *.-debug <emphasis>command</emphasis> <option>cmdName</option>
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+
+	</para>
+      </section>
+      <section id="channel">
+	<title>channel</title>
+	<para>
+
+	  <variablelist>
+	    <varlistentry>
+	      <term>Syntax:</term>
+	      <listitem>
+		<para>
+		  web::logdest add *.-debug <emphasis>channel</emphasis> ?options? <option>channel</option></para><para>
+		  Option is: <option>-unbuffered</option>
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+
+	</para>
+      </section>
+      <section id="apache">
+	<title>apache</title>
+	<para>
+	  web::logdest add *.-debug <emphasis>apache</emphasis>
+
+	  Available in mod_websh only.
+
+	</para>
+      </section>
+    </section>
+    <section id="Examples8">
+      <title>Examples</title>
+      <para>
+
+	<programlisting>
+	  web::logfilter add *.-debug
+	  web::logdest add *.-debug channel stdout
+	  web::log info {websh is cool}
+	  ==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
+	  web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
+	  web::log info {websh is cool}
+	  ==&gt; --&gt; websh is cool
+	  web::logdest add -maxchar 5 *.-debug channel stdout
+	  web::log info {websh is cool}
+	  ==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
+	</programlisting>
+
+      </para>
+    </section>
   </section>
   <section id="context_handling">
     <title>context handling</title>
@@ -1550,7 +1546,7 @@ $Id$
 		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; <option>args</option></para><para>
 		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
 		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
-		<option>cnames</option>, and <option>dump</option>.  
+		<option>cnames</option>, and <option>dump</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2797,7 +2793,7 @@ $Id$
       <para>
 
 	web::match treats v1 as a list. Thus, <emphasis>web::match
-	&quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
+	  &quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
 	<emphasis>ok</emphasis>.
 
       </para>
