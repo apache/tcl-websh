@@ -496,7 +496,14 @@ int initPool(websh_server_conf * conf)
 
     if (conf->mainInterp != NULL || conf->webshPool != NULL) {
 	/* we have to cleanup */
+#ifndef APACHE2
+ 	ap_log_printf(conf->server, "initPool: mainInterp or webshPool not NULL\n");
+#else /* APACHE2 */
+	ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, conf->server,
+		     "initPool: mainInterp or webshPool not NULL\n");
+#endif /* APACHE2 */
 	destroyPool(conf);
+return 0;
     }
 
     /* create a single main interpreter */
