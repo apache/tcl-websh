@@ -30,6 +30,6 @@ int destroyLogToApData(Tcl_Interp * interp, LogToApData * logToApData);
 ClientData createLogToAp(Tcl_Interp * interp, ClientData clientData,
 			 int objc, Tcl_Obj * CONST objv[]);
 int destroyLogToAp(Tcl_Interp * interp, ClientData clientData);
-int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg);
+int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg, ...);
 
 #endif

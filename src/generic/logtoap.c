@@ -71,10 +71,14 @@ int destroyLogToAp(Tcl_Interp * interp, ClientData clientData)
 /* ----------------------------------------------------------------------------
  * logToAp
  * ------------------------------------------------------------------------- */
-int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg)
+int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg, ...)
 {
 
     request_rec *r = NULL;
+
+    va_list args;
+    va_start(args, msg);
+   
 
     if ((interp == NULL) || (msg == NULL))
 	return TCL_ERROR;
@@ -84,10 +88,12 @@ int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg)
     if (r != NULL)
 	if (r->server != NULL)
 #ifndef APACHE2
-	    ap_log_printf(r->server, msg);
+	    ap_log_printf(r->server, msg, args);
 #else /* APACHE2 */
-	    ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r, msg);
+	    ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r, msg, args);
 #endif /* APACHE2 */
 
+    va_end(args);
+   
     return TCL_OK;
 }
