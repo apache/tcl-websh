@@ -84,6 +84,8 @@ int logToCmd(Tcl_Interp * interp, ClientData clientData, char *msg)
     /* ----------------------------------------------------------------------
      * gonna call cmdName msg
      * ------------------------------------------------------------------- */
+
+    /* fixme: ouch! create a proper list to eval here!! */
     Tcl_DStringInit(&ds);
     Tcl_DStringAppend(&ds, (char *) logToCmdData, -1);
     Tcl_DStringAppend(&ds, " {", -1);
