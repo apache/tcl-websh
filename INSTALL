@@ -1,4 +1,4 @@
-To install Websh:
+To compile Websh:
 
 from the top level directory,
 
@@ -12,8 +12,11 @@ make mod_websh.so
 
 You may have to pass special options to configure, such as
 
---with-httpdinclude to indicate where the apache header files are.
+--with-httpdinclude to indicate where the Apache header files are.
 
 --with-tclinclude to indicate where the Tcl header files are.
 
 --with-tcl to indicate where tclConfig.sh is located.
+
+--enable-threads if you plan to use it with Apache 2 
+  (don't forget to also compile Tcl with threads enabled).
