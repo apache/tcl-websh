@@ -283,6 +283,7 @@ test log-3.3 {-nosubst} {
     web::logfilter add *.-debug
     web::logdest add -maxchar 5 -format "\$m"  *.-debug command logTestCatchMsg
     set i 0
+    web::config logsubst 1
     set tmp [web::log info {[incr i]}]
     web::config logsubst 0
     set tmp [web::log info {[incr i]}]
