@@ -40,6 +40,7 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
     int mode;
     int readToEnd = 0;
     int content_length = 0;
+    Tcl_DString translation;
 
     channel = Web_GetChannelOrVarChannel(interp, channelName, &mode);
     if (channel == NULL) {
@@ -61,8 +62,8 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
 	return TCL_ERROR;
     }
 
-    /* fixme: we don't set the channel options back. maybe we should. */
-    /* For now (3.5) we will add this to the documentation. */
+    Tcl_DStringInit(&translation);
+    Tcl_GetChannelOption(interp, channel, "-translation", &translation);
     Tcl_SetChannelOption(interp, channel, "-translation", "binary");
 
     /* ------------------------------------------------------------------------
@@ -86,6 +87,8 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
 
 	    if (Tcl_GetIntFromObj(interp, len, &content_length) != TCL_OK) {
 
+		Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+		Tcl_DStringFree(&translation);
 		/* unregister if was a varchannel */
 		Web_UnregisterVarChannel(interp, channelName, channel);
 		return TCL_ERROR;
@@ -118,6 +121,8 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
 
 	    Tcl_DecrRefCount(formData);
 
+	    Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+	    Tcl_DStringFree(&translation);
 	    /* unregister if was a varchannel */
 	    Web_UnregisterVarChannel(interp, channelName, channel);
 
@@ -125,6 +130,8 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
 	}
     }
 
+    Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+    Tcl_DStringFree(&translation);
     /* unregister if was a varchannel */
     Web_UnregisterVarChannel(interp, channelName, channel);
 
@@ -186,6 +193,7 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
     int mode;
     char *boundary = mimeGetParamFromContDisp(content_type, "boundary");
     int res = 0;
+    Tcl_DString translation;
 
 /*   printf("DBG parseMultipartFormData - starting\n"); fflush(stdout); */
 
@@ -214,13 +222,14 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
 	return TCL_ERROR;
     }
 
-    /* fixme: we don't set the channel options back. maybe we should. */
-    /* For now (3.5) we will add this to the documentation. */
+    Tcl_DStringInit(&translation);
+    Tcl_GetChannelOption(interp, channel, "-translation", &translation);
     Tcl_SetChannelOption(interp, channel, "-translation", "binary");
-
 
     res = mimeSplitMultipart(interp, channel, boundary, requestData);
 
+    Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+    Tcl_DStringFree(&translation);
     /* unregister if was a varchannel */
     Web_UnregisterVarChannel(interp, channelName, channel);
 
