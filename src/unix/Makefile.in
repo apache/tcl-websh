@@ -270,28 +270,6 @@ install-libraries: libraries
 #	    $(INSTALL_DATA) $$i $(includedir) ; \
 #	done;
 
-# =============================================================================
-# Install documentation.  Unix manpages should go in the $(mandir)
-# directory.
-# =============================================================================
-
-install-doc: doc
-	$(mkinstalldirs) $(prefix)/doc
-	@for i in quickref.html quickref.txt ; \
-	do \
-	echo "Installing $$i"; \
-	rm -f $(prefix)/doc/$$i; \
-	$(INSTALL_DATA) ../doc/$$i $(prefix)/doc/$$i ; \
-	chmod 444 $(prefix)/doc/$$i; \
-	done
-	@for i in README license.terms ChangeLog changes ; \
-	do \
-	echo "Installing $$i"; \
-	rm -f $(prefix)/doc/$$i; \
-	$(INSTALL_DATA) ../$$i $(prefix)/doc/$$i ; \
-	chmod 444 $(prefix)/doc/$$i; \
-	done
-
 test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
 	@LD_LIBRARY_PATH="$(TCL_PACKAGE_PATH):$(TCL_LIB_DIR):`pwd`:$(LD_LIBRARY_PATH)"; \
 	export LD_LIBRARY_PATH; \
@@ -526,6 +504,28 @@ install-lib-binaries: installdirs
 	    echo " $(RANLIB) $(DESTDIR)$(bindir)/$$p"; \
 	    $(RANLIB) $(DESTDIR)$(bindir)/$$p; \
 	  else :; fi; \
+	done
+
+# =============================================================================
+# Install documentation.  Unix manpages should go in the $(mandir)
+# directory.
+# =============================================================================
+
+install-doc: doc
+	$(mkinstalldirs) $(DESTDIR)/doc
+	@for i in quickref.html quickref.txt ; \
+	do \
+	echo "Installing $$i"; \
+	rm -f $(DESTDIR)/doc/$$i; \
+	$(INSTALL_DATA) ../../doc/$$i $(DESTDIR)/doc/$$i ; \
+	chmod 444 $(DESTDIR)/doc/$$i; \
+	done
+	@for i in README license.terms ChangeLog changes ; \
+	do \
+	echo "Installing $$i"; \
+	rm -f $(DESTDIR)/doc/$$i; \
+	$(INSTALL_DATA) ../$$i $(DESTDIR)/doc/$$i ; \
+	chmod 444 $(DESTDIR)/doc/$$i; \
 	done
 
 # =============================================================================
