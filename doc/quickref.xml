@@ -1527,7 +1527,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>Creation  </term>
+	    <term>Creation</term>
 	    <listitem>
 	      <para>
 		<command>web::context</command> <option>name</option>
@@ -1536,29 +1536,27 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Creates a namespace <option>name</option> with the following commands:
+	Creates a namespace <option>name</option> with the following
+	commands:
+
+	<cmdsynopsis>
+	  <command><varname>name</varname>::subcommand</command>
+	  <arg>args</arg>
+	</cmdsynopsis>
+
+	Subcommands are: <option>cset</option>,
+	<option>cappend</option>, <option>clappend</option>,
+	<option>cget</option>, <option>cexists</option>,
+	<option>cunset</option>, <option>carray</option>,
+	<option>cnames</option>, and <option>dump</option>.
+
+	Manages data of the context. The subcommands behave like the
+	Tcl commands with similar names.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>Syntax</term>
-	    <listitem>
-	      <para>
-		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; <option>args</option></para><para>
-		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
-		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
-		<option>cnames</option>, and <option>dump</option>.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
-	Manages data of the context. The subcommands have their
-	familiar behaviour of the Tcl commands with similar
-	names.
-
-	<variablelist>
-	  <varlistentry>
-	    <term>&lt;name&gt;::cset <option>key</option> <option>value</option></term>
+	    <term><command><varname>name</varname>::cset</command>
+	    <option>key</option> <option>value</option></term>
 	    <listitem>
 	      <para>
 		store <option>value</option>
@@ -1566,43 +1564,56 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::cappend <option>key</option> <option>value</option> ?<option>value</option> ...?</term>
+	    <term><command><varname>name</varname>::cappend</command>
+	    <option>key</option> <option>value</option>
+	    <optional><option>value</option></optional>
+	    <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
-		append <option>value</option> to existing value for <option>key</option>
+		append <option>value</option> to existing value for
+		<option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::clappend <option>key</option> <option>value</option> ?<option>value</option> ...?</term>
+	    <term><command><varname>name</varname>::clappend</command>
+	    <option>key</option> <option>value</option>
+	    <optional><option>value</option></optional>
+	    <optional><option>...</option></optional></term>
 	    <listitem>
 	      <para>
-		append <option>value</option> to existing list of values for <option>key</option>
+		append <option>value</option> to existing list of
+		values for <option>key</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::cget <option>key</option> <optional><option>default</option></optional></term>
+	    <term><command><varname>name</varname>::cget</command>
+	    <option>key</option>
+	    <optional><option>default</option></optional></term>
 	    <listitem>
 	      <para>
-		access the value for key <option>key</option>, or return <option>default</option>
-		if <option>key</option> does not exist in the context. If <option>default</option>
-		is omitted, an empty string is returned if <option>key</option>
-		is unknown.
+		access the value for key <option>key</option>, or
+		return <option>default</option> if
+		<option>key</option> does not exist in the context. If
+		<option>default</option> is omitted, an empty string
+		is returned if <option>key</option> is unknown.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::cexists <option>key</option></term>
+	    <term><command><varname>name</varname>::cexists</command>
+	    <option>key</option></term>
 	    <listitem>
 	      <para>
-		returns true (1) if <option>key</option> exists in context, false (0)
-		otherwise.
+		returns true (1) if <option>key</option> exists in
+		context, false (0) otherwise.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::cunset <option>key</option></term>
+	    <term><command><varname>name</varname>::cunset</command>
+	    <option>key</option></term>
 	    <listitem>
 	      <para>
 		remove <option>key</option> from context
@@ -1610,7 +1621,9 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::carray <option>option</option> <option>key</option> <option>arg</option></term>
+	    <term><command><varname>name</varname>::carray</command>
+	    <option>option</option> <option>key</option>
+	    <option>arg</option></term>
 	    <listitem>
 	      <para>
 		array manipulation as known from the Tcl command
@@ -1619,15 +1632,17 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>&lt;name&gt;::cnames</option> <optional><option>pattern</option></optional></term>
+	    <term><command><varname>name</varname>::cnames</command>
+	    <optional><option>pattern</option></optional></term>
 	    <listitem>
 	      <para>
-		lists existing keys of context matching <option>pattern</option>
+		lists existing keys of context matching
+		<option>pattern</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::dump</term>
+	    <term><command><varname>name</varname>::dump</command></term>
 	    <listitem>
 	      <para>
 		serialize context
@@ -1671,7 +1686,7 @@ $Id$
 	    <term>Syntax</term>
 	    <listitem>
 	      <para>
-		<emphasis>&lt;name&gt;</emphasis>::<option>subcommand</option> <option>args</option></para><para>
+		<emphasis><varname>name</varname></emphasis>::<option>subcommand</option> <option>args</option></para><para>
 		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
 		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
 		<option>cnames</option>, <option>init</option>, <option>new</option>, <option>commit</option>, <option>invalidate</option>, and <option>id</option>.
@@ -1688,7 +1703,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><option>&lt;name&gt;::init</option> <optional><option>id</option></optional></term>
+	    <term><option><varname>name</varname>::init</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		load an existing session context with id <option>id</option>, or create a new one,
@@ -1700,7 +1715,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>&lt;name&gt;::new</option> <optional><option>id</option></optional></term>
+	    <term><option><varname>name</varname>::new</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context. Automation depends on the settings of the
@@ -1709,7 +1724,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::commit</term>
+	    <term><varname>name</varname>::commit</term>
 	    <listitem>
 	      <para>
 		make session context persistent
@@ -1717,7 +1732,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::id</term>
+	    <term><varname>name</varname>::id</term>
 	    <listitem>
 	      <para>
 		return id of session
@@ -1725,7 +1740,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::invalidate</term>
+	    <term><varname>name</varname>::invalidate</term>
 	    <listitem>
 	      <para>
 		delete session in memory and on file system
@@ -1831,7 +1846,7 @@ $Id$
 	    <term>Syntax</term>
 	    <listitem>
 	      <para>
-		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; <option>args</option></para><para>
+		<emphasis><varname>name</varname></emphasis>::&lt;subcommand&gt; <option>args</option></para><para>
 		Subcommands are: <option>cset</option>, <option>cappend</option>, <option>clappend</option>,
 		<option>cget</option>, <option>cexists</option>,  <option>cunset</option>, <option>carray</option>,
 		<option>cnames</option>, <option>init</option>, <option>new</option>, <option>commit</option>, <option>invalidate</option>, and <option>id</option>.
@@ -1842,7 +1857,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><option>&lt;name&gt;::init</option> <optional><option>id</option></optional></term>
+	    <term><option><varname>name</varname>::init</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		load an existing session context (cookie must have been sent by the
@@ -1851,7 +1866,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>&lt;name&gt;::new</option> <optional><option>id</option></optional></term>
+	    <term><option><varname>name</varname>::new</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context.
@@ -1859,7 +1874,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::commit</term>
+	    <term><varname>name</varname>::commit</term>
 	    <listitem>
 	      <para>
 		send a cookie
@@ -1867,7 +1882,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::id</term>
+	    <term><varname>name</varname>::id</term>
 	    <listitem>
 	      <para>
 		return id of session
@@ -1875,7 +1890,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::invalidate</term>
+	    <term><varname>name</varname>::invalidate</term>
 	    <listitem>
 	      <para>
 		delete session in memory and on client side
