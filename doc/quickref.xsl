@@ -42,6 +42,14 @@
     <u><xsl:copy-of select="$content"/></u>
   </xsl:template>
 
+  <xsl:template name="inline.monounderlineseq">
+    <xsl:param name="content">
+      <xsl:call-template name="anchor"/>
+      <xsl:apply-templates/>
+    </xsl:param>
+    <tt><u><xsl:copy-of select="$content"/></u></tt>
+  </xsl:template>
+
   <xsl:template match="optional">
     <xsl:value-of select="$arg.choice.opt.open.str"/>
     <xsl:call-template name="inline.charseq"/>
@@ -85,7 +93,7 @@
 	<xsl:call-template name="inline.monoseq"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:call-template name="inline.underlineseq"/>
+	<xsl:call-template name="inline.monounderlineseq"/>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:choose>

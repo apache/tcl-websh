@@ -548,7 +548,7 @@ $Id$
 
 	Options are: <option>-cmd</option>,
 	<option>-querystring</option>, <option>-postdata</option>,
-	<option>-track</option> and <option>-hook</option>
+	<option>-track</option> and <option>-hook</option>.
       </para>
 	Parse information and call a command.
       <para>
@@ -569,7 +569,7 @@ $Id$
 	    <term><option>-querystring</option> <option>string</option></term>
 	    <listitem>
 	      <para>
-		parse <option>string</option> as querystring. If
+		parse <option>string</option> as the querystring. If
 		<option>string</option> is an empty string,
 		querystring parsing is turned off. By default,
 		querystring is taken from the request data (CGI
@@ -585,9 +585,9 @@ $Id$
 		parse <option>string</option> as POST data input with
 		type <option>content_type</option>.
 		<option>content_type</option> can be <literal
-		  remap="tt">application/x-www-form-urlencoded</literal>
+		remap="tt">application/x-www-form-urlencoded</literal>
 		or <literal remap="tt">multipart/form-data;
-		  boundary=xxx</literal>. In the second case,
+		boundary=xxx</literal>. In the second case,
 		<option>content-type</option> must specify the
 		boundary as well. By default, POST data is taken from
 		the request data.</para><para> If
@@ -611,9 +611,9 @@ $Id$
 	      </para>
 	      <para>
 		Use the keyword <literal remap="tt">end</literal> for
-		<option>content_length</option> to indicate that Webshell
-		should read all content.</para><para> Examples for
-		<option>content_type</option> include:
+		<option>content_length</option> to indicate that
+		Webshell should read all content.</para><para>
+		Examples for <option>content_type</option> include:
 		<itemizedlist>
 		  <listitem><para><literal remap="tt">multipart/form-data; boundary=xxxx</literal></para></listitem>
 		  <listitem><para><literal remap="tt">application/x-www-form-urlencoded</literal></para></listitem>
@@ -1012,12 +1012,10 @@ $Id$
       </para>
       Exactly like <command>web::param</command>.
       <para>
-
 	<command>web::formvar</command> is an accessor to HTML FORM
 	data.  After <command>web::dispatch</command> has parsed the
 	POST data, you can access all form fields using
-	<command>web::formvar</command> .
-
+	<command>web::formvar</command>.
       </para>
     </section>
     <section id="Examples6">
@@ -1045,12 +1043,13 @@ $Id$
     <title>Response data handling</title>
     <para>
       Webshell can send output to any Tcl channel and to global
-      variables (<command>web::put</command>). Optionally,
-      data is scanned for Tcl code before it is output to a channel
+      variables (<command>web::put</command>). Optionally, data is
+      scanned for Tcl code before it is output to a channel
       (<command>web::putx</command>). Webshell manages
       <emphasis>response objects</emphasis> that are related to Tcl
       channels and are identified using the name of the corresponding
-      Tcl channel. Configuration with <command>web::response</command>.
+      Tcl channel. Configuration is achieved with
+      <command>web::response</command>.
     </para>
     <section id="web::response">
       <title>web::response</title>
@@ -1067,7 +1066,7 @@ $Id$
 	  <arg>args</arg>
 	</cmdsynopsis>
 
-	Subcommands are <command>-select</command>,
+	Subcommands are <option>-select</option>,
 	<option>-set</option>, <option>-lappend</option>,
 	<option>-names</option>, <option>-count</option>,
 	<option>-unset</option>, <option>-reset</option>, and
@@ -1078,18 +1077,24 @@ $Id$
 	Selects the default response object and sets and accesses
 	properties of the response object, and returns the name of the
 	response object.
+      </para>
 
-      </para><para>
-	<command>web::response</command>
-	<option>-select</option>
-	<option>channelName</option>
-
-	selects <option>channelName</option> as new response
-	object. If the <option>channelName</option> is prepended by a
-	#, it refers to a global variable named
-	<option>channelName</option>.
-
+      <para>
 	<variablelist>
+	  <varlistentry>
+	    <term><command>web::response</command>
+	      <option>-select</option>
+	      <option>channelName</option>
+	    </term>
+	    <listitem>
+	      <para>
+		selects <option>channelName</option> as new response
+		object. If the <option>channelName</option> is
+		prepended by a #, it refers to a global variable named
+		<option>channelName</option>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command></term>
 	    <listitem>
@@ -1185,7 +1190,7 @@ $Id$
 		<option>value</option> given, returns the the current
 		HTTP response set. In the case of the Apache module
 		mod_websh, Apache replaces the protocol
-		&quot;HTTP/??&quot; in the reponse to
+		&quot;HTTP/??&quot; in the reponse with
 		&quot;HTTP/1.1&quot;.
 	      </para>
 	    </listitem>
@@ -1253,7 +1258,7 @@ $Id$
 	Writes <option>text</option> to the specified channel. Code in
 	curly brackets is eval'd, unless the brackets are escaped by
 	&quot;\&quot;. These markup characters '{...}' can be changed
-	to '&lt;% ... %&gt;' with 'web::config putxmarkup tag'.
+	to '&lt;? ... ?&gt;' with 'web::config putxmarkup tag'.
 
       </para>
     </section>
@@ -1267,14 +1272,13 @@ $Id$
 	<option>file</option>
 	<optional><option>msg</option></optional>
       </cmdsynopsis>
-
-	As web::putx, but takes input from a file.
-
+	Like web::putx, but takes input from a file.
+      </para>
+      <para>
 	Returns 0 on success, 1 otherwise. If an error occurs, an
 	error message is written to <option>msg</option>. If only two
 	arguments are passed, then <option>channel</option> takes
 	precedence.
-
       </para>
     </section>
     <section id="Examples7">
