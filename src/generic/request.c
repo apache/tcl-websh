@@ -208,10 +208,14 @@ int removeTempFiles(Tcl_Interp * interp, RequestData * requestData)
 		    "removeTempFiles", WEBLOG_INFO,
 		    "removing temporary file ", Tcl_GetString(tclo), ".",
 		    NULL);
-	    /* fixme: check for result of remove() --> log message
-	       Use PosixError
-	    */
-	    remove(Tcl_GetString(tclo));
+
+	    if (remove(Tcl_GetString(tclo)) < 0) {
+		LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
+			"removeTempFiles", WEBLOG_ERROR,
+			"Error: ", Tcl_PosixError(interp),
+			NULL);
+		return TCL_ERROR;
+	    }
 	    Tcl_DecrRefCount(tclo);
 	}
     }
