@@ -191,7 +191,7 @@ proc web::filecontext {ctxmgrname args} {
 	}
     }
     if {[info exists ${ctxmgrname}::_path] == 0} {
-	error "web::filecontext requires a -path argument"
+	error "web::filecontext requires a -path argument.  Use '-path %d' if you would like to keep the default behavior."
     } 
 
     # now eat up remaining args
