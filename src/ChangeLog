@@ -1,11 +1,55 @@
+2002-08-01  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* makedist:
+	added makedist to create tar balls from actual and previous builds
+
+	* apachetests/runtests.tcl:
+	fixed reference to mod_websh.so (proper version)
+	
+	* unix/Makefile.in:
+	disabled dist target (referred to ../../makedist)
+	removed a bunch of unused stuff
+
+	* src/unix/configure.in:
+	removed initcode from cleanfiles
+	
+2002-07-31  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* INSTALL, README:
+	added autoconf and other info to compile instructions
+
+	* websh-spec:
+	dynamic version of mod_websh, added make websh
+
+	* doc/faq.html:
+	removed (redundant to tcl-site/websh/faq.ws3)
+
+	* examples/README:
+	added (just a note of caution not to use the examples)
+
+	* Announce, src/Makefile, unix/Makefile.modwebsh, win/script.h:
+	removed (outdated, unused ...)
+	
+	* license.terms:
+	fixed typo
+
+	* generic/cfg.c, /generic/cfg.h, generic/webout.h:
+	harmonized different outputs of Websh's version
+
+	* tests/webout.test:
+	fixed teast ouptut-4.4: adapted for new version output
+
+	* src/unix/configure.in:
+	fixed NODOT_VERSION (currently unused)
+
 2002-07-30  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* generic/web.c (Websh_Init):
 	provide package websh
 	
-	* ChangeLog: 
+	* ChangeLog, changes: 
 	incorporated file "changes", which is now removed
-	
+
 2002-07-29  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* INSTALL: 
