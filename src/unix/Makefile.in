@@ -213,8 +213,8 @@ install-binaries: binaries install-lib-binaries install-bin-binaries
 # Dist target - to make the tarball.
 # =============================================================================
 
-dist: distclean distdoc
-	(cd ../../../ && pwd && tar czvf websh-$(VERSION).tar.gz tcl-websh)
+dist: 
+	@echo "use ../../makedist to create a tar ball for a specific release"
 
 distdoc: ../../doc/quickref.xml ../../doc/quickref.xsl
 	(cd ../../doc/ && make)
