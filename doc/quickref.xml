@@ -2605,6 +2605,10 @@ $Id$
   </section>
   <section id="Apache_module_specific_commands">
     <title>Apache module specific commands</title>
+    <para>Note that these commands are implemented as dummies in the CGI
+    version of Webshell only. They don't do anything except for
+    web::initializer and web::finalizer, which just evaluate the code
+    provided in the argument.
     <section id="web::initializer">
       <title>web::initializer</title>
       <para>
@@ -2638,18 +2642,28 @@ $Id$
 
       </para>
     </section>
-    <section id="web::dofinalize">
-      <title>web::dofinalize</title>
+    <section id="web::finalize">
+      <title>web::finalize</title>
       <para>
 
 	Syntax:
 	<cmdsynopsis>
-	  <command>web::dofinalize</command>
+	  <command>web::finalize</command>
 	</cmdsynopsis>
-
 	Execute finalizer code that has been registerd using
 	<command>web::finalizer</command>, starting with the most
 	recently added <option>code</option>.
+        Note that this command is executed automatically and does not have 
+        to be called manually. However, it can be used as a hook, when the
+        interpreter is deleted:
+	<programlisting>
+	  rename web::finalize web::finalize.orig
+	  proc web::myFinalize {} {
+	      # code to eval before finalize.orig
+	      finalize.orig
+	      # code to eval after finalize.orig
+	  }
+	</programlisting>
 
       </para>
     </section>
