@@ -96,7 +96,7 @@ test htmlify-3.2 {start interp, use htmlify, and stop again} {unixOnly} {
     set res [htmlify3_2 eval web::htmlify " !\"#\$%&'()*+"]
     interp delete htmlify3_2
     set res
-} "!&quot;#$%&amp;'()*+"
+} "!&quot;\#\$%&amp;'()*+"
 
 # -----------------------------------------------------------------------------
 # -- syntax
