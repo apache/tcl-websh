@@ -2406,7 +2406,7 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::htmlify</command>
-	  <arg choice="opt"><option>-options</option></arg>
+	  <arg choice="opt">-options</arg>
 	  <arg><replaceable>text</replaceable></arg>.
       </cmdsynopsis>
       </para>
@@ -2641,9 +2641,9 @@ $Id$
 	  <programlisting>
 	    rename web::finalize web::finalize.orig
 	    proc web::myFinalize {} {
-	    # code to eval before finalize.orig
-	    finalize.orig
-	    # code to eval after finalize.orig
+	        # code to eval before finalize.orig
+	        finalize.orig
+	        # code to eval after finalize.orig
 	    }
 	  </programlisting>
 	</example>
@@ -2836,16 +2836,16 @@ $Id$
 	<para>
 	  <programlisting>
 	    proc web::interpmap {filename} {
-	    if {[string match "/path/to/myApp" $filename]} {
-	    # this is my special app
-	    return /real/path/to/myApp
-	    }
-	    if {[string match "*.ws3"]} {
-	    # scripts have their own interp class
-	    return $filename
-	    }
-	    # default: all templates are handled by my handler
-	    return /my/special/template/handler
+	        if {[string match "/path/to/myApp" $filename]} {
+	            # this is my special app
+	            return /real/path/to/myApp
+	        }
+	        if {[string match "*.ws3"]} {
+	            # scripts have their own interp class
+	            return $filename
+	        }
+	        # default: all templates are handled by my handler
+	        return /my/special/template/handler
 	    }
 	  </programlisting>
 	</para>
@@ -2892,12 +2892,18 @@ $Id$
     <section id="web::tempfile">
       <title>web::tempfile</title>
       <para>
+	<cmdsynopsis>
+	  <command>web::tempfile</command>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	</cmdsynopsis>
+	Options are <option>-path <replaceable>path</replaceable></option>, 
+	<option>-prefix <replaceable>prefix</replaceable></option>, and <option>-remove</option>.
 	Returns a unique name of a temporary file. The maximum of
 	guaranteed unique names per application is system dependent.
 	This command just returns the name of a file. It is the
 	programmers job to handle the file, for example to open
 	it. Note that Websh keeps an internal list of all file
-	names generated with web::tempfile and will attempt to delete
+	names generated with <command>web::tempfile</command> and will attempt to delete
 	all files when the interpreter dies.
       </para>
     </section>
