@@ -19,6 +19,7 @@
 #include "crypt.h"
 #include <stdio.h>
 #include "log.h"
+#include <sys/errno.h>
 
 #ifdef WIN32
 #  include <time.h>
