@@ -502,10 +502,10 @@ $Id$
 	Note that setting a value to an empty string amounts to
 	<command>unset</command>.
 
-	<emphasis>Note also</emphasis>: web::cmdurl compares every key from the static
-	parameters see --&gt;(web::cmdurlcfg) against the keys from the command
-	line. The static parameter is only used if there is no such parameter on
-	the command line.
+	<emphasis>Note also</emphasis>: web::cmdurl compares every key
+	from the static parameters see --&gt;(web::cmdurlcfg) against
+	the keys from the command line. The static parameter is only
+	used if there is no such parameter on the command line.
 
       </para>
     </section>
@@ -543,48 +543,66 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::dispatch -cmd <option>cmdName</option></term>
+	    <term><option>-cmd</option> <option>cmdName</option></term>
 	    <listitem>
 	      <para>
-		switch into command <option>cmdName</option>. If <option>cmdName</option> is an empty string,
-		no command is called. By default, <option>cmdName</option> is taken from
-		the querystring.
+		switch into command <option>cmdName</option>. If
+		<option>cmdName</option> is an empty string, no
+		command is called. By default,
+		<option>cmdName</option> is taken from the
+		querystring.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::dispatch -querystring <option>string</option></term>
+	    <term><option>-querystring</option> <option>string</option></term>
 	    <listitem>
 	      <para>
-		parse <option>string</option> as querystring. If <option>string</option> is an empty string,
-		querystring parsing is turned off. By default, querystring is
-		taken from the request data (CGI environment or apache module
-		request object).
+		parse <option>string</option> as querystring. If
+		<option>string</option> is an empty string,
+		querystring parsing is turned off. By default,
+		querystring is taken from the request data (CGI
+		environment or apache module request object).
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::dispatch -postdata <option>string</option> <optional><option>content_type</option></optional></term>
+	    <term><option>-postdata</option> <option>string</option>
+	    <optional><option>content_type</option></optional></term>
 	    <listitem>
 	      <para>
-		parse <option>string</option> as POST data input with type <option>content_type</option>.
-		<option>content_type</option> can be <literal remap="tt">application/x-www-form-urlencoded</literal> or
-		<literal remap="tt">multipart/form-data; boundary=xxx</literal>. In the second case,
-		<option>content-type</option> must specify the boundary as well. By default,
-		POST data is taken from the request data.</para><para>
-		If <option>string</option> is an empty string, postdata parsing is turned off.</para><para>
-		Default for <option>content_type</option> is &quot;application/x-www-form-urlencoded&quot;
+		parse <option>string</option> as POST data input with
+		type <option>content_type</option>.
+		<option>content_type</option> can be <literal
+		remap="tt">application/x-www-form-urlencoded</literal>
+		or <literal remap="tt">multipart/form-data;
+		boundary=xxx</literal>. In the second case,
+		<option>content-type</option> must specify the
+		boundary as well. By default, POST data is taken from
+		the request data.</para><para> If
+		<option>string</option> is an empty string, postdata
+		parsing is turned off.</para><para> Default for
+		<option>content_type</option> is
+		&quot;application/x-www-form-urlencoded&quot;
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::dispatch -postdata <option>channelName</option> <option>content_length</option> <option>content_type</option></term>
+	    <term>
+	      <option>-postdata</option> <option>channelName</option>
+	      <option>content_length</option>
+	      <option>content_type</option>
+	    </term>
 	    <listitem>
 	      <para>
-		As above, but reads the POST data from channel <option>channelName</option>.</para><para>
-		Use the keyword <literal remap="tt">end</literal> for <option>content_length</option> to indicate that
-		websh should read all content.</para><para>
-		Examples for <option>content_type</option> include:
+		As above, but reads the POST data from channel
+		<option>channelName</option>.
+	      </para>
+	      <para>
+		Use the keyword <literal remap="tt">end</literal> for
+		<option>content_length</option> to indicate that websh
+		should read all content.</para><para> Examples for
+		<option>content_type</option> include:
 		<itemizedlist>
 		  <listitem><para><literal remap="tt">multipart/form-data; boundary=xxxx</literal></para></listitem>
 		  <listitem><para><literal remap="tt">application/x-www-form-urlencoded</literal></para></listitem>
@@ -593,32 +611,37 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::dispatch -track <option>paramKeyList</option></term>
+	    <term><option>-track</option> <option>paramKeyList</option></term>
 	    <listitem>
 	      <para>
-		Track a parameter: register it as &quot;static&quot; for the generation of
-		URLs with web::cmdurl. Thus, each parameter with the key in
-		<option>paramKeyList</option> will be repeated in every URL generated with
-		web::cmdurl. See the documentation of web::cmdurl for details.
+		Track a parameter: register it as &quot;static&quot;
+		for the generation of URLs with web::cmdurl. Thus,
+		each parameter with the key in
+		<option>paramKeyList</option> will be repeated in
+		every URL generated with web::cmdurl. See the
+		documentation of <command>web::cmdurl</command> for
+		details.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::dispatch -hook <option>code</option></term>
+	    <term><option>-hook</option> <option>code</option></term>
 	    <listitem>
 	      <para>
-		Causes web::dispatch to eval <option>code</option> just before the command (from
-		any source) is evaluated. When <option>code</option> is evaluated, the full
-		request information has been parsed.  That is, web::param,
-		web::formvar etc. will have up-to-date information when
-		<option>code</option> is evaluated.
+		Causes web::dispatch to eval <option>code</option>
+		just before the command (from any source) is
+		evaluated. When <option>code</option> is evaluated,
+		the full request information has been parsed.  That
+		is, web::param, web::formvar etc. will have up-to-date
+		information when <option>code</option> is evaluated.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
-	<emphasis>Note</emphasis> that, if no command is passed to web::dispatch either in the
-	querystring or with the -cmd option, web::dispatch will call the
+	<emphasis>Note</emphasis> that, if no command is passed to
+	web::dispatch either in the querystring or with the
+	<option>-cmd</option> option, web::dispatch will call the
 	command &quot;default&quot;.
 
       </para>
@@ -650,36 +673,34 @@ $Id$
       </para>
       <para>
 	Session context managers are described in detail below
-	(<emphasis>web::filecontext</emphasis>,
-	<emphasis>web::cookiecontext</emphasis>). Session id tracking
-	is managed by <command>web::dispatch
-	  -track</command>. The two parts are connected with the
-	<emphasis>-attachto</emphasis> option of the session context
-	manager.  The control is as follows:
+	(<command>web::filecontext</command>,
+	<command>web::cookiecontext</command>). Session id tracking is
+	managed by <command>web::dispatch -track</command>. The two
+	parts are connected with the <option>-attachto</option> option
+	of the session context manager.  The control is as follows:
       </para>
       <para>
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      a user uses the Webshell script for the first
-	      time.<command>web::dispatch -track</command>
-	      will not see any session id, and, consequently, not set
-	      the static parameter <literal remap="tt">id</literal>.
+	      A user uses the Webshell script for the first
+	      time.<command>web::dispatch -track</command> will not
+	      see any session id, and, consequently, not set the
+	      static parameter <literal remap="tt">id</literal>.
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para>
 	      Within the application, the session is initialized using
-	      <literal
-		       remap="tt"><option>mgr</option>::init</literal>. <literal
-									remap="tt">init</literal> will find no static parameter
-	      <literal remap="tt">id</literal> (which has been
-	      specified at creation time of the session manager using
-	      the <literal remap="tt">-attachto</literal> option).
-	      Now, it tries to create a new session id. This will be
-	      possible if a session id generator has been specified
-	      when the manager was created using the <literal
-							      remap="tt">-idgen</literal> option.  From now, on the
+	      <command>mgr::init</command>. <command>init</command>
+	      will find no static parameter <literal
+	      remap="tt">id</literal> (which has been specified at
+	      creation time of the session manager using the <literal
+	      remap="tt">-attachto</literal> option).  Now, it tries
+	      to create a new session id. This will be possible if a
+	      session id generator has been specified when the manager
+	      was created using the <literal
+	      remap="tt">-idgen</literal> option.  From now, on the
 	      session id will be a static parameter, and will
 	      therefore be present in every URL generated with
 	      <emphasis>web::cmdurl</emphasis>
