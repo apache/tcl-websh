@@ -1,0 +1,69 @@
+#!/bin/sh
+#==========================================================================================
+# create a source tar ball from the tcl-websh project 
+# $Id$
+#==========================================================================================
+# \
+exec tclsh "$0" "$@"
+
+proc usage {} {
+    global argv0
+    fatal "usage: $argv0 <build>\nwhere <build> is the name of a tagged build (e.g. 3.5.0)"
+}
+
+proc fatal {msg} {
+    puts stderr $msg
+    exit 1
+}
+
+if {$argc != 1} {
+    usage
+}
+
+# get build from command line
+set build [lindex $argv 0]
+
+# create tag which belongs to that build
+regsub -all {\.} $build _ tag
+set tag "websh-$tag"
+
+# make sure we're here
+cd [file dirname $argv0]
+
+# check whether build is valid
+puts "checking for build $build"
+
+if {[catch {
+    set cvslog [exec cvs log README]
+    if {![regexp "symbolic names:.*$tag: .*keyword substitution:" $cvslog]} {
+	fatal "build $build not tagged"
+    }
+} msg]} {fatal $msg}
+
+# checkout build in a temporary directory
+set tmpdir [pid].tmp
+file mkdir $tmpdir
+cd $tmpdir
+
+puts "checking out build $build in temporary directory" 
+
+catch {exec cvs -d cvs.apache.org:/home/cvs co -r $tag tcl-websh}
+if {![file exists tcl-websh/README]} {
+    cd ..
+    fatal "checkout in directory $tmpdir failed"
+}
+
+# do some cleanup in the build
+file rename tcl-websh websh-$build
+file delete -force websh-$build/examples
+
+# creating tar ball
+puts "creating tar ball websh-$build.tar.gz"
+exec tar czvf ../websh-$build.tar.gz --exclude CVS websh-$build
+
+# cleanup
+cd ..
+file delete -force $tmpdir
+
+puts "done."
+
