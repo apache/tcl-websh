@@ -158,13 +158,12 @@ Tcl_Obj *uriDecode(Tcl_Obj * in)
 	case '%':
 	    utf = Tcl_UtfNext(utf);
 
-
-	    if (utf[0] & 0x80) {
+	    if (!(utf[0] & 0x80) && utf[0] != 0) {
 		/* case: %[7bit] */
 		buf[0] = utf[0];
 
 		utf = Tcl_UtfNext(utf);
-		if (utf[0] & 0x80) {
+		if (!(utf[0] & 0x80) && utf[0] != 0) {
 		    /* case: %[7bit][7bit] */
 		    buf[1] = utf[0];
 		    buf[2] = 0;
