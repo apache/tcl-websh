@@ -132,6 +132,8 @@ int Web_Eval(ClientData clientData,
 	retval = TCL_ERROR;
 	break;
     }
+
+    outData->defaultResponseObj = savedObj;
     return retval;
 }
 
