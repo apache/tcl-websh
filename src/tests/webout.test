@@ -384,6 +384,24 @@ Generator: websh <VERSION>\u0D
 Hello, World !"
 
 
+test output-4.5 {switch back channel in putx} {
+    web::response -resetall
+    web::putx #_foo bar
+    set cmp $_foo
+    web::put zoo
+    expr {$_foo == $cmp}
+} {1}
+
+
+test output-4.6 {switch back channel in putx} {
+    web::response -resetall
+    set response [web::response]
+    web::putx #_foo bar
+    set cmp [web::response]
+    expr {$response == $cmp}
+} {1}
+
+
 test output-4.7 {reset single channel} {
     
     web::response -resetall
