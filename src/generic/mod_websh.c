@@ -192,9 +192,21 @@ static const char *set_webshscript(cmd_parms * cmd, void *dummy, char *arg)
 
 #ifdef APACHE2
 static void websh_init_child(apr_pool_t * p, server_rec * s)
+{
+    /* here we create our main Interp and Pool */
+    websh_server_conf *conf =
+	(websh_server_conf *) ap_get_module_config(s->module_config,
+						   &websh_module);
+    if (!initPool(conf)) {
+	ap_log_error(APLOG_MARK, APLOG_ERR, NULL, s,
+		     "Could not init interp pool\n");
+	return;
+    }
+    apr_pool_cleanup_register(p, s, exit_websh_pool, exit_websh_pool);
+}
+
 #else /* APACHE2 */
 static void websh_init_child(server_rec *s, pool *p)
-#endif
 {
     /* here we create our main Interp and Pool */
     websh_server_conf *conf =
@@ -205,10 +217,8 @@ static void websh_init_child(server_rec *s, pool *p)
 		     "Could not init interp pool\n");
 	return;
     }
-#ifdef APACHE2
-    apr_pool_cleanup_register(p, s, exit_websh_pool, exit_websh_pool);
-#endif
 }
+#endif
 
 static const command_rec websh_cmds[] = {
     {"WebshConfig", set_webshscript, NULL, RSRC_CONF, TAKE1,
@@ -416,8 +426,7 @@ module MODULE_VAR_EXPORT websh_module = {
 
 #else /* APACHE2 */
 
-static void register_websh_hooks(void)
-{
+static void register_websh_hooks(apr_pool_t *p) {
     ap_hook_handler(websh_handler, NULL, NULL, APR_HOOK_MIDDLE);
 
     ap_hook_child_init(websh_init_child, NULL, NULL, APR_HOOK_MIDDLE);
