@@ -18,13 +18,13 @@ $Id$
   <section id="intro">
     <title>Introduction</title>
     <section id="general_remarks">
-      <title>general remarks</title>
+      <title>General remarks</title>
       <para>
-	webshell 3.0 embeds a Tcl 8.3 interpreter, and all Tcl 8.3
-	commands are available, too.
+	Webshell 3.5 embeds a Tcl 8.3 interpreter, and all Tcl 8.3
+	commands are available.
       </para>
       <para>
-	Typically, webshell commands have the following syntax:
+	Typically, Webshell commands have the following syntax:
 	<cmdsynopsis>
 	  <command>web::acommand</command>
 	  <arg choice="opt">options</arg>
@@ -39,7 +39,7 @@ $Id$
       </para>
       <para>
 	In difference to the normal &quot;set&quot; behaviour of tcl and
-	webshell, configuration commands of webshell normally return the
+	Webshell, configuration commands of Webshell normally return the
 	previously used value when a new value is set.
       </para>
       <para>
@@ -179,15 +179,15 @@ $Id$
     </section>
   </section>
   <section id="command_dispatching_and_session_management">
-    <title>command dispatching and session management</title>
+    <title>Command dispatching and session management</title>
     <para>
-      webshell provides a command dispatching mechanism to produce,
-      for example, different HTML pages within one application.  The
+      Webshell provides a command dispatching mechanism to produce,
+      for example, different HTML pages within one application. The
       name of the command to be used is encoded in the querystring
       (see <command>web::cmdurl</command> for details on
       how to produce such querystrings).  Command dispatching is
-      initiated with the command <command>web::dispatch</command>.  Commands are defined with
-      <command>web::command</command>.
+      initiated with the command <command>web::dispatch</command>.
+      Commands are defined with <command>web::command</command>.
     </para>
     <section id="web::command">
       <title>web::command</title>
@@ -397,7 +397,7 @@ $Id$
       </para>
     </section>
     <section id="management_of_static_parameters">
-      <title>management of static parameters</title>
+      <title>Management of static parameters</title>
       <para>
 
 	In order to set, retrieve, append or unset static parameters,
@@ -433,7 +433,7 @@ $Id$
       </para>
     </section>
     <section id="configuration_for_web_cmdurl">
-      <title>configuration for <command>web::cmdurl</command></title>
+      <title>Configuration for <command>web::cmdurl</command></title>
       <para>
 
 	<variablelist>
@@ -599,7 +599,7 @@ $Id$
 	      </para>
 	      <para>
 		Use the keyword <literal remap="tt">end</literal> for
-		<option>content_length</option> to indicate that websh
+		<option>content_length</option> to indicate that Webshell
 		should read all content.</para><para> Examples for
 		<option>content_type</option> include:
 		<itemizedlist>
@@ -664,7 +664,7 @@ $Id$
       </para>
     </section>
     <section id="session_management">
-      <title>session management</title>
+      <title>Session management</title>
       <para>
 	Webshell session management consits of two parts:
 	<itemizedlist>
@@ -711,7 +711,7 @@ $Id$
 	      The next time the user visits the Webshell application
 	      using one of these URLs,
 	      <command>web::dispatch</command> will detect the
-	      session id, and =|<option>mgr</option>::init= will directly load
+	      session id, and <command>mgr::init</command> will directly load
 	      the corresponding session context without generating a
 	      new session id.
 	    </para>
@@ -732,7 +732,7 @@ $Id$
     </section>
   </section>
   <section id="request_data_handling">
-    <title>request data handling</title>
+    <title>Request data handling</title>
     <section id="web::request">
       <title>web::request</title>
       <para>
@@ -1028,12 +1028,12 @@ $Id$
     </section>
   </section>
   <section id="response_data_handling">
-    <title>response data handling</title>
+    <title>Response data handling</title>
     <para>
-      webshell can send output to any Tcl channel and to global
+      Webshell can send output to any Tcl channel and to global
       variables (<command>web::put</command>). Optionally,
       data is scanned for Tcl code before it is output to a channel
-      (<command>web::putx</command>).  webshell manages
+      (<command>web::putx</command>). Webshell manages
       <emphasis>response objects</emphasis> that are related to Tcl
       channels and are identified using the name of the corresponding
       Tcl channel. Configuration with <command>web::response</command>.
@@ -1295,16 +1295,16 @@ $Id$
     </section>
   </section>
   <section id="logging">
-    <title>logging</title>
+    <title>Logging</title>
     <para>
       Logging consists of two parts. <command>web::log</command>
       issues a logging message, while
       <command>web::logfilter</command> and
       <command>web::logdest</command> determine where to send a
-      message. webshell uses a two-step filtering. First, webshell
+      message. Webshell uses a two-step filtering. First, Webshell
       determines whether it should handle a message, or not, using the
       filters configured with &quot;web::logfilter&quot;. Then,
-      webshell determines which message is to be sent where, using the
+      Webshell determines which message is to be sent where, using the
       filters configured with <command>web::logdest</command>.
     </para>
     <para>
@@ -1423,9 +1423,9 @@ $Id$
       </para>
     </section>
     <section id="log_plug-ins">
-      <title>log plug-ins</title>
+      <title>Log plug-ins</title>
       <section id="file">
-	<title>file</title>
+	<title>File</title>
 	<para>
 	  Syntax:
 	  <cmdsynopsis>
@@ -1440,7 +1440,7 @@ $Id$
 	</para>
       </section>
       <section id="syslog">
-	<title>syslog</title>
+	<title>Syslog</title>
 	<para>
 	  Syntax:
 	  <cmdsynopsis>
@@ -1456,7 +1456,7 @@ $Id$
 	</para>
       </section>
       <section id="command">
-	<title>command</title>
+	<title>Command</title>
 	<para>
 	  Syntax:
 	  <cmdsynopsis>
@@ -1469,7 +1469,7 @@ $Id$
 	</para>
       </section>
       <section id="channel">
-	<title>channel</title>
+	<title>Channel</title>
 	<para>
 
 	  Syntax:
@@ -1485,7 +1485,7 @@ $Id$
 	</para>
       </section>
       <section id="apache">
-	<title>apache</title>
+	<title>Apache</title>
 	Syntax:
 	<cmdsynopsis>
 	  <command>web::logdest</command>
@@ -1508,17 +1508,17 @@ $Id$
 	logfilter0
 	% web::logdest add *.-debug channel stdout
 	logdest0
-	% web::log info {websh is cool}
-	03/01/00 00:00:00 [111] user.info: websh is cool
+	% web::log info {Webshell is cool}
+	03/01/00 00:00:00 [111] user.info: Webshell is cool
 	% web::logdest delete logdest0
 	% web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
 	logdest1
-	% web::log info {websh is cool}
-	--&gt; websh is cool
+	% web::log info {Webshell is cool}
+	--&gt; Webshell is cool
 	% web::logdest delete logdest1
 	% web::logdest add -maxchar 5 *.-debug channel stdout
-	% web::log info {websh is cool}
-	03/01/00 00:00:00 [111] user.info: websh
+	% web::log info {Webshell is cool}
+	03/01/00 00:00:00 [111] user.info: Websh
 	%
 	</programlisting>
 
@@ -1526,7 +1526,7 @@ $Id$
     </section>
   </section>
   <section id="context_handling">
-    <title>context handling</title>
+    <title>Context handling</title>
     <section id="web::context">
       <title>web::context</title>
       <para>
@@ -1796,7 +1796,7 @@ $Id$
 	      <para>
 		Sets command <option>idgen</option> to find a new session id. See doc of
 		<command>web::filecounter</command> below for an implementation
-		provided with webshell.</para><para>
+		provided with Webshell.</para><para>
 		<option>idgen</option> is used in case that no <option>id</option> argument
 		has been passed to <emphasis>init</emphasis> or <emphasis>new</emphasis>.
 	      </para>
@@ -1809,7 +1809,7 @@ $Id$
 		Use <literal remap="tt">web::param <option>idparam</option></literal> to access current session id.
 		This option is only used if <emphasis>init</emphasis> has been called
 		without <option>id</option> argument.</para><para>
-		webshell passes session ids from one HTML request to
+		Webshell passes session ids from one HTML request to
 		the next using the querystring (this is one reason why
 		the querystring is encrypted). After web::dispatch
 		has parsed the querystring, web::param will report the
@@ -1965,7 +1965,7 @@ $Id$
 	</variablelist>
 
 	Because cookies are client-based, in principle no id is
-	needed. webshell uses <option>id</option> to name the cookie, however, and the
+	needed. Webshell uses <option>id</option> to name the cookie, however, and the
 	<literal remap="tt">new</literal>, <literal remap="tt">init</literal>, and <literal remap="tt">load</literal> commands still require the <option>id</option>
 	argument. (fixme: any changes?) Please note that property settings
 	of a cookie context can only be changed <emphasis>before</emphasis> anything is output
@@ -2095,7 +2095,7 @@ $Id$
     </section>
   </section>
   <section id="file_handling_and_file_IO">
-    <title>file handling and file I/O</title>
+    <title>File handling and file I/O</title>
     <section id="web::include">
       <title>web::include</title>
       <para>
@@ -2202,7 +2202,7 @@ $Id$
     </section>
   </section>
   <section id="data_encryption">
-    <title>data encryption</title>
+    <title>Data encryption</title>
     <para>
       Encrypt (<command>web::encrypt</command>) and decrypt
       (<command>web::decrypt</command>) data. By default,
@@ -2260,7 +2260,7 @@ $Id$
       </para>
     </section>
     <section id="encryption_plug-in_D">
-      <title>encryption plug-in D</title>
+      <title>Encryption plug-in D</title>
       <para>
 
       </para>
@@ -2269,7 +2269,7 @@ $Id$
       <title>web::encryptd</title>
       <para>
 
-	By default, webshell uses this plug-In for weak data encryption for
+	By default, Webshell uses this plug-In for weak data encryption for
 	encryption (<command>web::encryptd</command>) and decryption (<command>web::decryptd</command>).
 	The encryption key is managed with <command>web::crpytdkey</command>.
 
@@ -2325,7 +2325,7 @@ $Id$
 
 	Sets the new key for encryption. If no argument is given, resets to
 	the default key. This command does not return the currently active
-	key, in difference to other configuration commands of webshell 3.
+	key, in difference to other configuration commands of Webshell.
 
 	Commands:
 
@@ -2358,7 +2358,7 @@ $Id$
       </para>
     </section>
     <section id="encryption_plug-in_interface_">
-      <title>encryption plug-in interface </title>
+      <title>Encryption plug-in interface</title>
       <para>
 	<emphasis>For plug-in developers only</emphasis>
       </para>
@@ -2398,7 +2398,7 @@ $Id$
     </section>
   </section>
   <section id="uri-html-_en-decoding">
-    <title>uri-/html- en-/decoding</title>
+    <title>Uri-/html- en-/decoding</title>
     <section id="web::htmlify">
       <title>web::htmlify</title>
       <para>
@@ -2478,7 +2478,7 @@ $Id$
     </section>
   </section>
   <section id="inter-process_and_-system_communication">
-    <title>inter-process/-system communication</title>
+    <title>Inter-process/-system communication</title>
     <para>
       Send to and receive from sockets.
     </para>
@@ -2792,7 +2792,7 @@ $Id$
     </section>
   </section>
   <section id="misc_commands">
-    <title>misc commands</title>
+    <title>Miscellaneous commands</title>
     <section id="web::match">
       <title>web::match</title>
       <para>
@@ -2815,7 +2815,7 @@ $Id$
 	<option>result</option>, otherwise an empty string.
 
       </para><para>
-	For websh2 wizards:</para><para>
+	For websh2 cracks:</para><para>
 
 	wpp_isselected v1 v2 would now be: web::match
 	&quot;selected&quot; v1 v2
@@ -2836,7 +2836,7 @@ $Id$
 	guaranteed unique names per application is system dependent.
 	This command just returns the name of a file. It is the
 	programmers job to handle the file, for example to open
-	it. Note that webshell keeps an internal list of all file
+	it. Note that Webshell keeps an internal list of all file
 	names generated with web::tempfile and will attempt to delete
 	all files when the interpreter dies.
       </para>
