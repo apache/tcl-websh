@@ -45,7 +45,7 @@ $Id$
       <para>
 	In addition to the examples given here, you might find <ulink
 	  url="http://tcl.apache.org/websh/examples/">http://tcl.apache.org/websh/examples/</ulink>
-	  a useful source of information.
+	a useful source of information.
       </para>
     </section>
     <section id="about">
@@ -53,7 +53,7 @@ $Id$
       <para>
 	The original version of this document can always be found at
 	<ulink
-	url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh/</ulink>.
+	  url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh/</ulink>.
       </para>
       <note>
 	We try to keep this quick reference up-to-date and hope that
@@ -82,7 +82,8 @@ $Id$
 
       <variablelist>
 	<varlistentry>
-	  <term><option>uploadfilesize</option> <optional><option><replaceable>size</replaceable></option></optional></term>
+	  <term><option>uploadfilesize</option>
+	    <optional><option><replaceable>size</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
 	      Sets the maximum number of bytes allowed to be uploaded.
@@ -119,7 +120,7 @@ $Id$
 	</varlistentry>
 	<varlistentry>
 	  <term><option>putxmarkup</option>
-	  <optional><option>brace|tag</option></optional></term>
+	    <optional><option>brace|tag</option></optional></term>
 	  <listitem>
 	    <para>
 	      Sets the markup characters for sections to be eval'd in
@@ -166,16 +167,14 @@ $Id$
 	</varlistentry>
       </variablelist>
     </section>
-    <section id="Examples0">
-      <para>
-	Examples:
-	<programlisting>
-	  % web::config decryptchain
-	  web::encryptd
-	  %
-	</programlisting>
-      </para>
-    </section>
+    <example>
+      <title>web::config</title>
+      <programlisting>
+	% web::config decryptchain
+	web::encryptd
+	%
+      </programlisting>
+    </example>
   </section>
   <section id="command_dispatching_and_session_management">
     <title>Command dispatching and session management</title>
@@ -345,18 +344,14 @@ $Id$
 	  </varlistentry>
 	</variablelist>
       </para>
-    </section>
-    <section id="Examples2">
-      <para>
-      Examples:
-
+      <example>
+	<title>web::cmdurl</title>
 	<programlisting>
 	  % web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
 	  http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	  %
 	</programlisting>
-
-      </para>
+      </example>
     </section>
     <section id="web::cmdurlcfg">
       <title>web::cmdurlcfg</title>
@@ -514,10 +509,8 @@ $Id$
 	used if there is no such parameter on the command line.
 
       </para>
-    </section>
-    <section id="Examples3">
-      <para>
-	Examples:
+      <example>
+	<title>web::cmdurl</title>
 	<programlisting>
 	  % web::cmdurl &quot;&quot;
 	  ?XDqPtk34XvyPh41gUBo
@@ -529,8 +522,7 @@ $Id$
 	  ?XDqPtk34XvyPh41gUBo
 	  %
 	</programlisting>
-
-      </para>
+      </example>
     </section>
     <section id="web::dispatch">
       <title>web::dispatch</title>
@@ -546,7 +538,7 @@ $Id$
 	<option>-querystring</option>, <option>-postdata</option>,
 	<option>-track</option> and <option>-hook</option>.
       </para>
-	Parse information and call a command.
+      Parse information and call a command.
       <para>
 	<variablelist>
 	  <varlistentry>
@@ -563,7 +555,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><option>-querystring</option>
-	    <option><replaceable>string</replaceable></option></term>
+	      <option><replaceable>string</replaceable></option></term>
 	    <listitem>
 	      <para>
 		parse <option>string</option> as the querystring. If
@@ -582,9 +574,9 @@ $Id$
 		parse <option>string</option> as POST data input with
 		type <option>content_type</option>.
 		<option>content_type</option> can be <literal
-		remap="tt">application/x-www-form-urlencoded</literal>
+		  remap="tt">application/x-www-form-urlencoded</literal>
 		or <literal remap="tt">multipart/form-data;
-		boundary=xxx</literal>. In the second case,
+		  boundary=xxx</literal>. In the second case,
 		<option>content-type</option> must specify the
 		boundary as well. By default, POST data is taken from
 		the request data.</para><para> If
@@ -653,11 +645,8 @@ $Id$
 	command &quot;default&quot;.
 
       </para>
-    </section>
-    <section id="Examples4">
-      <para>
-      Examples:
-
+      <example>
+	<title>web::command and web::dispatch</title>
 	<programlisting>
 	  % set tst {puts &quot;On the hook&quot;}
 	  puts &quot;On the hook&quot;
@@ -669,8 +658,7 @@ $Id$
 	  this is acmd
 	  %
 	</programlisting>
-
-      </para>
+      </example>
     </section>
     <section id="session_management">
       <title>Session management</title>
@@ -1016,11 +1004,10 @@ $Id$
 	<command>web::formvar</command>.
       </para>
     </section>
-    <section id="Examples6">
-      <para>
-      Examples:
-
-	<programlisting>
+    <section>
+      <example>
+	<title>web::param</title>
+      	<programlisting>
 	  % web::request CONTENT_LENGTH
 	  % web::dispatch -querystring &quot;cmd=default&amp;t=100&quot; -postdata &quot;&quot; -cmd &quot;&quot;
 	  % web::param -names
@@ -1033,8 +1020,7 @@ $Id$
 	  t cmd k
 	  %
 	</programlisting>
-
-      </para>
+      </example>
     </section>
   </section>
   <section id="response_data_handling">
@@ -1175,7 +1161,7 @@ $Id$
 		<option>boolean</option> is omitted, returns the
 		current value.
 	      </para>
-	    </listitem>
+   	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
@@ -1227,7 +1213,33 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
+    <example>
+	<title>web::response</title>
+	<programlisting>
+	  % web::response
+	  stdout
+	  % web::response -select stderr
+	  stdout
+	  % web::response
+	  stderr
+	  % web::response -sendheader
+	  1
+	  % web::response -names
+	  Content-Type Generator
+	  % web::response Content-Type
+	  text/html
+	  % web::response -bytessent
+	  0
+	  % web::response -set Set-Cookie &quot;my cookie that contains data&quot;
+	  % web::put &quot;Hello, world\n&quot;
+	  Content-Type: text/html
+	  Set-Cookie: my cookie that contains data
+	  Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
 
+	  Hello, world
+	  %
+	</programlisting>
+      </example>
       </para>
     </section>
     <section id="web::put">
@@ -1279,36 +1291,6 @@ $Id$
 	precedence.
       </para>
     </section>
-    <section id="Examples7">
-      <para>
-	Examples:
-	<programlisting>
-	  % web::response
-	  stdout
-	  % web::response -select stderr
-	  stdout
-	  % web::response
-	  stderr
-	  % web::response -sendheader
-	  1
-	  % web::response -names
-	  Content-Type Generator
-	  % web::response Content-Type
-	  text/html
-	  % web::response -bytessent
-	  0
-	  % web::response -set Set-Cookie &quot;my cookie that contains data&quot;
-	  % web::put &quot;Hello, world\n&quot;
-	  Content-Type: text/html
-	  Set-Cookie: my cookie that contains data
-	  Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
-
-	  Hello, world
-	  %
-	</programlisting>
-
-      </para>
-    </section>
   </section>
   <section id="logging">
     <title>Logging</title>
@@ -1345,7 +1327,7 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::logdest</command>
 	  <arg><replaceable>subcommand</replaceable></arg> <arg
-	  choice="opt"><replaceable>options</replaceable></arg>
+							     choice="opt"><replaceable>options</replaceable></arg>
 	  <arg><replaceable>level</replaceable></arg> <arg><replaceable>plugin</replaceable></arg>
 	</cmdsynopsis>
 
@@ -1512,13 +1494,12 @@ $Id$
 	</cmdsynopsis>
 	<para>
 	  Available in mod_websh only.
-
 	</para>
       </section>
-    </section>
-    <section id="Examples8">
-      <para>
-      Examples:
+      <section>
+	<title></title>
+	<example>
+	  <title>web::log</title>
 	<programlisting>
 	  % web::logfilter add *.-debug
 	  logfilter0
@@ -1536,9 +1517,9 @@ $Id$
 	  % web::log info {Websh is cool}
 	  03/01/00 00:00:00 [111] user.info: Websh
 	  %
-	</programlisting>
-
-      </para>2
+	  </programlisting>
+	</example>
+      </section>
     </section>
   </section>
   <section id="context_handling">
@@ -1665,7 +1646,8 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	Example:
+	<example>
+	  <title>web::context</title>
 	<programlisting>
 	  % web::context sc
 	  % sc::cset lang FR
@@ -1675,7 +1657,7 @@ $Id$
 	  FR
 	  %
 	</programlisting>
-
+	</example>
       </para>
     </section>
     <section id="web::filecontext">
@@ -1873,7 +1855,7 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::cookiecontext</command>
 	  <arg><replaceable>name</replaceable></arg> <arg
-	  choice="opt"><replaceable>options</replaceable></arg>
+						       choice="opt"><replaceable>options</replaceable></arg>
 	</cmdsynopsis>
 
 	Options are: <option>-expires</option>,
@@ -2148,12 +2130,9 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-      </para><para>
       </para>
-    </section>
-    <section id="Examples9">
-      <para>
-      Examples:
+      <example>
+	<title>web::filecounter</title>
 	<programlisting>
 	  % web::filecounter handleName -filename &quot;test.dat&quot;
 	  handleName
@@ -2166,8 +2145,9 @@ $Id$
 	  file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
 	  %
 	</programlisting>
+</example>
 
-      </para>
+
     </section>
   </section>
   <section id="file_handling_and_file_IO">
@@ -2176,16 +2156,11 @@ $Id$
       <title>web::include</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term></term>
-	    <listitem>
-	      <para>
-		web_include <option><replaceable>fileName</replaceable></option> <optional><option><replaceable>msg</replaceable></option></optional>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	<cmdsynopsis>
+	  <command>web_include</command>
+	  <arg><replaceable>fileName</replaceable></arg>
+	  <arg choice="opt"><replaceable>msg</replaceable></arg>
+	</cmdsynopsis>
 
 	If the file <option>fileName</option> exists, it is sourced (must be a
 	script). Otherwise if the library fileName+&quot;shared lib extension&quot;
@@ -2247,8 +2222,8 @@ $Id$
       </para>
     </section>
     <section id="Examples10">
-      <para>
-      Examples:
+      <example>
+	<title>web::lockfile</title>
 	<programlisting>
 	  set fh [open [web::tempfile] w]
 	  web::lockfile $fh
@@ -2256,8 +2231,7 @@ $Id$
 	  web::unlockfile $fh
 	  close $fh
 	</programlisting>
-
-      </para>
+      </example>
     </section>
   </section>
   <section id="data_encryption">
@@ -2294,7 +2268,8 @@ $Id$
 
 	Returns decrypted data.
 
-	Examples:
+	<example>
+	  <title>web::encrypt</title>
 	<programlisting>
 	  % web::encrypt &quot;Hello, world!&quot;
 	  XDIVAhkgkxRjcfA7UTwpD7
@@ -2302,7 +2277,7 @@ $Id$
 	  Hello, world!
 	  %
 	</programlisting>
-
+</example>
       </para>
     </section>
     <section id="encryption_plug-in_D">
@@ -2497,8 +2472,8 @@ $Id$
       </para>
     </section>
     <section id="Examples11">
-      <para>
-	Examples:
+      <example>
+	<title>web::htmlify</title>
 	<programlisting>
 	  % web::htmlify &lt;
 	  &amp;lt;
@@ -2512,8 +2487,7 @@ $Id$
 	  Hello, world!
 	  %
 	</programlisting>
-
-      </para>
+      </example>
     </section>
   </section>
   <section id="inter-process_and_-system_communication">
@@ -2531,7 +2505,7 @@ $Id$
 	  <arg><replaceable>channel</replaceable></arg>
 	  <arg><replaceable>cmdNr</replaceable></arg>
 	  <arg><replaceable>message</replaceable></arg><arg
-	  choice="opt"><replaceable>flags</replaceable></arg>
+							 choice="opt"><replaceable>flags</replaceable></arg>
 	</cmdsynopsis>
 
 	Send the command <option>cmdNr</option> and the message
@@ -2616,11 +2590,6 @@ $Id$
       </para><para>
       </para>
     </section>
-    <section id="Examples12">
-      <para>
-	Examples:
-      </para>
-    </section>
   </section>
   <section id="Apache_module_specific_commands">
     <title>Apache module specific commands</title>
@@ -2681,14 +2650,17 @@ $Id$
 	manually. However, it can be used as a hook, when the
 	interpreter is deleted:
 
-	<programlisting>
-	  rename web::finalize web::finalize.orig
-	  proc web::myFinalize {} {
-	  # code to eval before finalize.orig
-	  finalize.orig
-	  # code to eval after finalize.orig
-	  }
-	</programlisting>
+	<example>
+	  <title>web::finalize</title>
+	  <programlisting>
+	    rename web::finalize web::finalize.orig
+	    proc web::myFinalize {} {
+	    # code to eval before finalize.orig
+	    finalize.orig
+	    # code to eval after finalize.orig
+	    }
+	  </programlisting>
+	</example>
 
       </para>
     </section>
@@ -2795,57 +2767,57 @@ $Id$
 	Sets or accesses properties of the current interpreter.
 
 	<variablelist>2
-	  <varlistentry>
-	    <term><command>web::interpcfg</command></term>
-	    <listitem>
-	      <para>
-		returns <option>classid</option> of current
-		interpreter.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><command>web::interpcfg</command>
-	      <option>numreq</option></term>
-	    <listitem>
-	      <para>
-		gets the number of requests handled by this
-		interpreter.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><command>web::interpcfg</command>
-	      <option>retire</option>
-	      <optional><option>boolean</option></optional></term>
-	    <listitem>
-	      <para>
-		gets or sets the flag indicating this interpreter
-		should be removed after handling the current request.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><command>web::interpcfg</command>
-	      <option>starttime</option></term>
-	    <listitem>
-	      <para>
-		returns the time in seconds since the epoch, this
-		interpreter was started.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term><command>web::interpcfg</command>
-	      <option>lastusedtime</option></term>
-	    <listitem>
-	      <para>
-		returns the time in seconds since the epoch, this
-		interpreter was last used (starttime in case of first
-		request).
-	      </para>
-	    </listitem>
-	  </varlistentry>
+	      <varlistentry>
+		<term><command>web::interpcfg</command></term>
+		<listitem>
+		  <para>
+		    returns <option>classid</option> of current
+		    interpreter.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term><command>web::interpcfg</command>
+		  <option>numreq</option></term>
+		<listitem>
+		  <para>
+		    gets the number of requests handled by this
+		    interpreter.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term><command>web::interpcfg</command>
+		  <option>retire</option>
+		  <optional><option>boolean</option></optional></term>
+		<listitem>
+		  <para>
+		    gets or sets the flag indicating this interpreter
+		    should be removed after handling the current request.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term><command>web::interpcfg</command>
+		  <option>starttime</option></term>
+		<listitem>
+		  <para>
+		    returns the time in seconds since the epoch, this
+		    interpreter was started.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term><command>web::interpcfg</command>
+		  <option>lastusedtime</option></term>
+		<listitem>
+		  <para>
+		    returns the time in seconds since the epoch, this
+		    interpreter was last used (starttime in case of first
+		    request).
+		  </para>
+		</listitem>
+	      </varlistentry>
 	</variablelist>
 
       </para>
@@ -2858,7 +2830,7 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::interpmap</command>
 	<option><replaceable>filename</replaceable></option>
-	</cmdsynopsis>
+      </cmdsynopsis>
 
 	Hook to define interpreter classes depending on the requested file.
 	Note that this hook must be defined in the Websh configuration file
@@ -2873,25 +2845,25 @@ $Id$
 	and at the same time the filename of the script for this interpreter
 	class.
       </para>
-        <section>
+      <section>
 	<title>Example</title>
 	<para>
-	<programlisting>
-	  proc web::interpmap {filename} {
-	      if {[string match "/path/to/myApp" $filename]} {
-	          # this is my special app
-	          return /real/path/to/myApp
-	      }
-	      if {[string match "*.ws3"]} {
-	          # scripts have their own interp class
-	          return $filename
-	      }
-	      # default: all templates are handled by my handler
-	      return /my/special/template/handler
-	  }
-	</programlisting>
+	  <programlisting>
+	    proc web::interpmap {filename} {
+	    if {[string match "/path/to/myApp" $filename]} {
+	    # this is my special app
+	    return /real/path/to/myApp
+	    }
+	    if {[string match "*.ws3"]} {
+	    # scripts have their own interp class
+	    return $filename
+	    }
+	    # default: all templates are handled by my handler
+	    return /my/special/template/handler
+	    }
+	  </programlisting>
 	</para>
-        </section>
+      </section>
       <para>
         The default implementation of web::interpmap is
 	<programlisting>
@@ -2926,7 +2898,7 @@ $Id$
 
 	web::match treats v1 as a list. Thus, <emphasis>web::match
 	  &quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
-	  <emphasis>ok</emphasis>.
+	<emphasis>ok</emphasis>.
 
       </para>
     </section>

@@ -56,13 +56,37 @@
       <xsl:apply-templates/>
     </xsl:param>
     <tt><span style="text-decoration:underline"><xsl:copy-of
-    select="$content"/></span></tt>
+	  select="$content"/></span></tt>
   </xsl:template>
 
   <xsl:template match="/article/section/title" mode="titlepage.mode"
     priority="2">
     <hr/>
     <xsl:call-template name="section.title"/>
+  </xsl:template>
+
+  <xsl:template match="para">
+    <xsl:variable name="p">
+      <p style="width:90%">
+	<xsl:if test="position() = 1 and parent::listitem">
+	  <xsl:call-template name="anchor">
+	    <xsl:with-param name="node" select="parent::listitem"/>
+	  </xsl:call-template>
+	</xsl:if>
+	<xsl:call-template name="anchor"/>
+	<xsl:apply-templates/>
+      </p>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$html.cleanup != 0">
+	<xsl:call-template name="unwrap.p">
+	  <xsl:with-param name="p" select="$p"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:copy-of select="$p"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="optional">

@@ -1,4 +1,11 @@
+2002-06-16  David N. Welton  <davidw@dedasys.com>
+
+	* unix/Makefile.in (dist): Made dist target and distdoc target.
+	These can be used to roll releases.
+
 2002-06-10  David N. Welton  <davidw@dedasys.com>
+
+	* quickref.xml: Added 'replaceable' elements.
 
 	* quickref.xsl: Updated to latest XSL work.
 
