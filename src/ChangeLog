@@ -1,3 +1,9 @@
+2002-11-26  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* src/generic/weboutint.c, src/tests/script.test:
+	bug fix of web::putx and web::putxfile (double UTF encoding)
+	patch submitted by David Welton (Thanx David)
+
 2002-11-22  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* doc/quickref.xml:
