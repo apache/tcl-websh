@@ -830,8 +830,9 @@ int destroyLogPlugIn(void *plugIn, void *dum)
     LogPlugIn *logPlugIn = (LogPlugIn *) plugIn;
 
     if (logPlugIn != NULL) {
-	fprintf(stderr, "destroyLogPlugin: plugin doesn't exist!\n");
 	WebFreeIfNotNull(logPlugIn);
+    } else {
+	fprintf(stderr, "destroyLogPlugin: plugin doesn't exist.\n");
     }
     return TCL_OK;
 }
