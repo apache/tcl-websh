@@ -132,8 +132,6 @@ int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
     return TCL_CONTINUE;
   }
   
-  /* fixme: usefull returns for cgi mode */
-
   WebAssertObjc(objc != 2, 2, NULL);
   
   switch ((enum subCmd) index) {
