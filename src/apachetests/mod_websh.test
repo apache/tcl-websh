@@ -8,7 +8,10 @@
 
 # $Id$
 
-set urlbase "http://localhost:8081/"
+set host localhost
+set port 8081
+
+set urlbase "http://$host:$port/"
 
 package require tcltest
 package require http

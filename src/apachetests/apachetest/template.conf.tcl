@@ -7,8 +7,8 @@ ServerRoot "$CWD"
 
 PidFile "$CWD/httpd.pid"
 
-ResourceConfig "$CWD/srm.conf"
-AccessConfig "$CWD/access.conf"
+#ResourceConfig "$CWD/srm.conf"
+#AccessConfig "$CWD/access.conf"
 
 Timeout 300
 
@@ -16,7 +16,7 @@ MaxRequestsPerChild 0
 
 $LOADMODULES
 
-Port 8081
+Listen 8081
 
 ServerName localhost
 
@@ -38,6 +38,8 @@ AccessFileName .htaccess
 HostnameLookups Off
 
 ErrorLog $CWD/error_log
+TypesConfig $CWD/mime.types
+LockFile $CWD/httpd.lock
 
 LogLevel debug
 
