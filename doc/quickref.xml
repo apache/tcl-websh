@@ -881,6 +881,7 @@ $Id$
 	  <arg choice="opt">key</arg>
 	  <arg choice="opt">value</arg>
 	  <arg choice="opt">...</arg>
+	</cmdsynopsis>
 
 	Options are: <option>-count</option>, <option>-set</option>,
 	<option>-lappend</option>, <option>-names</option>, and
