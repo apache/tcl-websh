@@ -16,17 +16,6 @@
 
 #include "tcl.h"
 #include "web.h"
-#include <ctype.h>
-
-/*
- * The following variable is a special hack that is needed in order for
- * Sun shared libraries to be used for Tcl.
- */
-
-#ifndef WIN32
-extern int matherr();
-int *tclDummyMathPtr = (int *) matherr;
-#endif
 
 #ifdef TCL_TEST
 
