@@ -24,11 +24,11 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # creation and 'normal' usage
 # -----------------------------------------------------------------------------
 test copyright-1.0 {web::config copyright} {
-    set tmp [split [web::config copyright] "\n"]
-    if {[info exists res]} {unset res}
-    lappend res [regexp {http://netcetera\.ch} [lindex $tmp 0]]
-    lappend res [regexp {http://websh\.com} [lindex $tmp 1]]
-    lappend res [regexp {info@websh\.com} [lindex $tmp 2]]
+    set res {}
+    set tmp [web::config copyright]
+    lappend res [regexp {http://netcetera\.ch} $tmp]
+    lappend res [regexp {http://websh\.com} $tmp]
+    lappend res [regexp {info@websh\.com} $tmp]
     set res
 } {1 1 1}
 
