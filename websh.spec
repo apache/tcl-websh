@@ -3,7 +3,7 @@
 
 Summary: Tcl scripting for the web, both a CGI and Apache module.
 Name: websh
-Version: 4.0.0
+Version: 3.5.0
 Release: 1
 Copyright: Freely distributable and usable
 Group: System Environment/Daemons
