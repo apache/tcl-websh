@@ -536,7 +536,10 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
 	Tcl_AppendToObj(tclo, "\"\n", 2);
     }
 
-    return Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
+    Tcl_DStringFree(&dstr); 
+    Tcl_DStringFree(&convdstr); 
+    res = Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
+    return res;
 }
 
 /* ----------------------------------------------------------------------------
