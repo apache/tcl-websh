@@ -9,7 +9,7 @@ $Id$
 
 <article lang="en">
 
-  <title>Webshell Reference</title>
+  <title>Websh Reference</title>
   <articleinfo>
     <releaseinfo>
       $Id$
@@ -20,11 +20,11 @@ $Id$
     <section id="general_remarks">
       <title>General remarks</title>
       <para>
-	Webshell 3.5 embeds a Tcl 8.3 interpreter, and all Tcl 8.3
-	commands are available.
+	Websh 3.5 (pronounced "web shell") embeds a Tcl 8.3 interpreter,
+	and all Tcl 8.3 commands are available.
       </para>
       <para>
-	Typically, Webshell commands have the following syntax:
+	Typically, Websh commands have the following syntax:
 	<cmdsynopsis>
 	  <command>web::acommand</command>
 	  <arg choice="opt">options</arg>
@@ -38,7 +38,7 @@ $Id$
 	takes &quot;-o2&quot; as the first argument.
       </para>
       <para>
-	Instead of the normal Tcl behaviour, Webshell configuration
+	Instead of the normal Tcl behaviour, Websh configuration
 	commands normally return the previous value, when a new value
 	is set.
       </para>
@@ -184,7 +184,7 @@ $Id$
   <section id="command_dispatching_and_session_management">
     <title>Command dispatching and session management</title>
     <para>
-      Webshell provides a command dispatching mechanism to produce,
+      Websh provides a command dispatching mechanism to produce,
       for example, different HTML pages within one "application",
       which is most likely one file on the file system. The name of
       the command to be used for a particular page is encoded in the
@@ -612,7 +612,7 @@ $Id$
 	      <para>
 		Use the keyword <literal remap="tt">end</literal> for
 		<option>content_length</option> to indicate that
-		Webshell should read all content.</para><para>
+		Websh should read all content.</para><para>
 		Examples for <option>content_type</option> include:
 		<itemizedlist>
 		  <listitem><para><literal remap="tt">multipart/form-data; boundary=xxxx</literal></para></listitem>
@@ -678,7 +678,7 @@ $Id$
     <section id="session_management">
       <title>Session management</title>
       <para>
-	Webshell session management consits of two parts:
+	Websh session management consits of two parts:
 	<itemizedlist>
 	  <listitem><para>session id tracking</para></listitem>
 	  <listitem><para>session context management</para></listitem>
@@ -696,7 +696,7 @@ $Id$
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      A user uses the Webshell script for the first
+	      A user uses the Websh script for the first
 	      time.<command>web::dispatch -track</command> will not
 	      see any session id, and, consequently, not set the
 	      static parameter <literal remap="tt">id</literal>.
@@ -720,7 +720,7 @@ $Id$
 	  </listitem>
 	  <listitem>
 	    <para>
-	      The next time the user visits the Webshell application
+	      The next time the user visits the Websh application
 	      using one of these URLs,
 	      <command>web::dispatch</command> will detect the
 	      session id, and <command>mgr::init</command> will directly load
@@ -737,7 +737,7 @@ $Id$
 
 	See <ulink
 	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
-	for several sample application demonstrating Webshell's
+	for several sample application demonstrating Websh's
 	session management facilities.
 
       </para>
@@ -1042,10 +1042,10 @@ $Id$
   <section id="response_data_handling">
     <title>Response data handling</title>
     <para>
-      Webshell can send output to any Tcl channel and to global
+      Websh can send output to any Tcl channel and to global
       variables (<command>web::put</command>). Optionally, data is
       scanned for Tcl code before it is output to a channel
-      (<command>web::putx</command>). Webshell manages
+      (<command>web::putx</command>). Websh manages
       <emphasis>response objects</emphasis> that are related to Tcl
       channels and are identified using the name of the corresponding
       Tcl channel. Configuration is achieved with
@@ -1319,10 +1319,10 @@ $Id$
       issues a logging message, while
       <command>web::logfilter</command> and
       <command>web::logdest</command> determine where to send a
-      message. Webshell uses a two-step filtering. First, Webshell
+      message. Websh uses a two-step filtering. First, Websh
       determines whether it should handle a message, or not, using the
       filters configured with &quot;web::logfilter&quot;. Then,
-      Webshell determines which message is to be sent where, using the
+      Websh determines which message is to be sent where, using the
       filters configured with <command>web::logdest</command>.
     </para>
     <para>
@@ -1526,16 +1526,16 @@ $Id$
 	  logfilter0
 	  % web::logdest add *.-debug channel stdout
 	  logdest0
-	  % web::log info {Webshell is cool}
-	  03/01/00 00:00:00 [111] user.info: Webshell is cool
+	  % web::log info {Websh is cool}
+	  03/01/00 00:00:00 [111] user.info: Websh is cool
 	  % web::logdest delete logdest0
 	  % web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
 	  logdest1
-	  % web::log info {Webshell is cool}
-	  --&gt; Webshell is cool
+	  % web::log info {Websh is cool}
+	  --&gt; Websh is cool
 	  % web::logdest delete logdest1
 	  % web::logdest add -maxchar 5 *.-debug channel stdout
-	  % web::log info {Webshell is cool}
+	  % web::log info {Websh is cool}
 	  03/01/00 00:00:00 [111] user.info: Websh
 	  %
 	</programlisting>
@@ -1826,7 +1826,7 @@ $Id$
 		Sets command <option>idgen</option> to find a new
 		session id. See doc of
 		<command>web::filecounter</command> below for an
-		implementation provided with webshell.
+		implementation provided with Websh.
 	      </para>
 	      <para>
 		<option>idgen</option> is used in case that no
@@ -2023,7 +2023,7 @@ $Id$
 	</variablelist>
 
 	Because cookies are client-based, in principle no id is
-	needed. Webshell uses <option>id</option> to name the cookie,
+	needed. Websh uses <option>id</option> to name the cookie,
 	however, and the <command>new</command>,
 	<command>init</command>, and <command>load</command> commands
 	still require the <option>id</option> argument. (fixme: any
@@ -2317,7 +2317,7 @@ $Id$
       <title>web::encryptd</title>
       <para>
 
-	By default, Webshell uses this plug-In for weak data
+	By default, Websh uses this plug-In for weak data
 	encryption for encryption (<command>web::encryptd</command>)
 	and decryption (<command>web::decryptd</command>).  The
 	encryption key is managed with
@@ -2359,7 +2359,7 @@ $Id$
 	Sets the new key for encryption. If no argument is given,
 	resets to the default key. This command does not return the
 	currently active key, in difference to other configuration
-	commands of Webshell.
+	commands of Websh.
 
 	Commands:
 
@@ -2625,7 +2625,7 @@ $Id$
 
     <para>
       Note that these commands are implemented as dummies in the CGI
-      version of Webshell only. They don't do anything except for
+      version of Websh only. They don't do anything except for
       web::initializer and web::finalizer, which just evaluate the
       code provided in the argument.
     </para>
@@ -2640,7 +2640,7 @@ $Id$
 	</cmdsynopsis>
 
 	This code is executed only when a new interpreter is created.
-	Note that the &quot;main&quot; Webshell script can
+	Note that the &quot;main&quot; Websh script can
 	<command>source</command> several modules which each call
 	their initialization code.
 
@@ -2656,7 +2656,7 @@ $Id$
 	</cmdsynopsis>
 
 	Register code to be exectuted when the interpreter for this
-	Webshell script is deleted. <command>web::dofinalize</command>
+	Websh script is deleted. <command>web::dofinalize</command>
 	will then call each <option>code</option> block that has been
 	registered, starting with the most recently added
 	<option>code</option>.
@@ -2859,15 +2859,6 @@ $Id$
 
       </para>
       <para>
-	For websh2 cracks:
-      </para>
-      <para>
-
-	wpp_isselected v1 v2 would now be: web::match
-	&quot;selected&quot; v1 v2
-
-      </para>
-      <para>
 
 	web::match treats v1 as a list. Thus, <emphasis>web::match
 	  &quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
@@ -2882,7 +2873,7 @@ $Id$
 	guaranteed unique names per application is system dependent.
 	This command just returns the name of a file. It is the
 	programmers job to handle the file, for example to open
-	it. Note that Webshell keeps an internal list of all file
+	it. Note that Websh keeps an internal list of all file
 	names generated with web::tempfile and will attempt to delete
 	all files when the interpreter dies.
       </para>
