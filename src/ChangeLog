@@ -1,3 +1,8 @@
+2003-02-28  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* doc/quickref.xml:
+	fixed documentation of web::cmdurlcfg and web::request
+
 2002-11-26  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* src/generic/weboutint.c, src/tests/script.test:
