@@ -687,13 +687,13 @@ int readWebInterpCode(WebInterp * webInterp, char *filename)
     if (chan == (Tcl_Channel) NULL) {
 	Tcl_ResetResult(interp);
 	Tcl_AppendResult(interp, "couldn't read file \"", filename,
-			 "\": ", Tcl_PosixError(interp), (char *) NULL);
+			 "\": ", Tcl_ErrnoMsg(Tcl_GetErrno()), (char *) NULL);
     }
     else {
 	if (Tcl_ReadChars(chan, objPtr, -1, 0) < 0) {
 	    Tcl_Close(interp, chan);
 	    Tcl_AppendResult(interp, "couldn't read file \"", filename,
-			     "\": ", Tcl_PosixError(interp), (char *) NULL);
+			     "\": ", Tcl_ErrnoMsg(Tcl_GetErrno()), (char *) NULL);
 	}
 	else {
 	    if (Tcl_Close(interp, chan) == TCL_OK) {
