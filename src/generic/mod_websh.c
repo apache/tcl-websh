@@ -173,10 +173,15 @@ static void *create_websh_config(APPOOL * p, server_rec * s)
 
 static void *merge_websh_config(APPOOL * p, void *basev, void *overridesv)
 {
-    /* fixme: is this correct? (reset the locks) */
-    ((websh_server_conf *) overridesv)->mainInterpLock = NULL;
-    ((websh_server_conf *) overridesv)->webshPoolLock = NULL;
-    return overridesv;
+    /* fixme-later: is this correct? (reset the locks) */
+
+    /* When we have seperate interpreters for seperate virtual hosts,
+     * and things of that nature, then we can worry about this -
+     * davidw. */
+
+/*     ((websh_server_conf *) overridesv)->mainInterpLock = NULL;
+       ((websh_server_conf *) overridesv)->webshPoolLock = NULL;  */
+    return basev;
 }
 
 static const char *set_webshscript(cmd_parms * cmd, void *dummy, char *arg)
