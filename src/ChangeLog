@@ -1,7 +1,15 @@
+2002-11-22  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* doc/quickref.xml:
+	added documentation of web::formvar (file upload)
+
 2002-11-13  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* src/generic/url.c:
 	fixed core dump when [web::cmdurl] called scheme in urlformat
+
+	* src/tests/cmdurl.test:
+	added test to test bug that has been fixed today
 
 2002-09-11  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
