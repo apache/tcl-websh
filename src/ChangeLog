@@ -1,3 +1,22 @@
+2002-09-11  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* src/generic/*.[ch]:
+	fixed different declarations for Tcl8.4: added TCLCONST define
+	in macros.h, which is set according to the tcl version
+
+	* src/unix/configure.in:
+	added tcl8.4 to search for Tcl	
+	changed to version 3.5.1a1
+
+	* src/tests/webout.test:
+	compatibility with strange version numbers
+	
+	* src/generic/cfg.h, src/generic/modwebsh.h, src/generic/request.c, src/generic/webout.c:
+	tweaked header file includes for win32
+
+	* src/generic/tcldecmt.tcl:
+	tweaked line length of output for win32
+	
 2002-08-01  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* makedist:
