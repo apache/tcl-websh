@@ -8,7 +8,7 @@ make
 
 If you want to compile Websh as an Apache module:
 
-make mod_websh3.50.so
+make mod_websh.so
 
 You may have to pass special options to configure, such as
 
