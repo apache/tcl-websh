@@ -484,11 +484,16 @@ void poolReleaseWebInterp(WebInterp * webInterp)
  * ------------------------------------------------------------------------- */
 int initPool(websh_server_conf * conf)
 {
+    static called = 0;
 
-    /* fixme: is this really called once, by a single thread, and we don't do
-       any locking in here ?? */
-
-    /* check immediately to see if we have already been called.  */
+    Tcl_MutexLock(&(conf->webshPoolLock));
+    if (called == 1) {
+	Tcl_MutexUnlock(&(conf->webshPoolLock));
+	return 1;
+    } else {
+	Tcl_MutexUnlock(&(conf->webshPoolLock));
+	called = 1;
+    }
 
     Tcl_FindExecutable(NULL);
 
