@@ -480,6 +480,7 @@ clean:
 	-rm -f *.o core *.core
 	-rm -f *.$(OBJEXT)
 	-rm -f *pure*
+	-rm -f ../generic/script.h
 	-rm -f $(web_OBJECTS) $(web_ap_OBJECTS) mod_websh$(SHARED_LIB_SUFFIX) mod_websh$(UNSHARED_LIB_SUFFIX)
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
