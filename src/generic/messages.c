@@ -22,7 +22,6 @@
 #  include <unistd.h>
 #  include <signal.h>
 #  include <sys/types.h>
-#  include <sys/socket.h>
 #  include <sys/uio.h>
 #  include <netinet/in.h>
 #  include <sys/time.h>
