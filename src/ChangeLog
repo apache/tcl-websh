@@ -9,6 +9,11 @@
 	* generic/interpool.c (initPool): Removed 'called' - it can only
 	happen once.  Thanks to Ronnie.
 
+2002-03-27  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/formdata.c (parseUrlEncodedFormData, parseMultipartFormData):
+	set back channels after reading form data
+	
 2002-03-27  David N. Welton  <davidw@dedasys.com>
 
 	* generic/interpool.c (initPool): Remove locking, as this is
@@ -20,6 +25,13 @@
 	* quickref.xml: Changed documentation for web::log, which now
 	defaults to not running 'subst' on its arguments.
 
+2002-03-20  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/paramlist.c (paramGetIndexFromObj): removed fixed allocation
+	(is a bit slower though since we need to find out how much to allocate)
+	
+	* tests/dispatch.test: fixed dispatch-5.14
+	
 2002-03-19  David N. Welton  <davidw@dedasys.com>
 
 	* generic/mod_websh.c (merge_websh_config): Don't reset the locks
@@ -42,6 +54,29 @@
 	* quickref.xsl: Added our own custom .xsl file for Tcl style
 	output.
 
+2002-03-07  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/filecounter.c, generic/filecounter.h:
+	- added configurable permissions
+	- fixed comments to fit into 80 char columns
+	- changed behavior of -wrap to match documentation
+	- set all default into header file
+
+	* generic/interpool.c, generic/interpool.h:
+	- typecast logToAp (so it does not conflit with other plugins)
+	- added a numerical id to every webInterp (fo easier identification)
+	- always log the id and the class when logging about interps
+	- fixed some calls to apache log (diffs for ap 1.3 and ap 2.0)
+
+	* generic/logtocmd.c (logToCmd):
+	avoid compiler warning: type cast in logToCmd
+
+	* tests/filecounter.test: fixed tests 2.7, 2.8, and 2.9 to 
+	comply with new option -perms and changed option -wrap
+
+	* doc/quickref.xml: fixed documentation of web::filecounter:
+	added default values and -perms option
+
 2002-03-07  David N. Welton  <davidw@dedasys.com>
 
 	* generic/logtocmd.c (logToCmd): Use a real list instead of a
@@ -59,6 +94,21 @@
 	* unix/Makefile.in: Avoid the final link step if it's already been
 	performed, for websh, and mod_websh.so.
 
+2002-03-06  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/interpool.c (readWebInterpCode): use 
+	Tcl_ErrnoMsg(Tcl_GetErrno()) instead of Tcl_PosixError(interp), 
+	because it's independent of interp
+
+	* generic/logtoap.c, generic/logtoap.h (logToAp): 
+	added additional formatting capabilities to logToAp
+	
+	* generic/request.c: include sys/errno.h, fixed logging of 
+	unsuccessful tempfile removal 
+
+	* gneric/response_ap.c (apHeaderHandler): 
+	Fixed sending of multiple headers
+	
 2002-03-05  David N. Welton  <davidw@dedasys.com>
 
 	* generic/request.c (removeTempFiles): Log error on failure of
@@ -83,6 +133,17 @@
 	(createWebInterp): Log readWebInterpCode failure via Apache.
 	(destroyWebInterp): Log web::finalize errors to Apache logs.
 
+2002-03-05  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/mod_websh.c:
+	API change for Apache 2 (register_hooks and ap_log_error)
+
+	* generic/request_ap.c (requestFillRequestValues): 
+	expclicit type cast to satisfy compiler
+
+	* generic/webout.c (Web_Response): added type cast to 
+	avoid compiler warning (Solaris cc)
+	
 2002-02-27  David N. Welton  <davidw@dedasys.com>
 
 	* unix/configure.in: Changed version to 3.5.
@@ -120,6 +181,13 @@
 	* generic/mod_websh.c (websh_handler): Do correct checks for
 	Apache2.
 
+	* doc/quickref.xml: fixed web::interpclasscfg default of maxrequests
+	
+2002-02-18  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/interpool.c (poolReleaseWebInterp):
+	allow interps to live forever when maxrequests == 0
+	
 2002-02-14  David N. Welton  <davidw@dedasys.com>
 
 	* generic/weboutint.c (webout_eval_tag): Workaround to avoid
@@ -144,6 +212,13 @@
 
 	* generic/uricode.c (uriDecode): Fixed comparisons to work with
 	'char *' instead of specifying signed/unsigned.
+
+2001-12-28  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* generic/tcldecmt.tcl: escaped newline in output
+	(Solaris cc does not like newlines in string literals)
+
+	* unix/Makefile.in: delete ../generic/script.h in clean rule
 
 2001-12-12  David N. Welton  <davidw@dedasys.com>
 
