@@ -489,6 +489,7 @@ int Web_CmdUrl(ClientData clientData,
     int plistLen = 0;
     int i = 0;
     int flag = 0;
+    int bool = 1;
     int urlformat = 0;
     Tcl_Obj *urlFmt = NULL;
     Tcl_Obj *res = NULL;
@@ -535,6 +536,10 @@ int Web_CmdUrl(ClientData clientData,
     }
 
     if (argIndexOfKey(objc, objv, params[NOTIMESTAMP]) > 0)
+	flag = (flag | WEB_URL_NOTIMESTAMP);
+
+    Tcl_GetBooleanFromObj(interp, urlData->requestData->cmdUrlTimestamp, &bool);
+    if (bool == 0)
 	flag = (flag | WEB_URL_NOTIMESTAMP);
 
     /* --------------------------------------------------------------------------

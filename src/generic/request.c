@@ -116,6 +116,8 @@ RequestData *createRequestData(Tcl_Interp * interp)
 
 	WebNewStringObjFromStringIncr(requestData->cmdTag, "cmd");
 	WebNewStringObjFromStringIncr(requestData->timeTag, "t");
+	requestData->cmdUrlTimestamp = Tcl_NewBooleanObj(1);
+	Tcl_IncrRefCount(requestData->cmdUrlTimestamp);
 
 	HashUtlAllocInit(requestData->request, TCL_STRING_KEYS);
 
@@ -175,6 +177,10 @@ int resetRequestData(Tcl_Interp * interp, RequestData * requestData)
     WebDecrRefCountIfNotNullAndSetNull(requestData->cmdTag);
     WebNewStringObjFromStringIncr(requestData->cmdTag, "cmd");
 
+    WebDecrRefCountIfNotNullAndSetNull(requestData->cmdUrlTimestamp);
+    requestData->cmdUrlTimestamp = Tcl_NewBooleanObj(1);
+    Tcl_IncrRefCount(requestData->cmdUrlTimestamp);
+
     requestData->requestIsInitialized = 0;
     return TCL_OK;
 }
@@ -232,7 +238,7 @@ void destroyRequestData(ClientData clientData, Tcl_Interp * interp)
 
 	WebDecrRefCountIfNotNull(requestData->cmdTag);
 	WebDecrRefCountIfNotNull(requestData->timeTag);
-
+	WebDecrRefCountIfNotNull(requestData->cmdUrlTimestamp);
 	destroyParamList(requestData->request);
 
 	WebDecrRefCountIfNotNull(requestData->upLoadFileSize);

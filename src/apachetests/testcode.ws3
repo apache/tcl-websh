@@ -1,0 +1,6 @@
+
+web::command default {
+    web::put "Hello, World"
+}
+
+web::dispatch

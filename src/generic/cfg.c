@@ -124,20 +124,22 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	NULL
     };
 
-    static char *subCmd1[] = { "uploadfilesize",
-	"encryptchain",
-	"decryptchain",
-	"cmdparam",
-	"timeparam",
-	"putxmarkup",
-	"logsubst",
-	"version",
-	"copyright",
-	NULL
+    static char *subCmd1[] = { "uploadfilesize",			       
+			       "encryptchain",
+			       "decryptchain",
+			       "cmdparam",
+			       "timeparam",
+			       "putxmarkup",
+			       "logsubst",
+			       "version",
+			       "copyright",
+			       "cmdurltimestamp",
+			       NULL
     };
 
     enum subCmd1
-    { UPLOADFILESIZE,
+    { 
+	UPLOADFILESIZE,
 	ENCRYPTCHAIN,
 	DECRYPTCHAIN,
 	CMDTAG,
@@ -145,7 +147,8 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	PUTXMARKUP,
 	LOGSUBST,
 	WEBSHVERSION,
-	WEBSHCOPYRIGHT
+	WEBSHCOPYRIGHT,
+	CMDURLTIMESTAMP
     };
 
 
@@ -403,6 +406,42 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 			     NULL);
 	    return TCL_OK;
 	}
+    case CMDURLTIMESTAMP: {
+	int tmpbool = 1;
+	WebAssertData(interp, cfgData->requestData,
+		      "web::config cmdurltimestamp", TCL_ERROR);
+	
+	WebAssertData(interp, cfgData->requestData->cmdUrlTimestamp,
+			  "web::config cmdurltimestamp", TCL_ERROR);
+	Tcl_SetObjResult(interp,
+			 Tcl_DuplicateObj(cfgData->requestData->cmdUrlTimestamp));
+	switch (objc) {
+	case 2:
+	    return TCL_OK;
+	    break;
+	case 3:
+	    if (Tcl_GetBooleanFromObj(interp, objv[2], &tmpbool) ==
+		TCL_ERROR) {
+		LOG_MSG(interp, WRITE_LOG | SET_RESULT, __FILE__,
+			__LINE__, "web::config cmdurltimestamp",
+			WEBLOG_ERROR,
+			"web::config cmdurltimestamp only accepts boolean but ",
+			"got \"", Tcl_GetString(objv[2]), "\"", NULL);
+		return TCL_ERROR;
+	    }
+	    WebDecrOldIncrNew(cfgData->requestData->cmdUrlTimestamp,
+			      Tcl_DuplicateObj(objv[2]));
+	    return TCL_OK;
+	    break;
+	default:
+	    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
+		    __FILE__, __LINE__,
+		    "web::config cmdurltimestamp", WEBLOG_INFO,
+		    "usage: web::config cmdurltimestamp ?boolean?", NULL);
+	    return TCL_ERROR;
+	}
+	return TCL_OK;
+    }
     default:
 	break;
     }

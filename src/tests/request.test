@@ -27,6 +27,7 @@ proc cleanParam {} {
     web::cmdurlcfg -unset
     web::formvar -unset
     web::param -unset
+    web::request -reset
 }
 
 # -----------------------------------------------------------------------------

@@ -81,6 +81,8 @@ typedef struct RequestData
     /* default: cmd */
     Tcl_Obj *timeTag;		/* key to be used for param in URL (web::cmdurl) */
     /* default: t */
+    Tcl_Obj *cmdUrlTimestamp;   /* send timestamp with url's */
+    /* default: true */
     /* ............ */
     Tcl_HashTable *request;	/* everything from the request obj */
     /* e.g. server_port, server_name and so on */

@@ -138,24 +138,31 @@ int Web_Dispatch(ClientData clientData,
 		    /* ------------------------------------------------------------------
 		     * -postdata channel
 		     * --------------------------------------------------------------- */
-		    parsePostData(interp, objv[idx1 + 1], NULL, NULL,
-				  requestData);
+		    if (parsePostData(interp, objv[idx1 + 1], NULL, NULL,
+				      requestData) == TCL_ERROR) {
+			return TCL_ERROR;
+		    }
+
 		    break;
 		case 3:
 		    /* ------------------------------------------------------------------
 		     * -postdata channel length
 		     * --------------------------------------------------------------- */
 		    /* log is handled by parsePostData */
-		    parsePostData(interp, objv[idx1 + 1], objv[idx1 + 2],
-				  NULL, requestData);
+		    if (parsePostData(interp, objv[idx1 + 1], objv[idx1 + 2],
+				      NULL, requestData) == TCL_ERROR) {
+			return TCL_ERROR;
+		    }
 		    break;
 		case 4:
 		    /* ------------------------------------------------------------------
 		     * -postdata channel length type
 		     * --------------------------------------------------------------- */
 		    /* log is handled by parsePostData */
-		    parsePostData(interp, objv[idx1 + 1], objv[idx1 + 2],
-				  objv[idx1 + 3], requestData);
+		    if (parsePostData(interp, objv[idx1 + 1], objv[idx1 + 2],
+				      objv[idx1 + 3], requestData) == TCL_ERROR) {
+			return TCL_ERROR;
+		    }
 		    break;
 		default:
 		    Tcl_WrongNumArgs(interp, 1, objv,

@@ -378,6 +378,25 @@ test cmdurl-3.19 {no time and no cmd tag} {
     set res
 } "v319 {} {}"
 
+test cmdurl-3.191 {no time and no cmd tag} {
+
+    cleanParam    
+
+    web::config cmdurltimestamp 0
+    web::config timeparam "t"
+    web::config cmdparam "cmd"
+
+    set url [web::cmdurl "" k3191 v3191]
+    set tmp [web::querystring::getfromurl $url]
+    web::dispatch -cmd "" -postdata "" -querystring $tmp
+    set res [web::param k3191]
+    lappend res [web::param t]
+    lappend res [web::param cmd]
+    unset url
+    unset tmp
+    set res
+} "v3191 {} {}"
+
 
 test cmdurl-3.20 {full web::param syntax for web::cmdurlcfg, all-in-one} {
 
