@@ -214,7 +214,6 @@ int removeTempFiles(Tcl_Interp * interp, RequestData * requestData)
 			"removeTempFiles", WEBLOG_ERROR,
 			"Error: ", Tcl_PosixError(interp),
 			NULL);
-		return TCL_ERROR;
 	    }
 	    Tcl_DecrRefCount(tclo);
 	}
