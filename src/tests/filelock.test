@@ -69,7 +69,7 @@ test filelock-1.3 {test file locking (mulitple processes)} {unixOnly} {
     # temporary test script
     set fh [open $script "w"]
     global argv0
-    puts $fh "#!$argv0"
+    puts $fh "#![info nameofexecutable]"
     puts $fh {set c [lindex $argv 0]}
     puts $fh {puts "starting [pid] for $c"}
     puts $fh "if {\$c < $processes} {exec \$argv0 \[incr c\] &}"
