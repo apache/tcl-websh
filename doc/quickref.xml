@@ -39,13 +39,13 @@ $Id$
       </para>
       <para>
 	Instead of the normal Tcl behaviour, Websh configuration
-	commands normally return the previous value, when a new value
+	commands normally return the previous value when a new value
 	is set.
       </para>
       <para>
-	In addition to the examples given here you might find <ulink
-	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
-	a useful source of information.
+	In addition to the examples given here, you might find <ulink
+	  url="http://tcl.apache.org/websh/examples/">http://tcl.apache.org/websh/examples/</ulink>
+	  a useful source of information.
       </para>
     </section>
     <section id="about">
@@ -56,12 +56,10 @@ $Id$
 	url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh/</ulink>.
       </para>
       <note>
-	<para>
-	  We try to keep this quick reference up-to-date and hope that
-	  it will be useful. We do not guarantee that it is suitable
-	  for any particular purpose whatsoever. The authors accept no
-	  liability with regards to this information or its use.
-	</para>
+	We try to keep this quick reference up-to-date and hope that
+	it will be useful. We do not guarantee that it is suitable for
+	any particular purpose whatsoever. The authors accept no
+	liability with regards to this information or its use.
       </note>
     </section>
   </section>
@@ -71,8 +69,8 @@ $Id$
       <title>web::config</title>
       <cmdsynopsis>
 	<command>web::config</command>
-	<arg>key</arg>
-	<arg choice="opt">value</arg>
+	<arg><replaceable>key</replaceable></arg>
+	<arg choice="opt"><replaceable>value</replaceable></arg>
       </cmdsynopsis>
       <!--
       <emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
@@ -84,7 +82,7 @@ $Id$
 
       <variablelist>
 	<varlistentry>
-	  <term><option>uploadfilesize</option> <optional><option>size</option></optional></term>
+	  <term><option>uploadfilesize</option> <optional><option><replaceable>size</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
 	      Sets the maximum number of bytes allowed to be uploaded.
@@ -93,7 +91,7 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>cmdparam</option> <optional><option>name</option></optional></term>
+	  <term><option>cmdparam</option> <optional><option><replaceable>name</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
 	      Name of the <command>web::command</command> parameter in
@@ -102,7 +100,7 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>timeparam</option> <optional><option>name</option></optional></term>
+	  <term><option>timeparam</option> <optional><option><replaceable>name</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
 	      Name of the timestamp parameter in the URL. Default:
@@ -120,7 +118,8 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>putxmarkup</option> <optional><option>brace|tag</option></optional></term>
+	  <term><option>putxmarkup</option>
+	  <optional><option>brace|tag</option></optional></term>
 	  <listitem>
 	    <para>
 	      Sets the markup characters for sections to be eval'd in
@@ -148,7 +147,7 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>encryptchain</option> <option>list</option></term>
+	  <term><option>encryptchain</option> <option><replaceable>list</replaceable></option></term>
 	  <listitem>
 	    <para>
 	      defines which commands should be tried, in sequence, to
@@ -157,7 +156,7 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>decryptchain</option> <option>list</option></term>
+	  <term><option>decryptchain</option> <option><replaceable>list</replaceable></option></term>
 	  <listitem>
 	    <para>
 	      defines which commands should be tried, in sequence, to
@@ -169,7 +168,7 @@ $Id$
     </section>
     <section id="Examples0">
       <para>
-	<emphasis>Examples</emphasis>
+	Examples:
 	<programlisting>
 	  % web::config decryptchain
 	  web::encryptd
@@ -193,11 +192,10 @@ $Id$
     <section id="web::command">
       <title>web::command</title>
       <para>
-	Syntax:
 	<cmdsynopsis>
 	  <command>web::command</command>
-	  <arg choice="opt">cmdName</arg>
-	  <arg>cmdBody</arg>
+	  <arg choice="opt"><replaceable>cmdName</replaceable></arg>
+	  <arg><replaceable>cmdBody</replaceable></arg>
 	</cmdsynopsis>
 
 	Registers <option>cmdBody</option> as
@@ -210,10 +208,10 @@ $Id$
       <title>web::getcommand</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::getcommand</command>
-	  <arg choice="opt">cmdName</arg>
+	  <arg choice="opt"><replaceable>cmdName</replaceable></arg>
 	</cmdsynopsis>
 
 	Retrieves the body of the command <option>commandName</option>
@@ -226,19 +224,19 @@ $Id$
       <title>web::cmdurl</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::cmdurl</command>
-	  <arg choice="opt">options</arg>
-	  <arg>cmdName</arg>
-	  <arg choice="opt">key-value-list</arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg><replaceable>cmdName</replaceable></arg>
+	  <arg choice="opt"><replaceable>key-value-list</replaceable></arg>
 	</cmdsynopsis>
 
 	<cmdsynopsis>
 	  <command>web::cmdurl</command>
-	  <arg choice="opt">options</arg>
-	  <arg>cmdName</arg>
-	  <arg choice="opt">k1 v1 ... kN vN</arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg><replaceable>cmdName</replaceable></arg>
+	  <arg choice="opt"><replaceable>k1 v1 ... kN vN</replaceable></arg>
 	</cmdsynopsis>
       </para>
       <para>
@@ -264,7 +262,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-urlformat</option> <option>list</option></term>
+	    <term><option>-urlformat</option> <option><replaceable>list</replaceable></option></term>
 	    <listitem>
 	      <para>
 		specify what items will be used to format just this
@@ -350,7 +348,7 @@ $Id$
     </section>
     <section id="Examples2">
       <para>
-      <emphasis>Examples</emphasis>
+      Examples:
 
 	<programlisting>
 	  % web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
@@ -364,12 +362,12 @@ $Id$
       <title>web::cmdurlcfg</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::cmdurlcfg</command>
-	  <arg choice="opt">options</arg>
-	  <arg choice="opt">key</arg>
-	  <arg choice="opt">value</arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg choice="opt"><replaceable>key</replaceable></arg>
+	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	</cmdsynopsis>
       </para>
       <para>
@@ -377,8 +375,8 @@ $Id$
 	<command>web::param</command>.
       </para>
       <para>
-	<command>web::cmdurlcfg</command> <option>option</option>
-	<optional><option>value</option></optional>
+	<command>web::cmdurlcfg</command> <option><replaceable>option</replaceable></option>
+	<optional><option><replaceable>value</replaceable></option></optional>
       </para>
       <para>
 	Options are <option>-scheme</option>,
@@ -409,7 +407,8 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::cmdurlcfg</command> -set
-	      <option>key</option> <option>value</option></term>
+	      <option><replaceable>key</replaceable></option>
+	      <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
 		add the static parameter <option>key</option>.
@@ -441,7 +440,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><option>-protocol</option> <optional><option>value</option></optional></term>
+	    <term><option>-protocol</option> <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		protocol to be used. Defaults to the scheme used to
@@ -451,7 +450,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-servername</option> <optional><option>value</option></optional></term>
+	    <term><option>-servername</option> <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		server name to be used. Default: taken from request.
@@ -484,7 +483,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-urlformat</option> <option>list</option></term>
+	    <term><option>-urlformat</option> <option><replaceable>list</replaceable></option></term>
 	    <listitem>
 	      <para>
 		changes the urlformat permanently. See
@@ -518,7 +517,7 @@ $Id$
     </section>
     <section id="Examples3">
       <para>
-	<emphasis>Examples</emphasis>
+	Examples:
 	<programlisting>
 	  % web::cmdurl &quot;&quot;
 	  ?XDqPtk34XvyPh41gUBo
@@ -537,10 +536,10 @@ $Id$
       <title>web::dispatch</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::dispatch</command>
-	  <arg choice="opt">options</arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
 	</cmdsynopsis>
 
 	Options are: <option>-cmd</option>,
@@ -551,7 +550,7 @@ $Id$
       <para>
 	<variablelist>
 	  <varlistentry>
-	    <term><option>-cmd</option> <option>cmdName</option></term>
+	    <term><option>-cmd</option> <option><replaceable>cmdName</replaceable></option></term>
 	    <listitem>
 	      <para>
 		switch into command <option>cmdName</option>. If
@@ -563,7 +562,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-querystring</option> <option>string</option></term>
+	    <term><option>-querystring</option>
+	    <option><replaceable>string</replaceable></option></term>
 	    <listitem>
 	      <para>
 		parse <option>string</option> as the querystring. If
@@ -575,8 +575,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-postdata</option> <option>string</option>
-	      <optional><option>content_type</option></optional></term>
+	    <term><option>-postdata</option> <option><replaceable>string</replaceable></option>
+	      <optional><option><replaceable>content_type</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		parse <option>string</option> as POST data input with
@@ -597,9 +597,9 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term>
-	      <option>-postdata</option> <option>channelName</option>
-	      <option>content_length</option>
-	      <option>content_type</option>
+	      <option>-postdata</option> <option><replaceable>channelName</replaceable></option>
+	      <option><replaceable>content_length</replaceable></option>
+	      <option><replaceable>content_type</replaceable></option>
 	    </term>
 	    <listitem>
 	      <para>
@@ -619,7 +619,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-track</option> <option>paramKeyList</option></term>
+	    <term><option>-track</option> <option><replaceable>paramKeyList</replaceable></option></term>
 	    <listitem>
 	      <para>
 		Track a parameter: register it as &quot;static&quot;
@@ -633,7 +633,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-hook</option> <option>code</option></term>
+	    <term><option>-hook</option> <option><replaceable>code</replaceable></option></term>
 	    <listitem>
 	      <para>
 		Causes web::dispatch to eval <option>code</option>
@@ -656,7 +656,7 @@ $Id$
     </section>
     <section id="Examples4">
       <para>
-      <emphasis>Examples</emphasis>
+      Examples:
 
 	<programlisting>
 	  % set tst {puts &quot;On the hook&quot;}
@@ -730,7 +730,7 @@ $Id$
     </section>
     <section id="Examples5">
       <para>
-	<emphasis>Examples</emphasis>
+	Examples:
 
 	See <ulink
 	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
@@ -745,15 +745,15 @@ $Id$
     <section id="web::request">
       <title>web::request</title>
       <para>
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::request</command>
-	  <arg choice="opt">options</arg>
-	  <arg choice="opt">key</arg>
-	  <arg choice="opt">value</arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg choice="opt"><replaceable>key</replaceable></arg>
+	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	  <command>web::request</command>
-	  <arg choice="opt">key</arg>
-	  <arg choice="opt">default</arg>
+	  <arg choice="opt"><replaceable>key</replaceable></arg>
+	  <arg choice="opt"><replaceable>default</replaceable></arg>
 	</cmdsynopsis>
       </para>
       <para>
@@ -776,8 +776,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command>web::request</command> <option>key</option>
-	      <optional><option>default</option></optional></term>
+	    <term><command>web::request</command> <option><replaceable>key</replaceable></option>
+	      <optional><option><replaceable>default</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		returns the value for <option>key</option>. Can be a
@@ -789,7 +789,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	      <option>-count</option> <option>key</option></term>
+	      <option>-count</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		returns number of items in list for
@@ -800,7 +800,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	      <option>-set</option> <option>key</option></term>
+	      <option>-set</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		does the same as <command>web::request</command>
@@ -810,10 +810,10 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	      <option>-set</option> <option>key</option>
-	      <option>value</option>
-	      <optional><option>value</option></optional>
-	      <optional><option>...</option></optional></term>
+	      <option>-set</option> <option><replaceable>key</replaceable></option>
+	      <option><replaceable>value</replaceable></option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
+	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		adds the parameter <option>key</option> to the
@@ -824,10 +824,10 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	      <option>-lappend</option> <option>key</option>
-	      <option>value</option>
-	      <optional><option>value</option></optional>
-	      <optional><option>...</option></optional></term>
+	      <option>-lappend</option> <option><replaceable>key</replaceable></option>
+	      <option><replaceable>value</replaceable></option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
+	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		append parameters with the same <option>key</option>
@@ -847,7 +847,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::request</command>
-	      <option>-unset</option> <option>key</option></term>
+	      <option>-unset</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		deletes a parameter from the web::request data.
@@ -885,13 +885,13 @@ $Id$
       <title>web::param</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::param</command>
-	  <arg choice="opt">options</arg>
-	  <arg choice="opt">key</arg>
-	  <arg choice="opt">value</arg>
-	  <arg choice="opt">...</arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg choice="opt"><replaceable>key</replaceable></arg>
+	  <arg choice="opt"><replaceable>value</replaceable></arg>
+	  <arg choice="opt"><replaceable>...</replaceable></arg>
 	</cmdsynopsis>
 
 	Options are: <option>-count</option>, <option>-set</option>,
@@ -918,8 +918,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command>web::param</command> <option>key</option>
-	      <optional><option>default</option></optional></term>
+	    <term><command>web::param</command> <option><replaceable>key</replaceable></option>
+	      <optional><option><replaceable>default</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		returns the value for <option>key</option>. Can be a
@@ -931,7 +931,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command>
-	      <option>-count</option> <option>key</option></term>
+	      <option>-count</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		returns number of items in list of
@@ -941,18 +941,19 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command> <option>-set</option>
-	      <option>key</option></term>
+	      <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		does the same as '<command>web::param</command> <option>key</option>'.
+		does the same as '<command>web::param</command>
+		<option>key</option>'.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command> <option>-set</option>
-	      <option>key</option> <option>value</option>
-	      <optional><option>value</option></optional>
-	      <optional><option>...</option></optional></term>
+	      <option><replaceable>key</replaceable></option> <option><replaceable>value</replaceable></option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
+	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		add the parameter <option>key</option> to the
@@ -963,10 +964,10 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command>
-	      <option>-lappend</option> <option>key</option>
-	      <option>value</option>
-	      <optional><option>value</option></optional>
-	      <optional><option>...</option></optional></term>
+	      <option>-lappend</option> <option><replaceable>key</replaceable></option>
+	      <option><replaceable>value</replaceable></option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
+	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		append parameters with the same <option>key</option>
@@ -985,7 +986,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::param</command>
-	      <option>-unset</option> <option>key</option></term>
+	      <option>-unset</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		delete a parameter from the web::param data.
@@ -999,12 +1000,12 @@ $Id$
     <section id="web::formvar">
       <title>web::formvar</title>
       <para>
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::formvar</command>
-	  <arg choice="opt">options</arg>
-	  <arg choice="opt">key</arg>
-	  <arg choice="opt">value</arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
+	  <arg choice="opt"><replaceable>key</replaceable></arg>
+	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	</cmdsynopsis>
       </para>
       Exactly like <command>web::param</command>.
@@ -1017,7 +1018,7 @@ $Id$
     </section>
     <section id="Examples6">
       <para>
-      <emphasis>Examples</emphasis>
+      Examples:
 
 	<programlisting>
 	  % web::request CONTENT_LENGTH
@@ -1052,15 +1053,15 @@ $Id$
       <title>web::response</title>
       <para>
 
-	Syntax:
+
 
 	<cmdsynopsis>
 	  <command>web::response</command>
 	  <command>web::response</command>
-	  <arg choice="opt">option</arg>
+	  <arg choice="opt"><replaceable>option</replaceable></arg>
 	  <command>web::response</command>
-	  <arg choice="opt">subcommand</arg>
-	  <arg>args</arg>
+	  <arg choice="opt"><replaceable>subcommand</replaceable></arg>
+	  <arg><replaceable>args</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are <option>-select</option>,
@@ -1081,7 +1082,7 @@ $Id$
 	  <varlistentry>
 	    <term><command>web::response</command>
 	      <option>-select</option>
-	      <option>channelName</option>
+	      <option><replaceable>channelName</replaceable></option>
 	    </term>
 	    <listitem>
 	      <para>
@@ -1103,7 +1104,7 @@ $Id$
 	  <varlistentry>
 	    <term><command>web::response</command>
 	      <option>-select</option>
-	      <optional>#</optional><option>channel</option></term>
+	      <optional>#</optional><option><replaceable>channel</replaceable></option></term>
 	    <listitem>
 	      <para>
 		makes <option>channel</option> the new default
@@ -1114,8 +1115,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	      <option>-set</option> <option>key</option>
-	      <optional><option>value</option></optional></term>
+	      <option>-set</option> <option><replaceable>key</replaceable></option>
+	      <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		sets property <option>key</option> to
@@ -1142,7 +1143,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::response</command>
-	      <option>-count</option> <option>key</option></term>
+	      <option>-count</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		returns number of items in list of <option>key</option>.
@@ -1152,7 +1153,7 @@ $Id$
 	  <varlistentry>
 	    <term><command>web::response</command>
 	      <option>-unset</option>
-	      <optional><option>key</option></optional></term>
+	      <optional><option><replaceable>key</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		delete the value of <option>key</option>, if
@@ -1179,7 +1180,7 @@ $Id$
 	  <varlistentry>
 	    <term><command>web::response</command>
 	      <option>-httpresponse</option>
-	      <optional><option>value</option></optional></term>
+	      <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		Sets the HTTP response like &quot;HTTP/1.0 200
@@ -1232,11 +1233,11 @@ $Id$
     <section id="web::put">
       <title>web::put</title>
       <para>
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::put</command>
-	  <arg choice="opt">channel</arg>
-	  <arg choice="opt">text</arg>
+	  <arg choice="opt"><replaceable>channel</replaceable></arg>
+	  <arg choice="opt"><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
 	Send output to a Tcl channel.  No newline is added to output.
 
@@ -1248,8 +1249,8 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::putx</command>
-	  <arg choice="opt">channel</arg>
-	  <arg choice="opt">text</arg>
+	  <arg choice="opt"><replaceable>channel</replaceable></arg>
+	  <arg choice="opt"><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
 
 	Writes <option>text</option> to the specified channel. Code in
@@ -1265,9 +1266,9 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::putxfile</command>
-	??#<optional><option>channel</option></optional>
-	<option>file</option>
-	<optional><option>msg</option></optional>
+	??#<optional><option><replaceable>channel</replaceable></option></optional>
+	<option><replaceable>file</replaceable></option>
+	<optional><option><replaceable>msg</replaceable></option></optional>
       </cmdsynopsis>
 	Like web::putx, but takes input from a file.
       </para>
@@ -1280,7 +1281,7 @@ $Id$
     </section>
     <section id="Examples7">
       <para>
-	<emphasis>Examples</emphasis>
+	Examples:
 	<programlisting>
 	  % web::response
 	  stdout
@@ -1342,9 +1343,10 @@ $Id$
 	web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest
 
 	<cmdsynopsis>
-	  <command>web::logdest</command> <arg>subcommand</arg> <arg
-								  choice="opt">options</arg> <arg>level</arg>
-	  <arg>plugin</arg>
+	  <command>web::logdest</command>
+	  <arg><replaceable>subcommand</replaceable></arg> <arg
+	  choice="opt"><replaceable>options</replaceable></arg>
+	  <arg><replaceable>level</replaceable></arg> <arg><replaceable>plugin</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>add</option>,
@@ -1375,7 +1377,7 @@ $Id$
       <title>web::logfilter</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::logfilter</command>
 	  <arg>subcommand</arg>
@@ -1390,7 +1392,7 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::logfilter</command>
-	      <option>add</option> <option>level</option></term>
+	      <option>add</option> <option><replaceable>level</replaceable></option></term>
 	    <listitem>
 	      <para>
 		add a level to the list.
@@ -1400,7 +1402,7 @@ $Id$
 	  <varlistentry>
 	    <term><command>web::logfilter</command>
 	      <option>delete</option>
-	      <optional><option>name</option></optional></term>
+	      <optional><option><replaceable>name</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		remove a <option>name</option> from list, or remove all
@@ -1410,7 +1412,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::logfilter</command>
-	      <option>names</option></term>
+	      <option><replaceable>names</replaceable></option></term>
 	    <listitem>
 	      <para>
 		list all filters that have been set.
@@ -1426,8 +1428,8 @@ $Id$
       <para>
 
 	<cmdsynopsis>
-	  <command>web::log</command> <arg>level</arg>
-	  <arg>msg</arg>
+	  <command>web::log</command> <arg><replaceable>level</replaceable></arg>
+	  <arg><replaceable><replaceable>msg</replaceable></replaceable></arg>
 	</cmdsynopsis>
 
 	Issue a log message.  It is possible, should the user so
@@ -1442,14 +1444,14 @@ $Id$
       <section id="file">
 	<title>File</title>
 	<para>
-	  Syntax:
+
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
-	    <arg>destination.-level</arg>
+	    <arg><replaceable>destination</replaceable>.-<replaceable>level</replaceable></arg>
 	    <arg>file</arg>
-	    <arg choice="opt">options</arg>
-	    <arg>filename</arg>
+	    <arg choice="opt"><replaceable>options</replaceable></arg>
+	    <arg><replaceable>filename</replaceable></arg>
 	  </cmdsynopsis>
 	  Option is: <option>-unbuffered</option>
 	</para>
@@ -1457,13 +1459,13 @@ $Id$
       <section id="syslog">
 	<title>Syslog</title>
 	<para>
-	  Syntax:
+
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
 	    <arg>*.-debug</arg>
 	    <arg>syslog</arg>
-	    <arg choice="opt">level</arg>
+	    <arg choice="opt"><replaceable>level</replaceable></arg>
 	  </cmdsynopsis>
 
 	  See the man page for syslog for levels on your system. Typical: 10.
@@ -1473,13 +1475,13 @@ $Id$
       <section id="command">
 	<title>Command</title>
 	<para>
-	  Syntax:
+
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
 	    <arg>*.-debug</arg>
 	    <arg choice="plain">command</arg>
-	    <arg>cmdName</arg>
+	    <arg><replaceable>cmdName</replaceable></arg>
 	  </cmdsynopsis>
 	</para>
       </section>
@@ -1487,21 +1489,21 @@ $Id$
 	<title>Channel</title>
 	<para>
 
-	  Syntax:
+
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
 	    <arg>*.-debug</arg>
 	    <arg choice="plain">channel</arg>
-	    <arg choice="opt">options</arg>
-	    <arg>channel</arg>
+	    <arg choice="opt"><replaceable>options</replaceable></arg>
+	    <arg><replaceable>channel</replaceable></arg>
 	  </cmdsynopsis>
 	  Option is: <option>-unbuffered</option>
 	</para>
       </section>
       <section id="apache">
 	<title>Apache</title>
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::logdest</command>
 	  <arg choice="plain">add</arg>
@@ -1516,7 +1518,7 @@ $Id$
     </section>
     <section id="Examples8">
       <para>
-      <emphasis>Examples</emphasis>
+      Examples:
 	<programlisting>
 	  % web::logfilter add *.-debug
 	  logfilter0
@@ -1536,7 +1538,7 @@ $Id$
 	  %
 	</programlisting>
 
-      </para>
+      </para>2
     </section>
   </section>
   <section id="context_handling">
@@ -1546,14 +1548,14 @@ $Id$
       <para>
 	Creation
 	<cmdsynopsis>
-	  <command>web::context</command> <arg>name</arg>
+	  <command>web::context</command> <arg><replaceable>name</replaceable></arg>
 	</cmdsynopsis>
 	Creates a namespace <option>name</option> with the following
 	commands:
 
 	<cmdsynopsis>
-	  <command><varname>name</varname>::subcommand</command>
-	  <arg>args</arg>
+	  <command><replaceable>name</replaceable>::subcommand</command>
+	  <arg><replaceable>args</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>cset</option>,
@@ -1567,8 +1569,8 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::cset</command>
-	      <option>key</option> <option>value</option></term>
+	    <term><command><replaceable>name</replaceable>::cset</command>
+	      <option><replaceable>key</replaceable></option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
 		store <option>value</option>.
@@ -1576,10 +1578,10 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::cappend</command>
-	      <option>key</option> <option>value</option>
-	      <optional><option>value</option></optional>
-	      <optional><option>...</option></optional></term>
+	    <term><command><replaceable>name</replaceable>::cappend</command>
+	      <option><replaceable>key</replaceable></option> <option><replaceable>value</replaceable></option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
+	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		append <option>value</option> to existing value for
@@ -1588,10 +1590,10 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::clappend</command>
-	      <option>key</option> <option>value</option>
-	      <optional><option>value</option></optional>
-	      <optional><option>...</option></optional></term>
+	    <term><command><replaceable>name</replaceable>::clappend</command>
+	      <option><replaceable>key</replaceable></option> <option><replaceable>value</replaceable></option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
+	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		append <option>value</option> to existing list of
@@ -1600,9 +1602,9 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::cget</command>
-	      <option>key</option>
-	      <optional><option>default</option></optional></term>
+	    <term><command><replaceable>name</replaceable>::cget</command>
+	      <option><replaceable>key</replaceable></option>
+	      <optional><option><replaceable>default</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		access the value for key <option>key</option>, or
@@ -1614,8 +1616,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::cexists</command>
-	      <option>key</option></term>
+	    <term><command><replaceable>name</replaceable>::cexists</command>
+	      <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		returns true (1) if <option>key</option> exists in
@@ -1624,8 +1626,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::cunset</command>
-	      <option>key</option></term>
+	    <term><command><replaceable>name</replaceable>::cunset</command>
+	      <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
 		remove <option>key</option> from context.
@@ -1633,9 +1635,9 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::carray</command>
-	      <option>option</option> <option>key</option>
-	      <option>arg</option></term>
+	    <term><command><replaceable>name</replaceable>::carray</command>
+	      <option><replaceable>option</replaceable></option> <option><replaceable>key</replaceable></option>
+	      <option><replaceable>arg</replaceable></option></term>
 	    <listitem>
 	      <para>
 		array manipulation as known from the Tcl command
@@ -1644,8 +1646,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::cnames</command>
-	      <optional><option>pattern</option></optional></term>
+	    <term><command><replaceable>name</replaceable>::cnames</command>
+	      <optional><option><replaceable>pattern</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		lists existing keys of context matching
@@ -1654,7 +1656,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::dump</command></term>
+	    <term><command><replaceable>name</replaceable>::dump</command></term>
 	    <listitem>
 	      <para>
 		serialize context.
@@ -1683,8 +1685,8 @@ $Id$
 	Creation:
 	<cmdsynopsis>
 	  <command>web::filecontext</command>
-	  <arg>name</arg>
-	  <arg choice="opt">options</arg>
+	  <arg><replaceable>name</replaceable></arg>
+	  <arg choice="opt"><replaceable>options</replaceable></arg>
 	</cmdsynopsis>
 
 	Options are: <option>-perm</option>, <option>-path</option>,
@@ -1694,10 +1696,10 @@ $Id$
 	Creates a namespace <option>name</option> to manage file-based
 	context data:
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command><varname>name</varname>::subcommand</command>
-	  <arg>args</arg>
+	  <command><replaceable>name</replaceable>::subcommand</command>
+	  <arg><replaceable>args</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>cset</option>,
@@ -1721,8 +1723,8 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term>
-	      <command><varname>name</varname>::init</command>
-	      <optional><option>id</option></optional>
+	      <command><replaceable>name</replaceable>::init</command>
+	      <optional><option><replaceable>id</replaceable></option></optional>
 	    </term>
 	    <listitem>
 	      <para>
@@ -1738,8 +1740,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::new</command>
-	      <optional><option>id</option></optional></term>
+	    <term><command><replaceable>name</replaceable>::new</command>
+	      <optional><option><replaceable>id</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context. Automation depends on
@@ -1749,7 +1751,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::commit</command></term>
+	    <term><command><replaceable>name</replaceable>::commit</command></term>
 	    <listitem>
 	      <para>
 		make session context persistent.
@@ -1757,7 +1759,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::id</command></term>
+	    <term><command><replaceable>name</replaceable>::id</command></term>
 	    <listitem>
 	      <para>
 		return id of session.
@@ -1765,7 +1767,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::invalidate</command></term>
+	    <term><command><replaceable>name</replaceable>::invalidate</command></term>
 	    <listitem>
 	      <para>
 		delete session in memory and on file system.
@@ -1777,9 +1779,9 @@ $Id$
 	Options:
 	<cmdsynopsis>
 	  <command>web::filecontext</command>
-	  <arg>name</arg>
+	  <arg><replaceable>name</replaceable></arg>
 	  <arg>-perm</arg>
-	  <arg>perm</arg>
+	  <arg><replaceable>perm</replaceable></arg>
 	</cmdsynopsis>
 
 	set the file permissions of the session context files
@@ -1788,8 +1790,8 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::filecontext</command>
-	      <option>name</option> <option>-path</option>
-	      <option>path</option>
+	      <option><replaceable>name</replaceable></option> <option>-path</option>
+	      <option><replaceable>path</replaceable></option>
 	    </term>
 	    <listitem>
 	      <para>
@@ -1804,7 +1806,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::filecontext</command>
-	      <option>name</option> <option>-crypt</option>
+	      <option><replaceable>name</replaceable></option> <option>-crypt</option>
 	      <option>boolean</option></term>
 	    <listitem>
 	      <para>
@@ -1815,8 +1817,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::filecontext</command>
-	      <option>name</option> <option>-idgen</option>
-	      <option>idgen</option></term>
+	      <option><replaceable>name</replaceable></option> <option>-idgen</option>
+	      <option><replaceable>idgen</replaceable></option></term>
 	    <listitem>
 	      <para>
 		Sets command <option>idgen</option> to find a new
@@ -1833,8 +1835,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::filecontext</command>
-	      <option>name</option> <option>-attachto</option>
-	      <option>idparam</option>
+	      <option><replaceable>name</replaceable></option> <option>-attachto</option>
+	      <option><replaceable>idparam</replaceable></option>
 	    </term>
 	    <listitem>
 	      <para>
@@ -1869,8 +1871,9 @@ $Id$
 	Creation:
 
 	<cmdsynopsis>
-	  <command>web::cookiecontext</command> <arg>name</arg> <arg
-								  choice="opt">options</arg>
+	  <command>web::cookiecontext</command>
+	  <arg><replaceable>name</replaceable></arg> <arg
+	  choice="opt"><replaceable>options</replaceable></arg>
 	</cmdsynopsis>
 
 	Options are: <option>-expires</option>,
@@ -1883,11 +1886,10 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>Syntax</term>
 	    <listitem>
 	      <para>
-		<command><varname>name</varname>::subcommand</command>
-		<option>args</option></para>
+		<command><replaceable>name</replaceable>::subcommand</command>
+		<option><replaceable>args</replaceable></option></para>
 	      <para>
 		Subcommands are: <option>cset</option>,
 		<option>cappend</option>, <option>clappend</option>,
@@ -1903,8 +1905,8 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::init</command>
-	      <optional><option>id</option></optional></term>
+	    <term><command><replaceable>name</replaceable>::init</command>
+	      <optional><option><replaceable>id</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		load an existing session context (cookie must have
@@ -1913,8 +1915,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::new</command>
-	      <optional><option>id</option></optional></term>
+	    <term><command><replaceable>name</replaceable>::new</command>
+	      <optional><option><replaceable>id</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context.
@@ -1922,7 +1924,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::commit</command></term>
+	    <term><command><replaceable>name</replaceable>::commit</command></term>
 	    <listitem>
 	      <para>
 		send a cookie.
@@ -1930,7 +1932,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::id</command></term>
+	    <term><command><replaceable>name</replaceable>::id</command></term>
 	    <listitem>
 	      <para>
 		return id of session.
@@ -1938,7 +1940,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command><varname>name</varname>::invalidate</command></term>
+	    <term><command><replaceable>name</replaceable>::invalidate</command></term>
 	    <listitem>
 	      <para>
 		delete session in memory and on client side.
@@ -1952,8 +1954,8 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::cookiecontext</command>
-	      <option>name</option> <option>-expires</option>
-	      <option>time</option></term>
+	      <option><replaceable>name</replaceable></option> <option>-expires</option>
+	      <option><replaceable>time</replaceable></option></term>
 	    <listitem>
 	      <para>
 		set the expiration date of the cookie. Possible values
@@ -1967,8 +1969,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::cookiecontext</command>
-	      <option>name</option> <option>-path</option>
-	      <option>path</option></term>
+	      <option><replaceable>name</replaceable></option> <option>-path</option>
+	      <option><replaceable>path</replaceable></option></term>
 	    <listitem>
 	      <para>
 		set the <option>path</option> property of the cookie.
@@ -1977,8 +1979,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::cookiecontext</command>
-	      <option>name</option> <option>-domain</option>
-	      <option>domain</option></term>
+	      <option><replaceable>name</replaceable></option> <option>-domain</option>
+	      <option><replaceable>domain</replaceable></option></term>
 	    <listitem>
 	      <para>
 		set the <option>domain</option> property of the cookie.
@@ -1986,7 +1988,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cookiecontext <option>name</option>
+	    <term><command>web::cookiecontext</command>
+	      <option><replaceable>name</replaceable></option>
 	      <option>-secure</option> <option>boolean</option></term>
 	    <listitem>
 	      <para>
@@ -1996,7 +1999,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::cookiecontext</command>
-	      <option>name</option> <option>-crypt</option>
+	      <option><replaceable>name</replaceable></option> <option>-crypt</option>
 	      <option>boolean</option></term>
 	    <listitem>
 	      <para>
@@ -2007,8 +2010,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::cookiecontext</command>
-	      <option>name</option> <option>-channel</option>
-	      <option>channelName</option></term>
+	      <option><replaceable>name</replaceable></option> <option>-channel</option>
+	      <option><replaceable>channelName</replaceable></option></term>
 	    <listitem>
 	      <para>
 		The response object to send the cookie to (see also
@@ -2042,9 +2045,9 @@ $Id$
 	    <listitem>
 	      <para>
 		<command>web::filecounter</command>
-		<option>name</option> <option>-filename</option>
-		<option>fname</option>
-		<optional><option>options</option></optional>
+		<option><replaceable>name</replaceable></option> <option>-filename</option>
+		<option><replaceable>fname</replaceable></option>
+		<optional><option><replaceable>options</replaceable></option></optional>
 	      </para>
 	      <para>
 		Options are: <option>-min</option>,
@@ -2056,7 +2059,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><option>-filename</option>
-	      <option>filename</option></term>
+	      <option><replaceable>filename</replaceable></option></term>
 	    <listitem>
 	      <para>
 		uses <option>filename</option> to store the current
@@ -2065,7 +2068,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-min</option> <option>value</option></term>
+	    <term><option>-min</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
 		uses this value as a minimum at start and after wrap,
@@ -2074,7 +2077,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-max</option> <option>value</option></term>
+	    <term><option>-max</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
 		uses this value as a maximum, if wrap is true (default is 2147483647).
@@ -2082,7 +2085,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-seed</option> <option>value</option></term>
+	    <term><option>-seed</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
 		if persistent file does not yet exists, use this value
@@ -2091,7 +2094,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-incr</option> <option>value</option></term>
+	    <term><option>-incr</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
 		uses this value as an increment for each 'nextval'
@@ -2101,7 +2104,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><option>-perms</option>
-	      <option>value</option></term>
+	      <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
 		sets the permissions on the newly created files
@@ -2126,7 +2129,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><option>name</option> nextval</term>
+	    <term><option><replaceable>name</replaceable></option> nextval</term>
 	    <listitem>
 	      <para>
 		return the next value.
@@ -2134,7 +2137,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>name</option> curval</term>
+	    <term><option><replaceable>name</replaceable></option> curval</term>
 	    <listitem>
 	      <para>
 		return the current value, that is, the value that the
@@ -2150,7 +2153,7 @@ $Id$
     </section>
     <section id="Examples9">
       <para>
-      <emphasis>Examples</emphasis>
+      Examples:
 	<programlisting>
 	  % web::filecounter handleName -filename &quot;test.dat&quot;
 	  handleName
@@ -2175,10 +2178,10 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>Syntax:</term>
+	    <term></term>
 	    <listitem>
 	      <para>
-		web_include <option>fileName</option> <optional><option>msg</option></optional>
+		web_include <option><replaceable>fileName</replaceable></option> <optional><option><replaceable>msg</replaceable></option></optional>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2195,10 +2198,10 @@ $Id$
       <title>web::readfile</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::readfile</command> <arg>file</arg>
-	  <arg>varName</arg> <arg>msg</arg>
+	  <command>web::readfile</command> <arg><replaceable>file</replaceable></arg>
+	  <arg><replaceable>varName</replaceable></arg> <arg><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 
 	<option>file</option> is read and written to
@@ -2212,8 +2215,8 @@ $Id$
       <title>web::lockfile and web::unlockfile</title>
       <para>
 	<cmdsynopsis>
-	  <command>web::lockfile</command> <arg>fh</arg>
-	  <command>web::unlockfile</command> <arg>fh</arg>
+	  <command>web::lockfile</command> <arg><replaceable>fh</replaceable></arg>
+	  <command>web::unlockfile</command> <arg><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
 	Interface to lockf(). lockf() works best on local filesystems.
@@ -2231,10 +2234,10 @@ $Id$
       <title>web::truncatefile</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::truncatefile</command>
-	  <arg>fh</arg>
+	  <arg><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
 	Interface to truncate(). Truncates a file based on the file
@@ -2245,7 +2248,7 @@ $Id$
     </section>
     <section id="Examples10">
       <para>
-      <emphasis>Examples</emphasis>
+      Examples:
 	<programlisting>
 	  set fh [open [web::tempfile] w]
 	  web::lockfile $fh
@@ -2272,9 +2275,9 @@ $Id$
       <title>web::encrypt</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::encrypt</command> <arg>data</arg>
+	  <command>web::encrypt</command> <arg><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 	Returns encrypted data.
 
@@ -2284,9 +2287,9 @@ $Id$
       <title>web::decrypt</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::decrypt</command> <arg>data</arg>
+	  <command>web::decrypt</command> <arg><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
 	Returns decrypted data.
@@ -2322,7 +2325,7 @@ $Id$
       <para>
 
 	<cmdsynopsis>
-	  <command>web::encryptd</command> <arg>data</arg>
+	  <command>web::encryptd</command> <arg><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
 	Returns encrypted data.
@@ -2333,9 +2336,9 @@ $Id$
       <title>web::decryptd</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::decryptd</command> <arg>data</arg>
+	  <command>web::decryptd</command> <arg><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
 	Returns decrypted data.
@@ -2347,8 +2350,8 @@ $Id$
       <para>
 
 	<cmdsynopsis>
-	  <command>web::cryptdkey</command> <arg
-					      choice="opt">key</arg>
+	  <command>web::cryptdkey</command>
+	  <arg choice="opt"><replaceable>key</replaceable></arg>
 	</cmdsynopsis>
 
 	Sets the new key for encryption. If no argument is given,
@@ -2361,7 +2364,7 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::encryptd</command>
-	      <option>message</option></term>
+	      <option><replaceable>message</replaceable></option></term>
 	    <listitem>
 	      <para>
 		encrypts <option>message</option>.
@@ -2370,7 +2373,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::decryptd
-	      </command><option>message</option></term>
+	      </command><option><replaceable>message</replaceable></option></term>
 	    <listitem>
 	      <para>
 		decrypts <option>message</option>.
@@ -2379,7 +2382,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::cryptdkey</command>
-	      <optional><option>key</option></optional></term>
+	      <optional><option><replaceable>key</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 	      </para>
@@ -2456,7 +2459,7 @@ $Id$
 	    <para>
 	      <command>web::htmlify</command>
 	      <optional><option>-options</option></optional>
-	      <option>text</option>.
+	      <option><replaceable>text</replaceable></option>.
 	    </para>
 	    <para>
 	      Options is: <option>-numeric</option>.
@@ -2469,7 +2472,7 @@ $Id$
 	  </listitem>
 	  <listitem>
 	    <para><command>web::dehtmlify</command>
-	      <option>text</option>
+	      <option><replaceable>text</replaceable></option>
 	    </para>
 	    <para>
 	      Remove all HTML-specifics of <option>text</option>.
@@ -2477,7 +2480,7 @@ $Id$
 	  </listitem>
 	  <listitem>
 	    <para><command>web::uriencode</command>
-	      <option>text</option>
+	      <option><replaceable>text</replaceable></option>
 	    </para>
 	    <para>
 	      Return URI-compliant <option>text</option>.
@@ -2485,7 +2488,7 @@ $Id$
 	  </listitem>
 	  <listitem>
 	    <para>
-	      <command>web::uridecode</command> <option>text</option>
+	      <command>web::uridecode</command> <option><replaceable>text</replaceable></option>
 	    </para>
 	    <para>Decode URI-compliant <option>text</option>.
 	    </para>
@@ -2495,7 +2498,7 @@ $Id$
     </section>
     <section id="Examples11">
       <para>
-	<emphasis>Examples</emphasis>
+	Examples:
 	<programlisting>
 	  % web::htmlify &lt;
 	  &amp;lt;
@@ -2522,11 +2525,13 @@ $Id$
       <title>web::send</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::send</command> <arg>channel</arg>
-	  <arg>cmdNr</arg> <arg>message</arg> <arg
-						choice="opt">flags</arg>
+	  <command>web::send</command>
+	  <arg><replaceable>channel</replaceable></arg>
+	  <arg><replaceable>cmdNr</replaceable></arg>
+	  <arg><replaceable>message</replaceable></arg><arg
+	  choice="opt"><replaceable>flags</replaceable></arg>
 	</cmdsynopsis>
 
 	Send the command <option>cmdNr</option> and the message
@@ -2547,11 +2552,13 @@ $Id$
       <title>web::recv</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::recv</command> <arg>channel</arg>
-	  <arg>cmdVarName</arg> <arg>msgVarName</arg>
-	  <arg>flagVarName</arg>
+	  <command>web::recv</command>
+	  <arg><replaceable>channel</replaceable></arg>
+	  <arg><replaceable>cmdVarName</replaceable></arg>
+	  <arg><replaceable>msgVarName</replaceable></arg>
+	  <arg><replaceable>flagVarName</replaceable></arg>
 	</cmdsynopsis>
 
 	Receives a message from <option>channelName</option>. The
@@ -2568,8 +2575,8 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::msgflag</command>
-	  <arg choice="opt">flags</arg>
-	  <arg choice="opt">testflags</arg>
+	  <arg choice="opt"><replaceable>flags</replaceable></arg>
+	  <arg choice="opt"><replaceable>testflags</replaceable></arg>
 	</cmdsynopsis>
 
 	Set or test flags.
@@ -2585,7 +2592,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::msgflag</command>
-	      <option>flags</option></term>
+	      <option><replaceable>flags</replaceable></option></term>
 	    <listitem>
 	      <para>
 		returns the integer representation of the flags listed
@@ -2595,7 +2602,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::msgflag</command>
-	      <option>flags</option> <option>testflags</option></term>
+	      <option><replaceable>flags</replaceable></option>
+	      <option><replaceable>testflags</replaceable></option></term>
 	    <listitem>
 	      <para>
 		returns 1, if the flags in <option>testflags</option>
@@ -2610,7 +2618,7 @@ $Id$
     </section>
     <section id="Examples12">
       <para>
-	<emphasis>Examples</emphasis>
+	Examples:
       </para>
     </section>
   </section>
@@ -2628,9 +2636,9 @@ $Id$
       <title>web::initializer</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::initializer</command> <arg>code</arg>
+	  <command>web::initializer</command> <arg><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
 	This code is executed only when a new interpreter is created.
@@ -2646,7 +2654,7 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::finalizer</command> <arg>code</arg>
+	  <command>web::finalizer</command> <arg><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
 	Register code to be exectuted when the interpreter for this
@@ -2661,7 +2669,7 @@ $Id$
       <title>web::finalize</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::finalize</command>
 	</cmdsynopsis>
@@ -2688,15 +2696,15 @@ $Id$
       <title>web::maineval</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::maineval</command> <arg>code</arg>
+	  <command>web::maineval</command> <arg><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
-	Execute code in the &quot;main&quot; interpreter of mod_websh. (Note 
+	Execute code in the &quot;main&quot; interpreter of mod_websh. (Note
 	that this is synchronized, i.e. the main interpreter is locked for
 	exclusive access by the current thread within the process. However,
-	running Apache in a prefork setting sets up a main interpreter per 
+	running Apache in a prefork setting sets up a main interpreter per
 	child, so the exclusive access does not refer to server wide
 	exclusivity, but only to child process wide exclusiveity.)
 
@@ -2706,10 +2714,12 @@ $Id$
       <title>web::interpclasscfg</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
-	  <command>web::interpclasscfg</command> <arg>classid</arg>
-	  <arg>property</arg> <arg choice="opt">value</arg>
+	  <command>web::interpclasscfg</command>
+	  <arg><replaceable>classid</replaceable></arg>
+	  <arg><replaceable>property</replaceable></arg>
+	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	</cmdsynopsis>
 
 	Properties are: <option>maxrequests</option>,
@@ -2722,8 +2732,9 @@ $Id$
 	  <varlistentry>
 	    <term>
 	      <command>web::interpclasscfg</command>
-	      <option>classid</option> <option>maxrequests</option>
-	      <optional><option>value</option></optional>
+	      <option><replaceable>classid</replaceable></option>
+	      <option>maxrequests</option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
 	    </term>
 	    <listitem>
 	      <para>
@@ -2736,8 +2747,9 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::interpclasscfg</command>
-	      <option>classid</option> <option>maxttl</option>
-	      <optional><option>value</option></optional></term>
+	      <option><replaceable>classid</replaceable></option>
+	      <option>maxttl</option>
+	      <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		gets or sets the maximum number of seconds
@@ -2749,8 +2761,8 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::interpclasscfg</command>
-	      <option>classid</option> <option>maxidletime</option>
-	      <optional><option>value</option></optional>
+	      <option><replaceable>classid</replaceable></option> <option>maxidletime</option>
+	      <optional><option><replaceable>value</replaceable></option></optional>
 	    </term>
 	    <listitem>
 	      <para>
@@ -2769,11 +2781,11 @@ $Id$
       <title>web::interpcfg</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::interpcfg</command>
-	  <arg choice="opt">property</arg>
-	  <arg choice="opt">value</arg>
+	  <arg choice="opt"><replaceable>property</replaceable></arg>
+	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	</cmdsynopsis>
 
 	Properties are: <option>numreq</option>,
@@ -2782,7 +2794,7 @@ $Id$
 
 	Sets or accesses properties of the current interpreter.
 
-	<variablelist>
+	<variablelist>2
 	  <varlistentry>
 	    <term><command>web::interpcfg</command></term>
 	    <listitem>
@@ -2842,10 +2854,10 @@ $Id$
       <title>web::interpmap</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  <command>web::interpmap</command>
-	  <option>filename</option>
+	<option><replaceable>filename</replaceable></option>
 	</cmdsynopsis>
 
 	Hook to define interpreter classes depending on the requested file.
@@ -2898,7 +2910,7 @@ $Id$
       <title>web::match</title>
       <para>
 
-	Syntax:
+
 	<cmdsynopsis>
 	  web::match <arg>result</arg>
 	  <arg>listToBeSearched</arg>

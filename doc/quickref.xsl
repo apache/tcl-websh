@@ -45,7 +45,7 @@
       <xsl:call-template name="anchor"/>
       <xsl:apply-templates/>
     </xsl:param>
-    <span class="text-decoration:underline">
+    <span style="text-decoration:underline">
       <xsl:copy-of select="$content"/>
     </span>
   </xsl:template>
@@ -55,7 +55,14 @@
       <xsl:call-template name="anchor"/>
       <xsl:apply-templates/>
     </xsl:param>
-    <tt><u><xsl:copy-of select="$content"/></u></tt>
+    <tt><span style="text-decoration:underline"><xsl:copy-of
+    select="$content"/></span></tt>
+  </xsl:template>
+
+  <xsl:template match="/article/section/title" mode="titlepage.mode"
+    priority="2">
+    <hr/>
+    <xsl:call-template name="section.title"/>
   </xsl:template>
 
   <xsl:template match="optional">
@@ -65,7 +72,13 @@
   </xsl:template>
 
   <xsl:template match="option">
-    <xsl:call-template name="inline.underlineseq"/>
+    <xsl:call-template name="inline.monounderlineseq"/>
+  </xsl:template>
+
+  <xsl:template match="command">
+    <span style="font-family:monospace">
+      <xsl:call-template name="inline.boldseq"/>
+    </span>
   </xsl:template>
 
   <xsl:template match="cmdsynopsis">
