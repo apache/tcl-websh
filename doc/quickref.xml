@@ -1100,7 +1100,7 @@ $Id$
 	      <para>
 		makes <option>channel</option> the new default
 		response object and returns the old default response
-		object.
+		object. The optional hash (&quot;#&quot;) denotes that output should be sent to a global variable named <option><replaceable>channel</replaceable></option> instead of a Tcl channel.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1253,11 +1253,10 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::put</command>
-	  <arg choice="opt"><replaceable>channel</replaceable></arg>
-	  <arg choice="opt"><replaceable>text</replaceable></arg>
+	<optional><option>#<optional><option><replaceable>channel</replaceable></option></optional></option></optional>
+	  <arg><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
-	Send output to a Tcl channel.  No newline is added to output.
-
+	Send output to a Tcl channel. No newline is added to output. If <optional><option><replaceable>channel</replaceable></option></optional> is ommitted, output is sent to the current default channel. The default channel can be changed with <command>web::response -select <optional><option>#<optional><option><replaceable>channel</replaceable></option></optional></option></optional></command>. The optional hash (&quot;#&quot;) denotes that output should be sent to a global variable named <option><replaceable>channel</replaceable></option> instead of a Tcl channel.
       </para>
     </section>
     <section id="web::putx">
@@ -1266,14 +1265,14 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::putx</command>
-	  <arg choice="opt"><replaceable>channel</replaceable></arg>
-	  <arg choice="opt"><replaceable>text</replaceable></arg>
+	<optional><option>#<optional><option><replaceable>channel</replaceable></option></optional></option></optional>
+	  <arg><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
 
 	Writes <option>text</option> to the specified channel. Code in
 	curly brackets is eval'd, unless the brackets are escaped by
 	&quot;\&quot;. These markup characters '{...}' can be changed
-	to '&lt;? ... ?&gt;' with 'web::config putxmarkup tag'.
+	to '&lt;? ... ?&gt;' with 'web::config putxmarkup tag'. The optional hash (&quot;#&quot;) denotes that output should be sent to a global variable named <option><replaceable>channel</replaceable></option> instead of a Tcl channel.
 
       </para>
     </section>
@@ -1283,7 +1282,7 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::putxfile</command>
-	??#<optional><option><replaceable>channel</replaceable></option></optional>
+	<optional><option>#<optional><option><replaceable>channel</replaceable></option></optional></option></optional>
 	<option><replaceable>file</replaceable></option>
 	<optional><option><replaceable>msg</replaceable></option></optional>
       </cmdsynopsis>
@@ -1293,7 +1292,7 @@ $Id$
 	Returns 0 on success, 1 otherwise. If an error occurs, an
 	error message is written to <option>msg</option>. If only two
 	arguments are passed, then <option>channel</option> takes
-	precedence.
+	precedence. The optional hash (&quot;#&quot;) denotes that output should be sent to a global variable named <option><replaceable>channel</replaceable></option> instead of a Tcl channel.
       </para>
     </section>
   </section>
