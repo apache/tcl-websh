@@ -1372,30 +1372,35 @@ $Id$
 
 	Subcommands are: <option>add</option>,
 	<option>delete</option>, and <option>names</option>.  Options
-	are: <option>-maxchar</option>, and
-	<option>-format</option>.
+	are: <option>-maxchar n</option>, and
+	<option>-format &quot;format string&quot;</option>.
+	<literal>-maxchar n</literal> truncates the message to a 
+	maximum of <literal>n</literal> characters.
       </para>
       <para>
+	The format string consists of time format specifications for
+	<function>strftime()</function> plus: <literal
+	  remap="tt">$p</literal> (process id), <literal
+	  remap="tt">$t</literal> (thread id), <literal
+	  remap="tt">$l</literal> (log level), <literal
+	  remap="tt">$n</literal> (numerical log level), <literal
+	  remap="tt">$f</literal> (log facility), <literal
+	  remap="tt">$m</literal> (the message), and <literal
+	  remap="tt">$$</literal> (dollar sign).
 
+	Default format is <literal>&quot;%x %X [\$p] \$f.\$l: \$m\n&quot;</literal>
+      </para>
+      <para>
 	Known plug-ins are: <option>file</option>,
 	<option>syslog</option>, <option>command</option>,
 	<option>channel</option>, and
 	<option>apache</option>. <emphasis>Note</emphasis>: the
 	plugins may have indiviudal options
 	(<option>-unbuffered</option>), see documentation below.
-
-	The format string consits of format specifications for
-	<function>fprintf()</function> plus: <literal
-	  remap="tt">p</literal> (process id), <literal
-	  remap="tt">t</literal> (thread id), <literal
-	  remap="tt">n</literal> (log level), <literal
-	  remap="tt">f</literal> (log type), and <literal
-	  remap="tt">m</literal> (the message).
-
       </para>
       <para>
 	<programlisting>
-	  web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest</programlisting>
+	  web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug command logTest</programlisting>
       </para>
 
     </section>
