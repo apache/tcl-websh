@@ -1784,7 +1784,7 @@ $Id$
 		<emphasis>-path [file join .. data s%d.dat]</emphasis>
 		would then cause filecontext to save the session
 		context as <literal
-		remap="tt">../data/s99.dat</literal>
+		  remap="tt">../data/s99.dat</literal>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1856,8 +1856,8 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::cookiecontext</command> <arg>name</arg> <arg
-	  choice="opt">options</arg>
-      </cmdsynopsis>
+								  choice="opt">options</arg>
+	</cmdsynopsis>
 
 	Options are: <option>-expires</option>,
 	<option>-path</option>, <option>-domain</option>,
@@ -1890,7 +1890,7 @@ $Id$
 	<variablelist>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::init</command>
-	    <optional><option>id</option></optional></term>
+	      <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		load an existing session context (cookie must have
@@ -1900,7 +1900,7 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command><varname>name</varname>::new</command>
-	    <optional><option>id</option></optional></term>
+	      <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context.
@@ -1953,31 +1953,37 @@ $Id$
 	  </varlistentry>
 	  <varlistentry>
 	    <term><command>web::cookiecontext</command>
-	    <option>name</option> -path <option>path</option></term>
+	      <option>name</option> <option>-path</option>
+	      <option>path</option></term>
 	    <listitem>
 	      <para>
-		set the <emphasis>path</emphasis> property of the cookie
+		set the <option>path</option> property of the cookie
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cookiecontext <option>name</option> -domain  <option>domain</option></term>
+	    <term><command>web::cookiecontext</command>
+	      <option>name</option> <option>-domain</option>
+	      <option>domain</option></term>
 	    <listitem>
 	      <para>
-		set the <emphasis>domain</emphasis> property of the cookie
+		set the <option>domain</option> property of the cookie
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cookiecontext <option>name</option> -secure <option>boolean</option></term>
+	    <term>web::cookiecontext <option>name</option>
+	      <option>-secure</option> <option>boolean</option></term>
 	    <listitem>
 	      <para>
-		set the <emphasis>secure</emphasis> property of the cookie
+		set the <option>secure</option> property of the cookie
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cookiecontext <option>name</option> -crypt <option>boolean</option></term>
+	    <term><command>web::cookiecontext</command>
+	      <option>name</option> <option>-crypt</option>
+	      <option>boolean</option></term>
 	    <listitem>
 	      <para>
 		Flag to turn crypting of cookie context on and off.
@@ -1986,7 +1992,9 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cookiecontext <option>name</option> -channel <option>channelName</option></term>
+	    <term><command>web::cookiecontext</command>
+	      <option>name</option> <option>-channel</option>
+	      <option>channelName</option></term>
 	    <listitem>
 	      <para>
 		The response object to send the cookie to (see also
@@ -1997,11 +2005,13 @@ $Id$
 	</variablelist>
 
 	Because cookies are client-based, in principle no id is
-	needed. Webshell uses <option>id</option> to name the cookie, however, and the
-	<literal remap="tt">new</literal>, <literal remap="tt">init</literal>, and <literal remap="tt">load</literal> commands still require the <option>id</option>
-	argument. (fixme: any changes?) Please note that property settings
-	of a cookie context can only be changed <emphasis>before</emphasis> anything is output
-	on the respective channel.
+	needed. Webshell uses <option>id</option> to name the cookie,
+	however, and the <command>new</command>,
+	<command>init</command>, and <command>load</command> commands
+	still require the <option>id</option> argument. (fixme: any
+	changes?) Please note that property settings of a cookie
+	context can only be changed <emphasis>before</emphasis>
+	anything is output on the respective channel.
 
       </para>
     </section>
@@ -2009,37 +2019,48 @@ $Id$
       <title>web::filecounter</title>
       <para>
 
-	This is a numeric sequence-number generator which stores its state
-	in a file. Basic usage:
+	This is a numeric sequence-number generator which stores its
+	state in a file. Basic usage:
 
 	<variablelist>
 	  <varlistentry>
 	    <term>Creation:</term>
 	    <listitem>
 	      <para>
-		web::filecounter <option>name</option> -filename <option>fname</option> <optional><option>options</option></optional></para><para>
-		Options are: <option>-min</option>, <option>-max</option>, <option>-seed</option>, <option>-incr</option>, <option>-mask</option>, <option>-wrap</option>
+		<command>web::filecounter</command>
+		<option>name</option> <option>-filename</option>
+		<option>fname</option>
+		<optional><option>options</option></optional>
+	      </para>
+	      <para>
+		Options are: <option>-min</option>,
+		<option>-max</option>, <option>-seed</option>,
+		<option>-incr</option>, <option>-mask</option>,
+		<option>-wrap</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-filename <option>filename</option></term>
+	    <term><option>-filename</option>
+	    <option>filename</option></term>
 	    <listitem>
 	      <para>
-		uses <option>filename</option> to store the current value (no default)
+		uses <option>filename</option> to store the current
+		value (no default)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-min <option>value</option></term>
+	    <term><option>-min</option> <option>value</option></term>
 	    <listitem>
 	      <para>
-		uses this value as a minimum at start and after wrap, if wrap is true (default is 0)
+		uses this value as a minimum at start and after wrap,
+		if wrap is true (default is 0)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-max <option>value</option></term>
+	    <term><option>-max</option> <option>value</option></term>
 	    <listitem>
 	      <para>
 		uses this value as a maximum, if wrap is true (default is 2147483647)
@@ -2047,41 +2068,47 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-seed <option>value</option></term>
+	    <term><option>-seed</option> <option>value</option></term>
 	    <listitem>
 	      <para>
-		if persistent file does not yet exists, use this value as a starting point (default is 0)
+		if persistent file does not yet exists, use this value
+		as a starting point (default is 0)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-incr <option>value</option></term>
+	    <term><option>-incr</option> <option>value</option></term>
 	    <listitem>
 	      <para>
-		uses this value as an increment for each 'nextval' (default is 1)
+		uses this value as an increment for each 'nextval'
+		(default is 1)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-perms <option>value</option></term>
+	    <term><option>-perms</option>
+	    <option>value</option></term>
 	    <listitem>
 	      <para>
-		sets the permissions on the newly created files (default is 0644)
+		sets the permissions on the newly created files
+		(default is 0644)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-wrap <option>boolean</option></term>
+	    <term><option>-wrap</option>
+	    <option>boolean</option></term>
 	    <listitem>
 	      <para>
-		indicates whether this counter should wrap around its values (from min to max) (default is false)
+		indicates whether this counter should wrap around its
+		values (from min to max) (default is false)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
-	After creation, a new command <option>name</option> is registered with the following two
-	subcommands:
+	After creation, a new command <option>name</option> is
+	registered with the following two subcommands:
 
 	<variablelist>
 	  <varlistentry>
@@ -2096,8 +2123,8 @@ $Id$
 	    <term><option>name</option> curval</term>
 	    <listitem>
 	      <para>
-		return the current value, that is, the value that
-		the last call to &quot;nextval&quot; reported (as opposed
+		return the current value, that is, the value that the
+		last call to &quot;nextval&quot; reported (as opposed
 		to the current value in the file)
 	      </para>
 	    </listitem>
