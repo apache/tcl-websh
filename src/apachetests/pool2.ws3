@@ -1,0 +1,19 @@
+# $Id$
+# hello world websh code.
+
+web::command default {
+    web::put "[web::interpcfg] [web::interpcfg numreq]"
+
+    web::interpclasscfg
+
+    if { [info exists counter] } {
+	incr counter
+    } else {
+	set counter 1
+    }
+
+    web::put "Counter is $counter"
+}
+
+web::dispatch
+

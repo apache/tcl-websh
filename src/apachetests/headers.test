@@ -1,0 +1,14 @@
+# $Id$
+
+# test interp pools
+
+set testfilename1 "headers.ws3"
+
+::tcltest::test header-1.1 {websh header test} {
+    server::start
+    set page [ ::http::geturl "${urlbase}$testfilename1" ]
+    server::stop
+    upvar 0 $page state
+    array set meta $state(meta)
+    array get meta
+} {FIXME}

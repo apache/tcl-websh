@@ -1,0 +1,10 @@
+# $Id$
+# headers test code
+
+web::command default {
+    web::response -set foo bar
+    web::put "Hello, World"
+}
+
+web::dispatch
+

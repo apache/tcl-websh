@@ -2,6 +2,10 @@
 # the next line restarts using tclsh \
 	exec tclsh "$0" "$@"
 
+package require tcltest
+package require http 2.1
+package require Tclx
+
 proc getbinname { } {
     global argv
     set binname [lindex $argv 0]
@@ -18,25 +22,16 @@ source makeconf.tcl
 makeconf $binname server.conf
 
 puts "$binname -X -f [file join [pwd] server.conf]"
-switch -exact [lindex $argv 1] {
-    withconfigs {
-	foreach {option val} {
-	    {} {}
-	    WebshConfig config.tcl
-	} {
-	    set apachepid [exec $binname -X -f "[file join [pwd] server.conf]" -c "$option $val" &]
-	    set oput [exec [file join . mod_websh.test]]
-	    puts $oput
-	    exec kill $apachepid
-	}
-    } 
+
+# we do this to keep tcltest happy
+set commandline [lindex $argv 1]
+set argv {}
+
+switch -exact -- $commandline {
     startserver {
 	set apachepid [exec $binname -X -f "[file join [pwd] server.conf]" &]
     }
     default {
-	set apachepid [exec $binname -X -f "[file join [pwd] server.conf]" &]
-	set oput [exec [file join . mod_websh.test]]
-	puts $oput
-	exec kill $apachepid
+	source [file join . mod_websh.test]
     }
 }

@@ -22,14 +22,14 @@ $LOADMODULES
 
 LoadModule websh_module [file join $CWD .. unix "mod_websh3.10[info sharedlibextension]"]
 
-Port 8080
+Port 8081
 
 ServerName localhost
 
 DocumentRoot "$CWD"
 
 <Directory "$CWD">
-Options All MultiViews 
+Options All MultiViews
 AllowOverride All
 Order allow,deny
 Allow from all

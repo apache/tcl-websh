@@ -2,8 +2,12 @@
 
 # hello world test
 
+set testfilename1 "hello.ws3"
+
 ::tcltest::test hello-1.1 {hello world test} {
+    server::start
     set page [ ::http::geturl "${urlbase}$testfilename1" ]
     regexp -line {^Hello, World$} [ ::http::data $page ] match
+    server::stop
     set match
 } {Hello, World}
