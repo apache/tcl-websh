@@ -448,7 +448,9 @@ int paramGet(ParamList * paramList,
 	}
     }
 
-    return TCL_ERROR;
+    /* we never get here */
+    /* return TCL_ERROR; */
+
 }
 
 
