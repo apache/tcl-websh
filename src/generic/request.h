@@ -187,6 +187,7 @@ char *mimeGetParameterFromContDisp(const char *contentDisp, const char *name);
 /* in CGI case: implemented in request_cgi.c 
  * in httpd case: implemented in mod_websh.c */
 Tcl_Obj *requestGetDefaultChannelName();
+char *requestGetDefaultOutChannelName();
 
 int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData);
 

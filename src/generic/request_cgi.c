@@ -29,6 +29,13 @@ Tcl_Obj *requestGetDefaultChannelName()
     return Tcl_NewStringObj("stdin", 5);
 }
 
+/* default output channel */
+
+char *requestGetDefaultOutChannelName()
+{
+    return CGICHANNEL;
+}
+
 
 int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 {

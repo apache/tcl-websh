@@ -318,19 +318,23 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		}
 	    case SELECT:{
 		    ResponseObj *old = NULL;
-
+		    char *name = NULL;
 /*         fprintf(stderr,"DBG -select called\n"); fflush(stderr); */
 
 		    WebAssertObjc(objc != 3, 2, "channelName");
 		    old = responseObj;
+		    name = Tcl_GetString(objv[2]);
 		    /* we have to find the new channel */
+		    if (!strcmp(name, "default")) {
+			name = requestGetDefaultOutChannelName();
+		    }
 		    responseObj =
-			getResponseObj(interp, outData,
-				       Tcl_GetString(objv[2]));
+			getResponseObj(interp, outData, name);
+
 		    if (responseObj == NULL) {
 			Tcl_ResetResult(interp);
 			Tcl_AppendResult(interp, "invalid response object \"",
-					 Tcl_GetString(objv[2]), "\"",
+					 name, "\"",
 					 (char *) NULL);
 			return TCL_ERROR;
 		    }

@@ -29,6 +29,12 @@ Tcl_Obj *requestGetDefaultChannelName()
     return Tcl_NewStringObj(APCHANNEL, -1);
 }
 
+/* default output channel */
+
+char *requestGetDefaultOutChannelName()
+{
+    return APCHANNEL;
+}
 
 int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 {

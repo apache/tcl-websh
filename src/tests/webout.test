@@ -517,6 +517,10 @@ test output-6.2 {error message -bytessent} {
     set msg
 } {wrong # args: should be "web::response -bytessent"}
 
+test output-6.3 {default channel} {
+    web::response -select default
+} {#stdout}
+
 # =============================================================================
 # var channel
 # =============================================================================
