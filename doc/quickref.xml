@@ -722,8 +722,10 @@ $Id$
       <title>Examples</title>
       <para>
 
-	See <ulink url="http://websh.com/examples.html">http://websh.com/examples.html</ulink> for several sample
-	application demonstrating the session management of Webshell.
+	See <ulink
+	url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
+	for several sample application demonstrating Webshell's
+	session management facilities.
 
       </para>
     </section>
@@ -733,33 +735,36 @@ $Id$
     <section id="web::request">
       <title>web::request</title>
       <para>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::request</command>
+	  <arg choice="opt">options</arg>
+	  <arg choice="opt">key</arg>
+	  <arg choice="opt">value</arg>
+	  <command>web::request</command>
+	  <arg choice="opt">key</arg>
+	  <arg choice="opt">default</arg>
+	</cmdsynopsis>
+      </para>
+      <para>
+	Options are: <option>-count</option>, <option>-set</option>,
+        <option>-lappend</option>, <option>-names</option>,
+        <option>-unset</option>, <option>-reset</option> and
+        <option>-channel</option> fixme: gibt es -channel noch?
+      </para>
+
+      web::request is an accessor to CGI related information.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>syntax</term>
-	    <listitem>
-	      <para>
-		<command>web::request</command> ?options? ?<option>key</option>? ?<option>value</option> ...?</para><para>
-		<command>web::request</command> ?<option>key</option>? ?<option>default</option>?</para><para>
-		Options are: <literal remap="tt">-count</literal>, <literal remap="tt">-set</literal>, <literal remap="tt">-lappend</literal>, <literal remap="tt">-names</literal>, <literal remap="tt">-unset</literal>, <literal remap="tt">-reset</literal>
-		and <literal remap="tt">-channel</literal> fixme: gibt es -channel noch?
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
-	web::request is an accessor to CGI related information.
-
-	<variablelist>
-	  <varlistentry>
-	    <term>web::request</term>
-	    <listitem>
-	      <para>
-		returns a list of all known keys
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
+	  <term><command>web::request</command></term>
+	  <listitem>
+	    <para>
+	      returns a list of all known keys
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
 	    <term>web::request <option>key</option> <optional><option>default</option></optional></term>
 	    <listitem>
 	      <para>
@@ -853,7 +858,7 @@ $Id$
 	    <listitem>
 	      <para>
 		<command>web::param</command> ?options? <optional><option>key</option></optional> ?<option>value</option> ...?</para><para>
-		Options are: <literal remap="tt">-count</literal>, <literal remap="tt">-set</literal>, <literal remap="tt">-lappend</literal>, <literal remap="tt">-names</literal>, and <literal remap="tt">-unset</literal>
+		Options are: <option>-count</option>, <option>-set</option>, <option>-lappend</option>, <option>-names</option>, and <option>-unset</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
