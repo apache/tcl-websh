@@ -14,6 +14,7 @@
  */
 
 #include "tcl.h"
+#include "macros.h"
 
 /* ----------------------------------------------------------------------------
  * Web_Initializer -- just eval the code
@@ -96,6 +97,71 @@ int Web_MainEval(ClientData clientData,
 
     return TCL_OK;
 }
+
+/* ----------------------------------------------------------------------------
+ * Web_ConfigPath -- (sub)command (called from Web_Cfg)
+ * ------------------------------------------------------------------------- */
+
+int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
+
+  /* these options should be in sync with the options in Web_Cfg
+   * not the order or anything, but the actual text strings */
+  static char *subCmd[] = {
+    "script",
+    "server_root",
+    "document_root",
+    "interpclass",
+    NULL
+  };
+  
+  enum subCmd
+  {
+    SCRIPT,
+    SERVER_ROOT,
+    DOCUMENT_ROOT,
+    INTERPCLASS
+  };
+  
+  int index;
+  Tcl_Obj *res = NULL;
+ 
+  if (Tcl_GetIndexFromObj(interp, objv[1], subCmd, "subcommand", 0, &index)
+      != TCL_OK) {
+    /* let the caller handle the web::config command */
+    Tcl_ResetResult(interp);
+    return TCL_CONTINUE;
+  }
+  
+  /* fixme: usefull returns for cgi mode */
+
+  WebAssertObjc(objc != 2, 2, NULL);
+  
+  switch ((enum subCmd) index) {
+    
+  case SCRIPT: {
+    res = tclSetEnv(interp, "SCRIPT_FILENAME", NULL);
+    break;
+  }
+  case SERVER_ROOT: {
+    res = tclSetEnv(interp, "SERVER_ROOT", NULL);
+    break;
+  }
+  case DOCUMENT_ROOT: {
+    res = tclSetEnv(interp, "DOCUMENT_ROOT", NULL);
+    break;
+  }
+  case INTERPCLASS: {
+    res = tclSetEnv(interp, "SCRIPT_FILENAME", NULL);
+    break;
+  }
+  }
+  /* reset errors from getting invalid env vars */
+  Tcl_ResetResult(interp);
+  if (res)
+    Tcl_SetObjResult(interp, res);
+  return TCL_OK;
+}
+
 
 /* -------------------------------------------------------------------------
  * init --

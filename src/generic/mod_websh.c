@@ -281,6 +281,9 @@ static int run_websh_script(request_rec * r)
     Tcl_SetAssocData(webInterp->interp, WEB_AP_ASSOC_DATA, NULL,
 		     (ClientData) r);
 
+    Tcl_SetAssocData(webInterp->interp, WEB_INTERP_ASSOC_DATA, NULL,
+		     (ClientData) webInterp);
+
     if (createApchannel(webInterp->interp, r) != TCL_OK) {
 #ifndef APACHE2
 	ap_log_printf(r->server, "mod_websh - cannot create apchannel\n");
@@ -341,6 +344,7 @@ static int run_websh_script(request_rec * r)
     }
 
     Tcl_DeleteAssocData(webInterp->interp, WEB_AP_ASSOC_DATA);
+    Tcl_DeleteAssocData(webInterp->interp, WEB_INTERP_ASSOC_DATA);
 
     poolReleaseWebInterp(webInterp);
 

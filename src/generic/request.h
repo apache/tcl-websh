@@ -191,6 +191,4 @@ char *requestGetDefaultOutChannelName();
 
 int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData);
 
-int requestScriptName(Tcl_Interp *interp, char **filename);
-
 #endif

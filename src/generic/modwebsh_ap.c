@@ -422,11 +422,76 @@ int Web_MainEval(ClientData clientData,
 	Tcl_SetObjResult(interp, Tcl_GetObjResult(conf->mainInterp));
 	Tcl_ResetResult(conf->mainInterp);
     }
-#ifdef APACHE2
+
     Tcl_MutexUnlock(&(conf->mainInterpLock));
-#endif /* APACHE2 */
+
     return res;
 }
+
+
+/* ----------------------------------------------------------------------------
+ * Web_ConfigPath -- (sub)command in pool interp (called from Web_Cfg)
+ * ------------------------------------------------------------------------- */
+
+int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
+
+  /* these options should be in sync with the options in Web_Cfg
+   * not the order or anything, but the actual text strings */
+  static char *subCmd[] = {
+    "script",
+    "server_root",
+    "document_root",
+    "interpclass",
+    NULL
+  };
+  
+  enum subCmd
+  {
+    SCRIPT,
+    SERVER_ROOT,
+    DOCUMENT_ROOT,
+    INTERPCLASS
+  };
+  
+  int index;
+  
+  if (Tcl_GetIndexFromObj(interp, objv[1], subCmd, "subcommand", 0, &index)
+      != TCL_OK) {
+    /* let the caller handle the web::config command */
+    Tcl_ResetResult(interp);
+    return TCL_CONTINUE;
+  }
+  
+  WebAssertObjc(objc != 2, 2, NULL);
+  
+  switch ((enum subCmd) index) {
+    
+  case SCRIPT: {
+    request_rec *r;
+    r = (request_rec *)Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(r->filename, -1));
+    break;
+  }
+  case SERVER_ROOT: {
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(ap_server_root, -1));
+    break;
+  }
+  case DOCUMENT_ROOT: {
+    request_rec *r;
+    r = (request_rec *)Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(ap_document_root(r), -1));
+    break;
+  }
+  case INTERPCLASS: {
+    WebInterp *webInterp;
+    webInterp = (WebInterp *)Tcl_GetAssocData(interp, WEB_INTERP_ASSOC_DATA, NULL);
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(webInterp->interpClass->filename, -1));
+    break;
+  }
+  }
+  return TCL_OK;
+}
+
 
 
 /* -------------------------------------------------------------------------

@@ -163,8 +163,8 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	INTERPCLASS
     };
 
-
-    int idx1;
+    int idx1, result;
+    
     CfgData *cfgData = NULL;
 
     WebAssertData(interp, clientData, "Web_Cfg", TCL_ERROR);
@@ -174,10 +174,16 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
      * parse arguments
      * ----------------------------------------------------------------------- */
     if (objc < 2) {
-
 	Tcl_GetIndexFromObj(interp, objv[0], subCmd1, "usage", 0, &idx1);
 	return TCL_ERROR;
     }
+
+    /* ---------------------------------------------------------------------
+     * handle special config stuff (mod_websh)
+     * ------------------------------------------------------------------ */
+    result = Web_ConfigPath(interp, objc, objv);
+    if (result != TCL_CONTINUE)
+      return result;
 
     /* ------------------------------------------------------------------------
      * determine first sub-command
@@ -458,13 +464,6 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 
 	Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, 1);
 
-	return TCL_OK;
-    }
-    case SCRIPT: {
-	char *scriptname;
-	WebAssertObjc(objc != 2, 2, NULL);
-	requestScriptName(interp, &scriptname);
-	Tcl_SetResult(interp, scriptname, NULL);
 	return TCL_OK;
     }
     default:

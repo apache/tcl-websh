@@ -41,6 +41,7 @@
 #endif /* APACHE2 */
 
 #define WEB_AP_ASSOC_DATA "web::ap"
+#define WEB_INTERP_ASSOC_DATA "web::interp"
 
 typedef struct
 {

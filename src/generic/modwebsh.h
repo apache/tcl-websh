@@ -35,6 +35,8 @@ int Web_InterpCfg(ClientData clientData,
 int Web_InterpClassCfg(ClientData clientData,
 		       Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
+int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
+
 int modwebsh_createcmd(Tcl_Interp * interp);
 
 

@@ -44,12 +44,3 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
     requestData->requestIsInitialized = 1;
     return Tcl_Eval(interp, "web::cgi::copyenv");
 }
-
-
-int requestScriptName(Tcl_Interp *interp, char **filename) {
-  /* fixme: we should return script filen name from the CGI env 
-   * what's the status of such a char pointer (who allocates)??
-   * Maybe it would be easier to return a Tcl_Obj */
-  *filename = "";
-  return TCL_OK;
-}
