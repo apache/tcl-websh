@@ -33,6 +33,7 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
 {
 
     /* fixme-later: fixed allocation */
+    /* quick fix: make sure 'i' doesn't go over 20. */
     char *allopts[20];
     int i = 0, numprivateopts, po;
     Tcl_Obj *objCopy = Tcl_DuplicateObj(obj);
@@ -90,7 +91,6 @@ int paramListSet(ParamList * hash, char *key, Tcl_Obj * value)
      * ----------------------------------------------------------------------- */
 
     copy = Tcl_NewListObj(1, &value);
-    /* fixme: ref count of value correct here? */
     Tcl_IncrRefCount(copy);
     return appendToHashTable(hash, key, (ClientData) copy);
 }
@@ -346,7 +346,7 @@ void destroyParamList(ParamList * hash)
  * TCL_OK if command handled
  * TCL_ERROR if there was an error
  * TCL_CONTINUE if command is not handled
- * 
+ *
  * ------------------------------------------------------------------------- */
 int paramGet(ParamList * paramList,
 	     Tcl_Interp * interp,
@@ -432,22 +432,23 @@ int paramGet(ParamList * paramList,
 	    }
 	default:
 	    /* fixme: error message */
+	    /* "unknown command" - print available commands */
 	    return TCL_ERROR;
 	}
     }
     else {
 	/* no subcommand -> return value */
 	WebAssertObjc(objc > 3, 1, "key ?default?");
-	if (objc == 3)
+	if (objc == 3) {
 	    return paramListGetValueToResult(interp, paramList, objv[1],
 					     objv[2]);
-	else
+	} else {
 	    return paramListGetValueToResult(interp, paramList, objv[1],
 					     NULL);
+	}
     }
 
-    /* fixme: error message */
-    /* return TCL_ERROR; */
+    return TCL_ERROR;
 }
 
 
