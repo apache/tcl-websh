@@ -18,7 +18,7 @@
 	* generic/request_ap.c, generic/request_cgi.c, generic/request.h:
 	removed requestScriptName
 
-	* apachetests/hello.test, apachetests/hello.ws3, 
+	* apachetests/hello.test, apachetests/hello.ws3,
 	apachetests/websh.conf, apachetest/apachetest.tcl:
 	created test for new web::config stuff
 
@@ -57,7 +57,7 @@
 
 	* tests/webout.test:
 	fixed tests output-4.4 and output-4.1
-	
+
 2002-04-05  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* generic/interpool.c:
@@ -75,7 +75,7 @@
 	to apache in case of 'wrong # args')
 
 	* generic/modwebsh_cgi.c:
-	proper error handling in dummy procs (web::initializer 
+	proper error handling in dummy procs (web::initializer
 	and web::finalizer)
 
 2002-04-02  David N. Welton  <davidw@dedasys.com>
@@ -151,7 +151,7 @@
 	* generic/logtocmd.c (logToCmd):
 	avoid compiler warning: type cast in logToCmd
 
-	* tests/filecounter.test: fixed tests 2.7, 2.8, and 2.9 to 
+	* tests/filecounter.test: fixed tests 2.7, 2.8, and 2.9 to
 	comply with new option -perms and changed option -wrap
 
 	* doc/quickref.xml: fixed documentation of web::filecounter:
@@ -176,19 +176,19 @@
 
 2002-03-06  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
-	* generic/interpool.c (readWebInterpCode): use 
-	Tcl_ErrnoMsg(Tcl_GetErrno()) instead of Tcl_PosixError(interp), 
+	* generic/interpool.c (readWebInterpCode): use
+	Tcl_ErrnoMsg(Tcl_GetErrno()) instead of Tcl_PosixError(interp),
 	because it's independent of interp
 
-	* generic/logtoap.c, generic/logtoap.h (logToAp): 
+	* generic/logtoap.c, generic/logtoap.h (logToAp):
 	added additional formatting capabilities to logToAp
-	
-	* generic/request.c: include sys/errno.h, fixed logging of 
-	unsuccessful tempfile removal 
 
-	* gneric/response_ap.c (apHeaderHandler): 
+	* generic/request.c: include sys/errno.h, fixed logging of
+	unsuccessful tempfile removal
+
+	* gneric/response_ap.c (apHeaderHandler):
 	Fixed sending of multiple headers
-	
+
 2002-03-05  David N. Welton  <davidw@dedasys.com>
 
 	* generic/request.c (removeTempFiles): Log error on failure of
@@ -218,12 +218,12 @@
 	* generic/mod_websh.c:
 	API change for Apache 2 (register_hooks and ap_log_error)
 
-	* generic/request_ap.c (requestFillRequestValues): 
+	* generic/request_ap.c (requestFillRequestValues):
 	expclicit type cast to satisfy compiler
 
-	* generic/webout.c (Web_Response): added type cast to 
+	* generic/webout.c (Web_Response): added type cast to
 	avoid compiler warning (Solaris cc)
-	
+
 2002-02-27  David N. Welton  <davidw@dedasys.com>
 
 	* unix/configure.in: Changed version to 3.5.
@@ -262,12 +262,12 @@
 	Apache2.
 
 	* doc/quickref.xml: fixed web::interpclasscfg default of maxrequests
-	
+
 2002-02-18  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* generic/interpool.c (poolReleaseWebInterp):
 	allow interps to live forever when maxrequests == 0
-	
+
 2002-02-14  David N. Welton  <davidw@dedasys.com>
 
 	* generic/weboutint.c (webout_eval_tag): Workaround to avoid
@@ -378,7 +378,7 @@
 	* unix/configure.in: Moved to this directory from src/.
 
 2001-03-14  Simon Hefti <simon.hefti@netcetera.ch>
-	
+
 	* webutl.c: fixed setting global var for web::response command
 	* web::response error messages improved
 	* quickref updated
@@ -428,7 +428,7 @@
  	longer (websh tries to answer the request even in case of bad
  	postdata) we had to rewrite the tests which checked those
  	errors. log entry is checked now instead.
-	
+
 
 2000-11-14  Simon Hefti <simon.hefti@netcetera.ch>
 
@@ -471,4 +471,3 @@
  	skipped.
 	The session management module is missing in this release.
 	The Apache Module is missing in this release.
-	

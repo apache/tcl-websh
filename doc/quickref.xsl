@@ -22,7 +22,15 @@
 
   <!-- ==================================================================== -->
 
-  <xsl:import href="/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/html/docbook.xsl" />
+<!--
+  <xsl:import
+  href="http://docbook.sourceforge.net/release/xsl/1.48/html/docbook.xsl"/>
+-->
+
+  <xsl:import
+    href="/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/html/docbook.xsl"
+  />
+
 
   <xsl:variable name="arg.choice.opt.open.str">?</xsl:variable>
   <xsl:variable name="arg.choice.opt.close.str">?</xsl:variable>
