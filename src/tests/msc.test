@@ -168,6 +168,9 @@ test modwebsh-1.6 {web::config mod_websh vars} {
     lappend res [web::config server_root]
     lappend res [web::config document_root]
     lappend res [web::config interpclass]
+    unset env(SERVER_ROOT)
+    unset env(DOCUMENT_ROOT)
+    unset env(SCRIPT_FILENAME)
     set res
 } {ScFn SeRo DoRo ScFn}
 
