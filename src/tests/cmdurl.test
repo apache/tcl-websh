@@ -87,6 +87,17 @@ set ufpathinfo3  [list scheme host port scriptname pathinfo]
 #     set res [string range $res 0 15]
 # } {test_script_test}
 
+test cmdurl-1.1 {web::cmdurl -urlformat scheme} {
+
+    # note: this test should be much later in the code, but since 
+    # the configuration for web::cmdurlcfg is changed later, this bug 
+    # would not be triggered ...
+
+    cleanParam
+
+    set res [web::cmdurl -urlformat scheme foo]
+} {http:}
+
 test cmdurl-1.2 {web::cmdurl "" k1 v1 shows no command} {
 
     cleanParam
