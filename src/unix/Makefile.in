@@ -17,55 +17,6 @@ TOP_DIR = ..
 lib_BINARIES=$(web_LIB_FILE)
 BINARIES=$(lib_BINARIES)
 
-web_SOURCES = ../generic/args.c \
-	../generic/cfg.c \
-	../generic/checksum.c \
-	../generic/command.c \
-	../generic/conv.c \
-	../generic/crypt.c \
-	../generic/nca_d.c \
-	../generic/dispatch.c \
-	../generic/filecounter.c \
-	../generic/filelock.c \
-	../generic/formdata.c \
-	../generic/hashutl.c \
-	../generic/htmlify.c \
-	../generic/log.c \
-	../generic/logtocmd.c \
-	../generic/logtochannel.c \
-	../generic/logtofile.c \
-	../generic/logtosyslog.c \
-	../generic/logutl.c \
-	../generic/messages.c \
-	../generic/messagesCmd.c \
-	../generic/paramlist.c \
-	../generic/querystring.c \
-	../generic/request.c \
-	../generic/script.c \
-	../generic/uricode.c \
-	../generic/url.c \
-	../generic/web.c \
-	../generic/webout.c \
-	../generic/weboutint.c \
-	../generic/webutl.c \
-	../generic/webutlcmd.c \
-	../generic/varchannel.c
-
-web_cgi_SOURCES = ../generic/modwebsh_cgi.c \
-	../generic/request_cgi.c \
-	../generic/response_cgi.c
-
-web_ap_SOURCES =  ../generic/apchannel.c \
-	../generic/interpool.c \
-	../generic/logtoap.c \
-	../generic/mod_websh.c \
-	../generic/modwebsh_ap.c \
-	../generic/request_ap.c \
-	../generic/response_ap.c
-
-
-
-SOURCES = $(web_SOURCES) $(web_cgi_SOURCES)
 SCRIPT_SOURCES = ../generic/context.tcl ../generic/script.ws3 ../generic/cookie.ws3 ../generic/sessctx.ws3 
 
 web_OBJECTS_gen = args.o \
