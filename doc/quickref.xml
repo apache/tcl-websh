@@ -31,28 +31,29 @@ $Id$
 	  <arg choice="opt">subcommands</arg>
 	  <arg choice="opt">arguments</arg>
 	</cmdsynopsis>
-	Options start with a dash
-	(&quot;-&quot;). As usual, dash-dash (&quot;--&quot;) indicates
-	the &quot;end-of-options&quot;. Thus, <emphasis>web::acommand
-	  -o1 a1 -- -o2</emphasis> takes &quot;-o2&quot; as the first
-	argument.
+	Options start with a dash (&quot;-&quot;). As usual, dash-dash
+	(&quot;--&quot;) indicates the
+	&quot;end-of-options&quot;. Thus,
+	<programlisting>web::acommand -o1 a1 -- -o2</programlisting>
+	takes &quot;-o2&quot; as the first argument.
       </para>
       <para>
-	In difference to the normal &quot;set&quot; behaviour of tcl and
-	Webshell, configuration commands of Webshell normally return the
-	previously used value when a new value is set.
+	Instead of the normal Tcl behaviour, WebSH configuration
+	commands normally return the previous value, when a new value
+	is set.
       </para>
       <para>
 	In addition to the examples given here you might find <ulink
 	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
-	a usefull source of information.
+	  a usefull source of information.
       </para>
     </section>
     <section id="about">
       <title>About this document</title>
       <para>
 	The original version of this document can always be found at
-	<ulink url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh</ulink>.
+	<ulink
+	url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh</ulink>.
       </para>
       <note>
 	<para>
