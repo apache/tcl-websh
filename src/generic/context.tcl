@@ -103,5 +103,10 @@ proc web::context {name} {
 	    }
 	    return [join $result \n]
 	}
+
+	# destroy context
+	proc delete {} {
+	    namespace delete [namespace current]
+	}
     }
 }
