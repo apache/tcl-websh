@@ -31,7 +31,7 @@ PACKAGE=web
 
 MAJOR_VERSION=3
 MINOR_VERSION=5
-PATCHLEVEL=0
+PATCHLEVEL=1a1
 
 VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${PATCHLEVEL}
 NODOT_VERSION=${MAJOR_VERSION}${MINOR_VERSION}${PATCHLEVEL}
@@ -318,11 +318,11 @@ AC_SUBST(SHLIB_LD_LIBS)
 #     set VARIABLE to the entire path of the program found.
 
 AC_PATH_PROGS(TCLSH_PROG, \
-  tclsh8.3${EXEEXT} tclsh83${EXEEXT} tclsh8.2${EXEEXT} tclsh82${EXEEXT}, :, \
+  tclsh8.4${EXEEXT} tclsh84${EXEEXT} tclsh8.3${EXEEXT} tclsh83${EXEEXT} tclsh8.2${EXEEXT} tclsh82${EXEEXT}, :, \
   :${TCL_PACKAGE_PATH}/../bin:.:${prefix}:${exec_prefix}:${PATH})
 
 if test "x${TCLSH_PROG}" = "x:" ; then
-    AC_ERROR(needed tclsh 8.3 not found)
+    AC_ERROR(needed tclsh 8.4 not found)
 fi
 
 AC_SUBST(TCL_LIB_SPEC)
