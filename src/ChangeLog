@@ -1,3 +1,11 @@
+2002-06-10  David N. Welton  <davidw@dedasys.com>
+
+	* quickref.xsl: Updated to latest XSL work.
+
+2002-06-04  David N. Welton  <davidw@dedasys.com>
+
+	* Moved README one directory up, created INSTALL file.
+
 2002-04-26  David N. Welton  <davidw@dedasys.com>
 
 	* quickref.xml: Changed 'title' to 'emphasis' in order to avoid

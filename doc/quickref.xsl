@@ -22,14 +22,14 @@
 
   <!-- ==================================================================== -->
 
-<!--
+  <!--
   <xsl:import
   href="http://docbook.sourceforge.net/release/xsl/1.48/html/docbook.xsl"/>
--->
+  -->
 
   <xsl:import
     href="/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/html/docbook.xsl"
-  />
+    />
 
 
   <xsl:variable name="arg.choice.opt.open.str">?</xsl:variable>
@@ -40,14 +40,14 @@
   <xsl:variable name="arg.choice.def.open.str"></xsl:variable>
   <xsl:variable name="arg.choice.def.close.str"></xsl:variable>
 
-  <!-- <u> isn't a valid tag, so the best way to do this is via CSS,
-  but that's a pain - fixme-later.-->
   <xsl:template name="inline.underlineseq">
     <xsl:param name="content">
       <xsl:call-template name="anchor"/>
       <xsl:apply-templates/>
     </xsl:param>
-    <u><xsl:copy-of select="$content"/></u>
+    <span class="text-decoration:underline">
+      <xsl:copy-of select="$content"/>
+    </span>
   </xsl:template>
 
   <xsl:template name="inline.monounderlineseq">
@@ -68,7 +68,45 @@
     <xsl:call-template name="inline.underlineseq"/>
   </xsl:template>
 
-  <xsl:template match="group|arg">
+  <xsl:template match="cmdsynopsis">
+    <div class="{name(.)}">
+      <span style="background:#bbbbff">
+	<xsl:call-template name="anchor"/>
+	<xsl:apply-templates/>
+      </span>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="cmdsynopsis/command">
+    <br/>
+    <span style="font-weight:bold">
+      <xsl:call-template name="inline.monoseq"/>
+    </span>
+    <xsl:text> </xsl:text>
+  </xsl:template>
+
+  <xsl:template match="varlistentry">
+    <dt>
+      <xsl:call-template name="anchor"/>
+      <span style="background:#bbbbff">
+	<xsl:apply-templates select="term"/>
+      </span>
+    </dt>
+    <dd>
+      <div style="background:#dddddd ; padding:4 ; margin-top:3 ;
+	margin-bottom:3 ; width:75%" >
+	<xsl:apply-templates select="listitem"/>
+      </div>
+    </dd>
+  </xsl:template>
+
+  <xsl:template match="listitem/para">
+    <div style="margin-bottom:6">
+      <xsl:apply-templates/>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="arg">
     <xsl:variable name="choice" select="@choice"/>
     <xsl:variable name="rep" select="@rep"/>
     <xsl:variable name="sepchar">
