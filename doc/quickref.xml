@@ -25,9 +25,12 @@ $Id$
       </para>
       <para>
 	Typically, webshell commands have the following syntax:
-	<command>web::acommand  <arg choice="opt">options</arg> <arg choice="opt">subcommands</arg>
-	<arg choice="opt">arguments</arg>
-	</command>.
+	<cmdsynopsis>
+	  <command>web::acommand</command>
+	  <arg choice="opt">options</arg>
+	  <arg choice="opt">subcommands</arg>
+	  <arg choice="opt">arguments</arg>
+	</cmdsynopsis>
 	Options start with a dash
 	(&quot;-&quot;). As usual, dash-dash (&quot;--&quot;) indicates
 	the &quot;end-of-options&quot;. Thus, <emphasis>web::acommand
@@ -41,15 +44,15 @@ $Id$
       </para>
       <para>
 	In addition to the examples given here you might find <ulink
-								     url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
+	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
 	a usefull source of information.
       </para>
     </section>
     <section id="about">
-      <title>about this document</title>
+      <title>About this document</title>
       <para>
 	The original version of this document can always be found at
-	<ulink url="http://websh.com">http://websh.com</ulink>.
+	<ulink url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh</ulink>.
       </para>
       <note>
 	<para>
@@ -62,46 +65,43 @@ $Id$
     </section>
   </section>
   <section id="configuration">
-    <title>configuration</title>
+    <title>Configuration</title>
     <section id="web::config">
       <title>web::config</title>
-      <para>
-	<variablelist>
-	  <varlistentry>
-	    <term>syntax</term>
-	    <listitem>
-	      <para>
-		<emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
-		&lt;key&gt;: <emphasis>uploadfilesize</emphasis>, <emphasis>cmdparam</emphasis>, <emphasis>timeparam</emphasis>,
-		<emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>,
-		<emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis></para><para>
-		If &lt;value&gt; is ommitted, the current value of &lt;key&gt; is returned.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+      <cmdsynopsis>
+	<command>web::config</command>
+	<arg>key</arg>
+	<arg choice="opt">value</arg>
+      </cmdsynopsis>
+      <!--
+	<emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
+	&lt;key&gt;: <emphasis>uploadfilesize</emphasis>, <emphasis>cmdparam</emphasis>, <emphasis>timeparam</emphasis>,
+	<emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>,
+	<emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis></para><para>
+	If &lt;value&gt; is ommitted, the current value of &lt;key&gt; is returned.
+	-->
 
-	<variablelist>
-	  <varlistentry>
-	    <term>uploadfilesize ?&lt;size&gt;?</term>
-	    <listitem>
-	      <para>
-		Sets the maximum number of bytes allowed to be uploaded.
-		Default: 0.
+      <variablelist>
+	<varlistentry>
+	  <term><option>uploadfilesize</option> <optional><option>size</option></optional></term>
+	  <listitem>
+	    <para>
+	      Sets the maximum number of bytes allowed to be uploaded.
+	      Default: 0.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>cmdparam</option> <optional><option>name</option></optional></term>
+	  <listitem>
+	    <para>
+	      Name of the parameter to store reference to a web::command command
+	      in the URL. Default: &quot;cmd&quot;.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>cmdparam ?&lt;name&gt;?</term>
-	    <listitem>
-	      <para>
-		Name of the parameter to store reference to a web::command command
-		in the URL. Default: &quot;cmd&quot;.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
-	    <term>timeparam ?&lt;name&gt;?</term>
+	    <term><option>timeparam</option> <optional><option>name</option></optional></term>
 	    <listitem>
 	      <para>
 		Name of the parameter to store reference to the timestamp
@@ -110,7 +110,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>logsubst ?&lt;boolean&gt;?</term>
+	    <term><option>logsubst</option> <optional><option>boolean</option></optional></term>
 	    <listitem>
 	      <para>
 		Turns substitution of log messages on or off. Default: on.
@@ -118,18 +118,18 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>putxmarkup ?brace|tag?</term>
+	    <term><option>putxmarkup</option> <optional><option>brace|tag</option></optional></term>
 	    <listitem>
 	      <para>
 		Sets the markup characters for sections to be eval'd in web::putx
-		and web::putxfile commands to either curly braces ({ ... }) or 
+		and web::putxfile commands to either curly braces ({ ... }) or
 		special tags (&lt;% ... %&gt;). Please note that when using the tags &lt;%%&gt;,
 		they cannot be nested. Default: brace.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>version</term>
+	  <term><option>version</option></term>
 	    <listitem>
 	      <para>
 		Returns the version info string
@@ -137,7 +137,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>copyright</term>
+	  <term><option>copyright</option></term>
 	    <listitem>
 	      <para>
 		Returns a copyright message string
@@ -145,7 +145,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>encryptchain &lt;list&gt;</term>
+	  <term><option>encryptchain</option> <option>list</option></term>
 	    <listitem>
 	      <para>
 		defines which commands should be tried, in sequence, to encrypt
@@ -154,7 +154,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>decryptchain &lt;list&gt;</term>
+	  <term><option>decryptchain</option> <option>list</option></term>
 	    <listitem>
 	      <para>
 		defines which commands should be tried, in sequence, to decrypt
@@ -164,7 +164,6 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-      </para>
     </section>
     <section id="Examples0">
       <title>Examples</title>
@@ -1520,7 +1519,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::cnames ?&lt;pattern&gt;?</term>
+	    <term><option>&lt;name&gt;::cnames</option> <optional><option>pattern</option></optional></term>
 	    <listitem>
 	      <para>
 		lists existing keys of context matching &lt;pattern&gt;
@@ -1589,7 +1588,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>&lt;name&gt;::init ?&lt;id&gt;?</term>
+	    <term><option>&lt;name&gt;::init</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		load an existing session context with id &lt;id&gt;, or create a new one,
@@ -1601,7 +1600,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::new ?&lt;id&gt;?</term>
+	    <term><option>&lt;name&gt;::new</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context. Automation depends on the settings of the
@@ -1743,7 +1742,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term>&lt;name&gt;::init ?&lt;id&gt;?</term>
+	    <term><option>&lt;name&gt;::init</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		load an existing session context (cookie must have been sent by the
@@ -1752,7 +1751,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>&lt;name&gt;::new ?&lt;id&gt;?</term>
+	    <term><option>&lt;name&gt;::new</option> <optional><option>id</option></optional></term>
 	    <listitem>
 	      <para>
 		create a new session context.
@@ -2218,7 +2217,7 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::cryptdkey ?&lt;key&gt;?</term>
+	    <term><option>web::cryptdkey</option> <optional><option>key</option></optional></term>
 	    <listitem>
 	      <para>
 	      </para>
