@@ -832,8 +832,9 @@ int destroyLogPlugIn(void *plugIn, void *dum)
     /* fixme: destroyLogPlugIn - have to assume that all channels are closed */
 
     /* boh...  */
-    if (logPlugIn != NULL)
+    if (logPlugIn != NULL) {
 	WebFreeIfNotNull(logPlugIn);
+    }
     return TCL_OK;
 }
 

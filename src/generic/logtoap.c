@@ -78,7 +78,7 @@ int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg, ...)
 
     va_list args;
     va_start(args, msg);
-   
+
 
     if ((interp == NULL) || (msg == NULL))
 	return TCL_ERROR;
@@ -94,6 +94,6 @@ int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg, ...)
 #endif /* APACHE2 */
 
     va_end(args);
-   
+
     return TCL_OK;
 }

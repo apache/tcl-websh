@@ -61,8 +61,8 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
 	return TCL_ERROR;
     }
 
-    /* fixme: we don't set the channel options back. maybe we should  ;-) */
-    /* add to documentation!  */
+    /* fixme: we don't set the channel options back. maybe we should. */
+    /* For now (3.5) we will add this to the documentation. */
     Tcl_SetChannelOption(interp, channel, "-translation", "binary");
 
     /* ------------------------------------------------------------------------
@@ -214,7 +214,8 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
 	return TCL_ERROR;
     }
 
-    /* fixme: we don't set the channel options back. maybe we should  ;-) */
+    /* fixme: we don't set the channel options back. maybe we should. */
+    /* For now (3.5) we will add this to the documentation. */
     Tcl_SetChannelOption(interp, channel, "-translation", "binary");
 
 
@@ -263,11 +264,8 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
      * read until last
      * ----------------------------------------------------------------------- */
 
-    /* fixme: only read content_length bytes ...
-
-    Add to documentation
-
-    */
+    /* fixme: only read content_length bytes ... */
+    /* For now (3.5) we will add this to the documentation. */
     while (isLast == TCL_ERROR) {
 
 	/* ------------------------------------------------------------------------
