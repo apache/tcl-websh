@@ -2181,46 +2181,35 @@ $Id$
       <title>web::readfile</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		web::readfile <option>file</option> <option>varName</option> <option>msg</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::readfile</command> <arg>file</arg>
+	  <arg>varName</arg> <arg>msg</arg>
+	</cmdsynopsis>
 
-	<option>file</option> is read and written to <option>varName</option>. Returns 0 on success, 1
-	otherwise. If an error occurs, an error message is written to the
-	variable <option>msg</option>.
+	<option>file</option> is read and written to
+	<option>varName</option>. Returns 0 on success, 1
+	otherwise. If an error occurs, an error message is written to
+	the variable <option>msg</option>.
 
       </para>
     </section>
     <section id="web::lockfile_and_web::unlockfile">
       <title>web::lockfile and web::unlockfile</title>
       <para>
+	<cmdsynopsis>
+		<command>web::lockfile</command> <arg>fh</arg>
+		<command>web::unlockfile</command> <arg>fh</arg>
+	</cmdsynopsis>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::lockfile</command> <option>fh</option></para><para>
-		<command>web::unlockfile</command> <option>fh</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Interface to lockf(). lockf() works best on local filesystems.
+	Please read the documentation of lockf on your system to learn
+	about the problems and limitations of file locking. Note that
+	web::lockfile also performs a seek() and resets the file
+	cursor to the beginning of the file.
 
-	Interface to lockf(). lockf() works best on local filesystems.  Please
-	read the documentation of lockf on your system to learn about the
-	problems and limitations of file locking. Note that web::lockfile also
-	performs a seek() and resets the file cursor to the beginning of the
-	file.
-
-	<emphasis>Note</emphasis> that the file needs to be open for writing.
+	<emphasis>Note</emphasis> that the file needs to be open for
+	writing.
 
       </para>
     </section>
@@ -2228,20 +2217,15 @@ $Id$
       <title>web::truncatefile</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::truncatefile</command> <option>fh</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::truncatefile</command>
+	  <arg>fh</arg>
+	</cmdsynopsis>
 
-	Interface to truncate(). Truncates a file based on the file handle,
-	while Tcl's file commands are based on file names. This is used to
-	truncate a file while holding the lock.
+	Interface to truncate(). Truncates a file based on the file
+	handle, while Tcl's file commands are based on file
+	names. This is used to truncate a file while holding the lock.
 
       </para>
     </section>
@@ -2275,17 +2259,10 @@ $Id$
       <title>web::encrypt</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::encrypt</command> <option>data</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
-
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::encrypt</command> <arg>data</arg>
+      </cmdsynopsis>
 	Returns encrypted data.
 
       </para>
@@ -2294,16 +2271,10 @@ $Id$
       <title>web::decrypt</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::decrypt</command> <option>data</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::decrypt</command> <arg>data</arg>
+      </cmdsynopsis>
 
 	Returns decrypted data.
 
@@ -2328,21 +2299,18 @@ $Id$
       <title>web::encryptd</title>
       <para>
 
-	By default, Webshell uses this plug-In for weak data encryption for
-	encryption (<command>web::encryptd</command>) and decryption (<command>web::decryptd</command>).
-	The encryption key is managed with <command>web::crpytdkey</command>.
+	By default, Webshell uses this plug-In for weak data
+	encryption for encryption (<command>web::encryptd</command>)
+	and decryption (<command>web::decryptd</command>).  The
+	encryption key is managed with
+	<command>web::crpytdkey</command>.
 
-      </para><para>
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::encryptd</command> <option>data</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+      </para>
+      <para>
+
+	<cmdsynopsis>
+	  <command>web::encryptd</command> <arg>data</arg>
+	</cmdsynopsis>
 
 	Returns encrypted data.
 
@@ -2352,16 +2320,10 @@ $Id$
       <title>web::decryptd</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::decryptd</command> <option>data</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::decryptd</command> <arg>data</arg>
+	</cmdsynopsis>
 
 	Returns decrypted data.
 
@@ -2371,26 +2333,23 @@ $Id$
       <title>web::cryptdkey</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::cryptdkey</command> <optional><option>key</option></optional>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
 
-	Sets the new key for encryption. If no argument is given, resets to
-	the default key. This command does not return the currently active
-	key, in difference to other configuration commands of Webshell.
+	<cmdsynopsis>
+	  <command>web::cryptdkey</command> <arg
+	  choice="opt">key</arg>
+      </cmdsynopsis>
+
+	Sets the new key for encryption. If no argument is given,
+	resets to the default key. This command does not return the
+	currently active key, in difference to other configuration
+	commands of Webshell.
 
 	Commands:
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::encryptd <option>message</option></term>
+	    <term><command>web::encryptd</command>
+	    <option>message</option></term>
 	    <listitem>
 	      <para>
 		encrypts <option>message</option>
@@ -2398,7 +2357,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::decryptd <option>message</option></term>
+	    <term><command>web::decryptd
+	    </command><option>message</option></term>
 	    <listitem>
 	      <para>
 		decrypts <option>message</option>
@@ -2406,7 +2366,8 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>web::cryptdkey</option> <optional><option>key</option></optional></term>
+	    <term><command>web::cryptdkey</command>
+	    <optional><option>key</option></optional></term>
 	    <listitem>
 	      <para>
 	      </para>
