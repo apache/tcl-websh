@@ -60,8 +60,6 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 
     /* fetch request object */
     r = (request_rec *) Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
-    /* fixme: make the following possible */
-    /* r = (request_rec *)(requestData->handleToSpecificReqData); */
     if (r == NULL) {
 	Tcl_SetResult(interp, "error accessing httpd request object", NULL);
 	return TCL_ERROR;
