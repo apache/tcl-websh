@@ -90,7 +90,8 @@ typedef struct WebInterpClass
 WebInterpClass;
 
 WebInterp *createWebInterp(websh_server_conf * conf,
-			   WebInterpClass * wic, char *filename, long mtime);
+			   WebInterpClass * wic, char *filename, long mtime,
+			   request_rec *r);
 
 void destroyWebInterp(WebInterp * webInterp);
 
