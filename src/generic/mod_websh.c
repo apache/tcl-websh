@@ -362,7 +362,7 @@ static int websh_handler(request_rec * r)
 	(websh_server_conf *) ap_get_module_config(sconf, &websh_module);
 
 #ifdef APACHE2
-    if (strcmp(r->handler, "websh-script"))
+    if (strcmp(r->handler, WEBSHHANDLER))
 	return DECLINED;
 #endif /* APACHE2 */
 
