@@ -744,6 +744,8 @@ $Id$
 	  <arg choice="opt"><replaceable>options</replaceable></arg>
 	  <arg choice="opt"><replaceable>key</replaceable></arg>
 	  <arg choice="opt"><replaceable>value</replaceable></arg>
+	</cmdsynopsis>
+	<cmdsynopsis>
 	  <command>web::request</command>
 	  <arg choice="opt"><replaceable>key</replaceable></arg>
 	  <arg choice="opt"><replaceable>default</replaceable></arg>
@@ -1048,8 +1050,12 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::response</command>
+	</cmdsynopsis>
+	<cmdsynopsis>
 	  <command>web::response</command>
 	  <arg choice="opt"><replaceable>option</replaceable></arg>
+	</cmdsynopsis>
+	<cmdsynopsis>
 	  <command>web::response</command>
 	  <arg choice="opt"><replaceable>subcommand</replaceable></arg>
 	  <arg><replaceable>args</replaceable></arg>
@@ -2853,14 +2859,15 @@ $Id$
 
 
 	<cmdsynopsis>
-	  web::match <arg>result</arg>
-	  <arg>listToBeSearched</arg>
-	  <arg>searchFor</arg>
+	  <command>web::match</command>
+	  <option><replaceable>result</replaceable></option>
+	  <option><replaceable>listToBeSearched</replaceable></option>
+	  <option><replaceable>searchFor</replaceable></option>
 	</cmdsynopsis>
 
-	In case <option>searchFor</option> exists in
-	<option>listToBeSearched</option>, web::match returns
-	<option>result</option>, otherwise an empty string.
+	In case <option><replaceable>searchFor</replaceable></option> exists in
+	<option><replaceable>listToBeSearched</replaceable></option>, web::match returns
+	<option><replaceable>result</replaceable></option>, otherwise an empty string.
 
       </para>
       <para>
