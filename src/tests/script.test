@@ -34,7 +34,12 @@ test script-readfile-1.1 {web::readfile (no args)} {
 	web::readfile
     } msg
     set msg
-} {no value given for parameter "name" to "web::readfile"}
+    if {$tcl_version < 8.4} {
+	set res [string compare {no value given for parameter "name" to "web::readfile"} $msg]
+    } else {
+	set res [string compare {wrong # args: should be "web::readfile name vtarget ?vmsg?"} $msg]
+    }
+} {0}
 
 test script-readfile-1.2 {web::include (to channel)} {
 
@@ -67,7 +72,12 @@ test script-evalfile-1.1 {web::putxfile (no args)} {
 	web::putxfile
     } msg
     set msg
-} {no value given for parameter "file" to "web::putxfile"}
+    if {$tcl_version < 8.4} {
+	set res [string compare {no value given for parameter "file" to "web::putxfile"} $msg]
+    } else {
+	set res [string compare {wrong # args: should be "web::putxfile file ?channel? ?vmsg?"} $msg]
+    }
+} {0}
 
 test script-evalfile-1.2 {web::putxfile (to channel)} {
 
@@ -107,7 +117,12 @@ test script-include-1.1 {web::include (no args)} {
 	web::include
     } msg
     set msg
-} {no value given for parameter "name" to "web::include"}
+    if {$tcl_version < 8.4} {
+	set res [string compare {no value given for parameter "name" to "web::include"} $msg]
+    } else {
+	set res [string compare {wrong # args: should be "web::include name ?vmsg?"} $msg]
+    }
+} {0}
 
 test script-include-1.2 {web::include (to channel)} {
 
