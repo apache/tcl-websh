@@ -266,42 +266,51 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>-urlformat <option>list</option></term>
+	    <term><option>-urlformat</option> <option>list</option></term>
 	    <listitem>
 	      <para>
-		specify what items will be used to format just this URL.
-		Default is: <command>{scriptname pathinfo querystring}</command></para><para>
-		Use <command>web::cmdurlcfg</command> to define the url format for all
-		URLs produced by <command>web::cmdurl</command> in one request.</para><para>
+		specify what items will be used to format just this
+		URL.  Default is: <command>{scriptname pathinfo
+		querystring}</command>
+	      </para>
+	      <para>
+		Use <command>web::cmdurlcfg</command> to define the
+		url format for all URLs produced by
+		<command>web::cmdurl</command> in one
+		request.
+	      </para>
+	      <para>
 		<variablelist>
 		  <varlistentry>
-		    <term>scheme</term>
+		    <term><option>scheme</option></term>
 		    <listitem>
 		      <para>
-			include the protocol, only &quot;http&quot; and &quot;https&quot; are currently supported
+			include the protocol, only &quot;http&quot;
+			and &quot;https&quot; are currently supported
 		      </para>
 		    </listitem>
 		  </varlistentry>
 		  <varlistentry>
-		    <term>host</term>
+		    <term><option>host</option></term>
 		    <listitem>
 		      <para>
-			include the host name, e.g. &quot;websh.com&quot;
+			include the host name,
+			e.g. &quot;websh.com&quot;
 		      </para>
 		    </listitem>
 		  </varlistentry>
 		  <varlistentry>
-		    <term>port</term>
+		    <term><option>port</option></term>
 		    <listitem>
 		      <para>
-			include the port, e.g. &quot;80&quot;</para><para>
-			Trying to set this item without host will throw
-			an error
+			include the port,
+			e.g. &quot;80&quot;</para><para> Trying to set
+			this item without host will throw an error
 		      </para>
 		    </listitem>
 		  </varlistentry>
 		  <varlistentry>
-		    <term>scriptname</term>
+		    <term><option>scriptname</option></term>
 		    <listitem>
 		      <para>
 			include scriptname, e.g. &quot;/cgi-bin/orderbooks&quot;
@@ -309,7 +318,7 @@ $Id$
 		    </listitem>
 		  </varlistentry>
 		  <varlistentry>
-		    <term>pathinfo</term>
+		    <term><option>pathinfo</option></term>
 		    <listitem>
 		      <para>
 			include pathinfo, e.g. &quot;/merchants/shop1&quot;
@@ -317,7 +326,7 @@ $Id$
 		    </listitem>
 		  </varlistentry>
 		  <varlistentry>
-		    <term>querystring</term>
+		    <term><option>querystring</option></term>
 		    <listitem>
 		      <para>
 			include the querystring, e.g. &quot;select=download&quot;
@@ -328,11 +337,9 @@ $Id$
 		<note>
 		  <para>
 		    Note that there are two more commands that control
-		    the output of <literal
-					   remap="tt">web::cmdurl</literal>: <literal
-										      remap="tt">web::config cmdparam</literal> and
-		    <command>web::config
-		      timeparam</command>.
+		    the output of <command>web::cmdurl</command>:
+		    <command>web::config</command> <option>cmdparam</option> and
+		    <command>web::config</command> <option>timeparam</option>.
 		  </para>
 		</note>
 	      </para>
@@ -513,7 +520,7 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>web::dispatch</emphasis> ?options?</para><para>
-		Options are: <command>-cmd</command>, <literal remap="tt">-querystring</literal>, <literal remap="tt">-postdata</literal>,
+		Options are: <option>-cmd</option>, <literal remap="tt">-querystring</literal>, <literal remap="tt">-postdata</literal>,
 		<literal remap="tt">-track</literal> and <literal remap="tt">-hook</literal>
 	      </para>
 	    </listitem>
@@ -820,11 +827,13 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	web::param is an accessor to state information from the querystring. 
-	Suppose the querystring is &quot;lang=EN&quot;.  After web::dispatch has parsed the
-	querystring, <command>web::param lang</command> will report <literal remap="tt">EN</literal>.  Additionaly,
-	web::param can manage this data and add, append, and delete parameters as
-	needed. 
+	web::param is an accessor to state information from the
+	querystring.  Suppose the querystring is &quot;lang=EN&quot;.
+	After web::dispatch has parsed the querystring,
+	<command>web::param</command> <option>lang</option> will
+	report <literal remap="tt">EN</literal>.  Additionaly,
+	<command>web::param</command> can manage this data and add,
+	append, and delete parameters as needed.
 
 	<variablelist>
 	  <varlistentry>
@@ -915,9 +924,11 @@ $Id$
 	  </varlistentry>
 	</variablelist>
 
-	web::formvar is an accessor to HTML <option>FORM</option>
-	data.  After web::dispatch has parsed the POST data, you can
-	access all form fields using web::formvar.
+	<command>web::formvar</command> is an accessor to HTML
+	<option>FORM</option> data.  After
+	<command>web::dispatch</command> has parsed the POST data, you
+	can access all form fields using
+	<command>web::formvar</command>.
 
       </para>
     </section>
@@ -1193,16 +1204,13 @@ $Id$
   <section id="logging">
     <title>logging</title>
     <para>
-      Logging consists of two parts. <literal
-      remap="tt">web::log</literal> issues a logging message, while
-      <command>web::logfilter</command> and <literal
-      remap="tt">web::logdest</literal> determine where to send a
+      Logging consists of two parts. <command>web::log</command> issues a logging message, while
+      <command>web::logfilter</command> and <command>web::logdest</command> determine where to send a
       message. webshell uses a two-step filtering. First, webshell
       determines whether it should handle a message, or not, using the
       filters configured with &quot;web::logfilter&quot;. Then,
       webshell determines which message is to be sent where, using the
-      filters configured with <literal
-      remap="tt">web::logdest</literal>.
+      filters configured with <command>web::logdest</command>.
     </para>
     <para>
       A filter consists of a tag and a level, separated by a
