@@ -695,22 +695,21 @@ $Id$
 	      <command>mgr::init</command>. <command>init</command>
 	      will find no static parameter <literal
 	      remap="tt">id</literal> (which has been specified at
-	      creation time of the session manager using the <literal
-	      remap="tt">-attachto</literal> option).  Now, it tries
-	      to create a new session id. This will be possible if a
+	      creation time of the session manager using the
+	      <option>-attachto</option> option).  Now, it tries to
+	      create a new session id. This will be possible if a
 	      session id generator has been specified when the manager
-	      was created using the <literal
-	      remap="tt">-idgen</literal> option.  From now, on the
-	      session id will be a static parameter, and will
-	      therefore be present in every URL generated with
-	      <emphasis>web::cmdurl</emphasis>
+	      was created using the <option>-idgen</option> option.
+	      From now, on the session id will be a static parameter,
+	      and will therefore be present in every URL generated
+	      with <command>web::cmdurl</command>
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para>
 	      The next time the user visits the Webshell application
 	      using one of these URLs,
-	      <emphasis>web::dispatch</emphasis> will detect the
+	      <command>web::dispatch</command> will detect the
 	      session id, and =|<option>mgr</option>::init= will directly load
 	      the corresponding session context without generating a
 	      new session id.
@@ -740,8 +739,8 @@ $Id$
 	    <term>syntax</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::request</emphasis> ?options? ?<option>key</option>? ?<option>value</option> ...?</para><para>
-		<emphasis>web::request</emphasis> ?<option>key</option>? ?<option>default</option>?</para><para>
+		<command>web::request</command> ?options? ?<option>key</option>? ?<option>value</option> ...?</para><para>
+		<command>web::request</command> ?<option>key</option>? ?<option>default</option>?</para><para>
 		Options are: <literal remap="tt">-count</literal>, <literal remap="tt">-set</literal>, <literal remap="tt">-lappend</literal>, <literal remap="tt">-names</literal>, <literal remap="tt">-unset</literal>, <literal remap="tt">-reset</literal>
 		and <literal remap="tt">-channel</literal> fixme: gibt es -channel noch?
 	      </para>
@@ -853,7 +852,7 @@ $Id$
 	    <term>syntax</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::param</emphasis> ?options? <optional><option>key</option></optional> ?<option>value</option> ...?</para><para>
+		<command>web::param</command> ?options? <optional><option>key</option></optional> ?<option>value</option> ...?</para><para>
 		Options are: <literal remap="tt">-count</literal>, <literal remap="tt">-set</literal>, <literal remap="tt">-lappend</literal>, <literal remap="tt">-names</literal>, and <literal remap="tt">-unset</literal>
 	      </para>
 	    </listitem>
@@ -950,7 +949,7 @@ $Id$
 	    <term>syntax</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::formvar</emphasis> ?options? <optional><option>key</option></optional> <optional><option>value</option></optional></para><para>
+		<command>web::formvar</command> ?options? <optional><option>key</option></optional> <optional><option>value</option></optional></para><para>
 		Exactly like <command>web::param</command>
 	      </para>
 	    </listitem>
@@ -1005,10 +1004,10 @@ $Id$
 	    <term>Syntax</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::response</emphasis></para><para>
-		<emphasis>web::response</emphasis> ?option?</para><para>
-		<emphasis>web::response</emphasis> ?subcommand? args</para><para>
-		Subcommands are <emphasis>-select</emphasis>, <emphasis>-set</emphasis>, <emphasis>-lappend</emphasis>,
+		<command>web::response</command></para><para>
+		<command>web::response</command> ?option?</para><para>
+		<command>web::response</command> ?subcommand? args</para><para>
+		Subcommands are <command>-select</command>, <emphasis>-set</emphasis>, <emphasis>-lappend</emphasis>,
 		<emphasis>-names</emphasis>, <emphasis>-count</emphasis>, <emphasis>-unset</emphasis>, <emphasis>-reset</emphasis>, and <emphasis>-resetall</emphasis>
 		Options are <emphasis>-sendheader</emphasis>, <emphasis>-httpresponse</emphasis>, and <emphasis>-bytessent</emphasis>.</para><para>
 	      </para>
@@ -1147,7 +1146,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::put</emphasis> ??#<optional><option>channel</option></optional> <option>text</option>
+		<command>web::put</command> ??#<optional><option>channel</option></optional> <option>text</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1167,7 +1166,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::putx</emphasis> ??#<optional><option>channel</option></optional> <option>text</option>
+		<command>web::putx</command> ??#<optional><option>channel</option></optional> <option>text</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1189,7 +1188,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::putxfile</emphasis> ??#<optional><option>channel</option></optional> <option>file</option> <optional><option>msg</option></optional>
+		<command>web::putxfile</command> ??#<optional><option>channel</option></optional> <option>file</option> <optional><option>msg</option></optional>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1269,7 +1268,7 @@ $Id$
 	  <term>Syntax:</term>
 	  <listitem>
 	    <para>
-	      <emphasis>web::logdest</emphasis> subcommand ?options? <option>level</option> <option>plugin</option></para><para>
+	      <command>web::logdest</command> subcommand ?options? <option>level</option> <option>plugin</option></para><para>
 	      Subcommands are: <literal remap="tt">add</literal>, <literal remap="tt">delete</literal>, and <literal remap="tt">names</literal>.</para><para>
 	      Options are: <literal remap="tt">-maxchar</literal>, and <literal remap="tt">-format</literal>.</para><para>
 	      Known plug-ins are:  <literal remap="tt">file</literal>, <literal remap="tt">syslog</literal>, <literal remap="tt">command</literal>,
@@ -1295,7 +1294,7 @@ $Id$
 	  <term>Syntax:</term>
 	  <listitem>
 	    <para>
-	      <emphasis>web::logfilter</emphasis> subcommand args</para><para>
+	      <command>web::logfilter</command> subcommand args</para><para>
 	      Subcommands are: <literal remap="tt">add</literal>, <literal remap="tt">delete</literal>, and <literal remap="tt">names</literal>.
 	    </para>
 	  </listitem>
@@ -1342,7 +1341,7 @@ $Id$
 	  <term>Syntax:</term>
 	  <listitem>
 	    <para>
-	      <emphasis>web::log</emphasis> <option>level</option> <option>msg</option>
+	      <command>web::log</command> <option>level</option> <option>msg</option>
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -1475,7 +1474,7 @@ $Id$
 	    <term>Creation  </term>
 	    <listitem>
 	      <para>
-		<emphasis>web::context</emphasis> <option>name</option>
+		<command>web::context</command> <option>name</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1601,7 +1600,7 @@ $Id$
 	    <term>Creation:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::filecontext</emphasis> <option>name</option> ?options?</para><para>
+		<command>web::filecontext</command> <option>name</option> ?options?</para><para>
 		Options are: <literal remap="tt">-perm</literal>, <literal remap="tt">-path</literal>, <literal remap="tt">-crypt</literal>,
 		<literal remap="tt">-idgen</literal>, and <literal remap="tt">-attachto</literal>.
 	      </para>
@@ -1717,7 +1716,7 @@ $Id$
 	    <listitem>
 	      <para>
 		Sets command <option>idgen</option> to find a new session id. See doc of
-		<emphasis>web::filecounter</emphasis> below for an implementation
+		<command>web::filecounter</command> below for an implementation
 		provided with webshell.</para><para>
 		<option>idgen</option> is used in case that no <option>id</option> argument
 		has been passed to <emphasis>init</emphasis> or <emphasis>new</emphasis>.
@@ -1761,7 +1760,7 @@ $Id$
 	    <term>Creation:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::cookiecontext</emphasis> <option>name</option> ?options?</para><para>
+		<command>web::cookiecontext</command> <option>name</option> ?options?</para><para>
 		Options are: <literal remap="tt">-expires</literal>, <literal remap="tt">-path</literal>, <literal remap="tt">-domain</literal>,
 		<literal remap="tt">-secure</literal>, <literal remap="tt">-crypt</literal>, and <literal remap="tt">-channel</literal>.
 	      </para>
@@ -2064,8 +2063,8 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::lockfile</emphasis> <option>fh</option></para><para>
-		<emphasis>web::unlockfile</emphasis> <option>fh</option>
+		<command>web::lockfile</command> <option>fh</option></para><para>
+		<command>web::unlockfile</command> <option>fh</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2090,7 +2089,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::truncatefile</emphasis> <option>fh</option>
+		<command>web::truncatefile</command> <option>fh</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2137,7 +2136,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::encrypt</emphasis> <option>data</option>
+		<command>web::encrypt</command> <option>data</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2156,7 +2155,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::decrypt</emphasis> <option>data</option>
+		<command>web::decrypt</command> <option>data</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2194,7 +2193,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::encryptd</emphasis> <option>data</option>
+		<command>web::encryptd</command> <option>data</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2213,7 +2212,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::decryptd</emphasis> <option>data</option>
+		<command>web::decryptd</command> <option>data</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2232,7 +2231,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::cryptdkey</emphasis> <optional><option>key</option></optional>
+		<command>web::cryptdkey</command> <optional><option>key</option></optional>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2336,7 +2335,7 @@ $Id$
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <emphasis>web::htmlify</emphasis> ?-options? <option>text</option>
+	      <command>web::htmlify</command> ?-options? <option>text</option>
 	    </para>
 	    <para>
 	      Options is: <literal remap="tt">-numeric</literal>.
@@ -2348,14 +2347,14 @@ $Id$
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis>web::dehtmlify</emphasis>	<option>text</option>
+	    <para><command>web::dehtmlify</command>	<option>text</option>
 	    </para>
 	    <para>
 	      Remove all HTML-specifics of <option>text</option>
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis>web::uriencode</emphasis>
+	    <para><command>web::uriencode</command>
 	      <option>text</option>
 	    </para>
 	    <para>
@@ -2364,7 +2363,7 @@ $Id$
 	  </listitem>
 	  <listitem>
 	    <para>
-	      <emphasis>web::uridecode</emphasis> <option>text</option>
+	      <command>web::uridecode</command> <option>text</option>
 	    </para>
 	    <para>Decode URI-compliant <option>text</option>.
 	    </para>
@@ -2405,7 +2404,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::send</emphasis> <option>channel</option> <option>cmdNr</option> <option>message</option> ??#<optional><option>flags</option></optional>
+		<command>web::send</command> <option>channel</option> <option>cmdNr</option> <option>message</option> ??#<optional><option>flags</option></optional>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2431,7 +2430,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::recv</emphasis> <option>channel</option> <option>cmdVarName</option> <option>msgVarName</option> <option>flagVarName</option>
+		<command>web::recv</command> <option>channel</option> <option>cmdVarName</option> <option>msgVarName</option> <option>flagVarName</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2453,7 +2452,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::msgflag</emphasis> <optional><option>flags</option></optional> <optional><option>testflags</option></optional>
+		<command>web::msgflag</command> <optional><option>flags</option></optional> <optional><option>testflags</option></optional>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2509,7 +2508,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::initializer</emphasis> <option>code</option>
+		<command>web::initializer</command> <option>code</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2531,14 +2530,14 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::finalizer</emphasis> <option>code</option>
+		<command>web::finalizer</command> <option>code</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
 	Register code to be exectuted when the interpreter for this
-	Webshell script is deleted. <emphasis>web::dofinalize</emphasis> will then call
+	Webshell script is deleted. <command>web::dofinalize</command> will then call
 	each <option>code</option> block that has been registered, starting with the
 	most recently added <option>code</option>.
 
@@ -2553,14 +2552,14 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::dofinalize</emphasis>
+		<command>web::dofinalize</command>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
 	Execute finalizer code that has been registerd using
-	<emphasis>web::finalizer</emphasis>, starting with the most recently added <option>code</option>.
+	<command>web::finalizer</command>, starting with the most recently added <option>code</option>.
 
       </para>
     </section>
@@ -2573,7 +2572,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::maineval</emphasis> <option>code</option>
+		<command>web::maineval</command> <option>code</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2592,7 +2591,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::interpclasscfg</emphasis> <option>classid</option> property ?value?</para><para>
+		<command>web::interpclasscfg</command> <option>classid</option> property ?value?</para><para>
 		Properties are: <literal remap="tt">maxrequests</literal>, <literal remap="tt">maxttl</literal>, <literal remap="tt">maxidletime</literal>
 	      </para>
 	    </listitem>
@@ -2645,7 +2644,7 @@ $Id$
 	    <term>Syntax:</term>
 	    <listitem>
 	      <para>
-		<emphasis>web::interpcfg</emphasis> ?property? ?value?</para><para>
+		<command>web::interpcfg</command> ?property? ?value?</para><para>
 		Properties are: <literal remap="tt">numreq</literal>, <literal remap="tt">retire</literal>, <literal remap="tt">starttime</literal>, <literal remap="tt">lastusedtime</literal>
 	      </para>
 	    </listitem>
@@ -2728,12 +2727,15 @@ $Id$
       </para><para>
 	For websh2 wizards:</para><para>
 
-	wpp_isselected v1 v2 would now be:
-	web::match &quot;selected&quot; v1 v2
+	wpp_isselected v1 v2 would now be: web::match
+	&quot;selected&quot; v1 v2
 
-      </para><para>
-	web::match treats v1 as a list. Thus, <emphasis>web::match &quot;ok&quot; {tv dvd vcr} dvd</emphasis>
-	will return <emphasis>ok</emphasis>.
+      </para>
+      <para>
+
+	web::match treats v1 as a list. Thus, <emphasis>web::match
+	&quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
+	<emphasis>ok</emphasis>.
 
       </para>
     </section>
