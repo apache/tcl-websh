@@ -183,7 +183,7 @@ $Id$
       webshell provides a command dispatching mechanism to produce,
       for example, different HTML pages within one application.  The
       name of the command to be used is encoded in the querystring
-      (see <literal remap="tt">web::cmdurl</literal> for details on
+      (see <command>web::cmdurl</command> for details on
       how to produce such querystrings).  Command dispatching is
       initiated with the command <command>web::dispatch</command>.  Commands are defined with
       <command>web::command</command>.
@@ -270,9 +270,9 @@ $Id$
 	    <listitem>
 	      <para>
 		specify what items will be used to format just this URL.
-		Default is: <literal remap="tt">{scriptname pathinfo querystring}</literal></para><para>
-		Use <literal remap="tt">web::cmdurlcfg</literal> to define the url format for all
-		URLs produced by <literal remap="tt">web::cmdurl</literal> in one request.</para><para>
+		Default is: <command>{scriptname pathinfo querystring}</command></para><para>
+		Use <command>web::cmdurlcfg</command> to define the url format for all
+		URLs produced by <command>web::cmdurl</command> in one request.</para><para>
 		<variablelist>
 		  <varlistentry>
 		    <term>scheme</term>
@@ -331,8 +331,8 @@ $Id$
 		    the output of <literal
 					   remap="tt">web::cmdurl</literal>: <literal
 										      remap="tt">web::config cmdparam</literal> and
-		    <literal remap="tt">web::config
-		      timeparam</literal>.
+		    <command>web::config
+		      timeparam</command>.
 		  </para>
 		</note>
 	      </para>
@@ -362,7 +362,7 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>web::cmdurlcfg</emphasis> ?options? <optional><option>key</option></optional> <optional><option>value</option></optional></para><para>
-		Exactly like <literal remap="tt">web::param</literal></para><para>
+		Exactly like <command>web::param</command></para><para>
 		<emphasis>web::cmdurlcfg</emphasis> option <optional><option>value</option></optional></para><para>
 		Options are <emphasis>-scheme</emphasis>, <emphasis>-host</emphasis>, <emphasis>-port</emphasis>,
 		<emphasis>-scriptname</emphasis>, <emphasis>-pathinfo</emphasis>, <emphasis>-querystring</emphasis>, <emphasis>-urlformat</emphasis></para><para>
@@ -376,7 +376,7 @@ $Id$
 	Configuration for web::cmdurl.  This command serves two purposes:
 	<orderedlist>
 	  <listitem><para>management of static parameters</para></listitem>
-	  <listitem><para>configuration for <literal remap="tt">web::cmdurl</literal></para></listitem>
+	  <listitem><para>configuration for <command>web::cmdurl</command></para></listitem>
 	</orderedlist>
 
       </para>
@@ -386,7 +386,7 @@ $Id$
       <para>
 
 	In order to set, retrieve, append or unset static parameters,
-	use the syntax of the <literal remap="tt">web::param</literal> command, for example:
+	use the syntax of the <command>web::param</command> command, for example:
 	<variablelist>
 	  <varlistentry>
 	    <term>web::cmdurlcfg -set <option>key</option> <option>value</option></term>
@@ -407,15 +407,15 @@ $Id$
 	</variablelist>
 
       </para><para>
-	<emphasis>Important</emphasis>: <literal remap="tt">web::cmdurl</literal> compares every key from the static
-	parameters (see <literal remap="tt">web::cmdurlcfg</literal>) against the keys from the command
+	<emphasis>Important</emphasis>: <command>web::cmdurl</command> compares every key from the static
+	parameters (see <command>web::cmdurlcfg</command>) against the keys from the command
 	line. The static parameter is only used if there is no parameter given
 	on the command line.
 
       </para>
     </section>
     <section id="configuration_for_web_cmdurl">
-      <title>configuration for <literal remap="tt">web::cmdurl</literal></title>
+      <title>configuration for <command>web::cmdurl</command></title>
       <para>
 
 	<variablelist>
@@ -513,7 +513,7 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>web::dispatch</emphasis> ?options?</para><para>
-		Options are: <literal remap="tt">-cmd</literal>, <literal remap="tt">-querystring</literal>, <literal remap="tt">-postdata</literal>,
+		Options are: <command>-cmd</command>, <literal remap="tt">-querystring</literal>, <literal remap="tt">-postdata</literal>,
 		<literal remap="tt">-track</literal> and <literal remap="tt">-hook</literal>
 	      </para>
 	    </listitem>
@@ -633,8 +633,8 @@ $Id$
 	Session context managers are described in detail below
 	(<emphasis>web::filecontext</emphasis>,
 	<emphasis>web::cookiecontext</emphasis>). Session id tracking
-	is managed by <literal remap="tt">web::dispatch
-	  -track</literal>. The two parts are connected with the
+	is managed by <command>web::dispatch
+	  -track</command>. The two parts are connected with the
 	<emphasis>-attachto</emphasis> option of the session context
 	manager.  The control is as follows:
       </para>
@@ -643,7 +643,7 @@ $Id$
 	  <listitem>
 	    <para>
 	      a user uses the Webshell script for the first
-	      time.<literal remap="tt">web::dispatch -track</literal>
+	      time.<command>web::dispatch -track</command>
 	      will not see any session id, and, consequently, not set
 	      the static parameter <literal remap="tt">id</literal>.
 	    </para>
@@ -822,7 +822,7 @@ $Id$
 
 	web::param is an accessor to state information from the querystring. 
 	Suppose the querystring is &quot;lang=EN&quot;.  After web::dispatch has parsed the
-	querystring, <literal remap="tt">web::param lang</literal> will report <literal remap="tt">EN</literal>.  Additionaly,
+	querystring, <command>web::param lang</command> will report <literal remap="tt">EN</literal>.  Additionaly,
 	web::param can manage this data and add, append, and delete parameters as
 	needed. 
 
@@ -909,14 +909,15 @@ $Id$
 	    <listitem>
 	      <para>
 		<emphasis>web::formvar</emphasis> ?options? <optional><option>key</option></optional> <optional><option>value</option></optional></para><para>
-		Exactly like <literal remap="tt">web::param</literal>
+		Exactly like <command>web::param</command>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
-	web::formvar is an accessor to HTML <option>FORM</option> data.  After web::dispatch has
-	parsed the POST data, you can access all form fields using web::formvar.
+	web::formvar is an accessor to HTML <option>FORM</option>
+	data.  After web::dispatch has parsed the POST data, you can
+	access all form fields using web::formvar.
 
       </para>
     </section>
@@ -944,13 +945,12 @@ $Id$
     <title>response data handling</title>
     <para>
       webshell can send output to any Tcl channel and to global
-      variables (<literal remap="tt">web::put</literal>). Optionally,
+      variables (<command>web::put</command>). Optionally,
       data is scanned for Tcl code before it is output to a channel
-      (<literal remap="tt">web::putx</literal>).  webshell manages
+      (<command>web::putx</command>).  webshell manages
       <emphasis>response objects</emphasis> that are related to Tcl
       channels and are identified using the name of the corresponding
-      Tcl channel. Configuration with <literal
-					       remap="tt">web::response</literal>.
+      Tcl channel. Configuration with <command>web::response</command>.
     </para>
     <section id="web::response">
       <title>web::response</title>
@@ -1045,7 +1045,7 @@ $Id$
 		Sets the sendheader flag which indicates and controls
 		whether the HTTP headers have been or should be sent.
 		It is initially set to 1 and set to 0 after the first
-		call of <literal remap="tt">web::put</literal> or <literal remap="tt">web::putx</literal>. If <option>boolean</option> is
+		call of <command>web::put</command> or <command>web::putx</command>. If <option>boolean</option> is
 		omitted, returns the current value.
 	      </para>
 	    </listitem>
@@ -1195,7 +1195,7 @@ $Id$
     <para>
       Logging consists of two parts. <literal
       remap="tt">web::log</literal> issues a logging message, while
-      <literal remap="tt">web::logfilter</literal> and <literal
+      <command>web::logfilter</command> and <literal
       remap="tt">web::logdest</literal> determine where to send a
       message. webshell uses a two-step filtering. First, webshell
       determines whether it should handle a message, or not, using the
@@ -1839,7 +1839,7 @@ $Id$
 	    <listitem>
 	      <para>
 		The response object to send the cookie to (see also
-		<literal remap="tt">web::response</literal>).
+		<command>web::response</command>).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2079,12 +2079,12 @@ $Id$
   <section id="data_encryption">
     <title>data encryption</title>
     <para>
-      Encrypt (<literal remap="tt">web::encrypt</literal>) and decrypt
-      (<literal remap="tt">web::decrypt</literal>) data. By default,
+      Encrypt (<command>web::encrypt</command>) and decrypt
+      (<command>web::decrypt</command>) data. By default,
       the built-in, weak encryption is used. encryption is extensible
       by plug-Ins.  The encryption module tries all plug-Ins from a
       list until the first plug-In was able to en-/decrypt the input.
-      See <literal remap="tt">web::config</literal> for the
+      See <command>web::config</command> for the
       configuration of the plug-Ins to be used.
     </para>
     <section id="web::encrypt">
@@ -2144,8 +2144,8 @@ $Id$
       <para>
 
 	By default, webshell uses this plug-In for weak data encryption for
-	encryption (<literal remap="tt">web::encryptd</literal>) and decryption (<literal remap="tt">web::decryptd</literal>).
-	The encryption key is managed with <literal remap="tt">web::crpytdkey</literal>.
+	encryption (<command>web::encryptd</command>) and decryption (<command>web::decryptd</command>).
+	The encryption key is managed with <command>web::crpytdkey</command>.
 
       </para><para>
 	<variablelist>
@@ -2475,7 +2475,7 @@ $Id$
 	</variablelist>
 
 	This code is executed only when a new interpreter is created.  Note
-	that the &quot;main&quot; Webshell script can <literal remap="tt">source</literal> several modules which
+	that the &quot;main&quot; Webshell script can <command>source</command> several modules which
 	each call their initialization code.
 
       </para><para>
