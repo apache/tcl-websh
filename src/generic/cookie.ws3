@@ -135,11 +135,11 @@ proc web::cookiecontext {ctxmgrname args} {
 	set cookie "$id=$data"
 
 	if { $doInvalidate } {
-	    append cookie "; expires=Sat, 01-01-2000 00:00:00 MET"
+	    append cookie "; expires=Sat, 01-Jan-2000 00:00:00 GMT"
 	} else {
 
 	    if { $data == "{}" || $data == ""} {
-		set cookie "$id=; expires=Sat, 01-01-2000 00:00:00 MET"
+		set cookie "$id=; expires=Sat, 01-Jan-2000 00:00:00 GMT"
 	    } else {
 
 		# write the expiry-date
@@ -162,7 +162,7 @@ proc web::cookiecontext {ctxmgrname args} {
 		    if {[string equal $_expires "today"]} {
 			set expstr $_expires
 		    } else {
-			set expstr [clock format $expsec -format "%a, %d-%m-%Y %H:%M:%S %Z"]
+			set expstr [clock format $expsec -format "%a, %d-%b-%Y %H:%M:%S %Z" -gmt true]
 		    }
 		}
 		if { [string length $expstr] } {
