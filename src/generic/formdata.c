@@ -33,8 +33,8 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
     Tcl_Obj *tclo = NULL;
     int tRes = 0;
     int listLen = -1;
-    Tcl_Obj *tmps[2];
-    Tcl_Obj *tmpObj = NULL;
+    Tcl_Obj *cmdList[2];
+    Tcl_Obj *uriCmd = NULL;
     Tcl_Obj *formData = NULL;
     Tcl_Channel channel;
     int mode;
@@ -135,13 +135,18 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
     /* unregister if was a varchannel */
     Web_UnregisterVarChannel(interp, channelName, channel);
 
-    tmpObj = Tcl_NewStringObj("web::uri2list ", -1);
-    Tcl_AppendObjToObj(tmpObj, formData);
+    cmdList[0] = Tcl_NewStringObj("web::uri2list", -1);
+    cmdList[1] = Tcl_DuplicateObj(formData);
+    Tcl_IncrRefCount(cmdList[0]);
+    Tcl_IncrRefCount(cmdList[1]);
+    uriCmd = Tcl_NewListObj(2, cmdList);
+    Tcl_IncrRefCount(uriCmd);
+    tRes = Tcl_EvalObjEx(interp, uriCmd, TCL_EVAL_DIRECT);
+    Tcl_DecrRefCount(uriCmd);
+    Tcl_DecrRefCount(cmdList[0]);
+    Tcl_DecrRefCount(cmdList[1]);
 
-    Tcl_IncrRefCount(tmpObj);
-    tRes = Tcl_EvalObjEx(interp, tmpObj, TCL_EVAL_DIRECT);
 
-    Tcl_DecrRefCount(tmpObj);
     Tcl_DecrRefCount(formData);
 
     if (tRes == TCL_ERROR) {
