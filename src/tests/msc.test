@@ -27,7 +27,7 @@ test copyright-1.0 {web::config copyright} {
     set res {}
     set tmp [web::config copyright]
     lappend res [regexp {http://netcetera\.ch} $tmp]
-    lappend res [regexp {http://websh\.com} $tmp]
+    lappend res [regexp {http://tcl\.apache\.org/websh} $tmp]
     lappend res [regexp {info@websh\.com} $tmp]
     set res
 } {1 1 1}
