@@ -98,6 +98,10 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 int requestScriptName(Tcl_Interp *interp, char **filename) {
     request_rec *r;
     r = (request_rec *)Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
+#ifdef APACHE2
+    *filename = (char *) apr_pstrdup(r->pool, r->filename);
+#else /* not APACHE2 */
     *filename = ap_pstrdup(r->pool, r->filename);
+#endif /* APACHE2 */
     return TCL_OK;
 }
