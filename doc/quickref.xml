@@ -71,7 +71,7 @@ $Id$
       <title>web::config</title>
       <cmdsynopsis>
 	<command>web::config</command>
-	<arg><replaceable>key</replaceable></arg>
+	<arg choice="req"><replaceable>key</replaceable></arg>
 	<arg choice="opt"><replaceable>value</replaceable></arg>
       </cmdsynopsis>
       <!--
@@ -200,7 +200,7 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::command</command>
 	  <arg choice="opt"><replaceable>cmdName</replaceable></arg>
-	  <arg><replaceable>cmdBody</replaceable></arg>
+	  <arg choice="req"><replaceable>cmdBody</replaceable></arg>
 	</cmdsynopsis>
 
 	Registers <option>cmdBody</option> as
@@ -233,14 +233,14 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::cmdurl</command>
 	  <arg choice="opt"><replaceable>options</replaceable></arg>
-	  <arg><replaceable>cmdName</replaceable></arg>
+	  <arg choice="req"><replaceable>cmdName</replaceable></arg>
 	  <arg choice="opt"><replaceable>key-value-list</replaceable></arg>
 	</cmdsynopsis>
 
 	<cmdsynopsis>
 	  <command>web::cmdurl</command>
 	  <arg choice="opt"><replaceable>options</replaceable></arg>
-	  <arg><replaceable>cmdName</replaceable></arg>
+	  <arg choice="req"><replaceable>cmdName</replaceable></arg>
 	  <arg choice="opt"><replaceable>k1 v1 ... kN vN</replaceable></arg>
 	</cmdsynopsis>
       </para>
@@ -376,7 +376,7 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::cmdurlcfg</command>
-	  <arg><replaceable>option</replaceable></arg>
+	  <arg choice="req"><replaceable>option</replaceable></arg>
 	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	</cmdsynopsis>
       </para>
@@ -1062,7 +1062,7 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::response</command>
 	  <arg choice="opt"><replaceable>subcommand</replaceable></arg>
-	  <arg><replaceable>args</replaceable></arg>
+	  <arg choice="req"><replaceable>args</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are <option>-select</option>,
@@ -1253,9 +1253,9 @@ $Id$
 	  <command>web::put</command>
 	  <arg choice="opt">
 	    <arg choice="opt">#</arg>
-	    <arg><replaceable>channel</replaceable></arg>
+	    <replaceable>channel</replaceable>
 	  </arg>
-	  <arg><replaceable>text</replaceable></arg>
+	  <arg choice="req"><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
 	Send output to a Tcl channel. No newline is added to
 	output. If
@@ -1278,9 +1278,9 @@ $Id$
 	  <command>web::putx</command>
 	  <arg choice="opt">
 	    <arg choice="opt">#</arg>
-	    <arg><replaceable>channel</replaceable></arg>
+	    <replaceable>channel</replaceable>
 	  </arg>
-	  <arg><replaceable>text</replaceable></arg>
+	  <arg choice="req"><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
 
 	Writes <option>text</option> to the specified channel. Code in
@@ -1298,9 +1298,9 @@ $Id$
 	  <command>web::putxfile</command>
 	  <arg choice="opt">
 	    <arg choice="opt">#</arg>
-	    <arg><replaceable>channel</replaceable></arg>
+	    <replaceable>channel</replaceable>
 	  </arg>
-	  <arg><replaceable>file</replaceable></arg>
+	  <arg choice="req"><replaceable>file</replaceable></arg>
 	  <arg choice="opt"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 	Like <command>web::putx</command>, but takes input from a file.
@@ -1345,9 +1345,9 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::logdest</command>
-	  <arg><replaceable>subcommand</replaceable></arg> <arg
+	  <arg choice="req"><replaceable>subcommand</replaceable></arg> <arg
 							     choice="opt"><replaceable>options</replaceable></arg>
-	  <arg><replaceable>level</replaceable></arg> <arg><replaceable>plugin</replaceable></arg>
+	  <arg choice="req"><replaceable>level</replaceable></arg> <arg choice="req"><replaceable>plugin</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>add</option>,
@@ -1386,8 +1386,8 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::logfilter</command>
-	  <arg>subcommand</arg>
-	  <arg>args</arg>
+	  <arg choice="req">subcommand</arg>
+	  <arg choice="req">args</arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>add</option>,
@@ -1434,8 +1434,8 @@ $Id$
       <para>
 
 	<cmdsynopsis>
-	  <command>web::log</command> <arg><replaceable>level</replaceable></arg>
-	  <arg><replaceable>msg</replaceable></arg>
+	  <command>web::log</command> <arg choice="req"><replaceable>level</replaceable></arg>
+	  <arg choice="req"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 
 	Issue a log message.  It is possible, should the user so
@@ -1454,10 +1454,10 @@ $Id$
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
-	    <arg><replaceable>destination</replaceable>.-<replaceable>level</replaceable></arg>
-	    <arg>file</arg>
+	    <arg choice="req"><replaceable>destination</replaceable>.-<replaceable>level</replaceable></arg>
+	    <arg choice="req">file</arg>
 	    <arg choice="opt"><replaceable>options</replaceable></arg>
-	    <arg><replaceable>filename</replaceable></arg>
+	    <arg choice="req"><replaceable>filename</replaceable></arg>
 	  </cmdsynopsis>
 	  Option is: <option>-unbuffered</option>
 	</para>
@@ -1469,8 +1469,8 @@ $Id$
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
-	    <arg>*.-debug</arg>
-	    <arg>syslog</arg>
+	    <arg choice="req">*.-debug</arg>
+	    <arg choice="req">syslog</arg>
 	    <arg choice="opt"><replaceable>level</replaceable></arg>
 	  </cmdsynopsis>
 
@@ -1485,9 +1485,9 @@ $Id$
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
-	    <arg>*.-debug</arg>
+	    <arg choice="req">*.-debug</arg>
 	    <arg choice="plain">command</arg>
-	    <arg><replaceable>cmdName</replaceable></arg>
+	    <arg choice="req"><replaceable>cmdName</replaceable></arg>
 	  </cmdsynopsis>
 	</para>
       </section>
@@ -1499,10 +1499,10 @@ $Id$
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
 	    <arg choice="plain">add</arg>
-	    <arg>*.-debug</arg>
+	    <arg choice="req">*.-debug</arg>
 	    <arg choice="plain">channel</arg>
 	    <arg choice="opt"><replaceable>options</replaceable></arg>
-	    <arg><replaceable>channel</replaceable></arg>
+	    <arg choice="req"><replaceable>channel</replaceable></arg>
 	  </cmdsynopsis>
 	  Option is: <option>-unbuffered</option>
 	</para>
@@ -1513,7 +1513,7 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::logdest</command>
 	  <arg choice="plain">add</arg>
-	  <arg>*.-debug</arg>
+	  <arg choice="req">*.-debug</arg>
 	  <arg choice="plain">apache</arg>
 	</cmdsynopsis>
 	<para>
@@ -1553,14 +1553,14 @@ $Id$
       <para>
 	Creation
 	<cmdsynopsis>
-	  <command>web::context</command> <arg><replaceable>name</replaceable></arg>
+	  <command>web::context</command> <arg choice="req"><replaceable>name</replaceable></arg>
 	</cmdsynopsis>
 	Creates a namespace <option>name</option> with the following
 	commands:
 
 	<cmdsynopsis>
 	  <command><replaceable>name</replaceable>::subcommand</command>
-	  <arg><replaceable>args</replaceable></arg>
+	  <arg choice="req"><replaceable>args</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>cset</option>,
@@ -1691,7 +1691,7 @@ $Id$
 	Creation:
 	<cmdsynopsis>
 	  <command>web::filecontext</command>
-	  <arg><replaceable>name</replaceable></arg>
+	  <arg choice="req"><replaceable>name</replaceable></arg>
 	  <arg choice="opt"><replaceable>options</replaceable></arg>
 	</cmdsynopsis>
 
@@ -1705,7 +1705,7 @@ $Id$
 
 	<cmdsynopsis>
 	  <command><replaceable>name</replaceable>::subcommand</command>
-	  <arg><replaceable>args</replaceable></arg>
+	  <arg choice="req"><replaceable>args</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>cset</option>,
@@ -1785,9 +1785,9 @@ $Id$
 	Options:
 	<cmdsynopsis>
 	  <command>web::filecontext</command>
-	  <arg><replaceable>name</replaceable></arg>
-	  <arg>-perm</arg>
-	  <arg><replaceable>perm</replaceable></arg>
+	  <arg choice="req"><replaceable>name</replaceable></arg>
+	  <arg choice="req">-perm</arg>
+	  <arg choice="req"><replaceable>perm</replaceable></arg>
 	</cmdsynopsis>
 
 	set the file permissions of the session context files
@@ -1878,7 +1878,7 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::cookiecontext</command>
-	  <arg><replaceable>name</replaceable></arg> <arg
+	  <arg choice="req"><replaceable>name</replaceable></arg> <arg
 						       choice="opt"><replaceable>options</replaceable></arg>
 	</cmdsynopsis>
 
@@ -2181,7 +2181,7 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web_include</command>
-	  <arg><replaceable>fileName</replaceable></arg>
+	  <arg choice="req"><replaceable>fileName</replaceable></arg>
 	  <arg choice="opt"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 
@@ -2198,8 +2198,8 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::readfile</command> <arg><replaceable>file</replaceable></arg>
-	  <arg><replaceable>varName</replaceable></arg> <arg><replaceable>msg</replaceable></arg>
+	  <command>web::readfile</command> <arg choice="req"><replaceable>file</replaceable></arg>
+	  <arg choice="req"><replaceable>varName</replaceable></arg> <arg choice="req"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 
 	<option>file</option> is read and written to
@@ -2213,10 +2213,10 @@ $Id$
       <title>web::lockfile and web::unlockfile</title>
       <para>
 	<cmdsynopsis>
-	  <command>web::lockfile</command> <arg><replaceable>fh</replaceable></arg>
+	  <command>web::lockfile</command> <arg choice="req"><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 	<cmdsynopsis>
-	  <command>web::unlockfile</command> <arg><replaceable>fh</replaceable></arg>
+	  <command>web::unlockfile</command> <arg choice="req"><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
 	Interface to lockf(). lockf() works best on local filesystems.
@@ -2237,7 +2237,7 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::truncatefile</command>
-	  <arg><replaceable>fh</replaceable></arg>
+	  <arg choice="req"><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
 	Interface to truncate(). Truncates a file based on the file
@@ -2274,7 +2274,7 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::encrypt</command> <arg><replaceable>data</replaceable></arg>
+	  <command>web::encrypt</command> <arg choice="req"><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 	Returns encrypted data.
 
@@ -2286,7 +2286,7 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::decrypt</command> <arg><replaceable>data</replaceable></arg>
+	  <command>web::decrypt</command> <arg choice="req"><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
 	Returns decrypted data.
@@ -2323,7 +2323,7 @@ $Id$
       <para>
 
 	<cmdsynopsis>
-	  <command>web::encryptd</command> <arg><replaceable>data</replaceable></arg>
+	  <command>web::encryptd</command> <arg choice="req"><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
 	Returns encrypted <option><replaceable>data</replaceable></option>.
@@ -2336,7 +2336,7 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::decryptd</command> <arg><replaceable>data</replaceable></arg>
+	  <command>web::decryptd</command> <arg choice="req"><replaceable>data</replaceable></arg>
 	</cmdsynopsis>
 
 	Returns decrypted <option><replaceable>data</replaceable></option>.
@@ -2408,7 +2408,7 @@ $Id$
 	<cmdsynopsis>
 	  <command>web::htmlify</command>
 	  <arg choice="opt">-options</arg>
-	  <arg><replaceable>text</replaceable></arg>
+	  <arg choice="req"><replaceable>text</replaceable></arg>
       </cmdsynopsis>
       </para>
       <para>
@@ -2424,7 +2424,7 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::dehtmlify</command>
-	  <arg><replaceable>text</replaceable></arg>
+	  <arg choice="req"><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
       </para>
       <para>
@@ -2436,7 +2436,7 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::uriencode</command>
-	<arg><replaceable>text</replaceable></arg>
+	<arg choice="req"><replaceable>text</replaceable></arg>
       </cmdsynopsis>
       </para>
       <para>
@@ -2448,7 +2448,7 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::uridecode</command>
-	  <arg><replaceable>text</replaceable></arg>
+	  <arg choice="req"><replaceable>text</replaceable></arg>
       </cmdsynopsis>
       </para>
       <para>Decode URI-compliant <option>text</option>.
@@ -2483,9 +2483,9 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::send</command>
-	  <arg><replaceable>channel</replaceable></arg>
-	  <arg><replaceable>cmdNr</replaceable></arg>
-	  <arg><replaceable>message</replaceable></arg>
+	  <arg choice="req"><replaceable>channel</replaceable></arg>
+	  <arg choice="req"><replaceable>cmdNr</replaceable></arg>
+	  <arg choice="req"><replaceable>message</replaceable></arg>
 	  <arg choice="opt"><replaceable>flags</replaceable></arg>
 	</cmdsynopsis>
 
@@ -2514,10 +2514,10 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::recv</command>
-	  <arg><replaceable>channel</replaceable></arg>
-	  <arg><replaceable>cmdVarName</replaceable></arg>
-	  <arg><replaceable>msgVarName</replaceable></arg>
-	  <arg><replaceable>flagVarName</replaceable></arg>
+	  <arg choice="req"><replaceable>channel</replaceable></arg>
+	  <arg choice="req"><replaceable>cmdVarName</replaceable></arg>
+	  <arg choice="req"><replaceable>msgVarName</replaceable></arg>
+	  <arg choice="req"><replaceable>flagVarName</replaceable></arg>
 	</cmdsynopsis>
 
 	Receives a message from <option>channelName</option>. The
@@ -2592,7 +2592,7 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::initializer</command> <arg><replaceable>code</replaceable></arg>
+	  <command>web::initializer</command> <arg choice="req"><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
 	This code is executed only when a new interpreter is created.
@@ -2608,7 +2608,7 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::finalizer</command> <arg><replaceable>code</replaceable></arg>
+	  <command>web::finalizer</command> <arg choice="req"><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
 	Register code to be exectuted when the interpreter for this
@@ -2655,7 +2655,7 @@ $Id$
 
 
 	<cmdsynopsis>
-	  <command>web::maineval</command> <arg><replaceable>code</replaceable></arg>
+	  <command>web::maineval</command> <arg choice="req"><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
 	Execute code in the &quot;main&quot; interpreter of mod_websh. (Note
@@ -2674,8 +2674,8 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::interpclasscfg</command>
-	  <arg><replaceable>classid</replaceable></arg>
-	  <arg><replaceable>property</replaceable></arg>
+	  <arg choice="req"><replaceable>classid</replaceable></arg>
+	  <arg choice="req"><replaceable>property</replaceable></arg>
 	  <arg choice="opt"><replaceable>value</replaceable></arg>
 	</cmdsynopsis>
 
@@ -2814,7 +2814,7 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::interpmap</command>
-	  <arg><replaceable>filename</replaceable></arg>
+	  <arg choice="req"><replaceable>filename</replaceable></arg>
         </cmdsynopsis>
 
 	Hook to define interpreter classes depending on the requested file.
@@ -2871,9 +2871,9 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::match</command>
-	  <arg><replaceable>result</replaceable></arg>
-	  <arg><replaceable>listToBeSearched</replaceable></arg>
-	  <arg><replaceable>searchFor</replaceable></arg>
+	  <arg choice="req"><replaceable>result</replaceable></arg>
+	  <arg choice="req"><replaceable>listToBeSearched</replaceable></arg>
+	  <arg choice="req"><replaceable>searchFor</replaceable></arg>
 	</cmdsynopsis>
 
 	In case <option><replaceable>searchFor</replaceable></option> exists in
