@@ -28,9 +28,10 @@
   -->
 
   <xsl:import
-    href="/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/html/docbook.xsl"
+    href="/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/html/chunk.xsl"
     />
 
+  <xsl:param name="use.id.as.filename" select="1"/>
 
   <xsl:variable name="arg.choice.opt.open.str">?</xsl:variable>
   <xsl:variable name="arg.choice.opt.close.str">?</xsl:variable>
