@@ -171,7 +171,7 @@ case "`uname -s`" in
 	AC_SUBST(CLEANFILES)
     ;;
     *)
-	CLEANFILES="initcode websh3* *pure* *.cov* ../tests/webtest.log ../tests/*.dat"
+	CLEANFILES="*pure* *.cov* ../tests/webtest.log ../tests/*.dat"
     ;;
 esac
 
