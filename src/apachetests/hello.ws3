@@ -1,6 +1,9 @@
+# $Id$
+# hello world websh code.
 
 web::command default {
     web::put "Hello, World"
 }
 
 web::dispatch
+

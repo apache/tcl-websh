@@ -1,0 +1,9 @@
+# $Id$
+
+# hello world test
+
+::tcltest::test hello-1.1 {hello world test} {
+    set page [ ::http::geturl "${urlbase}$testfilename1" ]
+    regexp -line {^Hello, World$} [ ::http::data $page ] match
+    set match
+} {Hello, World}

@@ -50,7 +50,6 @@ LogLevel debug
 LogFormat "%h %l %u %t \\"%r\\" %>s %b \\"%{Referer}i\\" \\"%{User-Agent}i\\"" combined
 CustomLog "$CWD/access_log" combined
 
-WebshConfig [file join $CWD config.tcl]
 
 <IfModule mod_mime.c>
 AddLanguage en .en

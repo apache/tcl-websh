@@ -12,17 +12,15 @@ package require tcltest
 package require http 2.1
 
 set urlbase "http://localhost:8080/"
-set testfilename1 "testcode.ws3"
+set testfilename1 "hello.ws3"
 
 # Test stanzas are created by giving the test a name and a
 # description.  The code is then executed, and the results compared
 # with the desired result, which is placed after the block of code.
 # See man tcltest for more information.
 
-::tcltest::test hello-1.1 {hello world test} {
-    set page [ ::http::geturl "${urlbase}$testfilename1" ]
-    regexp -line {^Hello, World$} [ ::http::data $page ] match
-    set match
-} {Hello, World}
+foreach Test {hello.test} {
+    source $Test
+}
 
 ::tcltest::cleanupTests
