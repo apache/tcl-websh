@@ -1,3 +1,27 @@
+2004-02-03  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* src/generic/cookie.ws3:
+	fixed cookie expiry date format to meet Netscape specs
+
+2003-11-15  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* src/generic/interpool.c:
+	bug fix in web::interpmap (files with spaces in names)
+
+	* src/generic/formdata.c
+	potential bug fix of call to web::uri2list
+
+2003-10-31  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* doc/quickref.xml:
+	added documentation for context::delete
+	added documentation for web::config cmdurltimestamp
+
+2003-05-27  Ronnie Brunner <ronnie.brunner@netcetra.ch>
+
+	* INSTALL, README:
+	added hint on GNU make extensions
+	
 2003-02-28  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* doc/quickref.xml:
