@@ -54,7 +54,7 @@ proc apachetest::start { options code } {
 
     apachetest::connect
     puts "Apache started as PID $serverpid"
-    if { ! [catch {
+    if { [catch {
 	uplevel $code
     } err] } {
 	puts $err
