@@ -295,17 +295,23 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     char *id = NULL;
     Tcl_Obj *idObj = NULL;
     Tcl_Obj *mapCmd = NULL;
+    Tcl_Obj *cmdList[2];
     int res;
 
     /* get interpreter id for filename */
 
     Tcl_MutexLock(&(conf->mainInterpLock));
 
-    mapCmd = Tcl_NewStringObj("web::interpmap ", -1);
+    cmdList[0] = Tcl_NewStringObj("web::interpmap", -1);
+    cmdList[1] = Tcl_NewStringObj(filename, -1);
+    Tcl_IncrRefCount(cmdList[0]);
+    Tcl_IncrRefCount(cmdList[1]);
+    mapCmd = Tcl_NewListObj(2, cmdList);
     Tcl_IncrRefCount(mapCmd);
-    Tcl_AppendToObj(mapCmd, filename, -1);
     res = Tcl_EvalObjEx(conf->mainInterp, mapCmd, 0);
     Tcl_DecrRefCount(mapCmd);
+    Tcl_DecrRefCount(cmdList[0]);
+    Tcl_DecrRefCount(cmdList[1]);
 
     idObj = Tcl_DuplicateObj(Tcl_GetObjResult(conf->mainInterp));
     Tcl_ResetResult(conf->mainInterp);
