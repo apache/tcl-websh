@@ -60,6 +60,7 @@
  * ------------------------------------------------------------------- */
 typedef struct UrlData
 {
+    Tcl_Obj *defaultscheme;     /* default scheme to use */
     Tcl_Obj *scheme;		/* e.g http */
     Tcl_Obj *port;		/* e.g. 8080 */
     Tcl_Obj *host;		/* e.g. www.netcetera.ch */
@@ -73,7 +74,7 @@ typedef struct UrlData
 }
 UrlData;
 
-UrlData *createUrlData(Tcl_Interp *interp);
+UrlData *createUrlData();
 int resetUrlData(Tcl_Interp * interp, UrlData * urlData);
 void destroyUrlData(ClientData clientData, Tcl_Interp * interp);
 

@@ -1,7 +1,7 @@
 /*
  * url.c -- url generation
  * nca-073-9
- * 
+ *
  * Copyright (c) 1996-2000 by Netcetera AG.
  * Copyright (c) 2001 by Apache Software Foundation.
  * All rights reserved.
@@ -80,7 +80,7 @@ int url_Init(Tcl_Interp * interp)
     /* --------------------------------------------------------------------------
      * new data
      * ----------------------------------------------------------------------- */
-    urlData = createUrlData(interp);
+    urlData = createUrlData();
 
     /* --------------------------------------------------------------------------
      * register commands
@@ -107,7 +107,7 @@ int url_Init(Tcl_Interp * interp)
 /* ----------------------------------------------------------------------------
  * create
  * ------------------------------------------------------------------------- */
-UrlData *createUrlData(Tcl_Interp *interp)
+UrlData *createUrlData()
 {
 
     UrlData *urlData = NULL;
@@ -115,14 +115,8 @@ UrlData *createUrlData(Tcl_Interp *interp)
     urlData = WebAllocInternalData(UrlData);
 
     if (urlData != NULL) {
-	char *https = Tcl_GetVar2(interp, "env", "HTTPS", 0);
-	
-	if (https == NULL || strcmp(https, "on"))
-	{
-	    WebNewStringObjFromStringIncr(urlData->scheme, WEB_DEFAULT_SCHEME);
-	} else {
-	    WebNewStringObjFromStringIncr(urlData->scheme, "https");
-	}
+	urlData->defaultscheme = NULL;
+	urlData->scheme = NULL;
 	/* we want to read port from request if available */
 	/*WebNewStringObjFromStringIncr(urlData->port,WEB_DEFAULT_PORT); */
 	urlData->port = NULL;
@@ -144,21 +138,11 @@ UrlData *createUrlData(Tcl_Interp *interp)
  * ------------------------------------------------------------------------- */
 int resetUrlData(Tcl_Interp * interp, UrlData * urlData)
 {
-    char *https;
-
     if ((interp == NULL) || (urlData == NULL))
 	return TCL_ERROR;
 
+    WebDecrRefCountIfNotNullAndSetNull(urlData->defaultscheme);
     WebDecrRefCountIfNotNullAndSetNull(urlData->scheme);
-    
-    https = Tcl_GetVar2(interp, "env", "HTTPS", 0);
-    
-    if (https == NULL || strcmp(https, "on"))
-    {
-	WebNewStringObjFromStringIncr(urlData->scheme, WEB_DEFAULT_SCHEME);
-    } else {
-	WebNewStringObjFromStringIncr(urlData->scheme, "https");
-    }
 
     WebDecrRefCountIfNotNullAndSetNull(urlData->port);
     /* we want to read port from request if available */
@@ -191,6 +175,7 @@ void destroyUrlData(ClientData clientData, Tcl_Interp * interp)
 
 	urlData = (UrlData *) clientData;
 
+	WebDecrRefCountIfNotNull(urlData->defaultscheme);
 	WebDecrRefCountIfNotNull(urlData->scheme);
 	WebDecrRefCountIfNotNull(urlData->port);
 	WebDecrRefCountIfNotNull(urlData->host);
@@ -653,9 +638,24 @@ int Web_CmdUrl(ClientData clientData,
     res = Tcl_NewObj();
 
     if ((urlformat & WEB_URL_WITH_SCHEME) != 0) {
-	if (urlData->scheme != NULL) {
-	    Tcl_AppendObjToObj(res, urlData->scheme);
+	if (urlData->defaultscheme != NULL) {
+	    Tcl_AppendObjToObj(res, urlData->defaultscheme);
 	    Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
+	} else {
+	    Tcl_Obj *schemeObj = NULL;
+	    char *scheme = NULL;
+	    if( urlData->requestData != NULL ) {
+		schemeObj = paramListGetObjectByString(interp, urlData->requestData->request, "HTTPS");
+		if (schemeObj != NULL)
+		    scheme = Tcl_GetString(schemeObj);
+	    }
+	    if (!strcmp(scheme, "on")) {
+		Tcl_AppendObjToObj(res, Tcl_NewStringObj("https", -1));
+		Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
+	    } else {
+		Tcl_AppendObjToObj(res, Tcl_NewStringObj(WEB_DEFAULT_SCHEME, -1));
+		Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
+	    }
 	}
     }
 
@@ -803,7 +803,26 @@ int Web_CmdUrlCfg(ClientData clientData,
 	switch ((enum urlElement) opt) {
 	case SCHEME:
 	    WebAssertObjc(objc > 3, 2, "?value?");
-	    return handleConfig(interp, &urlData->scheme, tmpObj, 1);
+	    if (urlData->defaultscheme != NULL) {
+		Tcl_SetObjResult(interp,
+				 Tcl_DuplicateObj(urlData->defaultscheme));
+		if (tmpObj != NULL) {
+		    Tcl_DecrRefCount(urlData->defaultscheme);
+		    urlData->defaultscheme = Tcl_DuplicateObj(tmpObj);
+		}
+		return TCL_OK;
+	    } else {
+		Tcl_SetObjResult(interp,
+				 Tcl_NewStringObj(WEB_DEFAULT_SCHEME, -1));
+		if (tmpObj != NULL) {
+		    if (!strcmp(Tcl_GetString(tmpObj), "")) {
+			urlData->defaultscheme = NULL;
+		    } else {
+			urlData->defaultscheme = Tcl_DuplicateObj(tmpObj);
+		    }
+		}
+		return TCL_OK;
+	    }
 	    break;
 	case HOST:
 	    WebAssertObjc(objc > 3, 2, "?value?");
