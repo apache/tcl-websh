@@ -34,7 +34,7 @@ void dRequestData(ClientData clientData)
 /* ----------------------------------------------------------------------------
  * Init --
  * ------------------------------------------------------------------------- */
-int request_Init(Tcl_Interp * interp)
+int request_Init(Tcl_Interp * interp, int initial)
 {
 
     RequestData *requestData;
@@ -85,9 +85,8 @@ int request_Init(Tcl_Interp * interp)
     /* -------------------------------------------------------------------------
      * need an exit handler, too (if this is the main interp)
      * ---------------------------------------------------------------------- */
-    if (Tcl_GetMaster(interp) == NULL)
-	Tcl_CreateThreadExitHandler(dRequestData, (ClientData) requestData);
-
+    if (initial)
+      Tcl_CreateThreadExitHandler(dRequestData, (ClientData) requestData);
     /* -------------------------------------------------------------------------
      * done
      * ---------------------------------------------------------------------- */

@@ -110,7 +110,7 @@ void destroyRequestData(ClientData clientData, Tcl_Interp * interp);
 int removeTempFiles(Tcl_Interp * interp, RequestData * requestData);
 
 
-int request_Init(Tcl_Interp * interp);
+int request_Init(Tcl_Interp * interp, int initial);
 
 int Web_Request(ClientData clientData,
 		Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);

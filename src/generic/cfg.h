@@ -42,7 +42,7 @@ CfgData;
 CfgData *createCfgData(Tcl_Interp * interp);
 void destroyCfgData(ClientData clientData, Tcl_Interp * interp);
 
-int cfg_Init(Tcl_Interp * interp);
+int cfg_Init(Tcl_Interp * interp, int initial);
 
 int Web_Cfg(ClientData clientData,
 	    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);

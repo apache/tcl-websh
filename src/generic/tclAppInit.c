@@ -178,7 +178,7 @@ int Tcl_AppInit(interp)
      *
      * where "Mod" is the name of the module.
      */
-    if (Websh_Init(interp) == TCL_ERROR) {
+    if (Websh_Init(interp, 1) == TCL_ERROR) {
 	return TCL_ERROR;
     }
 

@@ -30,7 +30,7 @@ void dCfgData(ClientData clientData)
 /* ----------------------------------------------------------------------------
  * Init --
  * ------------------------------------------------------------------------- */
-int cfg_Init(Tcl_Interp * interp)
+int cfg_Init(Tcl_Interp * interp, int initial)
 {
 
     CfgData *cfgData;
@@ -62,7 +62,7 @@ int cfg_Init(Tcl_Interp * interp)
     /* -------------------------------------------------------------------------
      * need an exit handler, too (if this is the main interp)
      * ---------------------------------------------------------------------- */
-    if (Tcl_GetMaster(interp) == NULL)
+    if (initial)
 	Tcl_CreateThreadExitHandler(dCfgData, (ClientData) cfgData);
 
     /* -------------------------------------------------------------------------
