@@ -64,11 +64,6 @@ int request_Init(Tcl_Interp * interp)
     Tcl_CreateObjCommand(interp, "web::formvar",
 			 Web_FormVar, (ClientData) requestData, NULL);
 
-    /*fixme: needed? Simon will deal with this. */
-    Tcl_CreateObjCommand(interp, "web::querystring::getfromurl",
-			 Web_GetQueryStringFromUrl,
-			 (ClientData) requestData, NULL);
-
     Tcl_CreateObjCommand(interp, "web::tempfile",
 			 Web_TempFile, (ClientData) requestData, NULL);
 
@@ -429,8 +424,7 @@ Tcl_Obj *tempFileName(Tcl_Interp * interp, RequestData * requestData,
 
     Tcl_IncrRefCount(tclo);
 
-    /* fixme: should I check for for TMP_MAX filenames per app ?
-       fixme - later
+    /* fixme-later: should I check for for TMP_MAX filenames per app ?
     */
     return tclo;
 }

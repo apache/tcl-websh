@@ -85,39 +85,3 @@ int parseQueryString(RequestData * requestData, Tcl_Interp * interp,
     return TCL_OK;
 
 }
-
-/* ----------------------------------------------------------------------------
- * Web_GetQueryStringFromUrl
- * ------------------------------------------------------------------------- */
-int Web_GetQueryStringFromUrl(ClientData clientData,
-			      Tcl_Interp * interp,
-			      int objc, Tcl_Obj * CONST objv[])
-{
-
-    char *qMark;
-
-    /* --------------------------------------------------------------------------
-     * parse arguments
-     * ----------------------------------------------------------------------- */
-    if (objc != 2) {
-
-	Tcl_WrongNumArgs(interp, 1, objv, "URL");
-	return TCL_ERROR;
-    }
-
-    qMark = Tcl_UtfFindFirst(Tcl_GetString(objv[1]), '?');
-
-    if (qMark != NULL) {
-
-	qMark = Tcl_UtfNext(qMark);
-
-	if (qMark != NULL) {
-
-	    Tcl_SetResult(interp, qMark, NULL);
-	    return TCL_OK;
-	}
-    }
-
-    Tcl_SetResult(interp, "no query-string found", NULL);
-    return TCL_ERROR;
-}
