@@ -23,33 +23,35 @@
   hash = WebAllocInternalData(Tcl_HashTable); \
   if( hash != NULL ) Tcl_InitHashTable(hash,type);
 
-  
+
 #define HashUtlDelFree(hash) \
   Tcl_DeleteHashTable(hash); \
   Tcl_Free((char *)hash);
 
-typedef struct HashTableIterator {
-  Tcl_HashSearch hashSearch;
-  Tcl_HashTable  *htable;
-  Tcl_HashEntry  *e; 
-  Tcl_HashEntry  *current;
-} HashTableIterator;
+typedef struct HashTableIterator
+{
+    Tcl_HashSearch hashSearch;
+    Tcl_HashTable *htable;
+    Tcl_HashEntry *e;
+    Tcl_HashEntry *current;
+}
+HashTableIterator;
 
-int resetHashTable(Tcl_HashTable *hash, int keyType);
-int resetHashTableWithContent(Tcl_HashTable *hash, int keyType, 
-			      int (*delete_fnc)(void*,void*), void *env);
-int appendToHashTable(Tcl_HashTable *hash, char *key, ClientData data);
+int resetHashTable(Tcl_HashTable * hash, int keyType);
+int resetHashTableWithContent(Tcl_HashTable * hash, int keyType,
+			      int (*delete_fnc) (void *, void *), void *env);
+int appendToHashTable(Tcl_HashTable * hash, char *key, ClientData data);
 
-ClientData removeFromHashTable(Tcl_HashTable *hash, char *key);
-ClientData getFromHashTable(Tcl_HashTable *hash, char *key);
+ClientData removeFromHashTable(Tcl_HashTable * hash, char *key);
+ClientData getFromHashTable(Tcl_HashTable * hash, char *key);
 
-int assignIteratorToHashTable(Tcl_HashTable *hash,
-	HashTableIterator *iterator);
-int nextFromHashIterator(HashTableIterator* iterator);
+int assignIteratorToHashTable(Tcl_HashTable * hash,
+			      HashTableIterator * iterator);
+int nextFromHashIterator(HashTableIterator * iterator);
 
-char*      keyOfCurrent(HashTableIterator *iterator);
-ClientData valueOfCurrent(HashTableIterator *iterator);
+char *keyOfCurrent(HashTableIterator * iterator);
+ClientData valueOfCurrent(HashTableIterator * iterator);
 
-int resetHashIterator(HashTableIterator *iterator);
+int resetHashIterator(HashTableIterator * iterator);
 
 #endif

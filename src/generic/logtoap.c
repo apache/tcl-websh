@@ -24,65 +24,70 @@
 /* ----------------------------------------------------------------------------
  * createLogToApData --
  * ------------------------------------------------------------------------- */
-LogToApData *createLogToApData() {
+LogToApData *createLogToApData()
+{
 
-  return NULL;
+    return NULL;
 }
 
 /* ----------------------------------------------------------------------------
  * destroyLogToApData --
  * ------------------------------------------------------------------------- */
-int destroyLogToApData(Tcl_Interp *interp, 
-  LogToApData *logToApData) {
+int destroyLogToApData(Tcl_Interp * interp, LogToApData * logToApData)
+{
 
-  return TCL_OK;
+    return TCL_OK;
 }
 
 /* ----------------------------------------------------------------------------
  * constructor -- initializes internal data for "logToAp".
  * Called by "web::logbag add channel chName".
  * ------------------------------------------------------------------------- */
-ClientData createLogToAp(Tcl_Interp *interp, ClientData clientData,
-			 int objc, Tcl_Obj *CONST objv[]) {
+ClientData createLogToAp(Tcl_Interp * interp, ClientData clientData,
+			 int objc, Tcl_Obj * CONST objv[])
+{
 
-  /* --------------------------------------------------------------------------
-   * syntax is: apache
-   *            0    1             2
-   * ----------------------------------------------------------------------- */
-  if (objc != 1 ) {
-    Tcl_WrongNumArgs(interp, 0, objv, "");
-    return NULL;
-  }
+    /* --------------------------------------------------------------------------
+     * syntax is: apache
+     *            0    1             2
+     * ----------------------------------------------------------------------- */
+    if (objc != 1) {
+	Tcl_WrongNumArgs(interp, 0, objv, "");
+	return NULL;
+    }
 
-  return (ClientData)1;
+    return (ClientData) 1;
 }
 
 
 /* ----------------------------------------------------------------------------
  * destructor
  * ------------------------------------------------------------------------- */
-int destroyLogToAp(Tcl_Interp *interp, ClientData clientData) {
-  return TCL_OK;
+int destroyLogToAp(Tcl_Interp * interp, ClientData clientData)
+{
+    return TCL_OK;
 }
 
 /* ----------------------------------------------------------------------------
  * logToAp
  * ------------------------------------------------------------------------- */
-int logToAp(Tcl_Interp *interp,ClientData clientData, char *msg) {
+int logToAp(Tcl_Interp * interp, ClientData clientData, char *msg)
+{
 
-  request_rec *r = NULL;
+    request_rec *r = NULL;
 
-  if ((interp == NULL) || (msg == NULL)) return TCL_ERROR;
+    if ((interp == NULL) || (msg == NULL))
+	return TCL_ERROR;
 
-  r = (request_rec *)Tcl_GetAssocData(interp,WEB_AP_ASSOC_DATA,NULL);
+    r = (request_rec *) Tcl_GetAssocData(interp, WEB_AP_ASSOC_DATA, NULL);
 
-  if (r != NULL)
-    if (r->server != NULL)
+    if (r != NULL)
+	if (r->server != NULL)
 #ifndef APACHE2
-      ap_log_printf(r->server,msg);
+	    ap_log_printf(r->server, msg);
 #else /* APACHE2 */
-      ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, r, msg);
+	    ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r, msg);
 #endif /* APACHE2 */
 
-  return TCL_OK;
+    return TCL_OK;
 }

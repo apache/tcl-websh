@@ -27,37 +27,37 @@
 /* --------------------------------------------------------------------------
  * SeqNoGenerator
  * --------------------------------------------------------------------------*/
-typedef struct SeqNoGenerator {
-  char* fileName;
-  char* handleName;
-  int seed;
-  int minValue;
-  int maxValue;
-  int incrValue;
-  int currValue;
-  int doWrap;
-  int hasCurrent;
-} SeqNoGenerator;
+typedef struct SeqNoGenerator
+{
+    char *fileName;
+    char *handleName;
+    int seed;
+    int minValue;
+    int maxValue;
+    int incrValue;
+    int currValue;
+    int doWrap;
+    int hasCurrent;
+}
+SeqNoGenerator;
 
-SeqNoGenerator* createSeqNoGenerator(Tcl_Obj* hn, Tcl_Obj* fn, 
-				     Tcl_Obj* seed, Tcl_Obj* min, 
-				     Tcl_Obj* max, Tcl_Obj* incr, int wrap);
+SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
+				     Tcl_Obj * seed, Tcl_Obj * min,
+				     Tcl_Obj * max, Tcl_Obj * incr, int wrap);
 
-int deleteSeqNoGenerator(SeqNoGenerator* seqnogen);
-int destroySeqNoGenerator(ClientData clientData, Tcl_Interp *interp);
-int nextSeqNo(Tcl_Interp* interp,SeqNoGenerator* seqnogen,int *seqno);
+int deleteSeqNoGenerator(SeqNoGenerator * seqnogen);
+int destroySeqNoGenerator(ClientData clientData, Tcl_Interp * interp);
+int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno);
 
 /* --------------------------------------------------------------------------
  * The function to register with TCL
  * ------------------------------------------------------------------------*/
-int filecounter(ClientData clientData, 
-		Tcl_Interp *interp, 
-		int objc, Tcl_Obj *CONST objv[]);
+int filecounter(ClientData clientData,
+		Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_Filecounter(ClientData clientData, 
-		    Tcl_Interp *interp, 
-		    int objc, Tcl_Obj *objv[]);
+int Web_Filecounter(ClientData clientData,
+		    Tcl_Interp * interp, int objc, Tcl_Obj * objv[]);
 
-int filecounter_Init(Tcl_Interp* interp);
+int filecounter_Init(Tcl_Interp * interp);
 
 #endif

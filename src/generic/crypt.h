@@ -24,30 +24,30 @@
 /* ----------------------------------------------------------------------------
  * crypt data structure
  * ------------------------------------------------------------------------- */
-typedef struct CryptData {
-  Tcl_Obj         *encryptChain;
-  Tcl_Obj         *decryptChain;
-} CryptData;
+typedef struct CryptData
+{
+    Tcl_Obj *encryptChain;
+    Tcl_Obj *decryptChain;
+}
+CryptData;
 CryptData *createCryptData();
-void      destroyCryptData(ClientData clientData, Tcl_Interp *interp);
+void destroyCryptData(ClientData clientData, Tcl_Interp * interp);
 
 /* ----------------------------------------------------------------------------
  * Tcl interface and commands
  * ------------------------------------------------------------------------- */
-int crypt_Init(Tcl_Interp *interp);
+int crypt_Init(Tcl_Interp * interp);
 
-int Web_Encrypt(ClientData clientData, 
-                Tcl_Interp *interp, 
-                int objc, Tcl_Obj *CONST objv[]);
+int Web_Encrypt(ClientData clientData,
+		Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_Decrypt(ClientData clientData, 
-                Tcl_Interp *interp, 
-                int objc, Tcl_Obj *CONST objv[]);
+int Web_Decrypt(ClientData clientData,
+		Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
 /* ----------------------------------------------------------------------------
  * C API
  * ------------------------------------------------------------------------- */
-int doencrypt(Tcl_Interp *interp, Tcl_Obj *in, int internal);
-int dodecrypt(Tcl_Interp *interp, Tcl_Obj *in, int internal);
+int doencrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal);
+int dodecrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal);
 
 #endif

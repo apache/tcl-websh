@@ -18,31 +18,24 @@
 #ifndef MODWEBSH_H
 #define MODWEBSH_H
 
-int Web_Initializer(ClientData clientData, 
-                    Tcl_Interp *interp, 
-                    int objc, Tcl_Obj *CONST objv[]);
-int Web_Finalizer(ClientData clientData, 
-                  Tcl_Interp *interp, 
-                  int objc, Tcl_Obj *CONST objv[]);
+int Web_Initializer(ClientData clientData,
+		    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
+int Web_Finalizer(ClientData clientData,
+		  Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_Finalize(ClientData clientData, 
-                  Tcl_Interp *interp, 
-                  int objc, Tcl_Obj *CONST objv[]);
+int Web_Finalize(ClientData clientData,
+		 Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_MainEval(ClientData clientData, 
-		 Tcl_Interp *interp, 
-		 int objc, Tcl_Obj *CONST objv[]);
+int Web_MainEval(ClientData clientData,
+		 Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_InterpCfg(ClientData clientData, 
-		    Tcl_Interp *interp, 
-		    int objc, Tcl_Obj *CONST objv[]);
+int Web_InterpCfg(ClientData clientData,
+		  Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_InterpClassCfg(ClientData clientData, 
-		    Tcl_Interp *interp, 
-		    int objc, Tcl_Obj *CONST objv[]);
+int Web_InterpClassCfg(ClientData clientData,
+		       Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int modwebsh_createcmd(Tcl_Interp *interp);
+int modwebsh_createcmd(Tcl_Interp * interp);
 
 
 #endif
-

@@ -17,7 +17,7 @@
 
 /* --------------------------------------------------------------------------
  * Commands
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 /* ----------------------------------------------------------------------------
  * SubCommands
@@ -35,11 +35,11 @@
 
 /* --------------------------------------------------------------------------
  * Registered Data
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 /* --------------------------------------------------------------------------
  * messages
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WEB_LOGTOSYSLOG_USAGE "priority"
 
 
@@ -48,12 +48,12 @@
  * ------------------------------------------------------------------------- */
 typedef int LogToSyslogData;
 LogToSyslogData *createLogToSyslogData();
-int             destroyLogTosySlogData(Tcl_Interp *interp,
-				       LogToSyslogData *logToSyslogData);
+int destroyLogTosySlogData(Tcl_Interp * interp,
+			   LogToSyslogData * logToSyslogData);
 
-ClientData createLogToSyslog(Tcl_Interp *interp, ClientData clientData,
-			     int objc, Tcl_Obj *CONST objv[]);
-int destroyLogToSyslog(Tcl_Interp *interp, ClientData clientData);
-int logToSyslog(Tcl_Interp *interp,ClientData clientData, char *msg);
+ClientData createLogToSyslog(Tcl_Interp * interp, ClientData clientData,
+			     int objc, Tcl_Obj * CONST objv[]);
+int destroyLogToSyslog(Tcl_Interp * interp, ClientData clientData);
+int logToSyslog(Tcl_Interp * interp, ClientData clientData, char *msg);
 
 #endif

@@ -24,14 +24,16 @@
 /* ----------------------------------------------------------------------------
  * web::request -channel: where input for request obj comes from
  * ------------------------------------------------------------------------- */
-Tcl_Obj *requestGetDefaultChannelName() {
-   return Tcl_NewStringObj("stdin",5);
+Tcl_Obj *requestGetDefaultChannelName()
+{
+    return Tcl_NewStringObj("stdin", 5);
 }
 
 
-int requestFillRequestValues(Tcl_Interp *interp, RequestData *requestData) {
-  if (requestData->requestIsInitialized)
-    return TCL_OK;
-  requestData->requestIsInitialized = 1;
-  return Tcl_Eval(interp, "web::cgi::copyenv");
+int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
+{
+    if (requestData->requestIsInitialized)
+	return TCL_OK;
+    requestData->requestIsInitialized = 1;
+    return Tcl_Eval(interp, "web::cgi::copyenv");
 }

@@ -25,94 +25,99 @@
  * parseQueryString --
  *   parse "k1=v1&k2=v2" kind of data, and store in web::params structure
  * ------------------------------------------------------------------------- */
-int parseQueryString(RequestData *requestData, Tcl_Interp *interp,
-                     Tcl_Obj *query_string) {
-  Tcl_Obj *tclo = NULL;
-  int     tRes = 0;
-  int     listLen = 0;
+int parseQueryString(RequestData * requestData, Tcl_Interp * interp,
+		     Tcl_Obj * query_string)
+{
+    Tcl_Obj *tclo = NULL;
+    int tRes = 0;
+    int listLen = 0;
 
-  tRes = TCL_OK;
+    tRes = TCL_OK;
 
-  if( (requestData == NULL) || (query_string == NULL) ) return TCL_ERROR;
+    if ((requestData == NULL) || (query_string == NULL))
+	return TCL_ERROR;
 
-  /* --------------------------------------------------------------------------
-   * decrypt
-   * ----------------------------------------------------------------------- */
+    /* --------------------------------------------------------------------------
+     * decrypt
+     * ----------------------------------------------------------------------- */
 
-  Tcl_IncrRefCount(query_string);
-  if (dodecrypt(interp, query_string, 1) == TCL_OK) {
+    Tcl_IncrRefCount(query_string);
+    if (dodecrypt(interp, query_string, 1) == TCL_OK) {
 
-    tclo = Tcl_DuplicateObj(Tcl_GetObjResult(interp));
-    Tcl_ResetResult(interp);
-    Tcl_DecrRefCount(query_string);
+	tclo = Tcl_DuplicateObj(Tcl_GetObjResult(interp));
+	Tcl_ResetResult(interp);
+	Tcl_DecrRefCount(query_string);
 
-    /* ------------------------------------------------------------------------
-     * only add if list length > 0
-     * --------------------------------------------------------------------- */
-    if( (listLen = tclGetListLength(interp,tclo)) == -1 ) {
-      Tcl_DecrRefCount(tclo);
-      return TCL_ERROR;
+	/* ------------------------------------------------------------------------
+	 * only add if list length > 0
+	 * --------------------------------------------------------------------- */
+	if ((listLen = tclGetListLength(interp, tclo)) == -1) {
+	    Tcl_DecrRefCount(tclo);
+	    return TCL_ERROR;
+	}
+
+	if (listLen > 0) {
+
+	    /* ----------------------------------------------------------------------
+	     * add list to requestData
+	     * ------------------------------------------------------------------- */
+	    tRes = listObjAsParamList(tclo, requestData->paramList);
+	    Tcl_DecrRefCount(tclo);
+	    return tRes;
+	}
+
+	/* ------------------------------------------------------------------------
+	 * done
+	 * --------------------------------------------------------------------- */
+	Tcl_DecrRefCount(tclo);
+	return TCL_OK;
+    }
+    else {
+
+	/* just write a note */
+	LOG_MSG(interp, WRITE_LOG,
+		__FILE__, __LINE__,
+		"web::dispatch", WEBLOG_DEBUG,
+		"error decrypting \"", Tcl_GetString(query_string), "\"",
+		NULL);
     }
 
-    if( listLen > 0) {
-
-      /* ----------------------------------------------------------------------
-       * add list to requestData
-       * ------------------------------------------------------------------- */
-      tRes = listObjAsParamList(tclo,requestData->paramList);
-      Tcl_DecrRefCount(tclo);
-      return tRes;
-    }
-
-    /* ------------------------------------------------------------------------
-     * done
-     * --------------------------------------------------------------------- */
-    Tcl_DecrRefCount(tclo);
     return TCL_OK;
-  } else {
-
-    /* just write a note */
-    LOG_MSG(interp,WRITE_LOG,
-	    __FILE__,__LINE__,
-	    "web::dispatch",WEBLOG_DEBUG,
-	    "error decrypting \"",Tcl_GetString(query_string),"\"",NULL);
-  }
-
-  return TCL_OK;
 
 }
 
 /* ----------------------------------------------------------------------------
  * Web_GetQueryStringFromUrl
  * ------------------------------------------------------------------------- */
-int Web_GetQueryStringFromUrl(ClientData clientData, 
-			      Tcl_Interp *interp, 
-			      int objc, Tcl_Obj *CONST objv[]) {
+int Web_GetQueryStringFromUrl(ClientData clientData,
+			      Tcl_Interp * interp,
+			      int objc, Tcl_Obj * CONST objv[])
+{
 
-  char *qMark;
+    char *qMark;
 
-  /* --------------------------------------------------------------------------
-   * parse arguments
-   * ----------------------------------------------------------------------- */
-  if( objc != 2 ) {
+    /* --------------------------------------------------------------------------
+     * parse arguments
+     * ----------------------------------------------------------------------- */
+    if (objc != 2) {
 
-    Tcl_WrongNumArgs(interp, 1, objv,"URL");
-    return TCL_ERROR;
-  }
-
-  qMark = Tcl_UtfFindFirst(Tcl_GetString(objv[1]),'?');
-
-  if( qMark != NULL ) {
-
-    qMark = Tcl_UtfNext(qMark);
-
-    if( qMark != NULL ) {
-
-      Tcl_SetResult(interp,qMark,NULL);
-      return TCL_OK;
+	Tcl_WrongNumArgs(interp, 1, objv, "URL");
+	return TCL_ERROR;
     }
-  }
-  
-  Tcl_SetResult(interp,"no query-string found",NULL);
-  return TCL_ERROR;
+
+    qMark = Tcl_UtfFindFirst(Tcl_GetString(objv[1]), '?');
+
+    if (qMark != NULL) {
+
+	qMark = Tcl_UtfNext(qMark);
+
+	if (qMark != NULL) {
+
+	    Tcl_SetResult(interp, qMark, NULL);
+	    return TCL_OK;
+	}
+    }
+
+    Tcl_SetResult(interp, "no query-string found", NULL);
+    return TCL_ERROR;
 }

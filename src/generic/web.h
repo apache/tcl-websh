@@ -32,10 +32,10 @@
 #include "filecounter.h"
 #include "modwebsh.h"
 
-int Websh_Init(Tcl_Interp *interp);
+int Websh_Init(Tcl_Interp * interp);
 
-int Script_Init(Tcl_Interp *interp);
+int Script_Init(Tcl_Interp * interp);
 
-int State_Init(Tcl_Interp *interp);
+int State_Init(Tcl_Interp * interp);
 
 #endif

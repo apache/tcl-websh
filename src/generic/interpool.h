@@ -16,9 +16,9 @@
 #ifndef WEBSHPOOL_H
 #define WEBSHPOOL_H
 
-#include "tcl.h"     /* tcl is not necesseraly a system-wide include */
-#include "macros.h"  /* for WebAssert and friends. can also reside in .c */
-#include "hashutl.h" /* hash table utitilies */
+#include "tcl.h"		/* tcl is not necesseraly a system-wide include */
+#include "macros.h"		/* for WebAssert and friends. can also reside in .c */
+#include "hashutl.h"		/* hash table utitilies */
 #include <time.h>
 
 #include "modwebsh.h"
@@ -31,66 +31,71 @@
  * the pool is locked
  * ------------------------------------------------------------------------- */
 
-typedef enum WebInterpState {
-  WIP_INUSE, WIP_FREE, WIP_EXPIRED, WIP_EXPIREDINUSE
-} WebInterpState;
+typedef enum WebInterpState
+{
+    WIP_INUSE, WIP_FREE, WIP_EXPIRED, WIP_EXPIREDINUSE
+}
+WebInterpState;
 
 struct WebInterpClass;
 
 
-typedef struct WebInterp {
-  
-  Tcl_Interp  *interp; /* the interp */
-  WebInterpState state;   /* its state */
+typedef struct WebInterp
+{
 
-  struct WebInterpClass *interpClass;   /* infos about this type of interp */
+    Tcl_Interp *interp;		/* the interp */
+    WebInterpState state;	/* its state */
 
-  /* code blocks */
-  Tcl_Obj *code;             /* per-request code (=file content) */
-  Tcl_Obj *dtor;             /* destructor */
+    struct WebInterpClass *interpClass;	/* infos about this type of interp */
 
-  /* dynamic members */
+    /* code blocks */
+    Tcl_Obj *code;		/* per-request code (=file content) */
+    Tcl_Obj *dtor;		/* destructor */
 
-  long numrequests;          /* number of current request */
-  long starttime;            /* start time (Tcl does not handle time_t */
-  long lastusedtime;         /* last used time */
+    /* dynamic members */
 
-  /* we double-link this list so it's easier to remove elements */
-  struct WebInterp *next;
-  struct WebInterp *prev;
+    long numrequests;		/* number of current request */
+    long starttime;		/* start time (Tcl does not handle time_t */
+    long lastusedtime;		/* last used time */
 
-} WebInterp;
+    /* we double-link this list so it's easier to remove elements */
+    struct WebInterp *next;
+    struct WebInterp *prev;
+
+}
+WebInterp;
 
 
 
-typedef struct WebInterpClass {
-  
-  char      *filename;
+typedef struct WebInterpClass
+{
 
-  /* death reasons */
-  long      maxrequests;
-  long      maxttl;
-  long      maxidletime;
-  long      mtime;
+    char *filename;
 
-  Tcl_Obj *code;        /* per-request code (=file content) */
+    /* death reasons */
+    long maxrequests;
+    long maxttl;
+    long maxidletime;
+    long mtime;
 
-  WebInterp *first;
-  WebInterp *last;
+    Tcl_Obj *code;		/* per-request code (=file content) */
 
-  /* configuration of our main Interpreter */
-  websh_server_conf *conf;
+    WebInterp *first;
+    WebInterp *last;
 
-} WebInterpClass;
+    /* configuration of our main Interpreter */
+    websh_server_conf *conf;
 
-WebInterp* createWebInterp(websh_server_conf *conf, 
-			   WebInterpClass *wic, 
-			   char *filename,
-			   long mtime);
+}
+WebInterpClass;
 
-void       destroyWebInterp(WebInterp *webInterp);
+WebInterp *createWebInterp(websh_server_conf * conf,
+			   WebInterpClass * wic, char *filename, long mtime);
 
-WebInterpClass* createWebInterpClass(websh_server_conf *conf, char *filename, long mtime);
+void destroyWebInterp(WebInterp * webInterp);
+
+WebInterpClass *createWebInterpClass(websh_server_conf * conf, char *filename,
+				     long mtime);
 
 
 
@@ -126,15 +131,15 @@ WebInterpClass* createWebInterpClass(websh_server_conf *conf, char *filename, lo
     - release lock
  */
 
-Tcl_Interp *createMainInterp(websh_server_conf *conf);
+Tcl_Interp *createMainInterp(websh_server_conf * conf);
 
-WebInterp *poolGetWebInterp(websh_server_conf *conf, char *filename, long mtime, request_rec *r);
-int       initPool(websh_server_conf *conf);
-void      destroyPool(websh_server_conf *conf);
-void      cleanupPool(websh_server_conf *conf);
-void      poolReleaseWebInterp(WebInterp *webInterp);
-void      deleteInterpClass(WebInterpClass *webInterpClass);
-int       readWebInterpCode(WebInterp *wi, char *filename);
+WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
+			    long mtime, request_rec * r);
+int initPool(websh_server_conf * conf);
+void destroyPool(websh_server_conf * conf);
+void cleanupPool(websh_server_conf * conf);
+void poolReleaseWebInterp(WebInterp * webInterp);
+void deleteInterpClass(WebInterpClass * webInterpClass);
+int readWebInterpCode(WebInterp * wi, char *filename);
 
 #endif
-

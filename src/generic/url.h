@@ -24,19 +24,19 @@
 
 /* --------------------------------------------------------------------------
  * Registered Data
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WEB_URL_ASSOC_DATA "web::urlData"
 
 /* --------------------------------------------------------------------------
  * defaults
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 #define WEB_DEFAULT_SCHEME "http"
 #define WEB_DEFAULT_PORT   "80"
 
 /* --------------------------------------------------------------------------
  * Internas
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 #define WEBURL_SCHEME_SEP ":"
 #define WEBURL_HOST_SEP "//"
@@ -58,31 +58,31 @@
 /* -------------------------------------------------------------------
  * UrlData
  * ------------------------------------------------------------------- */
-typedef struct UrlData {
-  Tcl_Obj  *scheme;    /* e.g http */
-  Tcl_Obj  *port; /* e.g. 8080 */
-  Tcl_Obj  *host; /* e.g. www.netcetera.ch */
-  Tcl_Obj  *scriptname; /* e.g. /bin/tutorial.ws3 */
-  Tcl_Obj  *pathinfo;   /* e.g. /some/path */
-  Tcl_Obj  *querystring;   /* e.g. foo=bar */
-  /* ............ */
-  RequestData *requestData; /* link to request module for host etc */
-  /* ............ */
-  int      urlformat;
-} UrlData;
+typedef struct UrlData
+{
+    Tcl_Obj *scheme;		/* e.g http */
+    Tcl_Obj *port;		/* e.g. 8080 */
+    Tcl_Obj *host;		/* e.g. www.netcetera.ch */
+    Tcl_Obj *scriptname;	/* e.g. /bin/tutorial.ws3 */
+    Tcl_Obj *pathinfo;		/* e.g. /some/path */
+    Tcl_Obj *querystring;	/* e.g. foo=bar */
+    /* ............ */
+    RequestData *requestData;	/* link to request module for host etc */
+    /* ............ */
+    int urlformat;
+}
+UrlData;
 
 UrlData *createUrlData(void);
-int     resetUrlData(Tcl_Interp *interp, UrlData *urlData);
-void    destroyUrlData(ClientData clientData, Tcl_Interp *interp);
+int resetUrlData(Tcl_Interp * interp, UrlData * urlData);
+void destroyUrlData(ClientData clientData, Tcl_Interp * interp);
 
-int url_Init(Tcl_Interp *interp);
-int Web_CmdUrlCfg(ClientData clientData, 
-		  Tcl_Interp *interp, 
-		  int objc, Tcl_Obj *CONST objv[]);
-int Web_CmdUrl(ClientData clientData, 
-	       Tcl_Interp *interp, 
-	       int objc, Tcl_Obj *CONST objv[]);
-Tcl_Obj *createQueryList(Tcl_Interp *interpm, Tcl_Obj *cmd, Tcl_Obj *plist, 
-                         UrlData *urlData, int flag);
+int url_Init(Tcl_Interp * interp);
+int Web_CmdUrlCfg(ClientData clientData,
+		  Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
+int Web_CmdUrl(ClientData clientData,
+	       Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
+Tcl_Obj *createQueryList(Tcl_Interp * interpm, Tcl_Obj * cmd, Tcl_Obj * plist,
+			 UrlData * urlData, int flag);
 
 #endif

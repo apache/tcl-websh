@@ -32,19 +32,19 @@ int *tclDummyMathPtr = (int *) matherr;
 
 #include "tclInt.h"
 
-extern int		Procbodytest_Init _ANSI_ARGS_((Tcl_Interp *interp));
-extern int		Procbodytest_SafeInit _ANSI_ARGS_((Tcl_Interp *interp));
-extern int		TclObjTest_Init _ANSI_ARGS_((Tcl_Interp *interp));
-extern int		Tcltest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+extern int Procbodytest_Init _ANSI_ARGS_((Tcl_Interp * interp));
+extern int Procbodytest_SafeInit _ANSI_ARGS_((Tcl_Interp * interp));
+extern int TclObjTest_Init _ANSI_ARGS_((Tcl_Interp * interp));
+extern int Tcltest_Init _ANSI_ARGS_((Tcl_Interp * interp));
 #ifdef TCL_THREADS
-extern int		TclThread_Init _ANSI_ARGS_((Tcl_Interp *interp));
+extern int TclThread_Init _ANSI_ARGS_((Tcl_Interp * interp));
 #endif
 
 #endif /* TCL_TEST */
 
 #ifdef TCL_XT_TEST
-extern void		XtToolkitInitialize _ANSI_ARGS_((void));
-extern int		Tclxttest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+extern void XtToolkitInitialize _ANSI_ARGS_((void));
+extern int Tclxttest_Init _ANSI_ARGS_((Tcl_Interp * interp));
 #endif
 
 /*
@@ -64,10 +64,9 @@ extern int		Tclxttest_Init _ANSI_ARGS_((Tcl_Interp *interp));
  *----------------------------------------------------------------------
  */
 
-int
-main(argc, argv)
-    int argc;			/* Number of command-line arguments. */
-    char **argv;		/* Values of command-line arguments. */
+int main(argc, argv)
+     int argc;			/* Number of command-line arguments. */
+     char **argv;		/* Values of command-line arguments. */
 {
     /*
      * The following #if block allows you to change the AppInit
@@ -75,18 +74,18 @@ main(argc, argv)
      * of rewriting this entire file.  The #if checks for that
      * #define and uses Tcl_AppInit if it doesn't exist.
      */
-    
+
 #ifndef TCL_LOCAL_APPINIT
-#define TCL_LOCAL_APPINIT Tcl_AppInit    
+#define TCL_LOCAL_APPINIT Tcl_AppInit
 #endif
-    extern int TCL_LOCAL_APPINIT _ANSI_ARGS_((Tcl_Interp *interp));
-    
+    extern int TCL_LOCAL_APPINIT _ANSI_ARGS_((Tcl_Interp * interp));
+
     /*
      * The following #if block allows you to change how Tcl finds the startup
      * script, prime the library or encoding paths, fiddle with the argv,
      * etc., without needing to rewrite Tcl_Main()
      */
-    
+
 #ifdef TCL_LOCAL_MAIN_HOOK
     extern int TCL_LOCAL_MAIN_HOOK _ANSI_ARGS_((int *argc, char ***argv));
 #endif
@@ -100,7 +99,7 @@ main(argc, argv)
      */
     Tcl_Obj *path;
     path = Tcl_NewStringObj(TCL_BUILDTIME_LIBRARY, -1);
-    TclSetLibraryPath(Tcl_NewListObj(1,&path));
+    TclSetLibraryPath(Tcl_NewListObj(1, &path));
 
 #endif
 
@@ -113,7 +112,7 @@ main(argc, argv)
 #endif
 
     Tcl_Main(argc, argv, TCL_LOCAL_APPINIT);
-    
+
     return 0;			/* Needed only to prevent compiler warning. */
 }
 
@@ -136,9 +135,8 @@ main(argc, argv)
  *----------------------------------------------------------------------
  */
 
-int
-Tcl_AppInit(interp)
-    Tcl_Interp *interp;		/* Interpreter for application. */
+int Tcl_AppInit(interp)
+     Tcl_Interp *interp;	/* Interpreter for application. */
 {
     if (Tcl_Init(interp) == TCL_ERROR) {
 	return TCL_ERROR;
@@ -146,15 +144,15 @@ Tcl_AppInit(interp)
 
 #ifdef TCL_TEST
 #ifdef TCL_XT_TEST
-     if (Tclxttest_Init(interp) == TCL_ERROR) {
-	 return TCL_ERROR;
-     }
+    if (Tclxttest_Init(interp) == TCL_ERROR) {
+	return TCL_ERROR;
+    }
 #endif
     if (Tcltest_Init(interp) == TCL_ERROR) {
 	return TCL_ERROR;
     }
     Tcl_StaticPackage(interp, "Tcltest", Tcltest_Init,
-            (Tcl_PackageInitProc *) NULL);
+		      (Tcl_PackageInitProc *) NULL);
     if (TclObjTest_Init(interp) == TCL_ERROR) {
 	return TCL_ERROR;
     }
@@ -167,7 +165,7 @@ Tcl_AppInit(interp)
 	return TCL_ERROR;
     }
     Tcl_StaticPackage(interp, "procbodytest", Procbodytest_Init,
-            Procbodytest_SafeInit);
+		      Procbodytest_SafeInit);
 #endif /* TCL_TEST */
 
     /*
@@ -181,7 +179,7 @@ Tcl_AppInit(interp)
      * where "Mod" is the name of the module.
      */
     if (Websh_Init(interp) == TCL_ERROR) {
-      return TCL_ERROR;
+	return TCL_ERROR;
     }
 
     /*

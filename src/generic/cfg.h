@@ -29,20 +29,21 @@
 /* ----------------------------------------------------------------------------
  * CfgData
  * ------------------------------------------------------------------------- */
-typedef struct CfgData {
-  RequestData *requestData;
-  CryptData   *cryptData;
-  OutData     *outData;
-  LogData     *logData;
-} CfgData;
+typedef struct CfgData
+{
+    RequestData *requestData;
+    CryptData *cryptData;
+    OutData *outData;
+    LogData *logData;
+}
+CfgData;
 
 
-CfgData *createCfgData(Tcl_Interp *interp);
-void    destroyCfgData(ClientData clientData, Tcl_Interp *interp);
+CfgData *createCfgData(Tcl_Interp * interp);
+void destroyCfgData(ClientData clientData, Tcl_Interp * interp);
 
-int cfg_Init(Tcl_Interp *interp);
+int cfg_Init(Tcl_Interp * interp);
 
-int Web_Cfg(ClientData clientData, 
-	    Tcl_Interp *interp, 
-	    int objc, Tcl_Obj *CONST objv[]);
+int Web_Cfg(ClientData clientData,
+	    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 #endif

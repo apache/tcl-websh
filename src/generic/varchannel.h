@@ -18,20 +18,22 @@
 #ifndef VARCHANNEL_H
 #define VARCHANNEL_H
 
-typedef struct VarChannel {
-  Tcl_Obj    *varName;
-  Tcl_Interp *interp;
-  int        readCursor;
-} VarChannel;
+typedef struct VarChannel
+{
+    Tcl_Obj *varName;
+    Tcl_Interp *interp;
+    int readCursor;
+}
+VarChannel;
 
-VarChannel* createVarChannel();
-int destroyVarChannel(ClientData clientData, Tcl_Interp *interp);
+VarChannel *createVarChannel();
+int destroyVarChannel(ClientData clientData, Tcl_Interp * interp);
 
-Tcl_Channel Web_GetChannelOrVarChannel(Tcl_Interp *interp, 
-                                       char *name, int *mode);
-Tcl_Channel Web_GetVarChannel(Tcl_Interp *interp, char *name, int *mode);
+Tcl_Channel Web_GetChannelOrVarChannel(Tcl_Interp * interp,
+				       char *name, int *mode);
+Tcl_Channel Web_GetVarChannel(Tcl_Interp * interp, char *name, int *mode);
 
-int Web_UnregisterVarChannel(Tcl_Interp *interp, char *name, 
-                             Tcl_Channel channel);
+int Web_UnregisterVarChannel(Tcl_Interp * interp, char *name,
+			     Tcl_Channel channel);
 
 #endif

@@ -22,24 +22,24 @@
 #ifndef WEBUTL_H
 #define WEBUTL_H
 
-char *allocAndSet (const char *aString);
+char *allocAndSet(const char *aString);
 char *allocAndSetN(const char *aString, int N);
-char *strchrchr(const char *cs, const char c0, const char c1, 
-                char *tag);
+char *strchrchr(const char *cs, const char c0, const char c1, char *tag);
 char *myUtfStrStr(const char *s1, const char *s2);
 char *webEat(char eat, char *cs);
 char *strWithoutLinebreak(char *cs);
 
-int handleConfig(Tcl_Interp *interp, Tcl_Obj **tclo, Tcl_Obj *newValue, int deleteIfEmpty);
-int tclGetListLength(Tcl_Interp *interp, Tcl_Obj *list);
+int handleConfig(Tcl_Interp * interp, Tcl_Obj ** tclo, Tcl_Obj * newValue,
+		 int deleteIfEmpty);
+int tclGetListLength(Tcl_Interp * interp, Tcl_Obj * list);
 
-Tcl_Obj *tclMyConcat(int objc, Tcl_Obj *CONST objv[]);
-Tcl_Obj *tclSetEnv(Tcl_Interp *interp, char *key, Tcl_Obj *val);
+Tcl_Obj *tclMyConcat(int objc, Tcl_Obj * CONST objv[]);
+Tcl_Obj *tclSetEnv(Tcl_Interp * interp, char *key, Tcl_Obj * val);
 
-int Web_IntIncrObj(Tcl_Interp *interp, Tcl_Obj *obj, int incr);
+int Web_IntIncrObj(Tcl_Interp * interp, Tcl_Obj * obj, int incr);
 int deleteTclObj_fnc(void *tclo, void *dum);
 
-Tcl_Obj *Web_GetOrCreateGlobalVar(Tcl_Interp *interp, Tcl_Obj *name,
+Tcl_Obj *Web_GetOrCreateGlobalVar(Tcl_Interp * interp, Tcl_Obj * name,
 				  int *isNew);
 
 #endif

@@ -21,23 +21,21 @@
 /* --------------------------------------------------------------------
  * Init --
  * -------------------------------------------------------------------- */
-int webutlcmd_Init(Tcl_Interp *interp) {
-  
+int webutlcmd_Init(Tcl_Interp * interp)
+{
 
-   Tcl_CreateObjCommand(interp, "web::lockfile",
- 		       Web_LockChannel,
- 		       (ClientData) NULL,
- 		       (Tcl_CmdDeleteProc *) NULL);
 
-   Tcl_CreateObjCommand(interp, "web::unlockfile",
- 		       Web_UnLockChannel,
- 		       (ClientData) NULL,
- 		       (Tcl_CmdDeleteProc *) NULL);
+    Tcl_CreateObjCommand(interp, "web::lockfile",
+			 Web_LockChannel,
+			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-   Tcl_CreateObjCommand(interp, "web::truncatefile",
-			Web_TruncateFile,
-			(ClientData) NULL,
-			(Tcl_CmdDeleteProc *) NULL);
+    Tcl_CreateObjCommand(interp, "web::unlockfile",
+			 Web_UnLockChannel,
+			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-   return TCL_OK;
+    Tcl_CreateObjCommand(interp, "web::truncatefile",
+			 Web_TruncateFile,
+			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
+
+    return TCL_OK;
 }

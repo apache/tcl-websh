@@ -42,7 +42,7 @@
 
 /* --------------------------------------------------------------------------
  * Log levels
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 #define WEBLOG_DEBUG   "websh.debug"
 #define WEBLOG_INFO    "websh.info"
@@ -54,7 +54,7 @@
 
 /* --------------------------------------------------------------------------
  * Commands
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 /* ----------------------------------------------------------------------------
  * SubCommands
@@ -75,12 +75,12 @@
 
 /* --------------------------------------------------------------------------
  * Registered Data
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WEB_LOG_ASSOC_DATA "web::logData"
 
 /* --------------------------------------------------------------------------
  * messages
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WEB_LOG_USAGE_LOGDEST_ADD \
   "add ?options? level type type-specific-arguments"
 
@@ -88,56 +88,63 @@
 /* ----------------------------------------------------------------------------
  * list of possible categories
  * ------------------------------------------------------------------------- */
-typedef enum Severity {
-  none, alert, error, warning, info, debug, invalid=-1
-} Severity;
+typedef enum Severity
+{
+    none, alert, error, warning, info, debug, invalid = -1
+}
+Severity;
 
 /* ----------------------------------------------------------------------------
  * the log level, as attached to a log message and as used for filtering
  * ------------------------------------------------------------------------- */
-typedef struct LogLevel {
-  char     *facility;
-  Severity minSeverity;
-  Severity maxSeverity;   /* only used for filter */
-} LogLevel;
+typedef struct LogLevel
+{
+    char *facility;
+    Severity minSeverity;
+    Severity maxSeverity;	/* only used for filter */
+}
+LogLevel;
 LogLevel *createLogLevel();
-int      destroyLogLevel(void *level, void *dum);
+int destroyLogLevel(void *level, void *dum);
 
 /* ----------------------------------------------------------------------------
  * plug-in interface
  * ------------------------------------------------------------------------- */
-typedef ClientData (LogPlugInConstructor)(Tcl_Interp *interp,
-                                          ClientData clientData,
-                                          int objc,
-                                          Tcl_Obj *CONST objv[]);
-typedef int (LogPlugInDestructor)(Tcl_Interp *interp,
-                                  ClientData clientData);
-typedef int (LogPlugInHandler)(Tcl_Interp *interp,
-                               ClientData clientData, char *msg);
+typedef ClientData(LogPlugInConstructor) (Tcl_Interp * interp,
+					  ClientData clientData,
+					  int objc, Tcl_Obj * CONST objv[]);
+typedef int (LogPlugInDestructor) (Tcl_Interp * interp,
+				   ClientData clientData);
+typedef int (LogPlugInHandler) (Tcl_Interp * interp,
+				ClientData clientData, char *msg);
 
-typedef struct LogPlugIn {
-  LogPlugInConstructor *constructor;
-  LogPlugInDestructor  *destructor;
-  LogPlugInHandler     *handler;
-} LogPlugIn;
+typedef struct LogPlugIn
+{
+    LogPlugInConstructor *constructor;
+    LogPlugInDestructor *destructor;
+    LogPlugInHandler *handler;
+}
+LogPlugIn;
 LogPlugIn *createLogPlugIn();
-int       destroyLogPlugIn(void *plugIn, void *dum);
-int       registerLogPlugIn(Tcl_Interp *interp, char *type, LogPlugIn *plugIn);
+int destroyLogPlugIn(void *plugIn, void *dum);
+int registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * plugIn);
 
 
 /* ----------------------------------------------------------------------------
  * log destination (like stderr, file, channel, ...)
  * ------------------------------------------------------------------------- */
-typedef struct LogDest {
-  LogLevel       *filter;
-  char           *format;
-  long           maxCharInMsg;
-  LogPlugIn      *plugIn;
-  ClientData     plugInData;
-} LogDest;
-LogDest  *createLogDest();
-int      destroyLogDest(void *dest, void *env);
-char     *createLogDestName(char *prefix, int cnt);
+typedef struct LogDest
+{
+    LogLevel *filter;
+    char *format;
+    long maxCharInMsg;
+    LogPlugIn *plugIn;
+    ClientData plugInData;
+}
+LogDest;
+LogDest *createLogDest();
+int destroyLogDest(void *dest, void *env);
+char *createLogDestName(char *prefix, int cnt);
 
 
 
@@ -145,65 +152,60 @@ char     *createLogDestName(char *prefix, int cnt);
 /* ----------------------------------------------------------------------------
  * log data structure
  * ------------------------------------------------------------------------- */
-typedef struct LogData {
-  Tcl_HashTable *listOfFilters;
-  int           filterCnt;
-  Tcl_HashTable *listOfDests;
-  int           destCnt;
-  Tcl_HashTable *listOfPlugIns;
-  int           logSubst; /* 1: subst log message, 0: don't (default 1) */
-} LogData;
+typedef struct LogData
+{
+    Tcl_HashTable *listOfFilters;
+    int filterCnt;
+    Tcl_HashTable *listOfDests;
+    int destCnt;
+    Tcl_HashTable *listOfPlugIns;
+    int logSubst;		/* 1: subst log message, 0: don't (default 1) */
+}
+LogData;
 
 LogData *createLogData();
-void    destroyLogData(ClientData clientData, Tcl_Interp *interp);
+void destroyLogData(ClientData clientData, Tcl_Interp * interp);
 
 
 /* ----------------------------------------------------------------------------
  * Tcl interface and commands
  * ------------------------------------------------------------------------- */
-int log_Init(Tcl_Interp *interp);
+int log_Init(Tcl_Interp * interp);
 
-int Web_Log(ClientData clientData, 
-            Tcl_Interp *interp, 
-            int objc, Tcl_Obj *CONST objv[]);
+int Web_Log(ClientData clientData,
+	    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_LogDest(ClientData clientData, 
-                Tcl_Interp *interp, 
-                int objc, Tcl_Obj *CONST objv[]);
+int Web_LogDest(ClientData clientData,
+		Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_LogFilter(ClientData clientData, 
-                  Tcl_Interp *interp, 
-                  int objc, Tcl_Obj *CONST objv[]);
+int Web_LogFilter(ClientData clientData,
+		  Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
 
 /* ----------------------------------------------------------------------------
  * the functions
  * ------------------------------------------------------------------------- */
 char *getSeverityName(Severity aSeverity);
-LogLevel *parseLogLevel(Tcl_Interp *interp, 
-			char *definition, 
-			char *defaultfacility,
-			int  cnt);
-Tcl_Obj *formatMessage(LogLevel *level, char *fmt, long maxCharInMsg,
-		       Tcl_Obj *msg);
-int doesPass(LogLevel *level, LogLevel *filter);
-int doesPassFilters(LogLevel *logLevel, Tcl_HashTable *hash);
-int logImpl(Tcl_Interp *interp, LogData *logData, 
-	    char *levelStr, Tcl_Obj *msg);
-int webLog(Tcl_Interp *interp, char *levelStr, char *msg);
+LogLevel *parseLogLevel(Tcl_Interp * interp,
+			char *definition, char *defaultfacility, int cnt);
+Tcl_Obj *formatMessage(LogLevel * level, char *fmt, long maxCharInMsg,
+		       Tcl_Obj * msg);
+int doesPass(LogLevel * level, LogLevel * filter);
+int doesPassFilters(LogLevel * logLevel, Tcl_HashTable * hash);
+int logImpl(Tcl_Interp * interp, LogData * logData,
+	    char *levelStr, Tcl_Obj * msg);
+int webLog(Tcl_Interp * interp, char *levelStr, char *msg);
 
-void sendMsgToDestList(Tcl_Interp *interp,
-		       LogData *logData,
-		       LogLevel *level,
-		       Tcl_Obj *msg);
+void sendMsgToDestList(Tcl_Interp * interp,
+		       LogData * logData, LogLevel * level, Tcl_Obj * msg);
 
 
 /* ----------------------------------------------------------------------------
  * Logging 
  * ------------------------------------------------------------------------- */
-#define WRITE_LOG 1  /* sends message to log facility */
-#define SET_RESULT 2 /* store part of message in interpreter result */
-#define INTERP_ERRORINFO 4 /* include tcl-interp's errorInfo in log message */
+#define WRITE_LOG 1		/* sends message to log facility */
+#define SET_RESULT 2		/* store part of message in interpreter result */
+#define INTERP_ERRORINFO 4	/* include tcl-interp's errorInfo in log message */
 
 /* default use:
   LOG_MSG(,WRITE_LOG,...)  --> just write log msg
@@ -212,7 +214,7 @@ void sendMsgToDestList(Tcl_Interp *interp,
   LOG_MSG(,0,...) --> don't do this
 */
 
-void LOG_MSG(Tcl_Interp *interp, int flag, char *filename, int linenr, 
-             char *cmd, char *level, char *msg,...);
+void LOG_MSG(Tcl_Interp * interp, int flag, char *filename, int linenr,
+	     char *cmd, char *level, char *msg, ...);
 
 #endif

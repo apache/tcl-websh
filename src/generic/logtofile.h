@@ -18,7 +18,7 @@
 
 /* --------------------------------------------------------------------------
  * Commands
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 /* ----------------------------------------------------------------------------
  * SubCommands
@@ -36,29 +36,30 @@
 
 /* --------------------------------------------------------------------------
  * Registered Data
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 /* --------------------------------------------------------------------------
  * messages
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WEB_LOGTOFILE_USAGE "?-unbuffered? fileName"
 
 
 /* ----------------------------------------------------------------------------
  * plugin logger: toFile
  * ------------------------------------------------------------------------- */
-typedef struct LogToFileData {
-  Tcl_Channel channel;
-  char        isBuffered;
-  char        *fileName;
-} LogToFileData;
+typedef struct LogToFileData
+{
+    Tcl_Channel channel;
+    char isBuffered;
+    char *fileName;
+}
+LogToFileData;
 LogToFileData *createLogToFileData();
-int           destroyLogToFileData(Tcl_Interp *interp,
-                                   LogToFileData *logToFileData);
+int destroyLogToFileData(Tcl_Interp * interp, LogToFileData * logToFileData);
 
-ClientData createLogToFile(Tcl_Interp *interp, ClientData clientData,
-                           int objc, Tcl_Obj *CONST objv[]);
-int destroyLogToFile(Tcl_Interp *interp, ClientData clientData);
-int logToFile(Tcl_Interp *interp,ClientData clientData, char *msg);
+ClientData createLogToFile(Tcl_Interp * interp, ClientData clientData,
+			   int objc, Tcl_Obj * CONST objv[]);
+int destroyLogToFile(Tcl_Interp * interp, ClientData clientData);
+int logToFile(Tcl_Interp * interp, ClientData clientData, char *msg);
 
 #endif

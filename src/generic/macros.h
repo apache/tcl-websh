@@ -24,7 +24,7 @@
 
 /* --------------------------------------------------------------------------
  * Varia concerning NULL 
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WebAssertData(interp,data,cmd,ret) \
   if( data == NULL ) { \
     LOG_MSG(interp,WRITE_LOG | SET_RESULT, \
@@ -114,7 +114,7 @@
 
 /* --------------------------------------------------------------------------
  * Argument parsing 
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WebAssertArgs(interp,objc,objv,params,idx,scanc)  \
   if( (idx = argHasOnlyAccepted(objc,objv,params,scanc)) != 0 ) { \
     Tcl_GetIndexFromObj(interp,objv[idx],params,"option",0,&idx);  \

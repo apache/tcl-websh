@@ -46,19 +46,16 @@ int truncate_file(ClientData handle);
 int lock_file(ClientData handle);
 int unlock_file(ClientData handle);
 
-int lock_TclChannel(Tcl_Interp *interp, Tcl_Channel channel);
-int unlock_TclChannel(Tcl_Interp *interp, Tcl_Channel channel);
+int lock_TclChannel(Tcl_Interp * interp, Tcl_Channel channel);
+int unlock_TclChannel(Tcl_Interp * interp, Tcl_Channel channel);
 
-int Web_LockChannel(ClientData clientData, 
-		    Tcl_Interp *interp, 
-		    int objc, Tcl_Obj *CONST objv[]);
+int Web_LockChannel(ClientData clientData,
+		    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_UnLockChannel(ClientData clientData, 
-		    Tcl_Interp *interp, 
-		    int objc, Tcl_Obj *CONST objv[]);
+int Web_UnLockChannel(ClientData clientData,
+		      Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
-int Web_TruncateFile(ClientData clientData, 
-		     Tcl_Interp *interp, 
-		     int objc, Tcl_Obj *CONST objv[]);
+int Web_TruncateFile(ClientData clientData,
+		     Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
 
 #endif

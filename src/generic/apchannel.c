@@ -36,132 +36,147 @@
 /* ----------------------------------------------------------------------------
  * close apache channel
  * ------------------------------------------------------------------------- */
-int apchannelCloseProc(ClientData clientData,
-		       Tcl_Interp *interp) {
+int apchannelCloseProc(ClientData clientData, Tcl_Interp * interp)
+{
 
-  /* nothing to do */
-  return 0;
+    /* nothing to do */
+    return 0;
 }
 
 /* ----------------------------------------------------------------------------
  * input from apache channel
  * ------------------------------------------------------------------------- */
-int apchannelInputProc(ClientData clientData, 
-		       char *buf, int bufSize,
-		       int *errorCodePtr) {
+int apchannelInputProc(ClientData clientData,
+		       char *buf, int bufSize, int *errorCodePtr)
+{
 
-  int res = -1;
-  request_rec *r = NULL;
-  
+    int res = -1;
+    request_rec *r = NULL;
 
-  if( (clientData == NULL) || (buf == NULL) ) return res;
-  r = (request_rec *)clientData;
 
-  if( bufSize > 0 )
-    res = ap_get_client_block(r,buf, bufSize);
+    if ((clientData == NULL) || (buf == NULL))
+	return res;
+    r = (request_rec *) clientData;
 
-  if( res <= 0 ) return -1;
+    if (bufSize > 0)
+	res = ap_get_client_block(r, buf, bufSize);
 
-  return res;
+    if (res <= 0)
+	return -1;
+
+    return res;
 }
 
 /* ----------------------------------------------------------------------------
  * output to apache channel
  * ------------------------------------------------------------------------- */
-int apchannelOutputProc(ClientData clientData, 
-		       char *buf, int toWrite,
-		       int *errorCodePtr) {
+int apchannelOutputProc(ClientData clientData,
+			char *buf, int toWrite, int *errorCodePtr)
+{
 
-  int res = -1;
+    int res = -1;
 
-  if( (clientData == NULL) || (buf == NULL) ) return res;
+    if ((clientData == NULL) || (buf == NULL))
+	return res;
 
 
-  if( toWrite > 0 ) {
-    res = ap_rwrite((void *)buf,toWrite,(request_rec *)clientData);
-  }
-  if( res < 0 ) return -1;
-  return res;
+    if (toWrite > 0) {
+	res = ap_rwrite((void *) buf, toWrite, (request_rec *) clientData);
+    }
+    if (res < 0)
+	return -1;
+    return res;
 }
 
 /* ----------------------------------------------------------------------------
  * watch apache channel
  * ------------------------------------------------------------------------- */
-void apchannelWatchProc(ClientData clientData, int mask) {
+void apchannelWatchProc(ClientData clientData, int mask)
+{
 }
 
 /* ----------------------------------------------------------------------------
  * getHandle for apache channel
  * ------------------------------------------------------------------------- */
 int apchannelGetHandleProc(ClientData clientData, int direction,
-			   ClientData *handlePtr) {
+			   ClientData * handlePtr)
+{
 
-  /* "not implemented" */
-  return EINVAL;
+    /* "not implemented" */
+    return EINVAL;
 }
 
 /* ----------------------------------------------------------------------------
  * apChannelType
  * ------------------------------------------------------------------------- */
 static Tcl_ChannelType apChannelType = {
-    "file",                             /* Type name. */
-    NULL,                               /* Set blocking/nonblocking mode.*/
-    apchannelCloseProc,                 /* Close proc. */
-    apchannelInputProc,                 /* Input proc. */
-    apchannelOutputProc,                /* Output proc. */
-    NULL,                               /* Seek proc. */
-    NULL,                               /* Set option proc. */
-    NULL,                               /* Get option proc. */
-    apchannelWatchProc,                 /* Initialize notifier. */
-    apchannelGetHandleProc,             /* Get OS handles out of channel. */
+    "file",			/* Type name. */
+    NULL,			/* Set blocking/nonblocking mode. */
+    apchannelCloseProc,		/* Close proc. */
+    apchannelInputProc,		/* Input proc. */
+    apchannelOutputProc,	/* Output proc. */
+    NULL,			/* Seek proc. */
+    NULL,			/* Set option proc. */
+    NULL,			/* Get option proc. */
+    apchannelWatchProc,		/* Initialize notifier. */
+    apchannelGetHandleProc,	/* Get OS handles out of channel. */
 };
 
 /* ----------------------------------------------------------------------------
  * createApchannel
  * ------------------------------------------------------------------------- */
-int createApchannel(Tcl_Interp *interp, request_rec *r) {
+int createApchannel(Tcl_Interp * interp, request_rec * r)
+{
 
-  Tcl_Channel channel = NULL;
-  int         flag = 0;
+    Tcl_Channel channel = NULL;
+    int flag = 0;
 
-  if( (interp == NULL) || (r == NULL) ) return TCL_ERROR;
+    if ((interp == NULL) || (r == NULL))
+	return TCL_ERROR;
 
-  flag = TCL_WRITABLE;
-  if (ap_should_client_block(r)) {
-    flag =  TCL_WRITABLE | TCL_READABLE;
-  }
+    flag = TCL_WRITABLE;
+    if (ap_should_client_block(r)) {
+	flag = TCL_WRITABLE | TCL_READABLE;
+    }
 
-  channel = Tcl_CreateChannel(&apChannelType,APCHANNEL,
-			      (ClientData)r,flag);
+    channel = Tcl_CreateChannel(&apChannelType, APCHANNEL,
+				(ClientData) r, flag);
 
-  if( channel == NULL ) return TCL_ERROR;
+    if (channel == NULL)
+	return TCL_ERROR;
 
-  Tcl_RegisterChannel(interp, channel);
+    Tcl_RegisterChannel(interp, channel);
 
-  return TCL_OK;
+    return TCL_OK;
 }
 
 /* ----------------------------------------------------------------------------
  * destroyApchannel
  * ------------------------------------------------------------------------- */
-int destroyApchannel(Tcl_Interp *interp) {
+int destroyApchannel(Tcl_Interp * interp)
+{
 
-  Tcl_Channel channel = NULL;
-  int mode = 0;
+    Tcl_Channel channel = NULL;
+    int mode = 0;
 
-  if( interp == NULL ) return TCL_ERROR;
+    if (interp == NULL)
+	return TCL_ERROR;
 
-  channel = Tcl_GetChannel(interp,APCHANNEL,&mode);
+    channel = Tcl_GetChannel(interp, APCHANNEL, &mode);
 
-  mode = 0;
-  if( channel == NULL ) {
-    mode++;
-  } else {
+    mode = 0;
+    if (channel == NULL) {
+	mode++;
+    }
+    else {
 
-    if( Tcl_UnregisterChannel(interp,channel) != TCL_OK ) mode++;
-  }
+	if (Tcl_UnregisterChannel(interp, channel) != TCL_OK)
+	    mode++;
+    }
 
-  if( mode ) return TCL_ERROR;
-  else       return TCL_OK;
+    if (mode)
+	return TCL_ERROR;
+    else
+	return TCL_OK;
 
 }

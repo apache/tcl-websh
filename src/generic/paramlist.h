@@ -21,50 +21,41 @@
 
 typedef Tcl_HashTable ParamList;
 
-int paramListGetValueToResult(Tcl_Interp *interp, ParamList *paramList, Tcl_Obj *key, Tcl_Obj *defaultObj);
+int paramListGetValueToResult(Tcl_Interp * interp, ParamList * paramList,
+			      Tcl_Obj * key, Tcl_Obj * defaultObj);
 
-int paramListSet(ParamList *hash, char *key, Tcl_Obj *value);
-int paramListSetAsWhole(ParamList *hash, char *key, Tcl_Obj *value);
-int paramListAdd(ParamList *hash, char *key, Tcl_Obj *value);
-int paramListDel(ParamList *hash, char *key);
-Tcl_Obj *paramListAsListObj(ParamList *hash);
-int     listObjAsParamList(Tcl_Obj *list, ParamList *hash);
-Tcl_Obj *paramListNamesAll(ParamList *hash);
-void    destroyParamList(ParamList *hash);
-int     paramGet(ParamList *paramList, 
-                 Tcl_Interp *interp, 
-                 int objc, Tcl_Obj *CONST objv[],
-		 int hasPrivate);
+int paramListSet(ParamList * hash, char *key, Tcl_Obj * value);
+int paramListSetAsWhole(ParamList * hash, char *key, Tcl_Obj * value);
+int paramListAdd(ParamList * hash, char *key, Tcl_Obj * value);
+int paramListDel(ParamList * hash, char *key);
+Tcl_Obj *paramListAsListObj(ParamList * hash);
+int listObjAsParamList(Tcl_Obj * list, ParamList * hash);
+Tcl_Obj *paramListNamesAll(ParamList * hash);
+void destroyParamList(ParamList * hash);
+int paramGet(ParamList * paramList,
+	     Tcl_Interp * interp,
+	     int objc, Tcl_Obj * CONST objv[], int hasPrivate);
 
-int paramGetIndexFromObj(Tcl_Interp *interp, 
-			 Tcl_Obj *obj,
+int paramGetIndexFromObj(Tcl_Interp * interp,
+			 Tcl_Obj * obj,
 			 char **tablePtr,
-			 char *msg,
-			 int flags,
-			 int *indexPtr);
+			 char *msg, int flags, int *indexPtr);
 
-Tcl_Obj *
-paramListGetObject(Tcl_Interp *interp,
-		   ParamList *paramList,
-		   Tcl_Obj *key);
+Tcl_Obj *paramListGetObject(Tcl_Interp * interp,
+			    ParamList * paramList, Tcl_Obj * key);
 
-Tcl_Obj *
-paramListGetObjectByString(Tcl_Interp *interp,
-		   ParamList *paramList,
-		   char *key);
+Tcl_Obj *paramListGetObjectByString(Tcl_Interp * interp,
+				    ParamList * paramList, char *key);
 
 int
-paramListGetValuetoResult(Tcl_Interp *interp,
-			  ParamList *paramList,
-			  Tcl_Obj *key,
-			  Tcl_Obj *defaultObj);
+paramListGetValuetoResult(Tcl_Interp * interp,
+			  ParamList * paramList,
+			  Tcl_Obj * key, Tcl_Obj * defaultObj);
 
 
 int
-paramListCountValue(Tcl_Interp *interp,
-		    ParamList *paramList,
-		    Tcl_Obj *key);
+paramListCountValue(Tcl_Interp * interp,
+		    ParamList * paramList, Tcl_Obj * key);
 
-void
-emptyParamList(ParamList *paramList);
+void emptyParamList(ParamList * paramList);
 #endif

@@ -21,13 +21,15 @@
 /* ----------------------------------------------------------------------------
  * createDefaultResponseObj
  * ------------------------------------------------------------------------- */
-ResponseObj *createDefaultResponseObj(Tcl_Interp *interp) {
-  return createResponseObj(interp, CGICHANNEL, &objectHeaderHandler);
+ResponseObj *createDefaultResponseObj(Tcl_Interp * interp)
+{
+    return createResponseObj(interp, CGICHANNEL, &objectHeaderHandler);
 }
 
 /* ----------------------------------------------------------------------------
  * isDefaultResponseObj
  * ------------------------------------------------------------------------- */
-int isDefaultResponseObj(char *name) {
-  return !strcmp(name, CGICHANNEL);
+int isDefaultResponseObj(char *name)
+{
+    return !strcmp(name, CGICHANNEL);
 }

@@ -19,33 +19,32 @@
 /* ----------------------------------------------------------------------------
  * Init --
  * ------------------------------------------------------------------------- */
-int messages_Init(Tcl_Interp *interp) {
+int messages_Init(Tcl_Interp * interp)
+{
 
-  /* --------------------------------------------------------------------------
-   * interpreter running ?
-   * ----------------------------------------------------------------------- */
-  if (interp == NULL) return TCL_ERROR;
+    /* --------------------------------------------------------------------------
+     * interpreter running ?
+     * ----------------------------------------------------------------------- */
+    if (interp == NULL)
+	return TCL_ERROR;
 
-  /* --------------------------------------------------------------------------
-   * register commands
-   * ----------------------------------------------------------------------- */
-  Tcl_CreateObjCommand(interp, "web::send",
-		       Web_Send,
-  		       (ClientData)NULL,
-  		       (Tcl_CmdDeleteProc *) NULL);
+    /* --------------------------------------------------------------------------
+     * register commands
+     * ----------------------------------------------------------------------- */
+    Tcl_CreateObjCommand(interp, "web::send",
+			 Web_Send,
+			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-  Tcl_CreateObjCommand(interp, "web::recv",
-		       Web_Recv,
-  		       (ClientData)NULL,
-  		       (Tcl_CmdDeleteProc *) NULL);
+    Tcl_CreateObjCommand(interp, "web::recv",
+			 Web_Recv,
+			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-  Tcl_CreateObjCommand(interp, "web::msgflag",
-		       Web_MsgFlag,
-  		       (ClientData)NULL,
-  		       (Tcl_CmdDeleteProc *) NULL);
+    Tcl_CreateObjCommand(interp, "web::msgflag",
+			 Web_MsgFlag,
+			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-  /* --------------------------------------------------------------------------
-   * done
-   * ----------------------------------------------------------------------- */
-  return TCL_OK;
+    /* --------------------------------------------------------------------------
+     * done
+     * ----------------------------------------------------------------------- */
+    return TCL_OK;
 }

@@ -18,7 +18,7 @@
 
 /* --------------------------------------------------------------------------
  * Commands
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 /* ----------------------------------------------------------------------------
  * SubCommands
@@ -36,11 +36,11 @@
 
 /* --------------------------------------------------------------------------
  * Registered Data
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 
 /* --------------------------------------------------------------------------
  * messages
- * ------------------------------------------------------------------------*/ 
+ * ------------------------------------------------------------------------*/
 #define WEB_LOGTOCMD_USAGE "cmdName"
 
 
@@ -48,12 +48,11 @@
  * plugin logger: tocmd
  * ------------------------------------------------------------------------- */
 typedef char *LogToCmdData;
-int          destroyLogToCmdData(Tcl_Interp *interp,
-				 LogToCmdData *logToCmdData);
+int destroyLogToCmdData(Tcl_Interp * interp, LogToCmdData * logToCmdData);
 
-ClientData createLogToCmd(Tcl_Interp *interp, ClientData clientData,
-			  int objc, Tcl_Obj *CONST objv[]);
-int destroyLogToCmd(Tcl_Interp *interp, ClientData clientData);
-int logToCmd(Tcl_Interp *interp,ClientData clientData, char *msg);
+ClientData createLogToCmd(Tcl_Interp * interp, ClientData clientData,
+			  int objc, Tcl_Obj * CONST objv[]);
+int destroyLogToCmd(Tcl_Interp * interp, ClientData clientData);
+int logToCmd(Tcl_Interp * interp, ClientData clientData, char *msg);
 
 #endif

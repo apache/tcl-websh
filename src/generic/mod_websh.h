@@ -42,20 +42,22 @@
 
 #define WEB_AP_ASSOC_DATA "web::ap"
 
-typedef struct {
+typedef struct
+{
 #ifndef APACHE2
-  char          *scriptName;
-#else /* APACHE2 */
-  const char    *scriptName;
-#endif /* APACHE2 */
-  Tcl_Interp    *mainInterp;
-  Tcl_Mutex     mainInterpLock;
-  Tcl_HashTable *webshPool;
-  Tcl_Mutex     webshPoolLock;
-  server_rec    *server;
-} websh_server_conf;
+    char *scriptName;
+#else				/* APACHE2 */
+    const char *scriptName;
+#endif				/* APACHE2 */
+    Tcl_Interp *mainInterp;
+    Tcl_Mutex mainInterpLock;
+    Tcl_HashTable *webshPool;
+    Tcl_Mutex webshPoolLock;
+    server_rec *server;
+}
+websh_server_conf;
 
-int createApchannel(Tcl_Interp *interp, request_rec *r);
-int destroyApchannel(Tcl_Interp *interp);
+int createApchannel(Tcl_Interp * interp, request_rec * r);
+int destroyApchannel(Tcl_Interp * interp);
 
 #endif

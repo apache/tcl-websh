@@ -21,11 +21,11 @@
 #define WEB_LOW_BYTE(x) ((unsigned char)((x) & 0xFF))
 #define WEB_HIG_BYTE(x) ((unsigned char)((x) >> 8))
 
-unsigned short crcCalc(Tcl_Obj *in);
-Tcl_Obj        *crcAsciify(unsigned short crc);
-unsigned short crcDeAsciify(Tcl_Obj *in);
-Tcl_Obj        *crcCheck(Tcl_Obj *in);
-int            crcAdd(Tcl_Obj *in);
+unsigned short crcCalc(Tcl_Obj * in);
+Tcl_Obj *crcAsciify(unsigned short crc);
+unsigned short crcDeAsciify(Tcl_Obj * in);
+Tcl_Obj *crcCheck(Tcl_Obj * in);
+int crcAdd(Tcl_Obj * in);
 
 
 #endif

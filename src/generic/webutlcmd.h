@@ -18,6 +18,6 @@
 #ifndef WEBUTLCMD_H
 #define WEBUTLCMD_H
 
-int webutlcmd_Init(Tcl_Interp *interp);
+int webutlcmd_Init(Tcl_Interp * interp);
 
 #endif
