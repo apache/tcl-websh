@@ -1,11 +1,11 @@
 #
 # sessctx.ws3 -- Session Context
 # nca-073-9
-# 
+#
 # Copyright (C) 1999 by Netcetera AG.
 # Copyright (C) 2001 by Apache Software Foundation.
 # All rights reserved.
-# 
+#
 # See the file "license.terms" for information on usage and
 # redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
@@ -17,7 +17,7 @@
 # =============================================================================
 
 proc web::sessioncontextfactory {ctxmgrname} {
- 
+
     # correct namespace (relative to caller)
     if {![string match ::* $ctxmgrname]} {
 	set ctxmgrname [uplevel namespace current]::$ctxmgrname
@@ -52,7 +52,7 @@ proc web::sessioncontextfactory {ctxmgrname} {
 	    }
 	}
     }
-    
+
     # init a session context
     proc ${ctxmgrname}::init {{id ""} {create 0}} {
 	# 1st: delete any data
@@ -61,16 +61,16 @@ proc web::sessioncontextfactory {ctxmgrname} {
 	if {[string length $id]} {
 	    _load $id $create
 	} else {
-	    
+
 	    # we assume we have an -attachto given
 	    variable _attachto
 	    if {![info exists _attachto]} {
 		error "no param to get session id from specified. Use -attachto."
 	    }
-	    set c [web::param -count $_attachto] 
+	    set c [web::param -count $_attachto]
 	    if { $c == 1 } {
 		# simple case: we have such a param
-		set id 
+		set id
 		_load [web::param $_attachto] $create
 	    } elseif { $c > 1} {
 		# uh-oh: multiple params
@@ -81,7 +81,7 @@ proc web::sessioncontextfactory {ctxmgrname} {
 	    }
 	}
     }
-    
+
     # create a new session context
     proc ${ctxmgrname}::new {{id ""}} {
 	cunset
@@ -97,7 +97,7 @@ proc web::sessioncontextfactory {ctxmgrname} {
 	}
 	commit
     }
-    
+
     # save a context to a context storage manager
     proc ${ctxmgrname}::commit {} {
 	variable _id
@@ -112,7 +112,7 @@ proc web::sessioncontextfactory {ctxmgrname} {
 	    web::cmdurlcfg -set $_attachto $_id
 	}
     }
-    
+
     # accessor to id
     proc ${ctxmgrname}::id {} {
 	variable _id
@@ -122,7 +122,7 @@ proc web::sessioncontextfactory {ctxmgrname} {
 	    error "no current id."
 	}
     }
-    
+
     # private method to load id from storage manager and
     # set current id
     proc ${ctxmgrname}::_load {id {create 0}} {
@@ -131,11 +131,11 @@ proc web::sessioncontextfactory {ctxmgrname} {
 	load $id $create
 	set _id $id
     }
-    
+
     # place holder for a session context storage manager
     proc ${ctxmgrname}::load {id {create 0}} {
 	error "no load method defined."
-	
+
     }
     # place holder for a session context storage manager
     proc ${ctxmgrname}::save {id} {
@@ -152,14 +152,14 @@ proc web::sessioncontextfactory {ctxmgrname} {
 # =============================================================================
 
 proc web::filecontext {ctxmgrname args} {
-    
+
     # correct namespace (relative to caller)
     if {![string match ::* $ctxmgrname]} {
 	set ctxmgrname [uplevel namespace current]::$ctxmgrname
     }
 
     web::sessioncontextfactory $ctxmgrname
-    
+
     # set default values for some properties
     # permission for files
     namespace eval ::$ctxmgrname {
@@ -169,7 +169,7 @@ proc web::filecontext {ctxmgrname args} {
 	# if to save/load values crypted
 	variable _crypt 1
     }
-    
+
     # parse args for this
     set argc [llength $args]
     set baseargs {}
@@ -192,11 +192,11 @@ proc web::filecontext {ctxmgrname args} {
     }
     if {[info exists ${ctxmgrname}::_path] == 0} {
 	error "web::filecontext requires a -path argument.  Use '-path %d' if you would like to keep the default behavior."
-    } 
+    }
 
     # now eat up remaining args
     ${ctxmgrname}::_parseargs $baseargs
- 
+
     # _checkID - checks whether the id is 'safe'
     proc ${ctxmgrname}::_checkID {id} {
 	set notok 0
@@ -212,7 +212,7 @@ proc web::filecontext {ctxmgrname args} {
 	}
 	return
     }
-   
+
     # Load - context from a file
     proc ${ctxmgrname}::load {id {create 0}} {
 	set filename [_getFileName $id]
@@ -249,7 +249,7 @@ proc web::filecontext {ctxmgrname args} {
 	# now that we have the lock: truncate
 	web::truncatefile $fh
  	seek $fh 0 start
-	
+
 	if {[catch {
 	    variable _crypt
 
@@ -265,17 +265,17 @@ proc web::filecontext {ctxmgrname args} {
 	}
 
 	web::unlockfile $fh
-	
+
 	close $fh
     }
 
     # invalidate context
     proc ${ctxmgrname}::invalidate {} {
 	variable _perm
- 
+
 	# delete in namespace
 	cunset
- 
+
 	# delete on file system
 	set filename [_getFileName [id]]
 	file delete -force $filename
