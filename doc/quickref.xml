@@ -1587,7 +1587,8 @@ $Id$
 	<option>cappend</option>, <option>clappend</option>,
 	<option>cget</option>, <option>cexists</option>,
 	<option>cunset</option>, <option>carray</option>,
-	<option>cnames</option>, and <option>dump</option>.
+	<option>cnames</option>, <option>delete</option>,
+        and <option>dump</option>.
 
 	Manages data of the context. The subcommands behave like the
 	Tcl commands with similar names.
@@ -1677,6 +1678,14 @@ $Id$
 	      <para>
 		lists existing keys of context matching
 		<option>pattern</option>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><command><replaceable>name</replaceable>::delete</command></term>
+	    <listitem>
+	      <para>
+		delete the context (same as <command>namespace delete <replaceable>name</replaceable></command>)
 	      </para>
 	    </listitem>
 	  </varlistentry>
