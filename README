@@ -56,6 +56,10 @@ Documentation is available at
 3. Compiling and installing Websh
 ---------------------------------
 
+Please note that we use some GNU make extensions, so make sure that 
+you try to compile Websh using a GNU version of make (or gmake) when
+compiling under UNIX.
+
 Websh is a pure Tcl extension, Tk is not required. You need
 Tcl8.3 or newer to compile and install Websh 3.5.
 

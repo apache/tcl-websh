@@ -1,3 +1,11 @@
+Notes
+=====
+
+Please note that we use some GNU make extensions, so make sure that 
+you try to compile Websh using a GNU version of make (or gmake) when
+compiling under UNIX.
+
+
 Compile Websh 3.5
 =================
 
