@@ -2198,8 +2198,8 @@ $Id$
       <title>web::lockfile and web::unlockfile</title>
       <para>
 	<cmdsynopsis>
-		<command>web::lockfile</command> <arg>fh</arg>
-		<command>web::unlockfile</command> <arg>fh</arg>
+	  <command>web::lockfile</command> <arg>fh</arg>
+	  <command>web::unlockfile</command> <arg>fh</arg>
 	</cmdsynopsis>
 
 	Interface to lockf(). lockf() works best on local filesystems.
@@ -2248,12 +2248,12 @@ $Id$
     <title>Data encryption</title>
     <para>
       Encrypt (<command>web::encrypt</command>) and decrypt
-      (<command>web::decrypt</command>) data. By default,
-      the built-in, weak encryption is used. encryption is extensible
-      by plug-Ins.  The encryption module tries all plug-Ins from a
-      list until the first plug-In was able to en-/decrypt the input.
-      See <command>web::config</command> for the
-      configuration of the plug-Ins to be used.
+      (<command>web::decrypt</command>) data. By default, the
+      built-in, weak encryption is used. encryption is extensible by
+      plug-Ins.  The encryption module tries all plug-Ins from a list
+      until the first plug-In was able to en-/decrypt the input.  See
+      <command>web::config</command> for the configuration of the
+      plug-Ins to be used.
     </para>
     <section id="web::encrypt">
       <title>web::encrypt</title>
@@ -2262,7 +2262,7 @@ $Id$
 	Syntax:
 	<cmdsynopsis>
 	  <command>web::encrypt</command> <arg>data</arg>
-      </cmdsynopsis>
+	</cmdsynopsis>
 	Returns encrypted data.
 
       </para>
@@ -2274,7 +2274,7 @@ $Id$
 	Syntax:
 	<cmdsynopsis>
 	  <command>web::decrypt</command> <arg>data</arg>
-      </cmdsynopsis>
+	</cmdsynopsis>
 
 	Returns decrypted data.
 
@@ -2333,11 +2333,10 @@ $Id$
       <title>web::cryptdkey</title>
       <para>
 
-
 	<cmdsynopsis>
 	  <command>web::cryptdkey</command> <arg
-	  choice="opt">key</arg>
-      </cmdsynopsis>
+					      choice="opt">key</arg>
+	</cmdsynopsis>
 
 	Sets the new key for encryption. If no argument is given,
 	resets to the default key. This command does not return the
@@ -2388,15 +2387,16 @@ $Id$
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      web::yourencrypt accepts one argument web::yourencrypt
-	      takes a string as input and generates a string which
-	      must be URI compliant
+	      <command>web::yourencrypt</command> accepts one argument
+	      web::yourencrypt takes a string as input and generates a
+	      string which must be URI compliant
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para>
-	      web::yourdecrypt accepts one argument web::yourdecrypt
-	      takes a string as input and returns a string
+	      <command>web::yourdecrypt</command> accepts one argument
+	      web::yourdecrypt takes a string as input and returns a
+	      string
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -2441,19 +2441,22 @@ $Id$
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      <command>web::htmlify</command> ?-options? <option>text</option>
+	      <command>web::htmlify</command>
+	      <optional><option>-options</option></optional>
+	      <option>text</option>
 	    </para>
 	    <para>
 	      Options is: <option>-numeric</option>.
 	    </para>
 	    <para>
-	      Return HTML-compliant <option>text</option> with HTML encoded
-	      entities in mnemonic form (e.g. &amp;auml;) or - with
-	      option -numeric - numeric form (e.g. &amp;#228;)
+	      Return HTML-compliant <option>text</option> with HTML
+	      encoded entities in mnemonic form (e.g. &amp;auml;) or -
+	      with option -numeric - numeric form (e.g. &amp;#228;)
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><command>web::dehtmlify</command>	<option>text</option>
+	    <para><command>web::dehtmlify</command>
+	    <option>text</option>
 	    </para>
 	    <para>
 	      Remove all HTML-specifics of <option>text</option>
@@ -2506,25 +2509,24 @@ $Id$
       <title>web::send</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::send</command> <option>channel</option> <option>cmdNr</option> <option>message</option> ??#<optional><option>flags</option></optional>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::send</command> <arg>channel</arg>
+	  <arg>cmdNr</arg> <arg>message</arg> <arg
+	  choice="opt">flags</arg>
+      </cmdsynopsis>
 
-	Send the command <option>cmdNr</option> and the message <option>message</option> to channel
-	<option>channelName</option> using the flags <option>flags</option>. The command numbers are
-	application specific. If #<option>flags</option> is used, flags is the numeric
-	(integer) representation of the flags is to be set. If the # is
-	omitted, <option>flags</option> is a list of symbolic flags. Currently, there is only
-	one flag: &quot;multiple&quot; or &quot;noflush&quot; with the same meaning, 
-	indicating that there is more to follow and no automatic flush on the
-	channel should be done.
+	Send the command <option>cmdNr</option> and the message
+	<option>message</option> to channel
+	<option>channelName</option> using the flags
+	<option>flags</option>. The command numbers are application
+	specific. If #<option>flags</option> is used, flags is the
+	numeric (integer) representation of the flags is to be set. If
+	the # is omitted, <option>flags</option> is a list of symbolic
+	flags. Currently, there is only one flag: &quot;multiple&quot;
+	or &quot;noflush&quot; with the same meaning, indicating that
+	there is more to follow and no automatic flush on the channel
+	should be done.
 
       </para>
     </section>
@@ -2532,21 +2534,18 @@ $Id$
       <title>web::recv</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::recv</command> <option>channel</option> <option>cmdVarName</option> <option>msgVarName</option> <option>flagVarName</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::recv</command> <arg>channel</arg>
+	  <arg>cmdVarName</arg> <arg>msgVarName</arg>
+	  <arg>flagVarName</arg>
+      </cmdsynopsis>
 
-	Receives a message from <option>channelName</option>. The other arguments are the
-	names of the corresponding variables which will contain the message.
-	The flags are returned numeric. (To handle these flags, use the
-	web::msgflag function).
+	Receives a message from <option>channelName</option>. The
+	other arguments are the names of the corresponding variables
+	which will contain the message.  The flags are returned
+	numeric. (To handle these flags, use the web::msgflag
+	function).
 
       </para>
     </section>
@@ -2554,22 +2553,17 @@ $Id$
       <title>web::msgflag</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::msgflag</command> <optional><option>flags</option></optional> <optional><option>testflags</option></optional>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	<cmdsynopsis>
+	  <command>web::msgflag</command>
+	  <arg choice="opt">flags</arg>
+	  <arg choice="opt">testflags</arg>
+      </cmdsynopsis>
 
 	Set or test flags.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::msgflag</term>
+	    <term><command>web::msgflag</command></term>
 	    <listitem>
 	      <para>
 		returns a list of all known message flags
@@ -2577,18 +2571,22 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::msgflag <option>flags</option></term>
+	    <term><command>web::msgflag</command>
+	    <option>flags</option></term>
 	    <listitem>
 	      <para>
-		returns the integer representation of the flags listed in <option>flags</option> 
+		returns the integer representation of the flags listed
+		in <option>flags</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::msgflag <option>flags</option> <option>testflags</option></term>
+	    <term><command>web::msgflag</command>
+	    <option>flags</option> <option>testflags</option></term>
 	    <listitem>
 	      <para>
-		returns 1, if the flags in <option>testflags</option> are set in <option>flags</option>
+		returns 1, if the flags in <option>testflags</option>
+		are set in <option>flags</option>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2610,43 +2608,32 @@ $Id$
       <title>web::initializer</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::initializer</command> <option>code</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::initializer</command> <arg>code</arg>
+	</cmdsynopsis>
 
-	This code is executed only when a new interpreter is created.  Note
-	that the &quot;main&quot; Webshell script can <command>source</command> several modules which
-	each call their initialization code.
+	This code is executed only when a new interpreter is created.
+	Note that the &quot;main&quot; Webshell script can
+	<command>source</command> several modules which each call
+	their initialization code.
 
-      </para><para>
       </para>
     </section>
     <section id="web::finalizer">
       <title>web::finalizer</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::finalizer</command> <option>code</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+
+	<cmdsynopsis>
+	  <command>web::finalizer</command> <arg>code</arg>
+	</cmdsynopsis>
 
 	Register code to be exectuted when the interpreter for this
-	Webshell script is deleted. <command>web::dofinalize</command> will then call
-	each <option>code</option> block that has been registered, starting with the
-	most recently added <option>code</option>.
+	Webshell script is deleted. <command>web::dofinalize</command>
+	will then call each <option>code</option> block that has been
+	registered, starting with the most recently added
+	<option>code</option>.
 
       </para>
     </section>
@@ -2654,19 +2641,14 @@ $Id$
       <title>web::dofinalize</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::dofinalize</command>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::dofinalize</command>
+	</cmdsynopsis>
 
 	Execute finalizer code that has been registerd using
-	<command>web::finalizer</command>, starting with the most recently added <option>code</option>.
+	<command>web::finalizer</command>, starting with the most
+	recently added <option>code</option>.
 
       </para>
     </section>
@@ -2674,16 +2656,10 @@ $Id$
       <title>web::maineval</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::maineval</command> <option>code</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::maineval</command> <arg>code</arg>
+	</cmdsynopsis>
 
 	Execute code in the &quot;main&quot; interpreter of mod_websh.
 
@@ -2693,46 +2669,57 @@ $Id$
       <title>web::interpclasscfg</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::interpclasscfg</command> <option>classid</option> property ?value?</para><para>
-		Properties are: <option>maxrequests</option>, <option>maxttl</option>, <option>maxidletime</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::interpclasscfg</command> <arg>classid</arg>
+	  <arg>property</arg> <arg choice="opt">value</arg>
+      </cmdsynopsis>
 
-	Set or accesses properties of the interpreter class <option>classid</option>.
+	Properties are: <option>maxrequests</option>,
+	<option>maxttl</option>, <option>maxidletime</option>
+
+	Set or accesses properties of the interpreter class
+	<option>classid</option>.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::interpclasscfg <option>classid</option> maxrequests <optional><option>value</option></optional></term>
+	    <term>
+	      <command>web::interpclasscfg</command>
+	      <option>classid</option> <option>maxrequests</option>
+	      <optional><option>value</option></optional>
+	    </term>
 	    <listitem>
 	      <para>
-		gets or sets the maximum number of requests interpreters of this
-		class should handle. If <option>value</option> is 0, handle an unlimited number
-		of requests. Default: 1
+		gets or sets the maximum number of requests
+		interpreters of this class should handle. If
+		<option>value</option> is 0, handle an unlimited
+		number of requests. Default: 1
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::interpclasscfg <option>classid</option> maxttl <optional><option>value</option></optional></term>
+	    <term><command>web::interpclasscfg</command>
+	      <option>classid</option> <option>maxttl</option>
+	      <optional><option>value</option></optional></term>
 	    <listitem>
 	      <para>
-		gets or sets the maximum number of seconds interpreters of this
-		class should live. If <option>value</option> is 0, it lives forever. Default: 0
+		gets or sets the maximum number of seconds
+		interpreters of this class should live. If
+		<option>value</option> is 0, it lives
+		forever. Default: 0
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::interpclasscfg <option>classid</option> maxidletime <optional><option>value</option></optional></term>
+	    <term><command>web::interpclasscfg</command>
+	      <option>classid</option> <option>maxidletime</option>
+	      <optional><option>value</option></optional>
+	    </term>
 	    <listitem>
 	      <para>
-		gets or sets the maximum number of seconds interpreters of this
-		class should live beeing idle. If <option>value</option> is 0, no idle timeout is
+		gets or sets the maximum number of seconds
+		interpreters of this class should live beeing idle. If
+		<option>value</option> is 0, no idle timeout is
 		assumed. Default: 0
 	      </para>
 	    </listitem>
@@ -2746,63 +2733,68 @@ $Id$
       <title>web::interpcfg</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		<command>web::interpcfg</command> ?property?
-		?value?</para><para> Properties are:
-		<option>numreq</option>, <option>retire</option>,
-		<option>starttime</option>,
-		<option>lastusedtime</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  <command>web::interpcfg</command>
+	  <arg choice="opt">property</arg>
+	  <arg choice="opt">value</arg>
+	</cmdsynopsis>
+
+	Properties are: <option>numreq</option>,
+	<option>retire</option>, <option>starttime</option>,
+	<option>lastusedtime</option>
 
 	Sets or accesses properties of the current interpreter.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>web::interpcfg </term>
+	    <term><command>web::interpcfg</command></term>
 	    <listitem>
 	      <para>
-		returns <option>classid</option> of current interpreter.
+		returns <option>classid</option> of current
+		interpreter.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::interpcfg numreq</term>
+	    <term><command>web::interpcfg</command>
+	    <option>numreq</option></term>
 	    <listitem>
 	      <para>
-		gets the number of requests handled by this interpreter
+		gets the number of requests handled by this
+		interpreter
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::interpcfg retire <optional><option>boolean</option></optional></term>
+	    <term><command>web::interpcfg</command>
+	    <option>retire</option>
+	    <optional><option>boolean</option></optional></term>
 	    <listitem>
 	      <para>
-		gets or sets the flag indicating this interpreter should be removed
-		after handling the current request
+		gets or sets the flag indicating this interpreter
+		should be removed after handling the current request
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::interpcfg starttime</term>
+	    <term><command>web::interpcfg</command>
+	    <option>starttime</option></term>
 	    <listitem>
 	      <para>
-		returns the time in seconds since the epoch, this interpreter was started
+		returns the time in seconds since the epoch, this
+		interpreter was started
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term>web::interpcfg lastusedtime</term>
+	    <term><command>web::interpcfg</command>
+	    <option>lastusedtime</option></term>
 	    <listitem>
 	      <para>
-		returns the time in seconds since the epoch, this interpreter was last used
-		(starttime in case of first request).
+		returns the time in seconds since the epoch, this
+		interpreter was last used (starttime in case of first
+		request).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2817,25 +2809,22 @@ $Id$
       <title>web::match</title>
       <para>
 
-	<variablelist>
-	  <varlistentry>
-	    <term>Syntax:</term>
-	    <listitem>
-	      <para>
-		web::match <option>result</option>
-		<option>listToBeSearched</option>
-		<option>searchFor</option>
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+	Syntax:
+	<cmdsynopsis>
+	  web::match <arg>result</arg>
+	  <arg>listToBeSearched</arg>
+	  <arg>searchFor</arg>
+	</cmdsynopsis>
 
 	In case <option>searchFor</option> exists in
 	<option>listToBeSearched</option>, web::match returns
 	<option>result</option>, otherwise an empty string.
 
-      </para><para>
-	For websh2 cracks:</para><para>
+      </para>
+      <para>
+	For websh2 cracks:
+      </para>
+      <para>
 
 	wpp_isselected v1 v2 would now be: web::match
 	&quot;selected&quot; v1 v2
@@ -2845,7 +2834,7 @@ $Id$
 
 	web::match treats v1 as a list. Thus, <emphasis>web::match
 	  &quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
-	<emphasis>ok</emphasis>.
+	  <emphasis>ok</emphasis>.
 
       </para>
     </section>
