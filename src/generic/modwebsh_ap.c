@@ -13,6 +13,7 @@
  *
  */
 
+#include <sys/stat.h>
 #include "tcl.h"
 #include "mod_websh.h"
 #include "modwebsh.h"
