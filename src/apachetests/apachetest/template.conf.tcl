@@ -22,6 +22,8 @@ ServerName localhost
 
 DocumentRoot "$CWD"
 
+WebshConfig "${CWD}/websh.conf"
+
 <Directory "$CWD">
 Options All MultiViews
 AllowOverride All
