@@ -1077,20 +1077,6 @@ $Id$
       <para>
 	<variablelist>
 	  <varlistentry>
-	    <term><command>web::response</command>
-	      <option>-select</option>
-	      <option><optional>#</optional><replaceable>channelName</replaceable></option>
-	    </term>
-	    <listitem>
-	      <para>
-		selects <option>channelName</option> as new response
-		object. If the <option>channelName</option> is
-		prepended by a <option>#</option>, it refers to a global 
-                variable named <option>channelName</option>.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry>
 	    <term><command>web::response</command></term>
 	    <listitem>
 	      <para>
@@ -1101,12 +1087,14 @@ $Id$
 	  <varlistentry>
 	    <term><command>web::response</command>
 	      <option>-select</option>
-	      <option><optional>#</optional><replaceable>channel</replaceable></option></term>
+	      <option><optional>#</optional><replaceable>channelName</replaceable></option>
+	    </term>
 	    <listitem>
 	      <para>
-		makes <option>channel</option> the new default
-		response object and returns the old default response
-		object. The optional hash (&quot;#&quot;) denotes that output should be sent to a global variable named <option><replaceable>channel</replaceable></option> instead of a Tcl channel.
+		selects <option>channelName</option> as new response
+		object. If the <option>channelName</option> is
+		prepended by a <option>#</option>, it refers to a global 
+                variable named <option>channelName</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
