@@ -166,18 +166,15 @@ $Id$
 	  </listitem>
 	</varlistentry>
       </variablelist>
-
     </section>
     <section id="Examples0">
-      <title>Examples</title>
       <para>
-
+	<emphasis>Examples</emphasis>
 	<programlisting>
 	  % web::config decryptchain
 	  web::encryptd
 	  %
 	</programlisting>
-
       </para>
     </section>
   </section>
@@ -352,8 +349,8 @@ $Id$
       </para>
     </section>
     <section id="Examples2">
-      <title>Examples</title>
       <para>
+      <emphasis>Examples</emphasis>
 
 	<programlisting>
 	  % web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
@@ -520,8 +517,8 @@ $Id$
       </para>
     </section>
     <section id="Examples3">
-      <title>Examples</title>
       <para>
+	<emphasis>Examples</emphasis>
 	<programlisting>
 	  % web::cmdurl &quot;&quot;
 	  ?XDqPtk34XvyPh41gUBo
@@ -658,8 +655,8 @@ $Id$
       </para>
     </section>
     <section id="Examples4">
-      <title>Examples</title>
       <para>
+      <emphasis>Examples</emphasis>
 
 	<programlisting>
 	  % set tst {puts &quot;On the hook&quot;}
@@ -732,8 +729,8 @@ $Id$
       </para>
     </section>
     <section id="Examples5">
-      <title>Examples</title>
       <para>
+	<emphasis>Examples</emphasis>
 
 	See <ulink
 	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
@@ -1019,8 +1016,8 @@ $Id$
       </para>
     </section>
     <section id="Examples6">
-      <title>Examples</title>
       <para>
+      <emphasis>Examples</emphasis>
 
 	<programlisting>
 	  % web::request CONTENT_LENGTH
@@ -1282,8 +1279,8 @@ $Id$
       </para>
     </section>
     <section id="Examples7">
-      <title>Examples</title>
       <para>
+	<emphasis>Examples</emphasis>
 	<programlisting>
 	  % web::response
 	  stdout
@@ -1518,9 +1515,8 @@ $Id$
       </section>
     </section>
     <section id="Examples8">
-      <title>Examples</title>
       <para>
-
+      <emphasis>Examples</emphasis>
 	<programlisting>
 	  % web::logfilter add *.-debug
 	  logfilter0
@@ -2153,8 +2149,8 @@ $Id$
       </para>
     </section>
     <section id="Examples9">
-      <title>Examples</title>
       <para>
+      <emphasis>Examples</emphasis>
 	<programlisting>
 	  % web::filecounter handleName -filename &quot;test.dat&quot;
 	  handleName
@@ -2248,9 +2244,8 @@ $Id$
       </para>
     </section>
     <section id="Examples10">
-      <title>Examples</title>
       <para>
-
+      <emphasis>Examples</emphasis>
 	<programlisting>
 	  set fh [open [web::tempfile] w]
 	  web::lockfile $fh
@@ -2499,8 +2494,8 @@ $Id$
       </para>
     </section>
     <section id="Examples11">
-      <title>Examples</title>
       <para>
+	<emphasis>Examples</emphasis>
 	<programlisting>
 	  % web::htmlify &lt;
 	  &amp;lt;
@@ -2614,9 +2609,8 @@ $Id$
       </para>
     </section>
     <section id="Examples12">
-      <title>Examples</title>
       <para>
-
+	<emphasis>Examples</emphasis>
       </para>
     </section>
   </section>
