@@ -62,8 +62,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Group and was originally based
- * on public domain software written at the National Center for
- * Supercomputing Applications, University of Illinois, Urbana-Champaign.
+ * on software written by Netcetera AG, Zurich, Switzerland.
  * For more information on the Apache Group and the Apache HTTP server
  * project, please see <http://www.apache.org/>.
  *
