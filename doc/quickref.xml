@@ -56,10 +56,12 @@ $Id$
 	  url="http://tcl.apache.org/websh/download/">http://tcl.apache.org/websh/download/</ulink>.
       </para>
       <note>
+      <para>
 	We try to keep this quick reference up-to-date and hope that
 	it will be useful. We do not guarantee that it is suitable for
 	any particular purpose whatsoever. The authors accept no
 	liability with regards to this information or its use.
+      </para>
       </note>
     </section>
   </section>
@@ -440,7 +442,7 @@ $Id$
 
 	<variablelist>
 	  <varlistentry>
-	    <term><option>-protocol</option> <option><optional><replaceable>value</replaceable></optional></option></term>
+	    <term><option>-protocol</option> <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		protocol to be used. Defaults to the scheme used to
@@ -1247,10 +1249,10 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::put</command>
-	  <group choice="opt">
+	  <arg choice="opt">
 	    <arg choice="opt">#</arg>
 	    <arg><replaceable>channel</replaceable></arg>
-	  </group>
+	  </arg>
 	  <arg><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
 	Send output to a Tcl channel. No newline is added to
@@ -1272,10 +1274,10 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::putx</command>
-	  <group choice="opt">
+	  <arg choice="opt">
 	    <arg choice="opt">#</arg>
 	    <arg><replaceable>channel</replaceable></arg>
-	  </group>
+	  </arg>
 	  <arg><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
 
@@ -1292,10 +1294,10 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::putxfile</command>
-	  <group choice="opt">
+	  <arg choice="opt">
 	    <arg choice="opt">#</arg>
 	    <arg><replaceable>channel</replaceable></arg>
-	  </group>
+	  </arg>
 	  <arg><replaceable>file</replaceable></arg>
 	  <arg choice="opt"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
@@ -2815,8 +2817,8 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::interpmap</command>
-	<option><replaceable>filename</replaceable></option>
-      </cmdsynopsis>
+	  <arg><replaceable>filename</replaceable></arg>
+        </cmdsynopsis>
 
 	Hook to define interpreter classes depending on the requested file.
 	Note that this hook must be defined in the Websh configuration file
@@ -2871,9 +2873,9 @@ $Id$
 
 	<cmdsynopsis>
 	  <command>web::match</command>
-	  <option><replaceable>result</replaceable></option>
-	  <option><replaceable>listToBeSearched</replaceable></option>
-	  <option><replaceable>searchFor</replaceable></option>
+	  <arg><replaceable>result</replaceable></arg>
+	  <arg><replaceable>listToBeSearched</replaceable></arg>
+	  <arg><replaceable>searchFor</replaceable></arg>
 	</cmdsynopsis>
 
 	In case <option><replaceable>searchFor</replaceable></option> exists in
