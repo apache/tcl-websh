@@ -398,6 +398,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    WebAssertObjc(objc != 2, 2, NULL);
 
 	    Tcl_SetResult(interp, WEBSH, NULL);
+	    Tcl_AppendResult(interp, " ", NULL);
 	    Tcl_AppendResult(interp, VERSION, NULL);
 	    Tcl_AppendResult(interp, " (built: ",
 			     __DATE__, " ", __TIME__, ")", NULL);

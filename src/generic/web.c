@@ -126,7 +126,6 @@ int Websh_Init(Tcl_Interp * interp)
      * we provide the websh package
      * --------------------------------------------------------------------- */
 
-    /* fixme: dynamic version for [package provide]*/
-    return Tcl_PkgProvide(interp, WEBSH, "3.5.0");
+    return Tcl_PkgProvide(interp, WEBSH, VERSION);
 
 }
