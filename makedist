@@ -60,14 +60,22 @@ cd tcl-websh
 # remove the examples
 file delete -force examples
 
-# make the docs
+# make the docs (quickref in html format)
 cd doc
+file mkdir html
 catch {exec make}
 cd ..
 
 ## end of cleanup
 ## -------------------------------------------------------------
-cd ..
+
+# creating tar ball for quickref
+puts "creating tar ball quickref-$build.tar.gz"
+cd doc
+file rename html quickref-$build
+exec tar czvf ../../../quickref-$build.tar.gz --exclude CVS quickref-$build
+file rename quickref-$build html
+cd ../..
 
 # rename subdirectory
 file rename tcl-websh websh-$build
@@ -75,6 +83,7 @@ file rename tcl-websh websh-$build
 # creating tar ball
 puts "creating tar ball websh-$build.tar.gz"
 exec tar czvf ../websh-$build.tar.gz --exclude CVS websh-$build
+
 
 # cleanup
 cd ..
