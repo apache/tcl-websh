@@ -20,8 +20,8 @@ $Id$
     <section id="general_remarks">
       <title>General remarks</title>
       <para>
-	Websh 3.5 (pronounced "web shell") embeds a Tcl 8.3 interpreter,
-	and all Tcl 8.3 commands are available.
+	Websh 3.5 (pronounced "web shell") embeds a Tcl interpreter,
+	(version 8.3 or higher) and all Tcl commands are available.
       </para>
       <para>
 	Typically, Websh commands have the following syntax:
