@@ -1,3 +1,7 @@
+2004-03-01  David N. Welton  <davidw@dedasys.com>
+
+	* LICENSE: Added Apache License, version 2.0.
+
 2004-02-03  Ronnie Brunner <ronnie.brunner@netcetra.ch>
 
 	* src/generic/cookie.ws3:
