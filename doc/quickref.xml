@@ -1,0 +1,2696 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+$Id$
+-->
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+  "http://www.oasis-open.org/committees/docbook/xml/4.1.2/docbookx.dtd">
+
+<article lang="en">
+
+  <title>webshell reference</title>
+  <articleinfo>
+    <releaseinfo>
+      $Id$
+    </releaseinfo>
+  </articleinfo>
+  <section id="intro">
+    <title>Introduction</title>
+    <section id="general_remarks">
+      <title>general remarks</title>
+      <para>
+	webshell 3.0 embeds a Tcl 8.3 interpreter, and all Tcl 8.3
+	commands are available, too.
+      </para>
+      <para>
+	Typically, webshell commands have the following syntax:
+	<emphasis>web::acommand ?options? ?subcommands ?
+	  ?arguments?</emphasis>.  Options start with a dash
+	(&quot;-&quot;). As usual, dash-dash (&quot;--&quot;) indicates
+	the &quot;end-of-options&quot;. Thus, <emphasis>web::acommand
+	  -o1 a1 -- -o2</emphasis> takes &quot;-o2&quot; as the first
+	argument.
+      </para>
+      <para>
+	In difference to the normal &quot;set&quot; behaviour of tcl and
+	webshell, configuration commands of webshell normally return the
+	previously used value when a new value is set.
+      </para>
+      <para>
+	In addition to the examples given here you might find <ulink
+								     url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
+	a usefull source of information.
+      </para>
+    </section>
+    <section id="about">
+      <title>about this document</title>
+      <para>
+	The original version of this document can always be found at
+	<ulink url="http://websh.com">http://websh.com</ulink>.
+      </para>
+      <note>
+	<para>
+	  We try to keep this quick reference up-to-date and hope that
+	  it will be useful. We do not guarantee that it is suitable
+	  for any particular purpose whatsoever. The authors accept no
+	  liability in respect to this information or its use.
+	</para>
+      </note>
+    </section>
+  </section>
+  <section id="configuration">
+    <title>configuration</title>
+    <section id="web::config">
+      <title>web::config</title>
+      <para>
+	<variablelist>
+	  <varlistentry>
+	    <term>syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::config</emphasis> &lt;key&gt; ?&lt;value&gt;?</para><para>
+		&lt;key&gt;: <emphasis>uploadfilesize</emphasis>, <emphasis>cmdparam</emphasis>, <emphasis>timeparam</emphasis>,
+		<emphasis>logsubst</emphasis>, <emphasis>putxmarkup</emphasis>, <emphasis>version</emphasis>, <emphasis>copyright</emphasis>, 
+		<emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis></para><para>
+		If &lt;value&gt; is ommitted, the current value of &lt;key&gt; is returned.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>uploadfilesize ?&lt;size&gt;?</term>
+	    <listitem>
+	      <para>
+		Sets the maximum number of bytes allowed to be uploaded.
+		Default: 0.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>cmdparam ?&lt;name&gt;?</term>
+	    <listitem>
+	      <para>
+		Name of the parameter to store reference to a web::command command
+		in the URL. Default: &quot;cmd&quot;.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>timeparam ?&lt;name&gt;?</term>
+	    <listitem>
+	      <para>
+		Name of the parameter to store reference to the timestamp
+		in the URL. Default: &quot;t&quot;.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>logsubst ?&lt;boolean&gt;?</term>
+	    <listitem>
+	      <para>
+		Turns substitution of log messages on or off. Default: on.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>putxmarkup ?brace|tag?</term>
+	    <listitem>
+	      <para>
+		Sets the markup characters for sections to be eval'd in web::putx
+		and web::putxfile commands to either curly braces ({ ... }) or 
+		special tags (&lt;% ... %&gt;). Please note that when using the tags &lt;%%&gt;,
+		they cannot be nested. Default: brace.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>version</term>
+	    <listitem>
+	      <para>
+		Returns the version info string
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>copyright</term>
+	    <listitem>
+	      <para>
+		Returns a copyright message string
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>encryptchain &lt;list&gt;</term>
+	    <listitem>
+	      <para>
+		defines which commands should be tried, in sequence, to encrypt
+		a message. Default: &quot;web::encryptd&quot;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>decryptchain &lt;list&gt;</term>
+	    <listitem>
+	      <para>
+		defines which commands should be tried, in sequence, to decrypt
+		a message. Default: &quot;web::decryptd&quot;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para>
+    </section>
+    <section id="Examples0">
+      <title>Examples</title>
+      <para>
+
+	<programlisting>
+	  web::config decryptchain
+	  ==&gt; web::encryptd
+	</programlisting>
+
+      </para>
+    </section>
+  </section>
+  <section id="command_dispatching_and_session_management">
+    <title>command dispatching and session management</title>
+    <para>
+      webshell provides a command dispatching mechanism to produce,
+      for example, different HTML pages within one application.  The
+      name of the command to be used is encoded in the querystring
+      (see <literal remap="tt">web::cmdurl</literal> for details on
+      how to produce such querystrings).  Command dispatching is
+      initiated with the command <literal
+					  remap="tt">web::dispatch</literal>.  Commands are defined with
+      <literal remap="tt">web::command</literal>.
+    </para>
+    <section id="web::command">
+      <title>web::command</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::command</emphasis> ?&lt;cmdName&gt;? &lt;cmdBody&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Registers &lt;cmdBody&gt; as &lt;cmdName&gt;. If &lt;cmdName&gt; is
+	omitted, &quot;default&quot; is used.
+
+      </para>
+    </section>
+    <section id="web::getcommand">
+      <title>web::getcommand</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::getcommand</emphasis> ?&lt;cmdName&gt;?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Retrieves the body of the command &lt;commandName&gt; or of the command &quot;default&quot;
+	if &lt;cmdName&gt; is omitted.
+
+      </para>
+    </section>
+    <section id="web::cmdurl">
+      <title>web::cmdurl</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::cmdurl</emphasis> ?options? &lt;cmdName&gt; ?&lt;key-value-list&gt;?</para><para>
+		<emphasis>web::cmdurl</emphasis> ?options? &lt;cmdName&gt; &lt;k1&gt; &lt;v1&gt; ... &lt;kN&gt; &lt;vN&gt;</para><para>
+		Options are: <literal remap="tt">-notimestamp</literal>, and \=-urlformat\=
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Generate URLs including querystring. By default, URLs are
+	self-referencing, but the exact output is subject to configuration. The
+	querystring is encrypted, using the encryption method specified by
+	configuration (see <literal remap="tt">web::config</literal>). If &lt;cmdName&gt; is &quot;&quot;, no command parameter
+	is produced in the query string.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>-notimestamp</term>
+	    <listitem>
+	      <para>
+		do not add a timestamp to the URL
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-urlformat &lt;list&gt;</term>
+	    <listitem>
+	      <para>
+		specify what items will be used to format just this URL.
+		Default is: <literal remap="tt">{scriptname pathinfo querystring}</literal></para><para>
+		Use <literal remap="tt">web::cmdurlcfg</literal> to define the url format for all
+		URLs produced by <literal remap="tt">web::cmdurl</literal> in one request.</para><para>
+		<variablelist>
+		  <varlistentry>
+		    <term>scheme</term>
+		    <listitem>
+		      <para>
+			include the protocol, only &quot;http&quot; and &quot;https&quot; are currently supported
+		      </para>
+		    </listitem>
+		  </varlistentry>
+		  <varlistentry>
+		    <term>host</term>
+		    <listitem>
+		      <para>
+			include the host name, e.g. &quot;websh.com&quot;
+		      </para>
+		    </listitem>
+		  </varlistentry>
+		  <varlistentry>
+		    <term>port</term>
+		    <listitem>
+		      <para>
+			include the port, e.g. &quot;80&quot;</para><para>
+			Trying to set this item without host will throw
+			an error
+		      </para>
+		    </listitem>
+		  </varlistentry>
+		  <varlistentry>
+		    <term>scriptname</term>
+		    <listitem>
+		      <para>
+			include scriptname, e.g. &quot;/cgi-bin/orderbooks&quot;
+		      </para>
+		    </listitem>
+		  </varlistentry>
+		  <varlistentry>
+		    <term>pathinfo</term>
+		    <listitem>
+		      <para>
+			include pathinfo, e.g. &quot;/merchants/shop1&quot;
+		      </para>
+		    </listitem>
+		  </varlistentry>
+		  <varlistentry>
+		    <term>querystring</term>
+		    <listitem>
+		      <para>
+			include the querystring, e.g. &quot;select=download&quot;
+		      </para>
+		    </listitem>
+		  </varlistentry>
+		</variablelist>
+		<note>
+		  <para>
+		    Note that there are two more commands that control
+		    the output of <literal
+					   remap="tt">web::cmdurl</literal>: <literal
+										      remap="tt">web::config cmdparam</literal> and
+		    <literal remap="tt">web::config
+		      timeparam</literal>.
+		  </para>
+		</note>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+      </para>
+    </section>
+    <section id="Examples2">
+      <title>Examples</title>
+      <para>
+
+	<programlisting>
+	  web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
+	  ==&gt; http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
+	</programlisting>
+
+      </para>
+    </section>
+    <section id="web::cmdurlcfg">
+      <title>web::cmdurlcfg</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::cmdurlcfg</emphasis> ?options? ?&lt;key&gt;? ?&lt;value&gt;?</para><para>
+		Exactly like <literal remap="tt">web::param</literal></para><para>
+		<emphasis>web::cmdurlcfg</emphasis> option ?&lt;value&gt;?</para><para>
+		Options are <emphasis>-scheme</emphasis>, <emphasis>-host</emphasis>, <emphasis>-port</emphasis>,
+		<emphasis>-scriptname</emphasis>, <emphasis>-pathinfo</emphasis>, <emphasis>-querystring</emphasis>, <emphasis>-urlformat</emphasis></para><para>
+		If &lt;value&gt; is omitted, the current value is returned.
+		Otherwise, the &lt;value&gt; is stored.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Configuration for web::cmdurl.  This command serves two purposes:
+	<orderedlist>
+	  <listitem><para>management of static parameters</para></listitem>
+	  <listitem><para>configuration for <literal remap="tt">web::cmdurl</literal></para></listitem>
+	</orderedlist>
+
+      </para>
+    </section>
+    <section id="management_of_static_parameters">
+      <title>management of static parameters</title>
+      <para>
+
+	In order to set, retrieve, append or unset static parameters,
+	use the syntax of the <literal remap="tt">web::param</literal> command, for example:
+	<variablelist>
+	  <varlistentry>
+	    <term>web::cmdurlcfg -set &lt;key&gt; &lt;value&gt;</term>
+	    <listitem>
+	      <para>
+		add the static parameter &lt;key&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cmdurlcfg</term>
+	    <listitem>
+	      <para>
+		returns a list of all known static parameters
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para><para>
+	<emphasis>Important</emphasis>: <literal remap="tt">web::cmdurl</literal> compares every key from the static
+	parameters (see <literal remap="tt">web::cmdurlcfg</literal>) against the keys from the command
+	line. The static parameter is only used if there is no parameter given
+	on the command line.
+
+      </para>
+    </section>
+    <section id="configuration_for_web_cmdurl">
+      <title>configuration for <literal remap="tt">web::cmdurl</literal></title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::cmdurlcfg -protocol ?&lt;value&gt;?</term>
+	    <listitem>
+	      <para>
+		protocol to be used. Default: http.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cmdurlcfg -servername ?&lt;value&gt;?</term>
+	    <listitem>
+	      <para>
+		server name to be used. Default: taken from request.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cmdurlcfg -port </term>
+	    <listitem>
+	      <para>
+		port number to be used. Default: 80.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-scriptname</term>
+	    <listitem>
+	      <para>
+		name of CGI executable. Default: taken from request.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-pathinfo</term>
+	    <listitem>
+	      <para>
+		path info (path after scriptname). Default: taken from request.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-urlformat &lt;list&gt;</term>
+	    <listitem>
+	      <para>
+		changes the urlformat permanently. See web::cmdurl for the
+		description of this option
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	In all cases, &quot;web::cmdurlcfg -option &lt;value&gt;&quot; sets the value of
+	the given option and returns the value that was used before the change,
+	while &quot;web::cmdurlcfg -option&quot; returns the current value.  If no value
+	has been set using web::cmdurlcfg, but is requested for the URL
+	generation, the value from the request will be used.  This value,
+	however, can not be retrieved using web::cmdurlcfg.
+
+      </para><para>
+	Note that setting a value to an empty string amounts to &quot;unset&quot;.
+
+	<emphasis>Note also</emphasis>: web::cmdurl compares every key from the static
+	parameters see --&gt;(web::cmdurlcfg) against the keys from the command
+	line. The static parameter is only used if there is no such parameter on
+	the command line.
+
+      </para>
+    </section>
+    <section id="Examples3">
+      <title>Examples</title>
+      <para>
+	<programlisting>
+	  % web::cmdurl
+	  ==&gt; ?XD8Fseb6tjYQsBUWZ9
+	  % web::cmdurlcfg -scriptname bin/test_script
+	  % web::cmdurl
+	  ==&gt; bin/test_script?XD8Fseb6tjYRl1M9Fl
+	  % web::cmdurlcfg -scriptname &quot;&quot;
+	  % web::cmdurl
+	  ==&gt; ?XD8Fseb6tjYQsBUWZ9
+	</programlisting>
+
+      </para>
+    </section>
+    <section id="web::dispatch">
+      <title>web::dispatch</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::dispatch</emphasis> ?options?</para><para>
+		Options are: <literal remap="tt">-cmd</literal>, <literal remap="tt">-querystring</literal>, <literal remap="tt">-postdata</literal>,
+		<literal remap="tt">-track</literal> and <literal remap="tt">-hook</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Parse information and call a command.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::dispatch -cmd &lt;cmdName&gt;</term>
+	    <listitem>
+	      <para>
+		switch into command &lt;cmdName&gt;. If &lt;cmdName&gt; is an empty string,
+		no command is called. By default, &lt;cmdName&gt; is taken from
+		the querystring.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::dispatch -querystring &lt;string&gt;</term>
+	    <listitem>
+	      <para>
+		parse &lt;string&gt; as querystring. If &lt;string&gt; is an empty string,
+		querystring parsing is turned off. By default, querystring is
+		taken from the request data (CGI environment or apache module
+		request object).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::dispatch -postdata &lt;string&gt; ?&lt;content_type&gt;?</term>
+	    <listitem>
+	      <para>
+		parse &lt;string&gt; as POST data input with type &lt;content_type&gt;.
+		&lt;content_type&gt; can be <literal remap="tt">application/x-www-form-urlencoded</literal> or
+		<literal remap="tt">multipart/form-data; boundary=xxx</literal>. In the second case,
+		&lt;content-type&gt; must specify the boundary as well. By default,
+		POST data is taken from the request data.</para><para>
+		If &lt;string&gt; is an empty string, postdata parsing is turned off.</para><para>
+		Default for &lt;content_type&gt; is &quot;application/x-www-form-urlencoded&quot;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::dispatch -postdata &lt;channelName&gt; &lt;content_length&gt; &lt;content_type&gt;</term>
+	    <listitem>
+	      <para>
+		As above, but reads the POST data from channel &lt;channelName&gt;.</para><para>
+		Use the keyword <literal remap="tt">end</literal> for &lt;content_length&gt; to indicate that
+		websh should read all content.</para><para>
+		Examples for &lt;content_type&gt; include:
+		<itemizedlist>
+		  <listitem><para><literal remap="tt">multipart/form-data; boundary=xxxx</literal></para></listitem>
+		  <listitem><para><literal remap="tt">application/x-www-form-urlencoded</literal></para></listitem>
+		</itemizedlist>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::dispatch -track &lt;paramKeyList&gt;</term>
+	    <listitem>
+	      <para>
+		Track a parameter: register it as &quot;static&quot; for the generation of
+		URLs with web::cmdurl. Thus, each parameter with the key in
+		&lt;paramKeyList&gt; will be repeated in every URL generated with
+		web::cmdurl. See the documentation of web::cmdurl for details.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::dispatch -hook &lt;code&gt;</term>
+	    <listitem>
+	      <para>
+		Causes web::dispatch to eval &lt;code&gt; just before the command (from
+		any source) is evaluated. When &lt;code&gt; is evaluated, the full
+		request information has been parsed.  That is, web::param,
+		web::formvar etc. will have up-to-date information when
+		&lt;code&gt; is evaluated.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	<emphasis>Note</emphasis> that, if no command is passed to web::dispatch either in the
+	querystring or with the -cmd option, web::dispatch will call the
+	command &quot;default&quot;.
+
+      </para>
+    </section>
+    <section id="Examples4">
+      <title>Examples</title>
+      <para>
+
+	<programlisting>
+	  set tst {puts &quot;On the hook&quot;}
+	  web::command acmd {  puts &quot;this is acmd&quot; }
+	  web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
+	  ==&gt; this is acmd
+	  web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
+	  ==&gt; On the hook
+	  ==&gt; this is acmd
+	</programlisting>
+
+      </para>
+    </section>
+    <section id="session_management">
+      <title>session management</title>
+      <para>
+	Webshell session management consits of two parts:
+	<itemizedlist>
+	  <listitem><para>session id tracking</para></listitem>
+	  <listitem><para>session context management</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	Session context managers are described in detail below
+	(<emphasis>web::filecontext</emphasis>,
+	<emphasis>web::cookiecontext</emphasis>). Session id tracking
+	is managed by <literal remap="tt">web::dispatch
+	  -track</literal>. The two parts are connected with the
+	<emphasis>-attachto</emphasis> option of the session context
+	manager.  The control is as follows:
+      </para>
+      <para>
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      a user uses the Webshell script for the first
+	      time.<literal remap="tt">web::dispatch -track</literal>
+	      will not see any session id, and, consequently, not set
+	      the static parameter <literal remap="tt">id</literal>.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Within the application, the session is initialized using
+	      <literal
+		       remap="tt">&lt;mgr&gt;::init</literal>. <literal
+									remap="tt">init</literal> will find no static parameter
+	      <literal remap="tt">id</literal> (which has been
+	      specified at creation time of the session manager using
+	      the <literal remap="tt">-attachto</literal> option).
+	      Now, it tries to create a new session id. This will be
+	      possible if a session id generator has been specified
+	      when the manager was created using the <literal
+							      remap="tt">-idgen</literal> option.  From now, on the
+	      session id will be a static parameter, and will
+	      therefore be present in every URL generated with
+	      <emphasis>web::cmdurl</emphasis>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      The next time the user visits the Webshell application
+	      using one of these URLs,
+	      <emphasis>web::dispatch</emphasis> will detect the
+	      session id, and =|&lt;mgr&gt;::init= will directly load
+	      the corresponding session context without generating a
+	      new session id.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </section>
+    <section id="Examples5">
+      <title>Examples</title>
+      <para>
+
+	See <ulink url="http://websh.com/examples.html">http://websh.com/examples.html</ulink> for several sample
+	application demonstrating the session management of Webshell.
+
+      </para>
+    </section>
+  </section>
+  <section id="request_data_handling">
+    <title>request data handling</title>
+    <section id="web::request">
+      <title>web::request</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::request</emphasis> ?options? ?&lt;key&gt;? ?&lt;value&gt; ...?</para><para>
+		<emphasis>web::request</emphasis> ?&lt;key&gt;? ?&lt;default&gt;?</para><para>
+		Options are: <literal remap="tt">-count</literal>, <literal remap="tt">-set</literal>, <literal remap="tt">-lappend</literal>, <literal remap="tt">-names</literal>, <literal remap="tt">-unset</literal>, <literal remap="tt">-reset</literal>
+		and <literal remap="tt">-channel</literal> fixme: gibt es -channel noch?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	web::request is an accessor to CGI related information.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::request</term>
+	    <listitem>
+	      <para>
+		returns a list of all known keys
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request &lt;key&gt; ?&lt;default&gt;?</term>
+	    <listitem>
+	      <para>
+		returns the value for &lt;key&gt;. Can be a list. In case
+		that &lt;key&gt; does not exist, return &lt;default&gt;, if it is
+		given, or an empty string.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -count &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		returns number of items in list for &lt;key&gt;; returns 0 if
+		&lt;key&gt; does not exist
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -set &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		does the same as 'web::request &lt;key&gt;'
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -set &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
+	    <listitem>
+	      <para>
+		adds the parameter &lt;key&gt; to the web::request data.
+		Any existing parameters with &lt;key&gt; are overwritten
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -lappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
+	    <listitem>
+	      <para>
+		append parameters with the same &lt;key&gt; to the web::request data. In
+		this case the existing &lt;value&gt; is not overwritten
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -unset</term>
+	    <listitem>
+	      <para>
+		deletes all parameters from the web::request data
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -unset &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		deletes a parameter from the web::request data
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -reset</term>
+	    <listitem>
+	      <para>
+		deletes all parameters from the web::request data (like 'web::request -unset'),
+		removes all static parameters (like 'web::cmdurlcfg -unset'), all form variables 
+		(like 'web::formvar -unset'), all query string parameters (like 'web::param -unset'),
+		and all temporary files created by HTTP form upload
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::request -channel</term>
+	    <listitem>
+	      <para>
+		fixme: what does it?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para>
+    </section>
+    <section id="web::param">
+      <title>web::param</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::param</emphasis> ?options? ?&lt;key&gt;? ?&lt;value&gt; ...?</para><para>
+		Options are: <literal remap="tt">-count</literal>, <literal remap="tt">-set</literal>, <literal remap="tt">-lappend</literal>, <literal remap="tt">-names</literal>, and <literal remap="tt">-unset</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	web::param is an accessor to state information from the querystring. 
+	Suppose the querystring is &quot;lang=EN&quot;.  After web::dispatch has parsed the
+	querystring, <literal remap="tt">web::param lang</literal> will report <literal remap="tt">EN</literal>.  Additionaly,
+	web::param can manage this data and add, append, and delete parameters as
+	needed. 
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::param -names</term>
+	    <listitem>
+	      <para>
+		returns a list of all known keys
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::param &lt;key&gt; ?&lt;default&gt;?</term>
+	    <listitem>
+	      <para>
+		returns the value for &lt;key&gt;. Can be a list. In case
+		that &lt;key&gt; does not exist, return &lt;default&gt;, if it is
+		given, or an empty string.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::param -count &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		returns number of items in list of &lt;key&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::param -set &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		does the same as 'web::param &lt;key&gt;'
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::param -set &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
+	    <listitem>
+	      <para>
+		add the parameter &lt;key&gt; to the web::param data.
+		Any existing parameters with &lt;key&gt; are overwritten
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::param -lappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
+	    <listitem>
+	      <para>
+		append parameters with the same &lt;key&gt; to the web::param data.  In
+		this case the existing &lt;value&gt; is not overwritten
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::param -unset</term>
+	    <listitem>
+	      <para>
+		deletes all parameters from the web::param data
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::param -unset &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		delete a parameter from the web::param data
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para>
+    </section>
+    <section id="web::formvar">
+      <title>web::formvar</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::formvar</emphasis> ?options? ?&lt;key&gt;? ?&lt;value&gt;?</para><para>
+		Exactly like <literal remap="tt">web::param</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	web::formvar is an accessor to HTML &lt;FORM&gt; data.  After web::dispatch has
+	parsed the POST data, you can access all form fields using web::formvar.
+
+      </para>
+    </section>
+    <section id="Examples6">
+      <title>Examples</title>
+      <para>
+
+	<programlisting>
+	  web::request CONTENT_LENGTH
+	  ==&gt;
+	  web::dispatch -querystring [web::cdurl default] -postdata &quot;&quot; -cmd &quot;&quot;
+	  web::param
+	  ==&gt; t cmd
+	  web::param cmd
+	  ==&gt; default
+	  web::param -set k v
+	  web::param
+	  ==&gt; t cmd k
+	</programlisting>
+
+      </para>
+    </section>
+  </section>
+  <section id="response_data_handling">
+    <title>response data handling</title>
+    <para>
+      webshell can send output to any Tcl channel and to global
+      variables (<literal remap="tt">web::put</literal>). Optionally,
+      data is scanned for Tcl code before it is output to a channel
+      (<literal remap="tt">web::putx</literal>).  webshell manages
+      <emphasis>response objects</emphasis> that are related to Tcl
+      channels and are identified using the name of the corresponding
+      Tcl channel. Configuration with <literal
+					       remap="tt">web::response</literal>.
+    </para>
+    <section id="web::response">
+      <title>web::response</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::response</emphasis></para><para>
+		<emphasis>web::response</emphasis> ?option?</para><para>
+		<emphasis>web::response</emphasis> ?subcommand? args</para><para>
+		Subcommands are <emphasis>-select</emphasis>, <emphasis>-set</emphasis>, <emphasis>-lappend</emphasis>,
+		<emphasis>-names</emphasis>, <emphasis>-count</emphasis>, <emphasis>-unset</emphasis>, <emphasis>-reset</emphasis>, and <emphasis>-resetall</emphasis>
+		Options are <emphasis>-sendheader</emphasis>, <emphasis>-httpresponse</emphasis>, and <emphasis>-bytessent</emphasis>.</para><para>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Selects the default response object and sets and accesses properties
+	of the response object, and returns the name of the response object.
+
+      </para><para>
+	<literal remap="tt">web::response -select &lt;channelName&gt;</literal> selects &lt;channelName&gt; as new
+	response object. If the &lt;channelName&gt; is prepended by a #, it refers
+	to a global variable named &lt;channelName&gt;.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::response</term>
+	    <listitem>
+	      <para>
+		returns the name of the currently selected response object
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -select ?#?&lt;channel&gt;</term>
+	    <listitem>
+	      <para>
+		makes &lt;channel&gt; the new default response object and returns the
+		old default response object
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -set &lt;key&gt; ?&lt;value&gt;?</term>
+	    <listitem>
+	      <para>
+		sets property &lt;key&gt; to &lt;value&gt;, or returns current value if
+		&lt;value&gt; is omitted.\\ 
+		The &lt;keys&gt; are names of HTTP header fields (do not include ':' at
+		the end of the header field name) and &lt;value&gt; the corresponding
+		value of the field (like Content-Type) and their values (like
+		text/html).</para><para>
+		Example:</para><para>
+		<literal remap="tt">web::response -set Status 200</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -names</term>
+	    <listitem>
+	      <para>
+		returns the list of known keys
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -count &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		returns number of items in list of &lt;key&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -unset ?&lt;key&gt;?</term>
+	    <listitem>
+	      <para>
+		delete the value of &lt;key&gt;, if &lt;key&gt; is given, or
+		all keys.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -sendheader ?&lt;boolean&gt;?</term>
+	    <listitem>
+	      <para>
+		Sets the sendheader flag which indicates and controls
+		whether the HTTP headers have been or should be sent.
+		It is initially set to 1 and set to 0 after the first
+		call of <literal remap="tt">web::put</literal> or <literal remap="tt">web::putx</literal>. If &lt;boolean&gt; is
+		omitted, returns the current value.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -httpresponse ?&lt;value&gt;?</term>
+	    <listitem>
+	      <para>
+		Sets the HTTP response like &quot;HTTP/1.0 200 OK&quot; for the given
+		(or default) channel. If no &lt;value&gt; given, returns the the
+		current HTTP response set. In the case of the Apache module
+		mod_websh, Apache replaces the protocol &quot;HTTP/??&quot; in the
+		reponse to &quot;HTTP/1.1&quot;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -bytessent</term>
+	    <listitem>
+	      <para>
+		returns the number of bytes that have already been sent to this
+		channel.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -reset</term>
+	    <listitem>
+	      <para>
+		resets the 'sendheader' flag for the channel to true, the HTTP
+		response to the default &quot;HTTP/?? 200 OK&quot;, removes any HTTP headers
+		set, and resets the names of the query string parameters for the timestamp
+		and the command to their default values (&quot;t&quot; and &quot;cmd&quot;, respectively)
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::response -resetall</term>
+	    <listitem>
+	      <para>
+		makes a 'web::response -reset' on all registered channels
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para>
+    </section>
+    <section id="web::put">
+      <title>web::put</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::put</emphasis> ??#?&lt;channel&gt;? &lt;text&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Send output to a Tcl channel.
+	No newline is added to output.
+
+      </para>
+    </section>
+    <section id="web::putx">
+      <title>web::putx</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::putx</emphasis> ??#?&lt;channel&gt;? &lt;text&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Writes &lt;text&gt; to the specified channel. Code in curly brackets is
+	eval'd, unless the brackets are escaped by &quot;\&quot;. These markup characters
+	'{...}' can be changed to '&lt;% ... %&gt;' with 'web::config putxmarkup tag'.
+
+      </para><para>
+      </para>
+    </section>
+    <section id="web::putxfile">
+      <title>web::putxfile</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::putxfile</emphasis> ??#?&lt;channel&gt;? &lt;file&gt; ?&lt;msg&gt;?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	As web::putx, but takes input from a file.
+
+	Returns 0 on success, 1 otherwise. If an error occurs, an error
+	message is written to &lt;msg&gt;. If only two arguments are passed, then
+	&lt;channel&gt; takes precedence.
+
+      </para><para>
+      </para>
+    </section>
+    <section id="Examples7">
+      <title>Examples</title>
+      <para>
+	<programlisting>
+	  web::response
+	  ==&gt; stdout
+	  web::response -select stderr
+	  ==&gt; stdout
+	  web::response
+	  ==&gt; stderr
+	  web::response -sendheader
+	  ==&gt; 1
+	  web::response -names
+	  ==&gt; Content-Type Generator
+	  web::response -set Content-type
+	  ==&gt; text/html
+	  web::response -bytessent
+	  ==&gt; 0
+	  web::response -lappend &quot;Set-Cookie&quot; &quot;mycookie&quot;
+	  web::put &quot;Hello, world&quot;
+	  ==&gt;Content-Type: text/html
+	  Generator: websh 3.0 (c) Netcetera AG, http://netcetera.ch
+	  Set-Cookie: mycookie
+
+	  Hello, world
+	</programlisting>
+
+      </para>
+    </section>
+  </section>
+  <section id="logging">
+    <title>logging</title>
+    <para>
+      Logging consists of two parts. <literal
+      remap="tt">web::log</literal> issues a logging message, while
+      <literal remap="tt">web::logfilter</literal> and <literal
+      remap="tt">web::logdest</literal> determine where to send a
+      message. webshell uses a two-step filtering. First, webshell
+      determines whether it should handle a message, or not, using the
+      filters configured with &quot;web::logfilter&quot;. Then,
+      webshell determines which message is to be sent where, using the
+      filters configured with <literal
+      remap="tt">web::logdest</literal>.
+    </para>
+    <para>
+      A filter consists of a tag and a level, separated by a
+      &quot;.&quot;. The tag is free text. Typically, it is the name
+      of the application, say &quot;foo&quot;. Example:
+      &quot;ws3.debug&quot;. Levels are, in order:
+      <itemizedlist>
+	<listitem><para>alert</para></listitem>
+	<listitem><para>error</para></listitem>
+	<listitem><para>warning</para></listitem>
+	<listitem><para>info</para></listitem>
+	<listitem><para>debug</para></listitem>
+      </itemizedlist>
+    </para>
+    <section id="web::logdest">
+    <title>web::logdest</title>
+    <para>
+
+      web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest
+
+      <variablelist>
+	<varlistentry>
+	  <term>Syntax:</term>
+	  <listitem>
+	    <para>
+	      <emphasis>web::logdest</emphasis> subcommand ?options? &lt;level&gt; &lt;plugin&gt;</para><para>
+	      Subcommands are: <literal remap="tt">add</literal>, <literal remap="tt">delete</literal>, and <literal remap="tt">names</literal>.</para><para>
+	      Options are: <literal remap="tt">-maxchar</literal>, and <literal remap="tt">-format</literal>.</para><para>
+	      Known plug-ins are:  <literal remap="tt">file</literal>, <literal remap="tt">syslog</literal>, <literal remap="tt">command</literal>,
+	      <literal remap="tt">channel</literal>, and <literal remap="tt">apache</literal>. <emphasis>Note</emphasis>: the plugins may have
+	      indiviudal options (<literal remap="tt">-unbuffered)</literal>, see documentation below.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+      The format string consits of format specifications for <literal remap="tt">fprintf()</literal>
+      plus: <literal remap="tt">p</literal> (process id), <literal remap="tt">t</literal> (thread id), <literal remap="tt">n</literal> (log level),
+      <literal remap="tt">f</literal> (log type), and <literal remap="tt">m</literal> (the message).
+
+    </para>
+  </section>
+  <section id="web::logfilter">
+    <title>web::logfilter</title>
+    <para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>Syntax:</term>
+	  <listitem>
+	    <para>
+	      <emphasis>web::logfilter</emphasis> subcommand args</para><para>
+	      Subcommands are: <literal remap="tt">add</literal>, <literal remap="tt">delete</literal>, and <literal remap="tt">names</literal>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+      Add a filter to the list.
+
+      <variablelist>
+	<varlistentry>
+	  <term>web::logfilter add &lt;level&gt;</term>
+	  <listitem>
+	    <para>
+	      add a &lt;level&gt; to the list
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>web::logfilter delete ?&lt;name&gt;?</term>
+	  <listitem>
+	    <para>
+	      remove a &lt;name&gt; from list, or remove all filters if &lt;name&gt; is omitted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>web::logfilter names</term>
+	  <listitem>
+	    <para>
+	      list all filters that have been set
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+    </para>
+  </section>
+  <section id="web::log">
+    <title>web::log</title>
+    <para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>Syntax:</term>
+	  <listitem>
+	    <para>
+	      <emphasis>web::log</emphasis> &lt;level&gt; &lt;msg&gt;
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+      Issue a log message.  <emphasis>Note</emphasis> that, for performance reasons,
+      variables and command names &lt;msg&gt; will be substituted by the log
+      module and you should put &lt;msg&gt; in curly braces to prevent Tcl from
+      substituting the string as well. This ensures that webshell only
+      spends time on messages which actually pass all filters, and debug
+      messages that contain variable names and commands will not slow down
+      the productive system, where no debug messages pass the filters. This
+      default behaviour can be changed with 'web::config logsubst 0'.
+
+    </para><para>
+    </para>
+  </section>
+  <section id="log_plug-ins">
+    <title>log plug-ins</title>
+  <section id="file">
+    <title>file</title>
+    <para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>Syntax:</term>
+	  <listitem>
+	    <para>
+	      web::logdest add *.-debug <emphasis>file</emphasis> ?options? &lt;fileName&gt;</para><para>
+	      Option is: <literal remap="tt">-unbuffered</literal>
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+    </para>
+  </section>
+  <section id="syslog">
+    <title>syslog</title>
+    <para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>Syntax:</term>
+	  <listitem>
+	    <para>
+	      web::logdest add *.-debug <emphasis>syslog</emphasis> &lt;level&gt;</para><para>
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+      See the man page for syslog for levels on your system. Typical: 10.
+
+    </para>
+  </section>
+  <section id="command">
+    <title>command</title>
+    <para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>Syntax:</term>
+	  <listitem>
+	    <para>
+	      web::logdest add *.-debug <emphasis>command</emphasis> &lt;cmdName&gt;
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+    </para>
+  </section>
+  <section id="channel">
+    <title>channel</title>
+    <para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>Syntax:</term>
+	  <listitem>
+	    <para>
+	      web::logdest add *.-debug <emphasis>channel</emphasis> ?options? &lt;channel&gt;</para><para>
+	      Option is: <literal remap="tt">-unbuffered</literal>
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+    </para>
+  </section>
+  <section id="apache">
+    <title>apache</title>
+    <para>
+      web::logdest add *.-debug <emphasis>apache</emphasis>
+
+      Available in mod_websh only.
+
+    </para>
+  </section>
+    </section>
+  <section id="Examples8">
+    <title>Examples</title>
+    <para>
+
+      <programlisting>
+	web::logfilter add *.-debug
+	web::logdest add *.-debug channel stdout
+	web::log info {websh is cool}
+	==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
+	web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
+	web::log info {websh is cool}
+	==&gt; --&gt; websh is cool
+	web::logdest add -maxchar 5 *.-debug channel stdout
+	web::log info {websh is cool}
+	==&gt; 03/01/00 00:00:00 [111] user.info: websh is cool
+      </programlisting>
+
+    </para>
+  </section>
+  </section>
+  <section id="context_handling">
+    <title>context handling</title>
+    <section id="web::context">
+      <title>web::context</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Creation  </term>
+	    <listitem>
+	      <para>
+		<emphasis>web::context</emphasis> &lt;name&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Creates a namespace &lt;name&gt; with the following commands:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; &lt;args&gt;</para><para>
+		Subcommands are: <literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>,
+		<literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,  <literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>,
+		<literal remap="tt">cnames</literal>, and <literal remap="tt">dump</literal>.  
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Manages data of the context. The subcommands have their
+	familiar behaviour of the Tcl commands with similar
+	names.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>&lt;name&gt;::cset &lt;key&gt; &lt;value&gt;</term>
+	    <listitem>
+	      <para>
+		store &lt;value&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::cappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
+	    <listitem>
+	      <para>
+		append &lt;value&gt; to existing value for &lt;key&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::clappend &lt;key&gt; &lt;value&gt; ?&lt;value&gt; ...?</term>
+	    <listitem>
+	      <para>
+		append &lt;value&gt; to existing list of values for &lt;key&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::cget &lt;key&gt; ?&lt;default&gt;?</term>
+	    <listitem>
+	      <para>
+		access the value for key &lt;key&gt;, or return &lt;default&gt;
+		if &lt;key&gt; does not exist in the context. If &lt;default&gt;
+		is omitted, an empty string is returned if &lt;key&gt;
+		is unknown.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::cexists &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		returns true (1) if &lt;key&gt; exists in context, false (0)
+		otherwise.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::cunset &lt;key&gt;</term>
+	    <listitem>
+	      <para>
+		remove &lt;key&gt; from context
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::carray &lt;option&gt; &lt;key&gt; &lt;arg&gt;</term>
+	    <listitem>
+	      <para>
+		array manipulation as known from the Tcl command
+		<emphasis>array</emphasis>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::cnames ?&lt;pattern&gt;?</term>
+	    <listitem>
+	      <para>
+		lists existing keys of context matching &lt;pattern&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::dump</term>
+	    <listitem>
+	      <para>
+		serialize context
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Example:
+	<programlisting>
+	  % web::context sc
+	  % sc::cset lang FR
+	  ... some code ...
+	  set lang [sc::cget lang EN]
+	  ==&gt; FR
+	</programlisting>
+
+      </para>
+    </section>
+    <section id="web::filecontext">
+      <title>web::filecontext</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Creation:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::filecontext</emphasis> &lt;name&gt; ?options?</para><para>
+		Options are: <literal remap="tt">-perm</literal>, <literal remap="tt">-path</literal>, <literal remap="tt">-crypt</literal>,
+		<literal remap="tt">-idgen</literal>, and <literal remap="tt">-attachto</literal>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Creates a namespace &lt;name&gt; to manage file-based context data:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; &lt;args&gt;</para><para>
+		Subcommands are: <literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>,
+		<literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,  <literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>,
+		<literal remap="tt">cnames</literal>, <literal remap="tt">init</literal>, <literal remap="tt">new</literal>, <literal remap="tt">commit</literal>, <literal remap="tt">invalidate</literal>, and <literal remap="tt">id</literal>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Manages file-based context data. The subcommands have their familiar
+	behaviour of the Tcl commands with similar names. Please refer to the
+	section <literal remap="tt">context management</literal> for a description of the commands
+	<literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>, <literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,
+	<literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>, and <literal remap="tt">cnames</literal>.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>&lt;name&gt;::init ?&lt;id&gt;?</term>
+	    <listitem>
+	      <para>
+		load an existing session context with id &lt;id&gt;, or create a new one,
+		if possible. Automation depends on the settings of the actual
+		context manager settings, see below.</para><para>
+		If you specify an &lt;id&gt;, you must decide when to create
+		a new file and when to use the old one, if any, by yourself.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::new ?&lt;id&gt;?</term>
+	    <listitem>
+	      <para>
+		create a new session context. Automation depends on the settings of the
+		actual context manager settings, see below.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::commit</term>
+	    <listitem>
+	      <para>
+		make session context persistent
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::id</term>
+	    <listitem>
+	      <para>
+		return id of session
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::invalidate</term>
+	    <listitem>
+	      <para>
+		delete session in memory and on file system
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Options:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::filecontext &lt;name&gt; -perm &lt;perm&gt;</term>
+	    <listitem>
+	      <para>
+		set the file permissions of the session context files
+		&lt;perm&gt; is an unix-like octal value like 0644.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::filecontext &lt;name&gt; -path &lt;path&gt;</term>
+	    <listitem>
+	      <para>
+		specify where to store session context files and
+		how to name them. Suppose that the session id is 99.
+		<emphasis>-path [file join .. data s%d.dat]</emphasis> would then
+		cause filecontext to save the session context
+		as <literal remap="tt">../data/s99.dat</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::filecontext &lt;name&gt; -crypt &lt;boolean&gt;</term>
+	    <listitem>
+	      <para>
+		Flag to turn crypting of session context on and off.
+		Default is on.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::filecontext &lt;name&gt; -idgen &lt;idgen&gt;</term>
+	    <listitem>
+	      <para>
+		Sets command &lt;idgen&gt; to find a new session id. See doc of
+		<emphasis>web::filecounter</emphasis> below for an implementation
+		provided with webshell.</para><para>
+		&lt;idgen&gt; is used in case that no &lt;id&gt; argument
+		has been passed to <emphasis>init</emphasis> or <emphasis>new</emphasis>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::filecontext &lt;name&gt; -attachto &lt;idparam&gt;</term>
+	    <listitem>
+	      <para>
+		Use <literal remap="tt">web::param &lt;idparam&gt;</literal> to access current session id.
+		This option is only used if <emphasis>init</emphasis> has been called
+		without &lt;id&gt; argument.</para><para>
+		webshell passes session ids from one HTML request to
+		the next using the querystring (this is one reason why
+		the querystring is encrypted). After web::dispatch
+		has parsed the querystring, web::param will report the
+		current session id, if any. <emphasis>Note</emphasis> that you can 
+		maintain several sessions in parallel, and attach every
+		session to its own &lt;idparam&gt;.</para><para>
+		Using <emphasis>web::dispatch -track</emphasis> further automates the
+		passing of session ids from request to request.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	<emphasis>Note:</emphasis> Whenever you create a new file-based context, the context is
+	initialized and you loose whatever information that you might have
+	stored in the context before you initialized it as a file-based
+	session context.
+
+      </para>
+    </section>
+    <section id="web::cookiecontext">
+      <title>web::cookiecontext</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Creation:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::cookiecontext</emphasis> &lt;name&gt; ?options?</para><para>
+		Options are: <literal remap="tt">-expires</literal>, <literal remap="tt">-path</literal>, <literal remap="tt">-domain</literal>,
+		<literal remap="tt">-secure</literal>, <literal remap="tt">-crypt</literal>, and <literal remap="tt">-channel</literal>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Creates a namespace &lt;name&gt; to manage cookie-based context data:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax</term>
+	    <listitem>
+	      <para>
+		<emphasis>&lt;name&gt;</emphasis>::&lt;subcommand&gt; &lt;args&gt;</para><para>
+		Subcommands are: <literal remap="tt">cset</literal>, <literal remap="tt">cappend</literal>, <literal remap="tt">clappend</literal>,
+		<literal remap="tt">cget</literal>, <literal remap="tt">cexists</literal>,  <literal remap="tt">cunset</literal>, <literal remap="tt">carray</literal>,
+		<literal remap="tt">cnames</literal>, <literal remap="tt">init</literal>, <literal remap="tt">new</literal>, <literal remap="tt">commit</literal>, <literal remap="tt">invalidate</literal>, and <literal remap="tt">id</literal>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>&lt;name&gt;::init ?&lt;id&gt;?</term>
+	    <listitem>
+	      <para>
+		load an existing session context (cookie must have been sent by the
+		client).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::new ?&lt;id&gt;?</term>
+	    <listitem>
+	      <para>
+		create a new session context.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::commit</term>
+	    <listitem>
+	      <para>
+		send a cookie
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::id</term>
+	    <listitem>
+	      <para>
+		return id of session
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt;::invalidate</term>
+	    <listitem>
+	      <para>
+		delete session in memory and on client side
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Options:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::cookiecontext &lt;name&gt; -expires &lt;time&gt;</term>
+	    <listitem>
+	      <para>
+		set the expiration date of the cookie. Possible values for &lt;time&gt;
+		are <emphasis>day</emphasis> (lifetime: one day), <emphasis>week</emphasis>, <emphasis>today</emphasis>, <emphasis>seconds</emphasis>
+		(time in seconds since 1-1-1970) or <emphasis>date-string</emphasis>.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cookiecontext &lt;name&gt; -path &lt;path&gt;</term>
+	    <listitem>
+	      <para>
+		set the <emphasis>path</emphasis> property of the cookie
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cookiecontext &lt;name&gt; -domain  &lt;domain&gt;</term>
+	    <listitem>
+	      <para>
+		set the <emphasis>domain</emphasis> property of the cookie
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cookiecontext &lt;name&gt; -secure &lt;boolean&gt;</term>
+	    <listitem>
+	      <para>
+		set the <emphasis>secure</emphasis> property of the cookie
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cookiecontext &lt;name&gt; -crypt &lt;boolean&gt;</term>
+	    <listitem>
+	      <para>
+		Flag to turn crypting of cookie context on and off.
+		Default is on.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cookiecontext &lt;name&gt; -channel &lt;channelName&gt;</term>
+	    <listitem>
+	      <para>
+		The response object to send the cookie to (see also
+		<literal remap="tt">web::response</literal>).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Because cookies are client-based, in principle no id is
+	needed. webshell uses &lt;id&gt; to name the cookie, however, and the
+	<literal remap="tt">new</literal>, <literal remap="tt">init</literal>, and <literal remap="tt">load</literal> commands still require the &lt;id&gt;
+	argument. (fixme: any changes?) Please note that property settings
+	of a cookie context can only be changed <emphasis>before</emphasis> anything is output
+	on the respective channel.
+
+      </para>
+    </section>
+    <section id="web::filecounter">
+      <title>web::filecounter</title>
+      <para>
+
+	This is a numeric sequence-number generator which stores its state
+	in a file. Basic usage:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Creation:</term>
+	    <listitem>
+	      <para>
+		web::filecounter &lt;name&gt; ?&lt;options&gt;?</para><para>
+		Options are: <literal remap="tt">-filename</literal>, <literal remap="tt">-min</literal>, <literal remap="tt">-max</literal>, <literal remap="tt">-seed</literal>, <literal remap="tt">-incr</literal>, <literal remap="tt">-wrap</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-filename &lt;filename&gt;</term>
+	    <listitem>
+	      <para>
+		uses &lt;filename&gt; to store the current value
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-min &lt;value&gt;</term>
+	    <listitem>
+	      <para>
+		uses this value as a minimum, if wrap is true
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-max &lt;value&gt;</term>
+	    <listitem>
+	      <para>
+		uses this value as a maximum, if wrap is true
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-seed &lt;value&gt;</term>
+	    <listitem>
+	      <para>
+		if persistant file does not yet exists, use this value as a starting point
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-incr &lt;value&gt;</term>
+	    <listitem>
+	      <para>
+		uses this value as an increment for each 'nextval'
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>-wrap &lt;boolean&gt;</term>
+	    <listitem>
+	      <para>
+		indicates whether this counter should wrap around its values
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	After creation, a new command &lt;name&gt; is registered with the following two
+	subcommands:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>&lt;name&gt; nextval</term>
+	    <listitem>
+	      <para>
+		return the next value
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>&lt;name&gt; curval</term>
+	    <listitem>
+	      <para>
+		return the current value, that is, the value that
+		the last call to &quot;nextval&quot; reported (as opposed
+		to the current value in the file)
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para><para>
+      </para>
+    </section>
+    <section id="Examples9">
+      <title>Examples</title>
+      <para>
+	<programlisting>
+	  web::filecounter handleName -filename &quot;test.dat&quot;
+	  ==&gt; from now on, use handleName &lt;curval|nextval&gt;
+	  web::filecounter handleName -filename &quot;test.dat&quot; \
+	  -min 1 -max 10 -seed 1 -incr 2 -wrap 1
+	</programlisting>
+
+      </para>
+    </section>
+  </section>
+  <section id="file_handling_and_file_IO">
+    <title>file handling and file I/O</title>
+    <section id="web::include">
+      <title>web::include</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		web_include &lt;fileName&gt; ?&lt;msg&gt;?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	If the file &lt;fileName&gt; exists, it is sourced (must be a
+	script). Otherwise if the library fileName+&quot;shared lib extension&quot;
+	exists, it is loaded (must be a shared library). Returns 0 on success,
+	1 otherwise. If an error occurs, an error message is written to &lt;msg&gt;.
+
+      </para>
+    </section>
+    <section id="web::readfile">
+      <title>web::readfile</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		web::readfile &lt;file&gt; &lt;varName&gt; &lt;msg&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	&lt;file&gt; is read and written to &lt;varName&gt;. Returns 0 on success, 1
+	otherwise. If an error occurs, an error message is written to the
+	variable &lt;msg&gt;.
+
+      </para>
+    </section>
+    <section id="web::lockfile_and_web::unlockfile">
+      <title>web::lockfile and web::unlockfile</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::lockfile</emphasis> &lt;fh&gt;</para><para>
+		<emphasis>web::unlockfile</emphasis> &lt;fh&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Interface to lockf(). lockf() works best on local filesystems.  Please
+	read the documentation of lockf on your system to learn about the
+	problems and limitations of file locking. Note that web::lockfile also
+	performs a seek() and resets the file cursor to the beginning of the
+	file.
+
+	<emphasis>Note</emphasis> that the file needs to be open for writing.
+
+      </para>
+    </section>
+    <section id="web::truncatefile">
+      <title>web::truncatefile</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::truncatefile</emphasis> &lt;fh&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Interface to truncate(). Truncates a file based on the file handle,
+	while Tcl's file commands are based on file names. This is used to
+	truncate a file while holding the lock.
+
+      </para>
+    </section>
+    <section id="Examples10">
+      <title>Examples</title>
+      <para>
+
+	<programlisting>
+	  set fh [open [web::tempfile] w]
+	  web::lockfile $fh
+	  puts $fh foo
+	  web::unlockfile $fh
+	  close $fh
+	</programlisting>
+
+      </para>
+    </section>
+  </section>
+  <section id="data_encryption">
+    <title>data encryption</title>
+    <para>
+      Encrypt (<literal remap="tt">web::encrypt</literal>) and decrypt
+      (<literal remap="tt">web::decrypt</literal>) data. By default,
+      the built-in, weak encryption is used. encryption is extensible
+      by plug-Ins.  The encryption module tries all plug-Ins from a
+      list until the first plug-In was able to en-/decrypt the input.
+      See <literal remap="tt">web::config</literal> for the
+      configuration of the plug-Ins to be used.
+    </para>
+    <section id="web::encrypt">
+      <title>web::encrypt</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::encrypt</emphasis> &lt;data&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Returns encrypted data.
+
+      </para>
+    </section>
+    <section id="web::decrypt">
+      <title>web::decrypt</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::decrypt</emphasis> &lt;data&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Returns decrypted data.
+
+	Examples:
+	<programlisting>
+	  % web::encrypt &quot;Hello, world!&quot;
+	  ==&gt; XDaL9T6OqaqUXVJVKDAKQU
+	  %  web::decrypt [web::encrypt &quot;Hello, world!&quot;]
+	  ==&gt; Hello, world!
+	</programlisting>
+
+      </para>
+    </section>
+    <section id="encryption_plug-in_D">
+      <title>encryption plug-in D</title>
+      <para>
+
+      </para>
+    </section>
+    <section id="web::encryptd">
+      <title>web::encryptd</title>
+      <para>
+
+	By default, webshell uses this plug-In for weak data encryption for
+	encryption (<literal remap="tt">web::encryptd</literal>) and decryption (<literal remap="tt">web::decryptd</literal>).
+	The encryption key is managed with <literal remap="tt">web::crpytdkey</literal>.
+
+      </para><para>
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::encryptd</emphasis> &lt;data&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Returns encrypted data.
+
+      </para>
+    </section>
+    <section id="web::decryptd">
+      <title>web::decryptd</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::decryptd</emphasis> &lt;data&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Returns decrypted data.
+
+      </para>
+    </section>
+    <section id="web::cryptdkey">
+      <title>web::cryptdkey</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::cryptdkey</emphasis> ?&lt;key&gt;?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Sets the new key for encryption. If no argument is given, resets to
+	the default key. This command does not return the currently active
+	key, in difference to other configuration commands of webshell 3.
+
+	Commands:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::encryptd &lt;message&gt;</term>
+	    <listitem>
+	      <para>
+		encrypts &lt;message&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::decryptd &lt;message&gt;</term>
+	    <listitem>
+	      <para>
+		decrypts &lt;message&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::cryptdkey ?&lt;key&gt;?</term>
+	    <listitem>
+	      <para>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para>
+    </section>
+    <section id="encryption_plug-in_interface_">
+      <title>encryption plug-in interface </title>
+      <para>
+	<emphasis>For plug-in developers only</emphasis>
+      </para>
+      <para>
+	The encryption plug-in is required to implement the interface
+	described below:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      web::yourencrypt accepts one argument web::yourencrypt
+	      takes a string as input and generates a string which
+	      must be URI compliant
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      web::yourdecrypt accepts one argument web::yourdecrypt
+	      takes a string as input and returns a string
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>symmetry: <emphasis>$in ==
+		[web::yourdecrypt [web::yourencrypt
+		$in]]</emphasis>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      error messaging: <emphasis>TCL_OK</emphasis> for
+	      success. <emphasis>TCL_ERROR</emphasis> for any error
+	      during en-/decryption. <emphasis>TCL_CONTINUE</emphasis>
+	      for unknown encryption type (pass on to next method)
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </section>
+  </section>
+  <section id="uri-html-_en-decoding">
+    <title>uri-/html- en-/decoding</title>
+    <section id="web::htmlify">
+      <title>web::htmlify</title>
+      <para>
+      </para>
+    </section>
+    <section id="web::dehtmlify">
+      <title>web::dehtmlify</title>
+      <para>
+      </para>
+    </section>
+    <section id="web::uriencode">
+      <title>web::uriencode</title>
+      <para>
+      </para>
+    </section>
+    <section id="web::uridecode">
+      <title>web::uridecode</title>
+      <para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>web::htmlify</emphasis> ?-options? &lt;text&gt;
+	    </para>
+	    <para>
+	      Options is: <literal remap="tt">-numeric</literal>.
+	    </para>
+	    <para>
+	      Return HTML-compliant &lt;text&gt; with HTML encoded
+	      entities in mnemonic form (e.g. &amp;auml;) or - with
+	      option -numeric - numeric form (e.g. &amp;#228;)
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis>web::dehtmlify</emphasis>	&lt;text&gt;
+	    </para>
+	    <para>
+	      Remove all HTML-specifics of &lt;text&gt;
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis>web::uriencode</emphasis>
+	      &lt;text&gt;
+	    </para>
+	    <para>
+	      Return URI-compliant &lt;text&gt;.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis>web::uridecode</emphasis> &lt;text&gt;
+	    </para>
+	    <para>Decode URI-compliant &lt;text&gt;.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </section>
+    <section id="Examples11">
+      <title>Examples</title>
+      <para>
+	<programlisting>
+	  % web::htmlify &auml;
+	  ==&gt; &amp;auml;
+	  % web::htmlify -numeric &auml;
+	  ==&gt; &amp;#228;
+	  % web::dehtmlify &amp;auml;
+	  ==&gt; &auml;
+	  % web::uriencode &quot;Hello, world!&quot;
+	  ==&gt; Hello,+world%21
+	  % web::uridecode %21
+	  ==&gt; !
+	</programlisting>
+
+      </para>
+    </section>
+  </section>
+  <section id="inter-process_and_-system_communication">
+    <title>inter-process/-system communication</title>
+    <para>
+      Send to and receive from sockets.
+    </para>
+    <section id="web::send">
+      <title>web::send</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::send</emphasis> &lt;channel&gt; &lt;cmdNr&gt; &lt;message&gt; ??#?&lt;flags&gt;?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Send the command &lt;cmdNr&gt; and the message &lt;message&gt; to channel
+	&lt;channelName&gt; using the flags &lt;flags&gt;. The command numbers are
+	application specific. If #&lt;flags&gt; is used, flags is the numeric
+	(integer) representation of the flags is to be set. If the # is
+	omitted, &lt;flags&gt; is a list of symbolic flags. Currently, there is only
+	one flag: &quot;multiple&quot; or &quot;noflush&quot; with the same meaning, 
+	indicating that there is more to follow and no automatic flush on the
+	channel should be done.
+
+      </para>
+    </section>
+    <section id="web::recv">
+      <title>web::recv</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::recv</emphasis> &lt;channel&gt; &lt;cmdVarName&gt; &lt;msgVarName&gt; &lt;flagVarName&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Receives a message from &lt;channelName&gt;. The other arguments are the
+	names of the corresponding variables which will contain the message.
+	The flags are returned numeric. (To handle these flags, use the
+	web::msgflag function).
+
+      </para>
+    </section>
+    <section id="web::msgflag">
+      <title>web::msgflag</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::msgflag</emphasis> ?&lt;flags&gt;? ?&lt;testflags&gt;?
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Set or test flags.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::msgflag</term>
+	    <listitem>
+	      <para>
+		returns a list of all known message flags
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::msgflag &lt;flags&gt;</term>
+	    <listitem>
+	      <para>
+		returns the integer representation of the flags listed in &lt;flags&gt; 
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::msgflag &lt;flags&gt; &lt;testflags&gt;</term>
+	    <listitem>
+	      <para>
+		returns 1, if the flags in &lt;testflags&gt; are set in &lt;flags&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para><para>
+      </para>
+    </section>
+    <section id="Examples12">
+      <title>Examples</title>
+      <para>
+
+      </para>
+    </section>
+  </section>
+  <section id="Apache_module_specific_commands">
+    <title>Apache module specific commands</title>
+    <section id="web::initializer">
+      <title>web::initializer</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::initializer</emphasis> &lt;code&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	This code is executed only when a new interpreter is created.  Note
+	that the &quot;main&quot; Webshell script can <literal remap="tt">source</literal> several modules which
+	each call their initialization code.
+
+      </para><para>
+      </para>
+    </section>
+    <section id="web::finalizer">
+      <title>web::finalizer</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::finalizer</emphasis> &lt;code&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Register code to be exectuted when the interpreter for this
+	Webshell script is deleted. <emphasis>web::dofinalize</emphasis> will then call
+	each &lt;code&gt; block that has been registered, starting with the
+	most recently added &lt;code&gt;.
+
+      </para>
+    </section>
+    <section id="web::dofinalize">
+      <title>web::dofinalize</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::dofinalize</emphasis>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Execute finalizer code that has been registerd using
+	<emphasis>web::finalizer</emphasis>, starting with the most recently added &lt;code&gt;.
+
+      </para>
+    </section>
+    <section id="web::maineval">
+      <title>web::maineval</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::maineval</emphasis> &lt;code&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Execute code in the &quot;main&quot; interpreter of mod_websh.
+
+      </para>
+    </section>
+    <section id="web::interpclasscfg">
+      <title>web::interpclasscfg</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::interpclasscfg</emphasis> &lt;classid&gt; property ?value?</para><para>
+		Properties are: <literal remap="tt">maxrequests</literal>, <literal remap="tt">maxttl</literal>, <literal remap="tt">maxidletime</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Set or accesses properties of the interpreter class &lt;classid&gt;.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::interpclasscfg &lt;classid&gt; maxrequests ?&lt;value&gt;?</term>
+	    <listitem>
+	      <para>
+		gets or sets the maximum number of requests interpreters of this
+		class should handle. If &lt;value&gt; is 0, handle an unlimited number
+		of requests. Default: 0
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::interpclasscfg &lt;classid&gt; maxttl ?&lt;value&gt;?</term>
+	    <listitem>
+	      <para>
+		gets or sets the maximum number of seconds interpreters of this
+		class should live. If &lt;value&gt; is 0, it lives forever. Default: 0
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::interpclasscfg &lt;classid&gt; maxidletime ?&lt;value&gt;?</term>
+	    <listitem>
+	      <para>
+		gets or sets the maximum number of seconds interpreters of this
+		class should live beeing idle. If &lt;value&gt; is 0, no idle timeout is
+		assumed. Default: 0
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para><para>
+      </para>
+    </section>
+    <section id="web::interpcfg">
+      <title>web::interpcfg</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		<emphasis>web::interpcfg</emphasis> ?property? ?value?</para><para>
+		Properties are: <literal remap="tt">numreq</literal>, <literal remap="tt">retire</literal>, <literal remap="tt">starttime</literal>, <literal remap="tt">lastusedtime</literal>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	Sets or accesses properties of the current interpreter.
+
+	<variablelist>
+	  <varlistentry>
+	    <term>web::interpcfg </term>
+	    <listitem>
+	      <para>
+		returns &lt;classid&gt; of current interpreter.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::interpcfg numreq</term>
+	    <listitem>
+	      <para>
+		gets the number of requests handled by this interpreter
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::interpcfg retire ?&lt;boolean&gt;?</term>
+	    <listitem>
+	      <para>
+		gets or sets the flag indicating this interpreter should be removed
+		after handling the current request
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::interpcfg starttime</term>
+	    <listitem>
+	      <para>
+		returns the time in seconds since the epoch, this interpreter was started
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term>web::interpcfg lastusedtime</term>
+	    <listitem>
+	      <para>
+		returns the time in seconds since the epoch, this interpreter was last used
+		(starttime in case of first request).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+      </para>
+    </section>
+  </section>
+  <section id="misc_commands">
+    <title>misc commands</title>
+    <section id="web::match">
+      <title>web::match</title>
+      <para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>Syntax:</term>
+	    <listitem>
+	      <para>
+		web::match &lt;result&gt; &lt;listToBeSearched&gt; &lt;searchFor&gt;
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	In case &lt;searchFor&gt; exists in &lt;listToBeSearched&gt;, web::match returns
+	&lt;result&gt;, otherwise an empty string.
+
+      </para><para>
+	For websh2 wizards:</para><para>
+
+	wpp_isselected v1 v2 would now be:
+	web::match &quot;selected&quot; v1 v2
+
+      </para><para>
+	web::match treats v1 as a list. Thus, <emphasis>web::match &quot;ok&quot; {tv dvd vcr} dvd</emphasis>
+	will return <emphasis>ok</emphasis>.
+
+      </para>
+    </section>
+    <section id="web::tempfile">
+      <title>web::tempfile</title>
+      <para>
+	Returns a unique name of a temporary file. The maximum of
+	guaranteed unique names per application is system dependent.
+	This command just returns the name of a file. It is the
+	programmers job to handle the file, for example to open
+	it. Note that webshell keeps an internal list of all file
+	names generated with web::tempfile and will attempt to delete
+	all files when the interpreter dies.
+      </para>
+    </section>
+  </section>
+</article>
