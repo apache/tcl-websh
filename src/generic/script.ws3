@@ -66,10 +66,10 @@ proc web::include {name {vmsg ""}} {
     if {![file exists $name]} {
 	set so "$name[info sharedlibextension]"
 	if {[file exists $so]} {
-	    return [catch {uplevel load $so} msg]
+	    return [catch {uplevel [list load $so]} msg]
 	}
     }
-    return [catch {uplevel source $name} msg]
+    return [catch {uplevel [list source $name]} msg]
 }
 
 #-----------------------------------------------------------------------------
