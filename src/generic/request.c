@@ -204,17 +204,24 @@ int removeTempFiles(Tcl_Interp * interp, RequestData * requestData)
     while (nextFromHashIterator(&iterator) != TCL_ERROR) {
 	tclo = (Tcl_Obj *) valueOfCurrent(&iterator);
 	if (tclo != NULL) {
-	    LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
-		    "removeTempFiles", WEBLOG_INFO,
-		    "removing temporary file ", Tcl_GetString(tclo), ".",
-		    NULL);
 
 	    if (remove(Tcl_GetString(tclo)) < 0) {
+	      /* not successful: usually because there is no such file */
+	      if (Tcl_GetErrno() != ENOENT) {
+		/* a different reason: create error log */
 		LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
 			"removeTempFiles", WEBLOG_ERROR,
-			"Error: ", Tcl_PosixError(interp),
+			"Error: ", Tcl_ErrnoMsg(Tcl_GetErrno()),
 			NULL);
+	      }
+	    } else {
+	      /* log if successfully removed */
+	      LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
+		      "removeTempFiles", WEBLOG_DEBUG,
+		      "removing temporary file ", Tcl_GetString(tclo), ".",
+		      NULL);
 	    }
+
 	    Tcl_DecrRefCount(tclo);
 	}
     }
