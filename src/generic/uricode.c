@@ -138,7 +138,7 @@ Tcl_Obj *uriDecode(Tcl_Obj * in)
 
     int length;
     Tcl_Obj *res = NULL;
-    char *utf = NULL;
+    signed char *utf = NULL;
     Tcl_UniChar unic;
     char buf[3];
 

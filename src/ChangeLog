@@ -1,5 +1,9 @@
 2001-11-07  David N. Welton  <davidw@dedasys.com>
 
+	* generic/uricode.c (uriDecode): changed 'utf' to be a signed
+	character, so that the comparison with 0 works on all
+	architectures.
+
 	* generic/tcldecmt.tcl: Extend functionality to do multiple files,
 	and properly quote \ and " characters for use in a C string.
 

@@ -1,3 +1,11 @@
+# 
+# tcldecmt.tcl -- strip white space and some comments from Tcl source code.
+
+# The comment stripper is rather simplistic and doesn't handle all
+# code perfectly.
+
+# $Id$
+
 proc DoFile { fileName } { 
     global argv0
     # ----------------------------------------------------------------------------
