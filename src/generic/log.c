@@ -805,7 +805,7 @@ int Web_LogFilter(ClientData clientData,
 }
 
 /* ----------------------------------------------------------------------------
- * createLogPlugIn -- 
+ * createLogPlugIn --
  * ------------------------------------------------------------------------- */
 LogPlugIn *createLogPlugIn()
 {
@@ -822,7 +822,7 @@ LogPlugIn *createLogPlugIn()
 }
 
 /* ----------------------------------------------------------------------------
- * destroyLogPlugIn -- 
+ * destroyLogPlugIn --
  * ------------------------------------------------------------------------- */
 int destroyLogPlugIn(void *plugIn, void *dum)
 {
@@ -830,6 +830,8 @@ int destroyLogPlugIn(void *plugIn, void *dum)
     LogPlugIn *logPlugIn = (LogPlugIn *) plugIn;
 
     /* fixme: destroyLogPlugIn - have to assume that all channels are closed */
+
+    /* boh...  */
     if (logPlugIn != NULL)
 	WebFreeIfNotNull(logPlugIn);
     return TCL_OK;
@@ -837,7 +839,7 @@ int destroyLogPlugIn(void *plugIn, void *dum)
 
 
 /* ----------------------------------------------------------------------------
- * registerLogPlugIn -- 
+ * registerLogPlugIn --
  * ------------------------------------------------------------------------- */
 int registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * logPlugIn)
 {
