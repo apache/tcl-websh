@@ -79,7 +79,9 @@ $Id$
       <emphasis>encryptchain</emphasis>, and <emphasis>decryptchain</emphasis>
       -->
       <para>
-      If <arg choice="opt"><replaceable>value</replaceable></arg> is ommitted, the current value of <arg><replaceable>key</replaceable></arg> is returned.
+	If <option><replaceable>value</replaceable></option> is
+	ommitted, the current value of
+	<option><replaceable>key</replaceable></option> is returned.
       </para>
 
       <variablelist>
@@ -370,10 +372,11 @@ $Id$
 	<command>web::param</command>.
       </para>
       <para>
-           <cmdsynopsis>
-	<command>web::cmdurlcfg</command> <option><replaceable>option</replaceable></option>
-	<optional><option><replaceable>value</replaceable></option></optional>
-           </cmdsynopsis>
+	<cmdsynopsis>
+	  <command>web::cmdurlcfg</command>
+	  <arg><replaceable>option</replaceable></arg>
+	  <arg choice="opt"><replaceable>value</replaceable></arg>
+	</cmdsynopsis>
       </para>
       <para>
 	Options are <option>-scheme</option>,
@@ -1215,33 +1218,33 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
-    <example>
-	<title>web::response</title>
-	<programlisting>
-	  % web::response
-	  stdout
-	  % web::response -select stderr
-	  stdout
-	  % web::response
-	  stderr
-	  % web::response -sendheader
-	  1
-	  % web::response -names
-	  Content-Type Generator
-	  % web::response Content-Type
-	  text/html
-	  % web::response -bytessent
-	  0
-	  % web::response -set Set-Cookie &quot;my cookie that contains data&quot;
-	  % web::put &quot;Hello, world\n&quot;
-	  Content-Type: text/html
-	  Set-Cookie: my cookie that contains data
-	  Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
+	<example>
+	  <title>web::response</title>
+	  <programlisting>
+	    % web::response
+	    stdout
+	    % web::response -select stderr
+	    stdout
+	    % web::response
+	    stderr
+	    % web::response -sendheader
+	    1
+	    % web::response -names
+	    Content-Type Generator
+	    % web::response Content-Type
+	    text/html
+	    % web::response -bytessent
+	    0
+	    % web::response -set Set-Cookie &quot;my cookie that contains data&quot;
+	    % web::put &quot;Hello, world\n&quot;
+	    Content-Type: text/html
+	    Set-Cookie: my cookie that contains data
+	    Generator: websh3.00 (c) Netcetera AG, http://netcetera.ch
 
-	  Hello, world
-	  %
-	</programlisting>
-      </example>
+	    Hello, world
+	    %
+	  </programlisting>
+	</example>
       </para>
     </section>
     <section id="web::put">
@@ -1355,8 +1358,8 @@ $Id$
 
       </para>
       <para>
-      <programlisting>
-	web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest</programlisting>
+	<programlisting>
+	  web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m&quot; *.-debug command logTest</programlisting>
       </para>
 
     </section>
@@ -1505,23 +1508,23 @@ $Id$
 	<title></title>
 	<example>
 	  <title>web::log</title>
-	<programlisting>
-	  % web::logfilter add *.-debug
-	  logfilter0
-	  % web::logdest add *.-debug channel stdout
-	  logdest0
-	  % web::log info {Websh is cool}
-	  03/01/00 00:00:00 [111] user.info: Websh is cool
-	  % web::logdest delete logdest0
-	  % web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
-	  logdest1
-	  % web::log info {Websh is cool}
-	  --&gt; Websh is cool
-	  % web::logdest delete logdest1
-	  % web::logdest add -maxchar 5 *.-debug channel stdout
-	  % web::log info {Websh is cool}
-	  03/01/00 00:00:00 [111] user.info: Websh
-	  %
+	  <programlisting>
+	    % web::logfilter add *.-debug
+	    logfilter0
+	    % web::logdest add *.-debug channel stdout
+	    logdest0
+	    % web::log info {Websh is cool}
+	    03/01/00 00:00:00 [111] user.info: Websh is cool
+	    % web::logdest delete logdest0
+	    % web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
+	    logdest1
+	    % web::log info {Websh is cool}
+	    --&gt; Websh is cool
+	    % web::logdest delete logdest1
+	    % web::logdest add -maxchar 5 *.-debug channel stdout
+	    % web::log info {Websh is cool}
+	    03/01/00 00:00:00 [111] user.info: Websh
+	    %
 	  </programlisting>
 	</example>
       </section>
@@ -1653,15 +1656,15 @@ $Id$
 
 	<example>
 	  <title>web::context</title>
-	<programlisting>
-	  % web::context sc
-	  % sc::cset lang FR
-	  FR
-	  % # ... some code ...
-	  % set lang [sc::cget lang EN]
-	  FR
-	  %
-	</programlisting>
+	  <programlisting>
+	    % web::context sc
+	    % sc::cset lang FR
+	    FR
+	    % # ... some code ...
+	    % set lang [sc::cget lang EN]
+	    FR
+	    %
+	  </programlisting>
 	</example>
       </para>
     </section>
@@ -2150,7 +2153,7 @@ $Id$
 	  file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
 	  %
 	</programlisting>
-</example>
+      </example>
 
 
     </section>
@@ -2196,8 +2199,8 @@ $Id$
       <para>
 	<cmdsynopsis>
 	  <command>web::lockfile</command> <arg><replaceable>fh</replaceable></arg>
-           </cmdsynopsis>
-           <cmdsynopsis>
+	</cmdsynopsis>
+	<cmdsynopsis>
 	  <command>web::unlockfile</command> <arg><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
@@ -2277,14 +2280,14 @@ $Id$
 
 	<example>
 	  <title>web::encrypt</title>
-	<programlisting>
-	  % web::encrypt &quot;Hello, world!&quot;
-	  XDIVAhkgkxRjcfA7UTwpD7
-	  % web::decrypt [web::encrypt &quot;Hello, world!&quot;]
-	  Hello, world!
-	  %
-	</programlisting>
-</example>
+	  <programlisting>
+	    % web::encrypt &quot;Hello, world!&quot;
+	    XDIVAhkgkxRjcfA7UTwpD7
+	    % web::decrypt [web::encrypt &quot;Hello, world!&quot;]
+	    Hello, world!
+	    %
+	  </programlisting>
+	</example>
       </para>
     </section>
     <section id="encryption_plug-in_D">
@@ -2368,8 +2371,8 @@ $Id$
 	  </listitem>
 	  <listitem>
 	    <para>symmetry: <emphasis><command>$in ==
-		[web::yourdecrypt [web::yourencrypt
-		$in]]</command></emphasis>
+		  [web::yourdecrypt [web::yourencrypt
+		  $in]]</command></emphasis>
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -2389,52 +2392,53 @@ $Id$
     <section id="web::htmlify">
       <title>web::htmlify</title>
       <para>
-           <cmdsynopsis>
-	      <command>web::htmlify</command>
-	      <optional><option>-options</option></optional>
-	      <option><replaceable>text</replaceable></option>.
-           </cmdsynopsis>
-	    </para>
-	    <para>
-	      Options: <option>-numeric</option>.
-	    </para>
-	    <para>
-	      Return HTML-compliant <option>text</option> with HTML
-	      encoded entities in mnemonic form (e.g. &amp;auml;) or in numeric form (e.g. &amp;#228;) if the option <option>-numeric</option> is specified.
+	<cmdsynopsis>
+	  <command>web::htmlify</command>
+	  <arg choice="opt"><option>-options</option></arg>
+	  <arg><replaceable>text</replaceable></arg>.
+      </cmdsynopsis>
+      </para>
+      <para>
+	Options: <option>-numeric</option>.
+      </para>
+      <para>
+	Return HTML-compliant <option>text</option> with HTML
+	encoded entities in mnemonic form (e.g. &amp;auml;) or in numeric form (e.g. &amp;#228;) if the option <option>-numeric</option> is specified.
       </para>
     </section>
     <section id="web::dehtmlify">
       <title>web::dehtmlify</title>
       <para>
-           <cmdsynopsis>
-              <command>web::dehtmlify</command>
-	      <option><replaceable>text</replaceable></option>
-           </cmdsynopsis>
-	    </para>
-	    <para>
-	      Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding ISO-8859-1 characters.
+	<cmdsynopsis>
+	  <command>web::dehtmlify</command>
+	  <arg><replaceable>text</replaceable></arg>
+	</cmdsynopsis>
+      </para>
+      <para>
+	Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding ISO-8859-1 characters.
       </para>
     </section>
     <section id="web::uriencode">
       <title>web::uriencode</title>
-	    <para>
-           <cmdsynopsis>
-            <command>web::uriencode</command>
-	      <option><replaceable>text</replaceable></option>
-           </cmdsynopsis>
-	    </para>
-	    <para>
-	      Return URI-compliant <option>text</option>.
+      <para>
+	<cmdsynopsis>
+	  <command>web::uriencode</command>
+	<arg><replaceable>text</replaceable></arg>
+      </cmdsynopsis>
+      </para>
+      <para>
+	Return URI-compliant <option>text</option>.
       </para>
     </section>
     <section id="web::uridecode">
       <title>web::uridecode</title>
       <para>
-           <cmdsynopsis>
-	    <command>web::uridecode</command> <option><replaceable>text</replaceable></option>
-           </cmdsynopsis>
-	    </para>
-	    <para>Decode URI-compliant <option>text</option>.
+	<cmdsynopsis>
+	  <command>web::uridecode</command>
+	  <arg><replaceable>text</replaceable></arg>
+      </cmdsynopsis>
+      </para>
+      <para>Decode URI-compliant <option>text</option>.
       </para>
     </section>
     <section id="Examples11">
@@ -2470,8 +2474,8 @@ $Id$
 	  <command>web::send</command>
 	  <arg><replaceable>channel</replaceable></arg>
 	  <arg><replaceable>cmdNr</replaceable></arg>
-	  <arg><replaceable>message</replaceable></arg><arg
-							 choice="opt"><replaceable>flags</replaceable></arg>
+	  <arg><replaceable>message</replaceable></arg>
+	  <arg choice="opt"><replaceable>flags</replaceable></arg>
 	</cmdsynopsis>
 
 	Send the command <option>cmdNr</option> and the message
@@ -2621,9 +2625,9 @@ $Id$
 	  <programlisting>
 	    rename web::finalize web::finalize.orig
 	    proc web::myFinalize {} {
-	        # code to eval before finalize.orig
-	        finalize.orig
-	        # code to eval after finalize.orig
+	    # code to eval before finalize.orig
+	    finalize.orig
+	    # code to eval after finalize.orig
 	    }
 	  </programlisting>
 	</example>
@@ -2817,12 +2821,12 @@ $Id$
 	  <programlisting>
 	    proc web::interpmap {filename} {
 	    if {[string match "/path/to/myApp" $filename]} {
-	        # this is my special app
-	        return /real/path/to/myApp
+	    # this is my special app
+	    return /real/path/to/myApp
 	    }
 	    if {[string match "*.ws3"]} {
-	        # scripts have their own interp class
-	        return $filename
+	    # scripts have their own interp class
+	    return $filename
 	    }
 	    # default: all templates are handled by my handler
 	    return /my/special/template/handler
