@@ -35,12 +35,15 @@ proc cleanParam {} {
     web::param -unset
 }
 
+proc getquerystringfromurl {url} {
+    return [string range $url [expr {[string first ? $url] + 1}] end]
+}
 
 proc cmdUrlToPlainTextAndParse {cmdurl} {
 
     cleanParam
 
-    set tmp [web::querystring::getfromurl $cmdurl]
+    set tmp [getquerystringfromurl $cmdurl]
     set res [web::decrypt $tmp]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
 
@@ -51,7 +54,7 @@ proc requestParamsAsList {url} {
 
     cleanParam
 
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
 
     set keys [web::param]
@@ -189,7 +192,7 @@ test cmdurl-3.2 {web::cmdurl aCommand} {
     cleanParam
 
     set url [web::cmdurl aCommand]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param cmd]
     unset url
@@ -202,7 +205,7 @@ test cmdurl-3.3 {web::cmdurl aCmd k1 v1} {
     cleanParam
 
     set url [web::cmdurl aCmd k1 v1]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param -names]
     unset url
@@ -226,7 +229,7 @@ test cmdurl-3.5 {web::cmdurl aCmd alist} {
     cleanParam
 
     set url [web::cmdurl aCmd [list k1 v1 k1 v2 k2 v3]]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param -names]
     unset url
@@ -300,7 +303,7 @@ test cmdurl-3.12 {web::cmdurl: add two value for one key} {
     cleanParam
 
     set url [web::cmdurl aCmd k1 v1 k1 v2]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param -names]
     unset url
@@ -313,7 +316,7 @@ test cmdurl-3.13 {empty value} {
     cleanParam
 
     set url [web::cmdurl aCmd id ""]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param id]
     unset url
@@ -326,7 +329,7 @@ test cmdurl-3.14 {empty value, in list} {
     cleanParam
 
     set url [web::cmdurl aCmd [list id ""]]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param -names]
     unset url
@@ -339,7 +342,7 @@ test cmdurl-3.15 {funny keys} {
     cleanParam
 
     set url [web::cmdurl "" \" v1 \} v2 ? v3 * v4 ` v5]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param -names]
     unset url
@@ -352,7 +355,7 @@ test cmdurl-3.16 {string as value} {
     cleanParam
 
     set url [web::cmdurl "" id "this is a \"test\" string with \{braces\}"]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param id]
     unset url
@@ -368,7 +371,7 @@ test cmdurl-3.19 {no time and no cmd tag} {
     web::config cmdparam "cmd"
 
     set url [web::cmdurl -notimestamp "" k319 v319]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param k319]
     lappend res [web::param t]
@@ -380,14 +383,14 @@ test cmdurl-3.19 {no time and no cmd tag} {
 
 test cmdurl-3.191 {no time and no cmd tag} {
 
-    cleanParam    
+    cleanParam
 
     web::config cmdurltimestamp 0
     web::config timeparam "t"
     web::config cmdparam "cmd"
 
     set url [web::cmdurl "" k3191 v3191]
-    set tmp [web::querystring::getfromurl $url]
+    set tmp [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $tmp
     set res [web::param k3191]
     lappend res [web::param t]

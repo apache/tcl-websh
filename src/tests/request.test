@@ -31,6 +31,10 @@ proc cleanParam {} {
     web::request -reset
 }
 
+proc getquerystringfromurl {url} {
+    return [string range $url [expr {[string first ? $url] + 1}] end]
+}
+
 # -----------------------------------------------------------------------------
 # errors
 # -----------------------------------------------------------------------------
@@ -43,7 +47,7 @@ test request-2.1 {gen url, parse it, access params} {
     cleanParam
 
     set url [web::cmdurl aTstCmd found 10 tried 20]
-    set url [web::querystring::getfromurl $url]
+    set url [getquerystringfromurl $url]
     web::dispatch -cmd "" -postdata "" -querystring $url
 
     set res [web::param -names]
