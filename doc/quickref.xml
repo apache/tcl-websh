@@ -38,14 +38,14 @@ $Id$
 	takes &quot;-o2&quot; as the first argument.
       </para>
       <para>
-	Instead of the normal Tcl behaviour, WebSH configuration
+	Instead of the normal Tcl behaviour, Webshell configuration
 	commands normally return the previous value, when a new value
 	is set.
       </para>
       <para>
 	In addition to the examples given here you might find <ulink
 	  url="http://websh.com/examples.html">http://websh.com/examples.html</ulink>
-	  a usefull source of information.
+	  a useful source of information.
       </para>
     </section>
     <section id="about">
@@ -53,14 +53,14 @@ $Id$
       <para>
 	The original version of this document can always be found at
 	<ulink
-	url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh</ulink>.
+	url="http://tcl.apache.org/websh/">http://tcl.apache.org/websh/</ulink>.
       </para>
       <note>
 	<para>
 	  We try to keep this quick reference up-to-date and hope that
 	  it will be useful. We do not guarantee that it is suitable
 	  for any particular purpose whatsoever. The authors accept no
-	  liability in respect to this information or its use.
+	  liability with regards to this information or its use.
 	</para>
       </note>
     </section>
@@ -96,8 +96,8 @@ $Id$
 	  <term><option>cmdparam</option> <optional><option>name</option></optional></term>
 	  <listitem>
 	    <para>
-	      Name of the parameter to store reference to a web::command command
-	      in the URL. Default: &quot;cmd&quot;.
+	      Name of the <command>web::command</command> parameter
+	      name in the URL. Default: &quot;cmd&quot;.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -105,8 +105,8 @@ $Id$
 	  <term><option>timeparam</option> <optional><option>name</option></optional></term>
 	  <listitem>
 	    <para>
-	      Name of the parameter to store reference to the timestamp
-	      in the URL. Default: &quot;t&quot;.
+	      Name of the timestamp parameter in the URL. Default:
+	      &quot;t&quot;.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -114,7 +114,8 @@ $Id$
 	  <term><option>logsubst</option> <optional><option>boolean</option></optional></term>
 	  <listitem>
 	    <para>
-	      Turns substitution of log messages on or off. Default: on.
+	      Turns substitution of log messages on or off. Default:
+	      off.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -122,10 +123,11 @@ $Id$
 	  <term><option>putxmarkup</option> <optional><option>brace|tag</option></optional></term>
 	  <listitem>
 	    <para>
-	      Sets the markup characters for sections to be eval'd in web::putx
-	      and web::putxfile commands to either curly braces ({ ... }) or
-	      special tags (&lt;% ... %&gt;). Please note that when using the tags &lt;%%&gt;,
-	      they cannot be nested. Default: brace.
+	      Sets the markup characters for sections to be eval'd in
+	      web::putx and web::putxfile commands to either curly
+	      braces ({ ... }) or special tags (&lt;?
+	      ... ?&gt;). Please note that when using the tags &lt;?
+	      ?&gt;, they cannot be nested. Default: brace.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -133,7 +135,7 @@ $Id$
 	  <term><option>version</option></term>
 	  <listitem>
 	    <para>
-	      Returns the version info string
+	      Returns the version info string.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -141,7 +143,7 @@ $Id$
 	  <term><option>copyright</option></term>
 	  <listitem>
 	    <para>
-	      Returns a copyright message string
+	      Returns a copyright message string.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -149,8 +151,8 @@ $Id$
 	  <term><option>encryptchain</option> <option>list</option></term>
 	  <listitem>
 	    <para>
-	      defines which commands should be tried, in sequence, to encrypt
-	      a message. Default: &quot;web::encryptd&quot;
+	      defines which commands should be tried, in sequence, to
+	      encrypt a message. Default: &quot;web::encryptd&quot;.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -158,8 +160,8 @@ $Id$
 	  <term><option>decryptchain</option> <option>list</option></term>
 	  <listitem>
 	    <para>
-	      defines which commands should be tried, in sequence, to decrypt
-	      a message. Default: &quot;web::decryptd&quot;
+	      defines which commands should be tried, in sequence, to
+	      decrypt a message. Default: &quot;web::decryptd&quot;.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -183,9 +185,10 @@ $Id$
     <title>Command dispatching and session management</title>
     <para>
       Webshell provides a command dispatching mechanism to produce,
-      for example, different HTML pages within one application. The
-      name of the command to be used is encoded in the querystring
-      (see <command>web::cmdurl</command> for details on
+      for example, different HTML pages within one "application",
+      which is most likely one file on the file system. The name of
+      the command to be used for a particular page is encoded in the
+      querystring (see <command>web::cmdurl</command> for details on
       how to produce such querystrings).  Command dispatching is
       initiated with the command <command>web::dispatch</command>.
       Commands are defined with <command>web::command</command>.
