@@ -98,10 +98,10 @@ int Web_Send(ClientData clientData,
     if (Tcl_GetIntFromObj(interp, objv[2], &cmdcode) == TCL_ERROR)
 	return TCL_ERROR;
 
-    len = Tcl_GetCharLength(objv[3]);
+    tmpStr = Tcl_GetStringFromObj(objv[3],&len);
 
-    if (send_msg(tc, cmdcode, flags, len, (void *) Tcl_GetString(objv[3]))
-	== -1) {
+    if ( send_msg(tc, cmdcode, flags, len, (void *)tmpStr) == -1 ) {
+
 	Tcl_PosixError(interp);
 	return TCL_ERROR;
     }

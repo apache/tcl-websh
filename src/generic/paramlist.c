@@ -352,21 +352,14 @@ int paramGet(ParamList * paramList,
 	     Tcl_Interp * interp,
 	     int objc, Tcl_Obj * CONST objv[], int hasPrivate)
 {
-
-
-    char *arg;
-    int opt;
+    char *arg = NULL;
+    int  opt = 0;
 
     /* --------------------------------------------------------------------------
      * sanity
      * ----------------------------------------------------------------------- */
 
     WebAssertData(interp, paramList, "paramList/paramGet", TCL_ERROR);
-
-    /* fixme: what for? */
-    /* probably not necessary:
-     * WebAssertArgs(interp,objc,objv,paramsubcmd,count,2);
-     */
 
     /* if there are no args -> continue with private parsing */
     if (objc < 2) {
@@ -376,6 +369,7 @@ int paramGet(ParamList * paramList,
 	    WebAssertObjc(1, 1, "args ...");
 	}
     }
+
     /* see if there is a subcommand */
     arg = Tcl_GetString(objv[1]);
     if (arg[0] == '-') {
@@ -443,7 +437,7 @@ int paramGet(ParamList * paramList,
     }
     else {
 	/* no subcommand -> return value */
-	WebAssertObjc(objc > 3, 2, "key ?default?");
+	WebAssertObjc(objc > 3, 1, "key ?default?");
 	if (objc == 3)
 	    return paramListGetValueToResult(interp, paramList, objv[1],
 					     objv[2]);
