@@ -585,45 +585,43 @@ $Id$
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-postdata</option> <option><replaceable>string</replaceable></option>
-	      <optional><option><replaceable>content_type</replaceable></option></optional></term>
+	    <term><option>-postdata</option> <option>&quot;&quot;</option></term>
 	    <listitem>
 	      <para>
-		parse <option>string</option> as POST data input with
-		type <option>content_type</option>.
-		<option>content_type</option> can be <literal
-		  remap="tt">application/x-www-form-urlencoded</literal>
-		or <literal remap="tt">multipart/form-data;
-		  boundary=xxx</literal>. In the second case,
-		<option>content-type</option> must specify the
-		boundary as well. By default, POST data is taken from
-		the request data.</para><para> If
-		<option>string</option> is an empty string, postdata
-		parsing is turned off.</para><para> Default for
-		<option>content_type</option> is
-		&quot;application/x-www-form-urlencoded&quot;.
+                do not parse any post data.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
 	    <term>
-	      <option>-postdata</option> <option><replaceable>channelName</replaceable></option>
-	      <option><replaceable>content_length</replaceable></option>
-	      <option><replaceable>content_type</replaceable></option>
+	      <option>-postdata</option> <option><optional>#</optional><replaceable>channelName</replaceable></option>
+	      <option><optional><replaceable>content_length</replaceable></optional></option>
+	      <option><optional><replaceable>content_type</replaceable></optional></option>
 	    </term>
 	    <listitem>
 	      <para>
-		As above, but reads the POST data from channel
-		<option>channelName</option>.
+		parse channel <option>channelName</option> (or variable named <option>channelName</option> if <option>#</option> is given) as POST data input with
+		length <option>content_length</option> and type <option>content_type</option>.
+		<option>content_type</option> can be <literal
+		  remap="tt">application/x-www-form-urlencoded</literal>
+		or <literal remap="tt">multipart/form-data;
+		  boundary=xxx</literal>.
+In the case of multipat form data,
+		<option>content-type</option> must specify the
+		boundary as well. By default, POST data is taken from
+		the request data.</para><para> Default for
+		<option>content_type</option> is <literal
+		  remap="tt">application/x-www-form-urlencoded</literal>.
+                Default for <option>content_length</option> is to read a channel up to EOF or the full content of the variable.
 	      </para>
 	      <para>
 		Use the keyword <literal remap="tt">end</literal> for
 		<option>content_length</option> to indicate that
 		Websh should read all content.</para><para>
-		Examples for <option>content_type</option> include:
+		Supported content types are:
 		<itemizedlist>
 		  <listitem><para><literal remap="tt">multipart/form-data; boundary=xxxx</literal></para></listitem>
-		  <listitem><para><literal remap="tt">application/x-www-form-urlencoded</literal></para></listitem>
+		  <listitem><para><literal remap="tt">application/x-www-form-urlencoded</literal> (default)</para></listitem>
 		</itemizedlist>
 	      </para>
 	    </listitem>
@@ -674,6 +672,13 @@ $Id$
 	  % web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
 	  On the hook
 	  this is acmd
+	  % set data &quot;a=b&amp;c=d&quot;
+	  a=b&amp;c=d
+	  % web::dispatch -cmd &quot;&quot; -querystring &quot;&quot; -postdata #data
+	  % web::formvar a
+	  b
+	  % web::formvar c
+	  d
 	  %
 	</programlisting>
       </example>
