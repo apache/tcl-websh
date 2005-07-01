@@ -166,7 +166,7 @@ int Web_Dispatch(ClientData clientData,
 		    break;
 		default:
 		    Tcl_WrongNumArgs(interp, 1, objv,
-				     "-postdata ?#?channel content_length ?content_type?");
+				     "-postdata ?#?channel ?content_length? ?content_type?");
 		    return TCL_ERROR;
 		    break;
 		}
