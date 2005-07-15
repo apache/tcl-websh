@@ -1,3 +1,26 @@
+2005-07-15 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/weboutint.c, src/tests/webout.test:
+	fixed handling of tag in putx (problems with '?') and 
+	wrote some tests for it
+
+2005-07-01 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* doc/quickref.xsl:
+	fixed URL to docbook to newer version
+	* doc/quickref.xml:
+	fixed documentation of web::dispatch -postdata
+	* src/generic/dispatch.c:
+	fixed error string of web::dispatch -postdata syntax
+
+2004-12-13 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/unix/config.guess, src/unix/config.sub:
+	config.sub and config.guess (avoids problems with some 
+	autoconf versions)
+
+2004-11-16 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* doc/quickref.xml:
+	fixed documentation of web::logdest 
+	(explanation for -format and -maxchar options)
+
 2004-09-15  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/cookie.ws3, src/tests/cookiecontext.test:
@@ -18,6 +41,7 @@
 
 	* src/generic/tclAppInit.c:
 	removed old SUN OS compatibilty hack (not needed anymore)
+
 	* src/generic/checksum.c:
 	hack around gcc optimization problem
 	(thanks to Jason Brazile for the "volatile" hint ...)
@@ -39,27 +63,31 @@
 	* src/generic/formdata.c:
 	fixed minor memory leak in parseMultipartFormData
 
-	* src/generic/hashdata.h, src/generic/hashdata.c:
-	removed unused function (resetHashIterator)
-
 	* src/generic/varchannel.c:
 	removed unused header include (webutl.h)
 
 	* src/tests/logtofile.test:
 	added logtofile-3.1 test (coverage of web::log to file)
 
-	* src/tests/cookiecontext.c:
+	* src/tests/cookiecontext.test:
 	fixed cookie tests to match proper cookie expiry format
 	changed webshell to Websh (just for beauty reasons ;-)
 
 	* src/tests/msc.test:
 	added coverage tests for cgi modwebsh stubs
+
+	* src/generic/webutl.c, src/generic/webutl.h:
+	removed unused functions tclMyConcat and Web_IntIncrObj
 	
+	* src/generic/hashutl.c, src/generic/hashutl.h:
+	removed unused function (resetHashIterator)
+
 2004-02-03  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/cookie.ws3:
 	fixed cookie expiry date format to meet Netscape specs
-
+        (http://wp.netscape.com/newsref/std/cookie_spec.html)
+	
 2003-11-15  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* src/generic/interpool.c:
