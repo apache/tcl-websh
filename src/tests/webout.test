@@ -121,7 +121,6 @@ test putx-2.5 {escaping} {
     web::putx {*\{noeval\}{web::put "eval this"}*}
     set eval2_5
 } {*{noeval}eval this*}
-## no longer true (todo 010) {*\{noeval\}eval this*}
 
 test putx-2.6 {escaped paren} {
     web::response -select #eval2_6
@@ -138,6 +137,51 @@ test putx-3.0 {<? ?> syntax} {
     web::config putxmarkup brace
     set putx3_0
 } {*{noeval}eval this*}
+
+test putx-3.0a {<? ?> syntax question mark} {
+    web::response -select #putx3_0a
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {*{noeval}<?web::put "eval this"?> what's the result?<b>*</b>}
+    web::config putxmarkup brace
+    set putx3_0a
+} {*{noeval}eval this what's the result?<b>*</b>}
+
+test putx-3.0b {<? ?> syntax question mark} {
+    web::response -select #putx3_0b
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {*{noeval}<?web::put "eval this"?> what's the result?}
+    web::config putxmarkup brace
+    set putx3_0b
+} {*{noeval}eval this what's the result?}
+
+test putx-3.0c {<? ?> syntax left over end tag} {
+    web::response -select #putx3_0c
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {*{noeval}<?web::put "eval this"?> end tag: ?>}
+    web::config putxmarkup brace
+    set putx3_0c
+} {*{noeval}eval this end tag: ?>}
+
+test putx-3.0d {<? ?> syntax escaping} {
+    web::response -select #putx3_0d
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {*{noeval}\<?web::put "eval this"\?> end tag: ?>}
+    web::config putxmarkup brace
+    set putx3_0d
+} {*{noeval}<?web::put "eval this"?> end tag: ?>}
+
+test putx-3.0e {<? ?> syntax cross escaping} {
+    web::response -select #putx3_0e
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    web::putx {*\{noeval\}*}
+    web::config putxmarkup brace
+    set putx3_0e
+} {*\{noeval\}*}
 
 test putx-3.1 {nested <? ?> syntax} {
     web::response -select #putx3_1

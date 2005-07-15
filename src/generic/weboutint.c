@@ -472,7 +472,7 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
 	    prev = cur;
 	    cur ++;
 	    continue;
-	} else if (*cur == strend[endmatch]) {
+	} else if (*cur == strend[endmatch] && (cntOpen > 0 || *prev == '\\')) {
 	    if (*prev == '\\') {
 		Tcl_DStringAppend(&dstr, cur, 1);
 	    } else if ((++endmatch) == endseqlen)
