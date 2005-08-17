@@ -154,17 +154,21 @@ proc web::cookiecontext {ctxmgrname args} {
 
 		if {[info exists expsec]} {
 		    # we have an (optional) expiry
-		    global env
-		    if {[info exists env(LC_TIME)]} {
-			set LC_TIME $env(LC_TIME)
-		    }
-		    set env(LC_TIME) C
-		    set expstr [clock format $expsec -format "%a, %d-%b-%Y %H:%M:%S %Z" -gmt true]
-		    if {[info exists LC_TIME]} {
-			set env(LC_TIME) $LC_TIME
-		    } else {
-			unset env(LC_TIME)
-		    }
+
+		    # we'd like to just format directly, but Tcl's locale
+		    # handling (at least in 8.4.X) shows strange side effects
+		    # when we play around with LC_TIME etc...
+		    # And since we need a specific locale here, we just
+		    # construct it manually ... (sorry)
+		    # we tried the unset env(LC_TIME) stuff ... it didn't
+		    # work reliably (and strange enough: now it's actually
+		    # faster than before ;-)
+		    set dayNum [clock format $expsec -format "%w"]
+		    set day [lindex "Sun Mon Tue Wed Thu Fri Sat" $dayNum]
+		    scan [clock format $expsec -format "%m"] "%d" monthNum
+		    # monthNum is not zero based -> dummy entry in the list
+		    set month [lindex "NaM Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec" $monthNum]
+		    set expstr [clock format $expsec -format "$day, %d-$month-%Y %H:%M:%S %Z" -gmt true]
 		    append cookie "; expires=$expstr"
 		}
 	    }
