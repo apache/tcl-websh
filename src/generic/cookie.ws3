@@ -163,9 +163,9 @@ proc web::cookiecontext {ctxmgrname args} {
 		    # we tried the unset env(LC_TIME) stuff ... it didn't
 		    # work reliably (and strange enough: now it's actually
 		    # faster than before ;-)
-		    set dayNum [clock format $expsec -format "%w"]
+		    set dayNum [clock format $expsec -format "%w" -gmt true]
 		    set day [lindex "Sun Mon Tue Wed Thu Fri Sat" $dayNum]
-		    scan [clock format $expsec -format "%m"] "%d" monthNum
+		    scan [clock format $expsec -format "%m" -gmt true] "%d" monthNum
 		    # monthNum is not zero based -> dummy entry in the list
 		    set month [lindex "NaM Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec" $monthNum]
 		    set expstr [clock format $expsec -format "$day, %d-$month-%Y %H:%M:%S %Z" -gmt true]
