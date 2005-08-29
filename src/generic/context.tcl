@@ -92,10 +92,15 @@ proc web::context {name} {
 	# dump content
 	proc dump {} {
 	    set result ""
+	    # dump sorted variables (easier to compare)
 	    foreach var [lsort [cnames]] {
 		if {[array exists vars::$var]} {
-		    # we have an array
-		    lappend result [list carray set $var [array get vars::$var]]
+		    # we have an array (and we also dump its sorted content)
+		    set array {}
+		    foreach arrayvar [lsort [array names vars::$var]] {
+			lappend array $arrayvar [set vars::${var}($arrayvar)]
+		    }
+		    lappend result [list carray set $var $array]
 		} else {
 		    # we have a scalar
 		    lappend result [list cset $var [set vars::$var]]

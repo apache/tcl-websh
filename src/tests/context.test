@@ -101,13 +101,16 @@ test context-1.9 {dump} {} {
     ctxa::cset d 2
     ctxa::cset ad(1st) 3
     ctxa::cset ad(2nd) [list a long list]
-    set res [ctxa::dump]
+    set res {}
+    lappend res [ctxa::dump]
     ctxa::cunset c
     lappend res [ctxa::dump]
     ctxa::cunset
     lappend res [ctxa::dump]
-
-} {carray set ad {2nd {a long list} 1st 3} cset c 1 cset d 2 {carray set ad {2nd {a long list} 1st 3}
+    set res
+} {{carray set ad {1st 3 2nd {a long list}}
+cset c 1
+cset d 2} {carray set ad {1st 3 2nd {a long list}}
 cset d 2} {}}
 
 test context-1.10 {dump long context} {} {
