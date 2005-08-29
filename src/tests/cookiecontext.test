@@ -62,7 +62,7 @@ test cookiecontext-1.1a {create a cookie-context expiry tomorrow} {
 
     web::response -select #text1a
     web::response -set Generator "cookiecontext-1.1a"
-    web::cookiecontext cctx -path "/some/app" -expires "day" -channel #text1a
+    web::cookiecontext cctx -path "/some/app" -expires "24 hours" -channel #text1a
     cctx::new myTestCookie
     cctx::cset somekey somevalue
     cctx::commit

@@ -31,7 +31,7 @@ proc web::cookiecontext {ctxmgrname args} {
         variable _channel ""
         variable _domain ""
         variable _path ""
-        variable _expires "day"
+        variable _expires "24 hours"
         # key to be used for key-value pair in cookie
 	variable _crypt 1
 	# secure flag of cookie
