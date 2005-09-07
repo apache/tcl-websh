@@ -2475,7 +2475,7 @@ In the case of multipat form data,
 	</cmdsynopsis>
       </para>
       <para>
-	Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding ISO-8859-1 characters.
+	Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding characters (also handles encoded Unicode characters encoded with &amp;#&lt;numeric&gt;;).
       </para>
     </section>
     <section id="web::uriencode">
