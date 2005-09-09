@@ -71,13 +71,11 @@ Tcl_Obj *webHtmlify(ConvData * convData, Tcl_Obj * in, int useNumeric)
 	if (unic == 0)
 	    break;
 
-	if (unic > WEBENC_LATIN_TABLE_LENGTH)
-	    continue;
-
 	/* --------------------------------------------------------------------
 	 * translation needed ?
 	 * ----------------------------------------------------------------- */
-	if (convData->need[unic] == TCL_OK) {
+	if (unic <= WEBENC_LATIN_TABLE_LENGTH &&
+	    convData->need[unic] == TCL_OK) {
 
 	    /* yes */
 
@@ -104,9 +102,14 @@ Tcl_Obj *webHtmlify(ConvData * convData, Tcl_Obj * in, int useNumeric)
 	    }
 	}
 	else {
-
+	  if (unic > WEBENC_LATIN_TABLE_LENGTH) {
+	    /* numeric translation, because there is no entity 
+	       for characters > 256 (multibyte character sets */
+	    htmlifyAppendNum(res, unic);
+	  } else {
 	    /* no, no translation needed */
 	    Tcl_AppendUnicodeToObj(res, &unic, 1);
+	  }
 	}
     }
 
