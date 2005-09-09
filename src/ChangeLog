@@ -1,34 +1,69 @@
+2005-09-09 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/generic/formdata.c:
+	removed unused function dumpBody (not referenced anywhere)
+	
+	* src/generic/cfg.c, src/generic/filecounter.[hc], src/generic/formdata.c, src/generic/log.[hc], src/generic/logtofile.c, src/generic/request.[hc], src/generic/sessctx.ws3, src/generic/web.c:
+	All file permissions of created files configurable:
+	log files, session files, filecounter, temporary files
+	from multipart form file upload.
+	Default is 0644. (Note that previously, the default for session files
+	was 0666. All other defaults where already set to 0644.)
+	
+	* src/test/cfg.test:
+	added tests for web::config filepermissions and
+	its effects.
+
+	* src/unix/Makefile.in:
+	set umask to 0 when running tests, so that file permission tests work
+
+	* doc/quickref.xml:
+	documented web::config filepermissions and adapted documentation
+	for web::formvar, web::filecounter, and web::filecontext.
+	Removed wrong note in web::config putxmarkup about not being able
+	to nest evaluation using the tag (<? ?>) syntax in web::putx, which
+	is possible for a long time now.
+	
 2005-09-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* src/unix/configure.in:
 	ensure compatibility with Tcl8.5
 	
 2005-08-29 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* src/generic/context.tcl, src/generic/cookie.ws3, tests/context.test, tests/cookiecontext.test, doc/quickref.xml:
 	ensure compatibility with Tcl8.5
 	
 2005-08-17 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* src/generic/cookie.ws3:
 	fixed locale dependency side effect of cookie expiry
 	
 2005-07-15 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* src/generic/weboutint.c, src/tests/webout.test:
 	fixed handling of tag in putx (problems with '?') and 
 	wrote some tests for it
 
 2005-07-01 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* doc/quickref.xsl:
 	fixed URL to docbook to newer version
+
 	* doc/quickref.xml:
 	fixed documentation of web::dispatch -postdata
+
 	* src/generic/dispatch.c:
 	fixed error string of web::dispatch -postdata syntax
 
 2004-12-13 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* src/unix/config.guess, src/unix/config.sub:
 	config.sub and config.guess (avoids problems with some 
 	autoconf versions)
 
 2004-11-16 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* doc/quickref.xml:
 	fixed documentation of web::logdest 
 	(explanation for -format and -maxchar options)
