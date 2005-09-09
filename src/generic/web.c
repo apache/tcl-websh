@@ -26,6 +26,7 @@ int Websh_Init(Tcl_Interp * interp)
 
     UrlData *urlData;
     RequestData *requestData;
+    LogData *logData;
 
     if (interp == NULL)
 	return TCL_ERROR;
@@ -34,12 +35,6 @@ int Websh_Init(Tcl_Interp * interp)
      * stubs
      * ----------------------------------------------------------------------- */
     Tcl_InitStubs(interp, "8.2", 0);
-
-    /* --------------------------------------------------------------------------
-     * the logging module
-     * ----------------------------------------------------------------------- */
-    if (log_Init(interp) == TCL_ERROR)
-	return TCL_ERROR;
 
     /* --------------------------------------------------------------------------
      * the encoding module (htmlify,uricode)
@@ -51,12 +46,6 @@ int Websh_Init(Tcl_Interp * interp)
      * output handler
      * ----------------------------------------------------------------------- */
     if (webout_Init(interp) == TCL_ERROR)
-	return TCL_ERROR;
-
-    /* --------------------------------------------------------------------------
-     * filecounter
-     * ----------------------------------------------------------------------- */
-    if (filecounter_Init(interp) == TCL_ERROR)
 	return TCL_ERROR;
 
     /* --------------------------------------------------------------------------
@@ -89,14 +78,27 @@ int Websh_Init(Tcl_Interp * interp)
 	return TCL_ERROR;
 
     /* --------------------------------------------------------------------------
-     * interlink the two
+     * logging (needs to be after request_Init, because it needs requestData)
+     * ----------------------------------------------------------------------- */
+    if (log_Init(interp) == TCL_ERROR)
+	return TCL_ERROR;
+
+    /* --------------------------------------------------------------------------
+     * filecounter (needs to be after request_Init, because it needs requestData)
+     * ----------------------------------------------------------------------- */
+    if (filecounter_Init(interp) == TCL_ERROR)
+	return TCL_ERROR;
+
+    /* --------------------------------------------------------------------------
+     * interlink some data
      * ----------------------------------------------------------------------- */
     requestData =
 	(RequestData *) Tcl_GetAssocData(interp, WEB_REQ_ASSOC_DATA, NULL);
     urlData = (UrlData *) Tcl_GetAssocData(interp, WEB_URL_ASSOC_DATA, NULL);
+    logData =  (LogData *) Tcl_GetAssocData(interp, WEB_LOG_ASSOC_DATA, NULL);
 
-/*   requestData->urlData = urlData; */
     urlData->requestData = requestData;
+    logData->requestData = requestData;
 
     /* --------------------------------------------------------------------------
      * utilities
