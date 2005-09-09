@@ -163,7 +163,7 @@ proc web::filecontext {ctxmgrname args} {
     # set default values for some properties
     # permission for files
     namespace eval ::$ctxmgrname {
-	variable _perm 0666
+	variable _perm [web::config filepermissions]
 	# path format. file path is created by passing this to format
 	# variable _path %d
 	# if to save/load values crypted
