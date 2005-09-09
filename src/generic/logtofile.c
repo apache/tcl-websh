@@ -72,6 +72,8 @@ ClientData createLogToFile(Tcl_Interp * interp, ClientData clientData,
     char *fileName = NULL;
     Tcl_Channel channel;
 
+    LogData * logData = (LogData *) clientData;
+
     /* --------------------------------------------------------------------------
      * syntax is: file ?-unbuffered? fileName
      *            0    1             2
@@ -99,7 +101,7 @@ ClientData createLogToFile(Tcl_Interp * interp, ClientData clientData,
     /* --------------------------------------------------------------------------
      * try to open channel
      * ----------------------------------------------------------------------- */
-    channel = Tcl_OpenFileChannel(interp, fileName, "a", 0644);
+    channel = Tcl_OpenFileChannel(interp, fileName, "a", logData->requestData->filePermissions);
     if (channel == NULL)
 	return NULL;
 

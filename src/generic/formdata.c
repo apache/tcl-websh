@@ -351,7 +351,7 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 		bytesWritten =
 		    readAndDumpBody(interp, channel, boundary, &isLast,
 				    tmpFileName, upLoadFileSize,
-				    &bytesSkipped);
+				    requestData->filePermissions, &bytesSkipped);
 
 		if (fileNameLen > 0) {
 
@@ -536,7 +536,7 @@ void mimeReadHeader(Tcl_Channel channel, Tcl_Obj * hdr)
 long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
 		     const char *boundary, int *isLast,
 		     Tcl_Obj * tmpFileName, long upLoadFileSize,
-		     long *bytesSkipped)
+		     int filePermissions, long *bytesSkipped)
 {
 
     Tcl_Channel out;
@@ -560,7 +560,7 @@ long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
      * open file
      * ----------------------------------------------------------------------- */
     if ((out = Tcl_OpenFileChannel(NULL, Tcl_GetString(tmpFileName),
-				   "w", 0644)) == NULL)
+				   "w", filePermissions)) == NULL)
 	return 0;
 
     /* --------------------------------------------------------------------------
