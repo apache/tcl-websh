@@ -206,5 +206,10 @@ test dehtmlify-5.5 {one char} {
     lappend res [web::dehtmlify ""]
 } {m {}}
 
+test dehtmlify-6.0 {multibyte characters} {
+    set res [web::dehtmlify "&#12354;&#12356;&#12358;&#12360;&#12362;"]
+    expr {$res == "\u3042\u3044\u3046\u3048\u304a"}
+} {1}
+
 # cleanup
 ::tcltest::cleanupTests

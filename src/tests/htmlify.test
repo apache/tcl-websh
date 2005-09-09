@@ -108,5 +108,11 @@ test htmlify-4.1 {--syntax} {
     set res
 } {-test-test}
 
+
+test htmlify-6.0 {multibyte characters} {
+    web::htmlify "\u3042\u3044\u3046\u3048\u304a"
+} {&#12354;&#12356;&#12358;&#12360;&#12362;}
+
+
 # cleanup
 ::tcltest::cleanupTests
