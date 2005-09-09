@@ -239,6 +239,7 @@ test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
 	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION); export WEB_BIN; \
 	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
 	cd $(TOP_DIR)/tests; \
+	umask 0; \
 	(echo source webtest.ws3) | ../unix/websh$(VERSION)
 
 test.pure: websh$(VERSION).pure
@@ -249,6 +250,7 @@ test.pure: websh$(VERSION).pure
 	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION).pure; export WEB_BIN; \
 	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
 	cd $(TOP_DIR)/tests; \
+	umask 0; \
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).pure
 
 test.cov: websh$(VERSION).cov
