@@ -23,24 +23,34 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # -----------------------------------------------------------------------------
 # 
 # -----------------------------------------------------------------------------
-test mintest-1.1 {create an interpreter, load websh3} {unixOnly} {
+test mintest-1.1 {create an interpreter, load websh3 library} {unixOnly} {
     set fn "mintest1_1.tcl"
     set fh [open $fn "w"]
-    puts $fh {catch {web::copyright} msg}
+    puts $fh {catch {web::encrypt test} msg}
     puts $fh {set res $msg}
     puts $fh {load $env(WEB_LIBRARY)}
     puts $fh {catch {web::encrypt test} msg}
     puts $fh {lappend res $msg}
     puts $fh {puts $res}
     close $fh
+    # find a late available tclsh
+    set ok 0
+    foreach tclsh {tclsh8.5 tclsh8.4 tclsh8.3 tclsh8.2 tclsh} {
+	if {![catch {exec echo return | $tclsh}]} {
+	    set ok 1
+	    break
+	}
+    }
     set res ""
-    catch {
-	##  fixme: use variable for tclsh8.3
-	set res [exec tclsh8.3 $fn]
+    if {$ok} {
+	puts "using $tclsh to test loading of $env(WEB_LIBRARY)"
+	catch {set res [exec $tclsh $fn]}
+    } else {
+	error "no reasonable tclsh found"
     }
     file delete -force $fn
     set res
-} {invalid command name web::copyright XDq3pUAU8b}
+} {invalid command name web::encrypt XDq3pUAU8b}
 
 # cleanup
 ::tcltest::cleanupTests
