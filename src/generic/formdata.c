@@ -674,62 +674,6 @@ long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
 }
 
 /* ----------------------------------------------------------------------------
- * dumpBody -- POST/file upload in string case: write body to file
- * ------------------------------------------------------------------------- */
-long dumpBody(Tcl_Interp * interp, char *body, Tcl_Obj * tmpFileName,
-	      long upLoadFileSize, long *bytesSkipped)
-{
-
-    Tcl_Channel out;
-    int len = 0;
-    long wlen = 0;
-    long wBytes = 0;
-
-    /* --------------------------------------------------------------------------
-     * sanity
-     * ----------------------------------------------------------------------- */
-    if ((interp == NULL) || (body == NULL) || (tmpFileName == NULL))
-	return 0;
-
-    /* --------------------------------------------------------------------------
-     * open file
-     * ----------------------------------------------------------------------- */
-    if ((out = Tcl_OpenFileChannel(NULL, Tcl_GetString(tmpFileName),
-				   "w", 0644)) == NULL)
-	return 0;
-
-    /* --------------------------------------------------------------------------
-     * switch to -translation "binary"
-     * ----------------------------------------------------------------------- */
-    if (Tcl_SetChannelOption(interp, out, "-translation", "binary")
-	== TCL_ERROR) {
-	LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
-		"web::dispatch (file upload)",
-		WEBLOG_INFO, "error setting translation to binary ", NULL);
-	return 0;
-    }
-
-    /* --------------------------------------------------------------------------
-     * how much to write ?
-     * ----------------------------------------------------------------------- */
-    len = strlen(body);
-    if (len > upLoadFileSize)
-	wlen = upLoadFileSize;
-    else
-	wlen = len;
-
-    if ((wBytes = Tcl_WriteChars(out, body, wlen)) == -1) {
-	*bytesSkipped = len;
-    }
-
-    Tcl_Close(NULL, out);
-
-    *bytesSkipped = (len - wBytes);
-
-    return wBytes;
-}
-
-/* ----------------------------------------------------------------------------
  * mimeReadBody
  * ------------------------------------------------------------------------- */
 void mimeReadBody(Tcl_Channel in, Tcl_Obj * bdy, const char *boundary,
