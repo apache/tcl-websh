@@ -13,13 +13,13 @@
  * ------------------------------------------------------------------------- */
 
 #include "filecounter.h"
-#include "tcl.h"
 
 /* --------------------------------------------------------------------------
  * Init
  * --------------------------------------------------------------------------*/
 int filecounter_Init(Tcl_Interp * interp)
 {
+    RequestData * requestData = NULL;
 
     if (interp == NULL)
 	return TCL_ERROR;
@@ -28,12 +28,17 @@ int filecounter_Init(Tcl_Interp * interp)
      * ClientData
      * --------------------------------------------------------------------*/
 
+    /* we need the request data, so that we have access 
+       to default file permissions */
+
+    requestData = (RequestData *) Tcl_GetAssocData(interp, WEB_REQ_ASSOC_DATA, NULL);
+
     /* ----------------------------------------------------------------------
      * register commands
      * ------------------------------------------------------------------- */
     Tcl_CreateObjCommand(interp, "web::filecounter",
 			 (Tcl_ObjCmdProc *) filecounter,
-			 (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
+			 (ClientData) requestData, (Tcl_CmdDeleteProc *) NULL);
 
     /* ----------------------------------------------------------------------
      * register private data with interp
@@ -157,6 +162,8 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
 		int objc, Tcl_Obj * CONST objv[])
 {
 
+    RequestData * requestData = (RequestData *) clientData;
+
     Tcl_Obj *hnameobj, *fnameobj, *seedobj, *maxobj,
 	*minobj, *incrobj, *maskobj, *wrapobj;
     SeqNoGenerator *seqnogen = NULL;
@@ -209,7 +216,8 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
     /* ----------------------------------------------------------------------
      * create SeqNoGenerator
      * ------------------------------------------------------------------- */
-    seqnogen = createSeqNoGenerator(hnameobj, fnameobj, seedobj, minobj,
+    seqnogen = createSeqNoGenerator(requestData,
+				    hnameobj, fnameobj, seedobj, minobj,
 				    maxobj, incrobj, maskobj, wrapobj);
 
     if (seqnogen == NULL) {
@@ -239,7 +247,8 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
  * Member functions of SeqNoGenerator
  * --------------------------------------------------------------------- */
 
-SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
+SeqNoGenerator *createSeqNoGenerator(RequestData * requestData,
+				     Tcl_Obj * hn, Tcl_Obj * fn,
 				     Tcl_Obj * seed, Tcl_Obj * min,
 				     Tcl_Obj * max, Tcl_Obj * incr, 
 				     Tcl_Obj * mask, Tcl_Obj * wrap)
@@ -272,7 +281,7 @@ SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
     else if (Tcl_GetIntFromObj(NULL, incr, &(seqnogen->incrValue)) == TCL_ERROR)
 	err++;
     if (mask == NULL)
-       seqnogen->mask = WEB_FILECOUNTER_MASK;
+       seqnogen->mask = requestData->filePermissions;
     else if (Tcl_GetIntFromObj(NULL, mask, &(seqnogen->mask)) == TCL_ERROR)
         err++;
     if (wrap == NULL)

@@ -16,6 +16,7 @@
 #include "args.h"
 #include "filelock.h"
 #include "log.h"
+#include "request.h"
 #include "tcl.h"
 
 #ifndef FILECOUNTER_H
@@ -23,7 +24,6 @@
 
 #define WEB_FILECOUNTER_MAXVAL 2147483647
 #define WEB_FILECOUNTER_MINVAL 0
-#define WEB_FILECOUNTER_MASK 0644
 #define WEB_FILECOUNTER_INCR 1
 #define WEB_FILECOUNTER_SEED 0
 #define WEB_FILECOUNTER_WRAP 0
@@ -47,7 +47,8 @@ typedef struct SeqNoGenerator
 }
 SeqNoGenerator;
 
-SeqNoGenerator *createSeqNoGenerator(Tcl_Obj * hn, Tcl_Obj * fn,
+SeqNoGenerator *createSeqNoGenerator(RequestData * requestData,
+				     Tcl_Obj * hn, Tcl_Obj * fn,
 				     Tcl_Obj * seed, Tcl_Obj * min,
 				     Tcl_Obj * max, Tcl_Obj * incr,
 				     Tcl_Obj * mask, Tcl_Obj * wrap);
