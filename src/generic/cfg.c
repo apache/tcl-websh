@@ -139,6 +139,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	"server_root",
 	"document_root",
 	"interpclass",
+	"filepermissions",
 	NULL
     };
 
@@ -158,7 +159,8 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	SCRIPT,
 	SERVER_ROOT,
 	DOCUMENT_ROOT,
-	INTERPCLASS
+	INTERPCLASS,
+	FILEPERMISSIONS
     };
 
     int idx1, result;
@@ -230,6 +232,44 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 			__FILE__, __LINE__,
 			"web::config uploadfilesize", WEBLOG_INFO,
 			"usage: web::config uploadfilesize ?size?.", NULL);
+		return TCL_ERROR;
+	    }
+	    break;
+	}
+    case FILEPERMISSIONS:{
+
+	    int tmpInt = -1;
+	    char buf[10];
+
+	    WebAssertData(interp, cfgData->requestData,
+			  "web::config filepermissions", TCL_ERROR);
+
+	    sprintf(buf, "%04o", cfgData->requestData->filePermissions);
+	    Tcl_SetObjResult(interp, Tcl_NewStringObj(buf, -1));
+
+	    switch (objc) {
+	      case 2:
+		return TCL_OK;
+	      case 3:
+		/* ------------------------------------------------------------
+		 * only accept integers
+		 * --------------------------------------------------------- */
+		if (Tcl_GetIntFromObj(interp, objv[2], &tmpInt) ==
+		    TCL_ERROR) {
+		    LOG_MSG(interp, WRITE_LOG | SET_RESULT, __FILE__,
+			    __LINE__, "web::config filepermissions",
+			    WEBLOG_ERROR,
+			    "web::config filepermissions only accepts integers but ",
+			    "got \"", Tcl_GetString(objv[2]), "\"", NULL);
+		    return TCL_ERROR;
+		}
+		cfgData->requestData->filePermissions = tmpInt;
+		return TCL_OK;
+	      default:
+		LOG_MSG(interp, WRITE_LOG | SET_RESULT,
+			__FILE__, __LINE__,
+			"web::config filepermissions", WEBLOG_INFO,
+			"usage: web::config filepermissions ?permissions?.", NULL);
 		return TCL_ERROR;
 	    }
 	    break;
@@ -454,6 +494,8 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->upLoadFileSize);
 	cfgData->requestData->upLoadFileSize = Tcl_NewLongObj(0);
+
+	cfgData->requestData->filePermissions = DEFAULT_FILEPERMISSIONS;
 
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->timeTag);
 	WebNewStringObjFromStringIncr(cfgData->requestData->timeTag, "t");
