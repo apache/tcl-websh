@@ -24,6 +24,11 @@
 	to nest evaluation using the tag (<? ?>) syntax in web::putx, which
 	is possible for a long time now.
 	
+2005-09-07 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* doc/quickref.xml
+	fixed documentation of web::dehtmlify (thanks to Holger Jakobs)
+
 2005-09-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/unix/configure.in:
