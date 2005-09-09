@@ -512,7 +512,7 @@ int Web_LogDest(ClientData clientData,
 	     * --------------------------------------------------------------------- */
 	    if ((logPlugInData =
 		 logPlugIn->constructor(interp,
-					NULL, objc - (iCurArg + 1),
+					clientData, objc - (iCurArg + 1),
 					&(objv[iCurArg + 1]))) == NULL) {
 		destroyLogLevel(logLevel, NULL);
 		WebFreeIfNotNull(name);

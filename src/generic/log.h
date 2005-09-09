@@ -35,6 +35,7 @@
 #include "macros.h"
 #include "tcl.h"
 #include "webutl.h"
+#include "request.h"
 
 
 #ifndef WEBLOG_H
@@ -161,6 +162,8 @@ typedef struct LogData
     int destCnt;
     Tcl_HashTable *listOfPlugIns;
     int logSubst;		/* 1: subst log message, 0: don't (default 1) */
+    /* needed so that global settings can be accessed */
+    RequestData * requestData;
 }
 LogData;
 
