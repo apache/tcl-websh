@@ -277,6 +277,42 @@ test putx-3.7 {putx of empty string before first brace does not send headers} {
 } {}
 
 
+test putx-4.0 {putx nested escaping brace} {
+    web::response -select #out
+    web::response -sendheader 0
+    web::config putxmarkup brace
+    set out {}
+    web::putx {\{web::putx "$"\}{web::putx ""}\{web::putx {web::putx {\{\}}}\}{web::putx { }}}
+    set out
+} {{web::putx "$"}{web::putx {}} }
+
+test putx-4.1 {putx nested escaping tag} {
+    web::response -select #out
+    web::response -sendheader 0
+    web::config putxmarkup tag
+    set out {}
+    web::putx {\<?web::putx "$"\?><?web::putx ""?>\<?web::putx <?web::putx {\<?\?>}?>\?><?web::putx { }?>}
+    set out
+} {<?web::putx "$"?><?web::putx <??>?> }
+
+test putx-4.2 {putx nested escaping tag/brace mix} {
+    web::response -select #out
+    web::response -sendheader 0
+    web::config putxmarkup brace
+    set out {}
+    web::putx {<?1{
+	web::config putxmarkup tag
+	web::putx {{2<?
+	    web::config putxmarkup brace
+	    web::putx {<?3{
+		web::putx {{web::putx {<?*?>}}}
+	    }3?>}
+	?>2}}
+    }1?>}
+    set out
+} {<?1{2<?3<?*?>3?>2}1?>}
+
+
 # =============================================================================
 # web::put
 # =============================================================================
