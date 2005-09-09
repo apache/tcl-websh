@@ -72,6 +72,8 @@ http://www3.netcetera.ch/bin/hefti/test.ws2/some/test/path?HalloDuDa
 #define APCHANNEL  "apache"
 #define CGICHANNEL "stdout"
 
+#define DEFAULT_FILEPERMISSIONS 0644
+
 /* ----------------------------------------------------------------------------
  * RequestData
  * ------------------------------------------------------------------------- */
@@ -88,6 +90,8 @@ typedef struct RequestData
     /* e.g. server_port, server_name and so on */
     /* ............ */
     Tcl_Obj *upLoadFileSize;	/* maximum number of bytes for file upload */
+    /* ............ */
+    int filePermissions;	/* file permissions for all files created */
     /* ............ */
     Tcl_HashTable *paramList;	/* after parsing of querystring */
     Tcl_HashTable *formVarList;	/* after parsing of post content */
@@ -181,7 +185,7 @@ void mimeReadBody(Tcl_Channel channel, Tcl_Obj * bdy, const char *boundary,
 long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
 		     const char *boundary, int *isLast,
 		     Tcl_Obj * tmpFileName, long upLoadFileSize,
-		     long *bytesSkipped);
+		     int filePermissions, long *bytesSkipped);
 char *mimeGetParameterFromContDisp(const char *contentDisp, const char *name);
 
 /* in CGI case: implemented in request_cgi.c

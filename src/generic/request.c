@@ -114,6 +114,7 @@ RequestData *createRequestData(Tcl_Interp * interp)
 	HashUtlAllocInit(requestData->request, TCL_STRING_KEYS);
 
 	requestData->upLoadFileSize = Tcl_NewLongObj(0);
+	requestData->filePermissions = DEFAULT_FILEPERMISSIONS;
 
 	HashUtlAllocInit(requestData->paramList, TCL_STRING_KEYS);
 	HashUtlAllocInit(requestData->formVarList, TCL_STRING_KEYS);
@@ -161,6 +162,8 @@ int resetRequestData(Tcl_Interp * interp, RequestData * requestData)
 #if 0
     WebDecrRefCountIfNotNullAndSetNull(requestData->upLoadFileSize);
     requestData->upLoadFileSize = Tcl_NewLongObj(0);
+
+    requestData->filePermissions = DEFAULT_FILEPERMISSIONS;
 
     WebDecrRefCountIfNotNullAndSetNull(requestData->timeTag);
     WebNewStringObjFromStringIncr(requestData->timeTag, "t");
