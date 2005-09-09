@@ -89,7 +89,7 @@ $Id$
 	    <optional><option><replaceable>size</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      Sets the maximum number of bytes allowed to be uploaded.
+	      Sets the maximum number of bytes that will be saved, when files are uploaded in a multipart form.
 	      Default: 0.
 	    </para>
 	  </listitem>
@@ -138,8 +138,7 @@ $Id$
 	      Sets the markup characters for sections to be eval'd in
 	      <command>web::putx</command> and <command>web::putxfile</command>
               commands to either curly braces ({ ... }) or special tags (&lt;?
-	      ... ?&gt;). Please note that when using the tags &lt;?
-	      ?&gt;, they cannot be nested. Default: brace.
+	      ... ?&gt;). Default: brace.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -163,7 +162,7 @@ $Id$
 	  <term><option>encryptchain</option> <optional><option><replaceable>list</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      defines which commands should be tried, in sequence, to
+	      Defines which commands should be tried, in sequence, to
 	      encrypt a message. Default: &quot;web::encryptd&quot;.
 	    </para>
 	  </listitem>
@@ -172,8 +171,19 @@ $Id$
 	  <term><option>decryptchain</option> <optional><option><replaceable>list</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      defines which commands should be tried, in sequence, to
+	      Defines which commands should be tried, in sequence, to
 	      decrypt a message. Default: &quot;web::decryptd&quot;.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>filepermissions</option> <optional><option><replaceable>permissions</replaceable></option></optional></term>
+	  <listitem>
+	    <para>
+	      Defines the file permissions of files that Websh creates. 
+This affects the creation of log files, filecounters, session files, 
+and temporary files created when files are uploaded in multipart forms (see
+<command>web::formvar</command>). Default is 0644.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -183,6 +193,8 @@ $Id$
       <programlisting>
 	% web::config decryptchain
 	web::encryptd
+	% web::config filepermissions
+	0644
 	%
       </programlisting>
     </example>
@@ -1041,6 +1053,10 @@ In the case of multipat form data,
 	(see <command>web::config uploadfilesize</command>) and n > 0 if n
 	Bytes have been truncated, because the file was too big.
       </para>
+      <para>
+Note that the temporary files are created with the permissions configured by
+<command>web::config filepermissions</command>, which defaults to 0644.
+      </para>
       <example>
 	<title>web::param</title>
       	<programlisting>
@@ -1831,6 +1847,9 @@ In the case of multipat form data,
 
 	set the file permissions of the session context files
 	<option>perm</option> is an unix-like octal value like 0644.
+	If not specified, files are created with the permissions defined
+	in <command>web::config filepermissions</command>,
+	which again defaults to 0644.
 
 	<variablelist>
 	  <varlistentry>
@@ -2114,7 +2133,7 @@ In the case of multipat form data,
 	      <option><replaceable>filename</replaceable></option></term>
 	    <listitem>
 	      <para>
-		uses <option>filename</option> to store the current
+		Uses <option>filename</option> to store the current
 		value (no default)
 	      </para>
 	    </listitem>
@@ -2123,7 +2142,7 @@ In the case of multipat form data,
 	    <term><option>-min</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		uses this value as a minimum at start and after wrap,
+		Uses this value as a minimum at start and after wrap,
 		if wrap is true (default is 0).
 	      </para>
 	    </listitem>
@@ -2132,7 +2151,7 @@ In the case of multipat form data,
 	    <term><option>-max</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		uses this value as a maximum, if wrap is true (default is 2147483647).
+		Uses this value as a maximum, if wrap is true (default is 2147483647).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2140,7 +2159,7 @@ In the case of multipat form data,
 	    <term><option>-seed</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		if persistent file does not yet exists, use this value
+		If persistent file does not yet exists, use this value
 		as a starting point (default is 0).
 	      </para>
 	    </listitem>
@@ -2149,7 +2168,7 @@ In the case of multipat form data,
 	    <term><option>-incr</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		uses this value as an increment for each 'nextval'
+		Uses this value as an increment for each 'nextval'
 		(default is 1).
 	      </para>
 	    </listitem>
@@ -2159,8 +2178,8 @@ In the case of multipat form data,
 	      <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		sets the permissions on the newly created files
-		(default is 0644).
+		Sets the permissions on the newly created files.
+		(Default is configured in <command>web::config filepermissions</command>, which defaults to 0644.)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2169,7 +2188,7 @@ In the case of multipat form data,
 	      <option>boolean</option></term>
 	    <listitem>
 	      <para>
-		indicates whether this counter should wrap around its
+		Indicates whether this counter should wrap around its
 		values (from min to max) (default is false).
 	      </para>
 	    </listitem>
@@ -2184,7 +2203,7 @@ In the case of multipat form data,
 	    <term><option><replaceable>name</replaceable></option> nextval</term>
 	    <listitem>
 	      <para>
-		return the next value.
+		Return the next value.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2192,7 +2211,7 @@ In the case of multipat form data,
 	    <term><option><replaceable>name</replaceable></option> curval</term>
 	    <listitem>
 	      <para>
-		return the current value, that is, the value that the
+		Return the current value, that is, the value that the
 		last call to &quot;nextval&quot; reported (as opposed
 		to the current value in the file).
 	      </para>
