@@ -2482,7 +2482,7 @@ Note that the temporary files are created with the permissions configured by
       </para>
       <para>
 	Return HTML-compliant <option>text</option> with HTML
-	encoded entities in mnemonic form (e.g. &amp;auml;) or in numeric form (e.g. &amp;#228;) if the option <option>-numeric</option> is specified.
+	encoded entities in mnemonic form (e.g. &amp;auml;) or in numeric form (e.g. &amp;#228;) if the option <option>-numeric</option> is specified. Multibyte characters are encoded as &amp;#&lt;numeric&gt;;.
       </para>
     </section>
     <section id="web::dehtmlify">
@@ -2494,7 +2494,7 @@ Note that the temporary files are created with the permissions configured by
 	</cmdsynopsis>
       </para>
       <para>
-	Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding characters (also handles encoded Unicode characters encoded with &amp;#&lt;numeric&gt;;).
+	Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding characters (also handles encoded multibyte characters encoded with &amp;#&lt;numeric&gt;;).
       </para>
     </section>
     <section id="web::uriencode">
