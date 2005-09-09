@@ -368,171 +368,110 @@ int destroyOutData(ClientData clientData, Tcl_Interp * interp)
     return TCL_OK;
 }
 
-/* --------------------------------------------------------------------------
- * quote_append (quote Tcl syntax characters and append to Tcl_DString)
- * ----------------------------------------------------------------------- */
-
-int quote_append(Tcl_DString *str, char *in, int len)
-{
-    int i = 0;
-    while (i < len) {
-	switch (*in)
-	{
-	case '{':
-	    Tcl_DStringAppend(str, "\\{", -1);
-	    break;
-	case '}':
-	    Tcl_DStringAppend(str, "\\}", -1);
-	    break;
-	case '$':
-	    Tcl_DStringAppend(str, "\\$", -1);
-	    break;
-	case '[':
-	    Tcl_DStringAppend(str, "\\[", -1);
-	    break;
-	case ']':
-	    Tcl_DStringAppend(str, "\\]", -1);
-	    break;
-	case '"':
-	    Tcl_DStringAppend(str, "\\\"", -1);
-	    break;
-/* 	    case '\\':
-	    Tcl_DStringAppend(str, "\\\\", -1);
-	    break;  */
-	default:
-	    Tcl_DStringAppend(str, in, 1);
-	    break;
-	}
-	in ++;
-	i ++;
-    }
-    return 0;
-}
-
-
 /* ----------------------------------------------------------------------------
  * webout_eval_tag (code in <? ?>)
  * ------------------------------------------------------------------------- */
 int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
 		    Tcl_Obj * in, const char *strstart, const char *strend)
 {
-    Tcl_DString dstr;
-    Tcl_Obj *tclo = NULL;
+  Tcl_Obj *outbuf;
+  Tcl_Obj *tclo;
+  char *next;
+  char *cur;
 
-    int inLen;
-    char *cur = NULL;
-    char *prev = NULL;
-    int cntOpen = 0;
-    int res = 0;
-    int startmatch = 0;
-    int endmatch = 0;
+  int endseqlen = strlen(strend);
+  int startseqlen = strlen(strstart);
+  int begin = 1;
+  int firstScan = 1;
+  int inside = 0, p = 0;
+  int inLen = 0;
+  int res = 0;
 
-    int begin = 1;
-    char *start;
+  next = Tcl_GetStringFromObj(in, &inLen);
+  outbuf = Tcl_NewStringObj("", -1);
 
-/*     const char *strstart = START_TAG;
-    const char *strend = END_TAG;  */
-/*     int endseqlen = strlen(END_TAG);
-    int startseqlen = strlen(START_TAG);
-  */
-    int endseqlen = strlen(strstart);
-    int startseqlen = strlen(strend);
+  if (inLen == 0)
+    return 0;
 
-    if ((responseObj == NULL) || (in == NULL))
-	return TCL_ERROR;
+  while (*next != 0) {
+    cur = next;
+    next = (char *)Tcl_UtfNext(cur);
 
-    Tcl_DStringInit(&dstr);
-
-    cur = Tcl_GetStringFromObj(in, &inLen);
-    prev = cur;
-    start = cur;
-
-    if (inLen == 0)
-	return TCL_OK;
-
-    while (*cur != 0) {
-	if (*cur == strstart[startmatch])
-	{
-	    if (*prev == '\\') {
-		Tcl_DStringAppend(&dstr, cur, 1);
-	    } else if ((++startmatch) == startseqlen) {
-		/* We have matched the starting sequence. */
-		if (cntOpen < 1) {
-		    if (!((cur - (startseqlen - 1)) - start)) {
-			begin = 0;
-		    } else {
-			Tcl_DStringAppend(&dstr, "\"\n", 2);
-		    }
-		} else {
-		    Tcl_DStringAppend(&dstr, strstart, -1);
-		}
-		cntOpen ++;
-		startmatch = 0;
-	    }
-	    prev = cur;
-	    cur ++;
-	    continue;
-	} else if (*cur == strend[endmatch] && (cntOpen > 0 || *prev == '\\')) {
-	    if (*prev == '\\') {
-		Tcl_DStringAppend(&dstr, cur, 1);
-	    } else if ((++endmatch) == endseqlen)
-	    {
-		/* We have matched the ending sequence. */
-		if (cntOpen == 1) {
-		    /* build up the command with the name of the channel. */
-		    Tcl_DStringAppend(&dstr, "\n web::put \"", -1);
-		} else {
-		    Tcl_DStringAppend(&dstr, strend, -1);
-		}
-		cntOpen --;
-		endmatch = 0;
-	    }
-	    prev = cur;
-	    cur ++;
-	    continue;
-	} else if (startmatch) {
-	    if (cntOpen < 1) {
-		quote_append(&dstr, (char *)strstart, startmatch);
-	    } else {
-		Tcl_DStringAppend(&dstr, (char *)strstart, startmatch);
-	    }
-	    startmatch = 0;
-	} else if (endmatch) {
-	    if (cntOpen < 1) {
-		quote_append(&dstr, (char *)strend, endmatch);
-	    } else {
-		Tcl_DStringAppend(&dstr, (char *)strend, endmatch);
-	    }
-	    endmatch = 0;
-	}
-	/* Put the current character in the output.  If we are in Tcl
-	       code, then don't escape Tcl characters. */
-	if (cntOpen < 1) {
-	    quote_append(&dstr, cur, 1);
+    if (strncmp("\\", cur, 1) == 0) {
+      if (firstScan == 1) { firstScan = 0; }
+      if (strncmp(strstart, next, startseqlen) == 0) {
+	Tcl_AppendToObj(outbuf, "\\", 1);
+	Tcl_AppendToObj(outbuf, strstart, startseqlen);
+	next += startseqlen;
+      } else if (strncmp(strend, next, endseqlen) == 0) {
+	Tcl_AppendToObj(outbuf, "\\", 1);
+	Tcl_AppendToObj(outbuf, strend, endseqlen);
+	next += endseqlen;
+      } else if (inside < 1) {
+	Tcl_AppendToObj(outbuf, "\\\\", 2);
+      } else {
+	Tcl_AppendToObj(outbuf, "\\", 1);
+      }
+    } else if (strncmp(strstart, cur, startseqlen) == 0) {
+      if ((++inside) == 1) {
+	if (firstScan == 1) {
+	  begin = 0;
+	  firstScan = 0;
+	  Tcl_AppendToObj(outbuf, "\n", 1);
 	} else {
-	    Tcl_DStringAppend(&dstr, cur, 1);
+	  Tcl_AppendToObj(outbuf, "\"\n", 2);
 	}
-	prev = cur;
-	cur ++;
-    }
-
-    /* build up the web::put with the name of the channel. */
-    if (begin) {
-	tclo = Tcl_NewStringObj("web::put \"", -1);
+	if (startseqlen > 1) {
+	  next += startseqlen - 1;
+	}
+      }  else {
+	Tcl_AppendToObj(outbuf, cur, startseqlen);
+	if (startseqlen > 1) {
+	  next += startseqlen - 1;
+	}
+      }
+    } else if (strncmp(strend, cur, endseqlen) == 0) {
+      if (firstScan == 1) { firstScan = 0; }
+      if ((--inside) == 0) {
+	Tcl_AppendToObj(outbuf, "\nweb::put \"", -1);
+	if (endseqlen > 1) {
+	  next += endseqlen - 1;
+	}
+      } else {
+	Tcl_AppendToObj(outbuf, cur, endseqlen);
+	if (endseqlen > 1) {
+	  next += endseqlen - 1;
+	}
+      }
+      if (inside < 0) { inside = 0; }
+    } else if (inside < 1) {
+      if (firstScan == 1) { firstScan = 0; }
+      switch (*cur) {
+      case '{':
+      case '}':
+      case '$':
+      case '[':
+      case ']':
+      case '"':
+	Tcl_AppendToObj(outbuf, "\\", -1);
+      default:
+	Tcl_AppendToObj(outbuf, cur, next - cur);
+	break;
+      }
     } else {
-	tclo = Tcl_NewStringObj("", -1);
+      if (firstScan == 1) { firstScan = 0; }
+      Tcl_AppendToObj(outbuf, cur, next - cur);
     }
-
-    Tcl_AppendToObj(tclo, Tcl_DStringValue(&dstr),
-		    Tcl_DStringLength(&dstr));
-
-    if (cntOpen < 1) {
-	Tcl_AppendToObj(tclo, "\"\n", 2);
-    }
-
-    Tcl_DStringFree(&dstr); 
-    res = Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
-    return res;
+  }
+  if (begin) {
+    tclo = Tcl_NewStringObj("web::put \"", -1);
+    Tcl_AppendObjToObj(tclo, outbuf);
+  } else {
+    tclo = outbuf;
+  }
+  Tcl_AppendToObj(tclo, "\"", -1);
+  res = Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
+  return res;
 }
 
 /* ----------------------------------------------------------------------------
