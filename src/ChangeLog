@@ -1,5 +1,19 @@
 2005-09-09 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
+	* src/unix/configure.in:
+	changed to version 3.5.1b1
+
+	* src/generic/htmlify.c, src/generic/weboutint.c:
+	handle multibyte characters in web::htmlify and web::putx correctly.
+	Many thanks to Taguchi Takeshi.
+
+	* src/generic/formdata.c:
+	save and reapplay channel enconding when setting translation to
+	binary (to avoid side effects). Thanks to Taguchi Takeshi
+
+	* src/test/mintest.test:
+	allow newer versions of tclsh for library test 
+
 	* src/generic/formdata.c:
 	removed unused function dumpBody (not referenced anywhere)
 	
