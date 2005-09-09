@@ -41,6 +41,7 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
     int readToEnd = 0;
     int content_length = 0;
     Tcl_DString translation;
+    Tcl_DString encoding;
 
     channel = Web_GetChannelOrVarChannel(interp, channelName, &mode);
     if (channel == NULL) {
@@ -63,7 +64,9 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
     }
 
     Tcl_DStringInit(&translation);
+    Tcl_DStringInit(&encoding);
     Tcl_GetChannelOption(interp, channel, "-translation", &translation);
+    Tcl_GetChannelOption(interp, channel, "-encoding", &encoding);
     Tcl_SetChannelOption(interp, channel, "-translation", "binary");
 
     /* ------------------------------------------------------------------------
@@ -88,7 +91,9 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
 	    if (Tcl_GetIntFromObj(interp, len, &content_length) != TCL_OK) {
 
 		Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+		Tcl_SetChannelOption(interp, channel, "-encoding", Tcl_DStringValue(&encoding));
 		Tcl_DStringFree(&translation);
+		Tcl_DStringFree(&encoding);
 		/* unregister if was a varchannel */
 		Web_UnregisterVarChannel(interp, channelName, channel);
 		return TCL_ERROR;
@@ -122,7 +127,9 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
 	    Tcl_DecrRefCount(formData);
 
 	    Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+	    Tcl_SetChannelOption(interp, channel, "-encoding", Tcl_DStringValue(&encoding));
 	    Tcl_DStringFree(&translation);
+	    Tcl_DStringFree(&encoding);
 	    /* unregister if was a varchannel */
 	    Web_UnregisterVarChannel(interp, channelName, channel);
 
@@ -131,7 +138,9 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
     }
 
     Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+    Tcl_SetChannelOption(interp, channel, "-encoding", Tcl_DStringValue(&encoding));
     Tcl_DStringFree(&translation);
+    Tcl_DStringFree(&encoding);
     /* unregister if was a varchannel */
     Web_UnregisterVarChannel(interp, channelName, channel);
 
@@ -199,6 +208,7 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
     char *boundary = mimeGetParamFromContDisp(content_type, "boundary");
     int res = 0;
     Tcl_DString translation;
+    Tcl_DString encoding;
 
 /*   printf("DBG parseMultipartFormData - starting\n"); fflush(stdout); */
 
@@ -230,13 +240,17 @@ int parseMultipartFormData(RequestData * requestData, Tcl_Interp * interp,
     }
 
     Tcl_DStringInit(&translation);
+    Tcl_DStringInit(&encoding);
     Tcl_GetChannelOption(interp, channel, "-translation", &translation);
+    Tcl_GetChannelOption(interp, channel, "-encoding", &encoding);
     Tcl_SetChannelOption(interp, channel, "-translation", "binary");
 
     res = mimeSplitMultipart(interp, channel, boundary, requestData);
 
     Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+    Tcl_SetChannelOption(interp, channel, "-encoding", Tcl_DStringValue(&encoding));
     Tcl_DStringFree(&translation);
+    Tcl_DStringFree(&encoding);
     /* unregister if was a varchannel */
     Web_UnregisterVarChannel(interp, channelName, channel);
 
