@@ -1,10 +1,12 @@
 #!/bin/sh
-#==========================================================================================
-# create a source tar ball from the tcl-websh project 
+#============================================================
+# create a source tar ball from the tcl/websh project 
 # $Id$
-#==========================================================================================
+#============================================================
 # \
 exec tclsh "$0" "$@"
+
+set repository "https://svn.apache.org/repos/test/tcl/websh"
 
 proc usage {} {
     global argv0
@@ -23,20 +25,13 @@ if {$argc != 1} {
 # get build from command line
 set build [lindex $argv 0]
 
-# create tag which belongs to that build
-regsub -all {\.} $build _ tag
-set tag "websh-$tag"
-
-# make sure we're here
-cd [file dirname $argv0]
-
 # check whether build is valid
 puts "checking for build $build"
 
 if {[catch {
-    set cvslog [exec cvs log README]
-    if {![regexp "symbolic names:.*$tag: .*keyword substitution:" $cvslog]} {
-	fatal "build $build not tagged"
+    set svnlist [exec svn list $repository/tags]
+    if {![regexp "$build/" $svnlist]} {
+	fatal "build $build is not tagged"
     }
 } msg]} {fatal $msg}
 
@@ -45,15 +40,15 @@ set tmpdir [pid].tmp
 file mkdir $tmpdir
 cd $tmpdir
 
-puts "checking out build $build in temporary directory" 
+puts "checking out build $build in temporary directory"
 
-catch {exec cvs -d cvs.apache.org:/home/cvs co -r $tag tcl-websh}
-if {![file exists tcl-websh/README]} {
+catch {exec svn co $repository/tags/$build websh-$build}
+if {![file exists websh-$build/README]} {
     cd ..
     fatal "checkout in directory $tmpdir failed"
 }
 
-cd tcl-websh
+cd websh-$build
 ## -------------------------------------------------------------
 ## do some cleanup in the build (just add more fixes or stuff
 
@@ -73,16 +68,13 @@ cd ..
 puts "creating tar ball quickref-$build.tar.gz"
 cd doc
 file rename html quickref-$build
-exec tar czvf ../../../quickref-$build.tar.gz --exclude CVS quickref-$build
+exec tar czvf ../../../quickref-$build.tar.gz --exclude .svn quickref-$build
 file rename quickref-$build html
 cd ../..
 
-# rename subdirectory
-file rename tcl-websh websh-$build
-
 # creating tar ball
 puts "creating tar ball websh-$build.tar.gz"
-exec tar czvf ../websh-$build.tar.gz --exclude CVS websh-$build
+exec tar czvf ../websh-$build.tar.gz --exclude .svn websh-$build
 
 
 # cleanup
@@ -90,4 +82,3 @@ cd ..
 file delete -force $tmpdir
 
 puts "done."
-
