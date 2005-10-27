@@ -426,5 +426,34 @@ test log-4.1 {fill up log filters} {
 logfilter1 *.alert-error
 logfilter2 *.alert-debug}}
 
+test log-5.1 {web::initializer logs} {
+
+    web::logfilter delete
+    web::logdest delete
+    set res {}
+    
+    web::logfilter add *.-debug
+    web::logdest add -maxchar 50 -format "\$m"  *.-debug command logTestCatchMsg
+    lappend res [web::logfilter names] [web::logdest names]
+
+    # since tests are in CGI mode, this is executed immediately
+    web::initializer {
+	web::logfilter add *.-debug
+	web::logdest add -maxchar 50 -format "\$m"  *.-debug command logTestCatchMsg
+    }
+    lappend res [web::logfilter names] [web::logdest names]
+
+    # this is supposed to delete all log filters and destinations not
+    # created in web::initializer
+    web::logfilter delete -requests
+    web::logdest delete -requests
+    lappend res [web::logfilter names] [web::logdest names]
+
+    web::logfilter delete
+    web::logdest delete
+    lappend res [web::logfilter names] [web::logdest names]
+
+} {logfilter0 logdest0 {logfilter0 logfilter1} {logdest0 logdest1} logfilter1 logdest1 {} {}}
+
 # cleanup
 ::tcltest::cleanupTests

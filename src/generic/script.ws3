@@ -128,19 +128,18 @@ proc web::uri2list {string} {
 namespace eval web::ap {}
 
 proc web::ap::perReqInit {} {
+}
 
+proc web::ap::perReqCleanup {} {
+    # reset logging (except stuff from web::initializer)
+    web::logfilter delete -requests
+    web::logdest delete -requests
     # reset request data
     web::request -reset
     # reset response channels
     web::response -resetall
     # reset url data
     web::cmdurlcfg -reset
-}
-
-proc web::ap::perReqCleanup {} {
-
-    web::logdest delete
-    web::logfilter delete
 }
 
 #-----------------------------------------------------------------------------
