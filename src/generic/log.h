@@ -60,9 +60,10 @@
 /* ----------------------------------------------------------------------------
  * SubCommands
  * ------------------------------------------------------------------------- */
-#define WEB_LOG_SUBCMD_ADD "add"
+#define WEB_LOG_SUBCMD_ADD    "add"
 #define WEB_LOG_SUBCMD_DELETE "delete"
-#define WEB_LOG_SUBCMD_NAMES "names"
+#define WEB_LOG_SUBCMD_NAMES  "names"
+#define WEB_LOG_SUBCMD_LEVELS "levels"
 
 /* ----------------------------------------------------------------------------
  * Switches (like "string -binary")
@@ -83,7 +84,7 @@
  * messages
  * ------------------------------------------------------------------------*/
 #define WEB_LOG_USAGE_LOGDEST_ADD \
-  "add ?options? level type type-specific-arguments"
+  "add ?options? level type ?type-specific-arguments ...?"
 
 
 /* ----------------------------------------------------------------------------
@@ -157,9 +158,11 @@ char *createLogDestName(char *prefix, int cnt);
 typedef struct LogData
 {
     Tcl_HashTable *listOfFilters;
-    int filterCnt;
+    int filterCnt; /* actual count of filters */
+    int filterInx; /* highest index in use */
     Tcl_HashTable *listOfDests;
-    int destCnt;
+    int destCnt; /* actual count of destinations */
+    int destInx; /* highest index in use */ 
     Tcl_HashTable *listOfPlugIns;
     int logSubst;		/* 1: subst log message, 0: don't (default 1) */
     /* needed so that global settings can be accessed */

@@ -34,20 +34,32 @@ proc logTestCatchMsg {msg} {
 test log-1.1 {web::logfilter wrong number of arguments} {
     catch {web::logfilter} msg
     set msg
-} {bad option "web::logfilter": must be add, delete, or names}
+} {wrong # args: should be "web::logfilter option ?arg?"}
 
 test log-1.2 {web::logfilter wrong argument} {
     catch {web::logfilter gugus} msg
     set msg
-} {bad option "gugus": must be add, delete, or names}
+} {bad option "gugus": must be add, delete, names, or levels}
+
+test log-1.2a {web::logfilter add wrong argument} {
+    catch {web::logfilter add} msg
+    set msg
+} {wrong # args: should be "web::logfilter add level"}
+
+test log-1.2b {web::logfilter delete wrong arguments} {
+    catch {web::logfilter delete foo bar} msg
+    set msg
+} {wrong # args: should be "web::logfilter delete ?filtername?"}
 
 test log-1.3 {websh3_weblog: add a filter} {
     web::logfilter delete
     web::logfilter add testWithoutAdd.alert-warning
     web::logfilter add testWithAdd.error-warning
-    set res [web::logfilter names]
+    set res [web::logfilter levels]
+    append res \n [web::logfilter names]
 } {logfilter0 testWithoutAdd.alert-warning
-logfilter1 testWithAdd.error-warning}
+logfilter1 testWithAdd.error-warning
+logfilter0 logfilter1}
 
 test log-1.4 {websh3_weblog: reset list of filters} {
     web::logfilter delete
@@ -76,25 +88,25 @@ test log-1.5 {websh3_weblog: different warn levels} {
     web::logfilter add testWarning.warning
     web::logfilter add testInfo.info
     web::logfilter add testDebug.debug
-    set res [web::logfilter names]
+    set res [web::logfilter levels]
 } {logfilter8 testInfo.info-info
-logfilter10 testError.error-error
 logfilter9 testDebug.debug-debug
-logfilter11 testWarning.warning-warning
-logfilter12 testInfo.info-info
-logfilter13 testDebug.debug-debug
+logfilter10 testAlert.alert-alert
+logfilter11 testError.error-error
+logfilter12 testWarning.warning-warning
+logfilter13 testInfo.info-info
+logfilter14 testDebug.debug-debug
+logfilter15 testAlert.alert-alert
+logfilter16 testError.error-error
+logfilter17 testWarning.warning-warning
 logfilter0 testAlert.alert-alert
+logfilter18 testInfo.info-info
 logfilter1 testError.error-error
-logfiltera testAlert.alert-alert
+logfilter19 testDebug.debug-debug
 logfilter2 testWarning.warning-warning
-logfilterb testError.error-error
-logfilterc testWarning.warning-warning
 logfilter3 testInfo.info-info
-logfilterd testInfo.info-info
 logfilter4 testDebug.debug-debug
-logfiltere testDebug.debug-debug
 logfilter5 testAlert.alert-alert
-logfilterf testAlert.alert-alert
 logfilter6 testError.error-error
 logfilter7 testWarning.warning-warning}
 
@@ -105,7 +117,7 @@ test log-1.6 {websh3_weblog: special syntax for message levels} {
     web::logfilter add *.alert-debug
     web::logfilter add test*.info
     web::logfilter add websh2.alert-error
-    set res [web::logfilter names]
+    set res [web::logfilter levels]
 } {logfilter4 websh2.alert-error
 logfilter0 *.alert-debug
 logfilter1 *.alert-debug
@@ -126,7 +138,7 @@ test log-1.8 {websh3_weblog: test delete} {
     ## now delete the middle one
     web::logfilter delete $id
     ## and see what we have
-    web::logfilter names
+    web::logfilter levels
 } {logfilter0 test0.alert-warning
 logfilter2 test2.alert-warning}
 
@@ -137,10 +149,10 @@ test log-1.9 {websh3_weblog: tons of filters} {
 	web::logfilter add test.alert
     }
     web::logfilter add last.warning
-    set res [web::logfilter names]
+    set res [web::logfilter levels]
     set res [split $res "\n "]
     array set test $res
-    set res $test(logfilter64)
+    set res $test(logfilter100)
 } "last.warning-warning"
 
 test log-1.10 {websh3_weblog: delete first filter} {
@@ -152,7 +164,7 @@ test log-1.10 {websh3_weblog: delete first filter} {
     ## now delete the middle one
     web::logfilter delete $id
     ## and see what we have
-    web::logfilter names
+    web::logfilter levels
 } {logfilter1 test2.alert-warning
 logfilter2 test3.alert-warning}
 
@@ -178,12 +190,23 @@ test log-1.12 {web::logfilter bad format} {
 test log-2.1 {web::logdest wrong number of arguments} {
     catch {web::logdest} msg
     set msg
-} {bad option "web::logdest": must be add, delete, or names}
+} {wrong # args: should be "web::logdest option arg ?arg ...?"}
 
 test log-2.2 {web::logdest wrong argument} {
     catch {web::logdest gugus} msg
     set msg
-} {bad option "gugus": must be add, delete, or names}
+} {bad option "gugus": must be add, delete, names, or levels}
+
+test log-2.2a {web::logdest wrong add argument} {
+    catch {web::logdest add} msg
+    set msg
+} {wrong # args: should be "web::logdest add ?options? level type ?type-specific-arguments ...?"}
+
+test log-2.2b {web::logdest delete wrong arguments} {
+    catch {web::logdest delete foo bar} msg
+    set msg
+} {wrong # args: should be "web::logdest delete ?destname?"}
+
 
 test log-2.3 {websh3_weblog: logdest add returns id} {
     set fn [web::tempfile]
@@ -369,12 +392,16 @@ test log-3.12 {multiple channels (crash test)} {
     web::logdest add *.-debug channel stdout
     web::logdest add *.-debug channel stdout
     web::logdest add *.-debug channel stdout
-    web::logdest names
+    set res [web::logdest levels]
     web::logfilter add *.-debug
     web::log debug test
-    web::logdest names
+    append res \n [web::logdest levels]
 
 } {logdest2 *.alert-debug
+logdest3 *.alert-debug
+logdest0 *.alert-debug
+logdest1 *.alert-debug
+logdest2 *.alert-debug
 logdest3 *.alert-debug
 logdest0 *.alert-debug
 logdest1 *.alert-debug}

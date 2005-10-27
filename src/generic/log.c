@@ -88,7 +88,7 @@ int log_Init(Tcl_Interp * interp)
     logtofile = createLogPlugIn();
     WebAssertData(interp, logtofile, "log_Init/logtofile plugin", TCL_ERROR)
 
-	logtofile->constructor = createLogToFile;
+    logtofile->constructor = createLogToFile;
     logtofile->destructor = destroyLogToFile;
     logtofile->handler = logToFile;
 
@@ -243,7 +243,7 @@ int destroyLogLevel(void *level, void *dum)
 char *createLogDestName(char *prefix, int cnt)
 {
 
-    char str[64];		/* more than enough space for logDestFFFF */
+    char str[64];		/* more than enough space for logDest%d */
     char *name;
 
     if (prefix == NULL)
@@ -252,10 +252,9 @@ char *createLogDestName(char *prefix, int cnt)
 	return NULL;
 
     if ((cnt >= 0) && (cnt < (1 << 15))) {
-	sprintf(str, "%s%x", prefix, cnt);
+	sprintf(str, "%s%d", prefix, cnt);
 	name = allocAndSet(str);
-    }
-    else {
+    } else {
 	name = NULL;
     }
 
@@ -376,12 +375,15 @@ int Web_LogDest(ClientData clientData,
     };
     enum params
     { MAXCHAR, FORMAT };
-    static TCLCONST char *subCommands[] = { WEB_LOG_SUBCMD_ADD,
-	WEB_LOG_SUBCMD_DELETE,
-	WEB_LOG_SUBCMD_NAMES, NULL
+    static TCLCONST char *subCommands[] = {
+      WEB_LOG_SUBCMD_ADD,
+      WEB_LOG_SUBCMD_DELETE,
+      WEB_LOG_SUBCMD_NAMES,
+      WEB_LOG_SUBCMD_LEVELS,
+      NULL
     };
     enum subCommands
-    { ADD, DELETE, NAMES };
+    { ADD, DELETE, NAMES, LEVELS };
 
     /* --------------------------------------------------------------------------
      * check for internal data
@@ -393,7 +395,7 @@ int Web_LogDest(ClientData clientData,
      * check arguments
      * ----------------------------------------------------------------------- */
     if (objc < 2) {
-	Tcl_GetIndexFromObj(interp, objv[0], subCommands, "option", 0, &idx);
+	Tcl_WrongNumArgs(interp, 1, objv, "option arg ?arg ...?");
 	return TCL_ERROR;
     }
 
@@ -559,6 +561,21 @@ int Web_LogDest(ClientData clientData,
     case NAMES:{
 
 	    HashTableIterator iterator;
+	    Tcl_ResetResult(interp);
+
+	    if (logData->listOfDests != NULL) {
+
+		assignIteratorToHashTable(logData->listOfDests, &iterator);
+
+		while (nextFromHashIterator(&iterator) != TCL_ERROR) {
+		    Tcl_AppendElement(interp, keyOfCurrent(&iterator));
+		}
+	    }
+	    return TCL_OK;
+	}
+    case LEVELS:{
+
+	    HashTableIterator iterator;
 	    int namesIsFirst = TCL_OK;
 	    LogDest *logDest = NULL;
 
@@ -646,10 +663,11 @@ int Web_LogFilter(ClientData clientData,
 	WEB_LOG_SUBCMD_ADD,
 	WEB_LOG_SUBCMD_DELETE,
 	WEB_LOG_SUBCMD_NAMES,
+	WEB_LOG_SUBCMD_LEVELS,
 	NULL
     };
     enum subCommands
-    { ADD, DELETE, NAMES };
+    { ADD, DELETE, NAMES, LEVELS };
 
     /* --------------------------------------------------------------------------
      * check for internal data
@@ -661,7 +679,7 @@ int Web_LogFilter(ClientData clientData,
      * enough arguments ?
      * ----------------------------------------------------------------------- */
     if (objc < 2) {
-	Tcl_GetIndexFromObj(interp, objv[0], subCommands, "option", 0, &idx);
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg?");
 	return TCL_ERROR;
     }
 
@@ -688,8 +706,7 @@ int Web_LogFilter(ClientData clientData,
 	     * enough arguments ?
 	     * --------------------------------------------------------------------- */
 	    if (objc != 3) {
-		Tcl_GetIndexFromObj(interp, objv[0], subCommands, "option", 0,
-				    &idx);
+	        Tcl_WrongNumArgs(interp, 2, objv, "level");
 		return TCL_ERROR;
 	    }
 
@@ -727,6 +744,24 @@ int Web_LogFilter(ClientData clientData,
 	    break;
 	}
     case NAMES:{
+
+	    HashTableIterator iterator;
+
+	    Tcl_ResetResult(interp);
+
+	    if (logData->listOfFilters != NULL) {
+
+		assignIteratorToHashTable(logData->listOfFilters, &iterator);
+
+		while (nextFromHashIterator(&iterator) != TCL_ERROR) {
+		    Tcl_AppendElement(interp, keyOfCurrent(&iterator));
+		}
+	    }
+	    return TCL_OK;
+	    break;
+	}
+
+    case LEVELS:{
 
 	    HashTableIterator iterator;
 	    LogLevel *logLevel = NULL;
