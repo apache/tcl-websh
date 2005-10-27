@@ -90,9 +90,7 @@ puts "Tests began at [clock format [clock seconds]]"
 # source each of the specified tests
 foreach file [lsort [::tcltest::getMatchingFiles]] {
     set tail [file tail $file]
-    if {$verbose} {
-	puts "Running test file $tail"
-    }
+    puts "Running test file $tail"
     if {[string match $tail "time.test"]} {
 	if {$verbose} {
 	    puts "Skipping test file $tail"
