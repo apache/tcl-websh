@@ -97,7 +97,7 @@ int logImpl(Tcl_Interp * interp, LogData * logData,
     /* ------------------------------------------------------------------
      * does level pass the filters --> send to dests
      * --------------------------------------------------------------- */
-    if (doesPassFilters(logLevel, logData->listOfFilters) == TCL_OK)
+    if (doesPassFilters(logLevel, logData->listOfFilters, logData->filterSize) == TCL_OK)
 	sendMsgToDestList(interp, logData, logLevel, msg);
 
     destroyLogLevel(logLevel, NULL);
@@ -119,18 +119,17 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
     Tcl_Obj *subst = NULL;
     int res = 0;
     int err = 0;
+    int i = 0;
 
-    Tcl_HashTable *hash = logData->listOfDests;
+    LogDest **logDests = logData->listOfDests;
 
-    if ((interp == NULL) || (hash == NULL) ||
+    if ((interp == NULL) || (logDests == NULL) ||
 	(logLevel == NULL) || (msg == NULL))
 	return;
 
-    assignIteratorToHashTable(hash, &iterator);
+    for (i = 0; i < logData->destSize; i++) {
 
-    while (nextFromHashIterator(&iterator) != TCL_ERROR) {
-
-	logDest = (LogDest *) valueOfCurrent(&iterator);
+	logDest = logDests[i];
 	if (logDest != NULL) {
 
 	    if ((logDest->plugIn != NULL) &&
@@ -143,7 +142,6 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 		    /* ------------------------------------------------------------------
 		     * do we need to eval the message ?
 		     * --------------------------------------------------------------- */
-
 		    if (logData->logSubst) {
 
 			/* message already evaluated ? */
@@ -380,20 +378,15 @@ int doesPass(LogLevel * level, LogLevel * filter)
 /* ----------------------------------------------------------------------------
  * doesPassFilters -- search through all filters and see if level passes one
  * ------------------------------------------------------------------------- */
-int doesPassFilters(LogLevel * logLevel, Tcl_HashTable * hash)
+int doesPassFilters(LogLevel * logLevel, LogLevel ** logLevels, int size)
 {
+    int i;
 
-    HashTableIterator iterator;
-    LogLevel *filter;
-
-    if ((logLevel == NULL) || (hash == NULL))
+    if ((logLevel == NULL) || (logLevels == NULL))
 	return TCL_ERROR;
 
-    assignIteratorToHashTable(hash, &iterator);
-    while (nextFromHashIterator(&iterator) != TCL_ERROR) {
-
-	filter = (LogLevel *) valueOfCurrent(&iterator);
-	if (doesPass(logLevel, filter) == TCL_OK)
+    for (i = 0; i < size; i++) {
+	if (doesPass(logLevel, logLevels[i]) == TCL_OK)
 	    return TCL_OK;
     }
 

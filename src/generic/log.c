@@ -137,10 +137,14 @@ LogData *createLogData()
 
     if (logData != NULL) {
 
-	HashUtlAllocInit(logData->listOfFilters, TCL_STRING_KEYS);
-	logData->filterCnt = 0;
-	HashUtlAllocInit(logData->listOfDests, TCL_STRING_KEYS);
-	logData->destCnt = 0;
+	/* initialize list of destination and levels */
+	logData->listOfFilters = NULL;
+	logData->filterSize = 0;
+	logData->listOfDests = NULL;
+	logData->destSize = 0;
+	insertIntoFilterList(logData, (LogLevel *) NULL);
+	insertIntoDestList(logData, (LogDest *) NULL);
+
 	HashUtlAllocInit(logData->listOfPlugIns, TCL_STRING_KEYS);
 	logData->logSubst = 0;
     }
@@ -163,24 +167,33 @@ void destroyLogData(ClientData clientData, Tcl_Interp * interp)
 	/* ..................................................................... */
 	if (logData->listOfFilters != NULL) {
 
-	    resetHashTableWithContent(logData->listOfFilters, TCL_STRING_KEYS,
-				      destroyLogLevel, interp);
-
-	    HashUtlDelFree(logData->listOfFilters);
-	    logData->listOfFilters = NULL;
+	  int i;
+	  LogLevel ** logLevels = logData->listOfFilters;
+	  for (i = 0; i < logData->filterSize; i++) {
+	    if (logLevels[i] != NULL) {
+	      destroyLogLevel(logLevels[i], interp);
+	    }
+	  }
+	  WebFreeIfNotNull(logData->listOfFilters);
+	  logData->filterSize = 0;
 	}
 
-	/* ..................................................................... */
+	/* ................................................................ */
 	if (logData->listOfDests != NULL) {
 
-	    resetHashTableWithContent(logData->listOfDests, TCL_STRING_KEYS,
-				      destroyLogDest, interp);
-	    HashUtlDelFree(logData->listOfDests);
-	    logData->listOfDests = NULL;
+	  int i;
+	  LogDest ** logDests = logData->listOfDests;
+	  for (i = 0; i < logData->destSize; i++) {
+	    if (logDests[i] != NULL) {
+	      destroyLogDest(logDests[i], interp);
+	    }
+	  }
+	  WebFreeIfNotNull(logData->listOfDests);
+	  logData->destSize = 0;
 	}
 
 
-	/* ..................................................................... */
+	/* ................................................................ */
 	if (logData->listOfPlugIns != NULL) {
 
 	    resetHashTableWithContent(logData->listOfPlugIns, TCL_STRING_KEYS,
@@ -238,9 +251,9 @@ int destroyLogLevel(void *level, void *dum)
 }
 
 /* ----------------------------------------------------------------------------
- * createLogDestName --
+ * createLogName --
  * ------------------------------------------------------------------------- */
-char *createLogDestName(char *prefix, int cnt)
+char *createLogName(char *prefix, int cnt)
 {
 
     char str[64];		/* more than enough space for logDest%d */
@@ -259,6 +272,76 @@ char *createLogDestName(char *prefix, int cnt)
     }
 
     return name;
+}
+
+/* ----------------------------------------------------------------------------
+ * getIndextFromLogName --
+ * ------------------------------------------------------------------------- */
+int getIndexFromLogName(char *format, char *string) {
+  int i = -1;
+  int index = -1;
+  if (sscanf(string, format, &index) == 1) {
+    i = index;
+  }
+  return i;
+}
+
+/* ----------------------------------------------------------------------------
+ * insertIntoDestList --
+ * ------------------------------------------------------------------------- */
+char * insertIntoDestList(LogData *logData, LogDest *logDest) {
+  int i;
+  LogDest ** logDests = logData->listOfDests;
+  for (i = 0; i < logData->destSize; i++) {
+    if (logDests[i] == NULL) {
+      logDests[i] = logDest;
+      return createLogName(LOG_DEST_PREFIX, i);
+    }
+  }
+  {
+    /* list too small: increase size */
+    LogDest ** newLogDests = (LogDest **) Tcl_Alloc((LOG_LIST_INITIAL_SIZE + logData->destSize) * sizeof(LogDest *));
+    if (newLogDests == NULL) {return NULL;}
+    /* copy old list to new list */
+    memcpy(newLogDests, logDests, logData->destSize * sizeof(LogDest *));
+    /* init new entries to NULL */
+    for (i = 0; i < LOG_LIST_INITIAL_SIZE; i++) {
+      newLogDests[i + logData->destSize] = NULL;
+    }
+    logData->listOfDests = newLogDests;
+    logData->destSize += LOG_LIST_INITIAL_SIZE;
+    WebFreeIfNotNull(logDests);
+    return insertIntoDestList(logData, logDest);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+ * insertIntoFilterList --
+ * ------------------------------------------------------------------------- */
+char * insertIntoFilterList(LogData *logData, LogLevel *logLevel) {
+  int i;
+  LogLevel ** logLevels = logData->listOfFilters;
+  for (i = 0; i < logData->filterSize; i++) {
+    if (logLevels[i] == NULL) {
+      logLevels[i] = logLevel;
+      return createLogName(LOG_FILTER_PREFIX, i);
+    }
+  }
+  {
+    /* list too small: increase size */
+    LogLevel ** newLogLevels = (LogLevel **) Tcl_Alloc((LOG_LIST_INITIAL_SIZE + logData->filterSize) * sizeof(LogLevel *));
+    if (newLogLevels == NULL) {return NULL;}
+    /* copy old list to new list */
+    memcpy(newLogLevels, logLevels, logData->filterSize * sizeof(LogLevel *));
+    /* init new entries to NULL */
+    for (i = 0; i < LOG_LIST_INITIAL_SIZE; i++) {
+      newLogLevels[i + logData->filterSize] = NULL;
+    }
+    logData->listOfFilters = newLogLevels;
+    logData->filterSize += LOG_LIST_INITIAL_SIZE;
+    WebFreeIfNotNull(logLevels);
+    return insertIntoFilterList(logData, logLevel);
+  }
 }
 
 /* ----------------------------------------------------------------------------
@@ -502,14 +585,6 @@ int Web_LogDest(ClientData clientData,
 	    }
 
 	    /* ------------------------------------------------------------------------
-	     * create name
-	     * --------------------------------------------------------------------- */
-	    name = createLogDestName("logdest", logData->destCnt);
-	    WebAssertData(interp, name,
-			  "cannot create name for log destination",
-			  TCL_ERROR);
-
-	    /* ------------------------------------------------------------------------
 	     * call constructor
 	     * --------------------------------------------------------------------- */
 	    if ((logPlugInData =
@@ -539,43 +614,38 @@ int Web_LogDest(ClientData clientData,
 	    logDest->plugInData = logPlugInData;
 	    logDest->maxCharInMsg = maxCharInMsg;
 
-	    /* ------------------------------------------------------------------------
+	    /* ----------------------------------------------------------
 	     * and add to list
-	     * --------------------------------------------------------------------- */
-	    if (appendToHashTable
-		(logData->listOfDests, name,
-		 (ClientData) logDest) == TCL_ERROR) {
-		Tcl_SetResult(interp, "cannot append \"", NULL);
-		Tcl_AppendResult(interp, name, "\" to list", NULL);
+	     * ---------------------------------------------------------- */
+	    
+	    name = insertIntoDestList(logData, logDest);
+	    if (name == NULL) {
+		Tcl_SetResult(interp, "cannot append new log destination to list", NULL);
 		destroyLogDest(logDest, interp);
 		destroyLogLevel(logLevel, NULL);
-		WebFreeIfNotNull(name);
 		WebFreeIfNotNull(format);
 		return TCL_ERROR;
 	    }
-	    logData->destCnt++;
 	    Tcl_SetResult(interp, name, Tcl_Free);
-
 	    return TCL_OK;
 	}
     case NAMES:{
 
-	    HashTableIterator iterator;
 	    Tcl_ResetResult(interp);
 
 	    if (logData->listOfDests != NULL) {
-
-		assignIteratorToHashTable(logData->listOfDests, &iterator);
-
-		while (nextFromHashIterator(&iterator) != TCL_ERROR) {
-		    Tcl_AppendElement(interp, keyOfCurrent(&iterator));
+	      int i;
+	      LogDest ** logDests = logData->listOfDests;
+	      for (i = 0; i < logData->destSize; i++) {
+		if (logDests[i] != NULL) {
+		  Tcl_AppendElement(interp, createLogName(LOG_DEST_PREFIX, i));
 		}
+	      }
 	    }
 	    return TCL_OK;
 	}
     case LEVELS:{
 
-	    HashTableIterator iterator;
 	    int namesIsFirst = TCL_OK;
 	    LogDest *logDest = NULL;
 
@@ -583,22 +653,25 @@ int Web_LogDest(ClientData clientData,
 
 	    if (logData->listOfDests != NULL) {
 
-		assignIteratorToHashTable(logData->listOfDests, &iterator);
+	      int i;
+	      LogDest ** logDests = logData->listOfDests;
+	      for (i = 0; i < logData->destSize; i++) {
+		if (logDests[i] != NULL) {
 
-		while (nextFromHashIterator(&iterator) != TCL_ERROR) {
 		    if (namesIsFirst == TCL_ERROR)
 			Tcl_AppendResult(interp, "\n", NULL);
 		    else
 			namesIsFirst = TCL_ERROR;
-		    logDest = (LogDest *) valueOfCurrent(&iterator);
+		    logDest = logDests[i];
 		    Tcl_AppendResult(interp,
-				     keyOfCurrent(&iterator), " ",
+				     createLogName(LOG_DEST_PREFIX, i), " ",
 				     logDest->filter->facility, ".",
 				     getSeverityName(logDest->filter->
 						     minSeverity), "-",
 				     getSeverityName(logDest->filter->
 						     maxSeverity), NULL);
 		}
+	      }
 	    }
 	    return TCL_OK;
 	}
@@ -611,29 +684,35 @@ int Web_LogDest(ClientData clientData,
 	    /*      web::loglogDest delete logDest1 */
 
 	    switch (objc) {
-	    case 3:
-		logDest =
-		    (LogDest *) removeFromHashTable(logData->listOfDests,
-						    Tcl_GetString(objv[2]));
-		if (logDest == NULL) {
-		    Tcl_SetResult(interp, "no such log destination \"", NULL);
-		    Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
+	    case 3: {
+	      int inx = getIndexFromLogName(LOG_DEST_PREFIX"%d", Tcl_GetString(objv[2]));
+	      LogDest ** logDests = logData->listOfDests;
+	      if (inx < 0 
+		  || inx >= logData->destSize
+		  || logDests[inx] == NULL) {
+		Tcl_SetResult(interp, "no such log destination \"", NULL);
+		Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
 				     NULL);
-		    return TCL_ERROR;
-		}
-		destroyLogDest(logDest, interp);
-		return TCL_OK;
+		return TCL_ERROR;
+	      }
+	      destroyLogDest(logDests[inx], interp);
+	      logDests[inx] = NULL;
+	      return TCL_OK;
+	      break;
+	    }
 	    case 2:
-		/* ----------------------------------------------------------------------
+		/* --------------------------------------------------------
 		 * no argument --> resets the list
-		 * ------------------------------------------------------------------- */
+		 * -------------------------------------------------------- */
 		if (logData->listOfDests != NULL) {
-		    if (resetHashTableWithContent(logData->listOfDests,
-						  TCL_STRING_KEYS,
-						  destroyLogDest,
-						  interp) == TCL_OK) {
-			logData->destCnt = 0;
+		  int i;
+		  LogDest ** logDests = logData->listOfDests;
+		  for (i = 0; i < logData->destSize; i++) {
+		    if (logDests[i] != NULL) {
+		      destroyLogDest(logDests[i], interp);
+		      logDests[i] = NULL;
 		    }
+		  }
 		}
 		return TCL_OK;
 		break;
@@ -711,13 +790,6 @@ int Web_LogFilter(ClientData clientData,
 	    }
 
 	    /* ------------------------------------------------------------------------
-	     * name it
-	     * --------------------------------------------------------------------- */
-	    name = createLogDestName("logfilter", logData->filterCnt);
-	    WebAssertData(interp, name, "cannot create name for log filter",
-			  TCL_ERROR);
-
-	    /* ------------------------------------------------------------------------
 	     * parse level
 	     * --------------------------------------------------------------------- */
 	    logLevel =
@@ -730,32 +802,28 @@ int Web_LogFilter(ClientData clientData,
 	    /* ------------------------------------------------------------------------
 	     * and add to list
 	     * --------------------------------------------------------------------- */
-	    if (appendToHashTable(logData->listOfFilters, name,
-				  (ClientData) logLevel) == TCL_ERROR) {
-		Tcl_SetResult(interp, "cannot append \"", NULL);
-		Tcl_AppendResult(interp, name, "\" to list", NULL);
+	    name = insertIntoFilterList(logData, logLevel);
+	    if (name == NULL) {
+		Tcl_SetResult(interp, "cannot append new log filter to list", NULL);
 		destroyLogLevel(logLevel, NULL);
-		WebFreeIfNotNull(name);
 		return TCL_ERROR;
 	    }
-	    logData->filterCnt++;
 	    Tcl_SetResult(interp, name, Tcl_Free);
 	    return TCL_OK;
 	    break;
 	}
     case NAMES:{
 
-	    HashTableIterator iterator;
-
 	    Tcl_ResetResult(interp);
 
 	    if (logData->listOfFilters != NULL) {
-
-		assignIteratorToHashTable(logData->listOfFilters, &iterator);
-
-		while (nextFromHashIterator(&iterator) != TCL_ERROR) {
-		    Tcl_AppendElement(interp, keyOfCurrent(&iterator));
+	      int i;
+	      LogLevel **logLevels = logData->listOfFilters;
+	      for (i = 0; i < logData->filterSize; i++) {
+		if (logLevels[i] != NULL) {
+		  Tcl_AppendElement(interp, createLogName(LOG_FILTER_PREFIX, i));
 		}
+	      }
 	    }
 	    return TCL_OK;
 	    break;
@@ -770,22 +838,25 @@ int Web_LogFilter(ClientData clientData,
 	    Tcl_SetResult(interp, "", NULL);
 
 	    if (logData->listOfFilters != NULL) {
+	      int i;
+	      LogLevel ** logLevels = logData->listOfFilters;
+	      for (i = 0; i < logData->filterSize; i++) {
+		if (logLevels[i] != NULL) {
 
-		assignIteratorToHashTable(logData->listOfFilters, &iterator);
-
-		while (nextFromHashIterator(&iterator) != TCL_ERROR) {
 		    if (namesIsFirst == TCL_ERROR)
 			Tcl_AppendResult(interp, "\n", NULL);
 		    else
 			namesIsFirst = TCL_ERROR;
-		    logLevel = (LogLevel *) valueOfCurrent(&iterator);
-		    Tcl_AppendResult(interp, keyOfCurrent(&iterator), " ",
+		    logLevel = logLevels[i];
+		    Tcl_AppendResult(interp,
+				     createLogName(LOG_FILTER_PREFIX, i), " ",
 				     logLevel->facility, ".",
 				     getSeverityName(logLevel->minSeverity),
 				     "-",
 				     getSeverityName(logLevel->maxSeverity),
 				     NULL);
 		}
+	      }
 	    }
 	    return TCL_OK;
 	    break;
@@ -799,41 +870,44 @@ int Web_LogFilter(ClientData clientData,
 	    /*      web::logfilter delete logLevel1 */
 
 	    switch (objc) {
-	    case 3:
-		logLevel =
-		    (LogLevel *) removeFromHashTable(logData->listOfFilters,
-						     Tcl_GetString(objv[2]));
-		if (logLevel == NULL) {
-		    Tcl_SetResult(interp, "no such log filter \"", NULL);
-		    Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
+	    case 3: {
+	      int inx = getIndexFromLogName(LOG_FILTER_PREFIX"%d", Tcl_GetString(objv[2]));
+	      LogLevel ** logLevels = logData->listOfFilters;
+	      if (inx < 0 
+		  || inx >= logData->filterSize
+		  || logLevels[inx] == NULL) {
+		Tcl_SetResult(interp, "no such log filter \"", NULL);
+		Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
 				     NULL);
-		    return TCL_ERROR;
-		}
-		destroyLogLevel(logLevel, NULL);
-		return TCL_OK;
-		break;
-	    case 2:
-		/* ----------------------------------------------------------------------
-		 * no argument --> resets the list
-		 * ------------------------------------------------------------------- */
-		if (logData->listOfFilters != NULL) {
-		    if (resetHashTableWithContent(logData->listOfFilters,
-						  TCL_STRING_KEYS,
-						  destroyLogLevel,
-						  NULL) == TCL_OK) {
-			logData->filterCnt = 0;
-			return TCL_OK;
-		    }
-		}
-		Tcl_SetResult(interp, "error resetting filter list", NULL);
 		return TCL_ERROR;
+	      }
+	      destroyLogLevel(logLevels[inx], interp);
+	      logLevels[inx] = NULL;
+	      return TCL_OK;
+	      break;
+	    }
+	    case 2:
+		/* -----------------------------------------------------
+		 * no argument --> resets the list
+		 * ----------------------------------------------------- */
+		if (logData->listOfFilters != NULL) {
+		  int i;
+		  LogLevel ** logLevels = logData->listOfFilters;
+		  for (i = 0; i < logData->filterSize; i++) {
+		    if (logLevels[i] != NULL) {
+		      destroyLogLevel(logLevels[i], interp);
+		      logLevels[i] = NULL;
+		    }
+		  }
+		}
+		return TCL_OK;
 		break;
 	    default:
 		Tcl_WrongNumArgs(interp, 1, objv, "delete ?filtername?");
 		return TCL_ERROR;
 	    }
 	    break;
-	}
+        }
     default:
 	return TCL_OK;
     }

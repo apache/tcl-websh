@@ -66,7 +66,7 @@ test log-1.4 {websh3_weblog: reset list of filters} {
     set res [web::logfilter names]
 } {}
 
-test log-1.5 {websh3_weblog: different warn levels} {
+test log-1.5 {websh3_weblog: different warn levels and more than initial size list} {
     web::logfilter delete
     web::logfilter add testAlert.alert
     web::logfilter add testError.error
@@ -88,8 +88,18 @@ test log-1.5 {websh3_weblog: different warn levels} {
     web::logfilter add testWarning.warning
     web::logfilter add testInfo.info
     web::logfilter add testDebug.debug
+    web::logfilter add testDebug.debug
+    web::logfilter add testDebug.debug
     set res [web::logfilter levels]
-} {logfilter8 testInfo.info-info
+} {logfilter0 testAlert.alert-alert
+logfilter1 testError.error-error
+logfilter2 testWarning.warning-warning
+logfilter3 testInfo.info-info
+logfilter4 testDebug.debug-debug
+logfilter5 testAlert.alert-alert
+logfilter6 testError.error-error
+logfilter7 testWarning.warning-warning
+logfilter8 testInfo.info-info
 logfilter9 testDebug.debug-debug
 logfilter10 testAlert.alert-alert
 logfilter11 testError.error-error
@@ -99,16 +109,10 @@ logfilter14 testDebug.debug-debug
 logfilter15 testAlert.alert-alert
 logfilter16 testError.error-error
 logfilter17 testWarning.warning-warning
-logfilter0 testAlert.alert-alert
 logfilter18 testInfo.info-info
-logfilter1 testError.error-error
 logfilter19 testDebug.debug-debug
-logfilter2 testWarning.warning-warning
-logfilter3 testInfo.info-info
-logfilter4 testDebug.debug-debug
-logfilter5 testAlert.alert-alert
-logfilter6 testError.error-error
-logfilter7 testWarning.warning-warning}
+logfilter20 testDebug.debug-debug
+logfilter21 testDebug.debug-debug}
 
 test log-1.6 {websh3_weblog: special syntax for message levels} {
     web::logfilter delete
@@ -118,11 +122,11 @@ test log-1.6 {websh3_weblog: special syntax for message levels} {
     web::logfilter add test*.info
     web::logfilter add websh2.alert-error
     set res [web::logfilter levels]
-} {logfilter4 websh2.alert-error
-logfilter0 *.alert-debug
+} {logfilter0 *.alert-debug
 logfilter1 *.alert-debug
 logfilter2 *.alert-debug
-logfilter3 test*.info-info}
+logfilter3 test*.info-info
+logfilter4 websh2.alert-error}
 
 test log-1.7 {websh3_weblog: see if we get the id} {
     web::logfilter delete
@@ -397,14 +401,30 @@ test log-3.12 {multiple channels (crash test)} {
     web::log debug test
     append res \n [web::logdest levels]
 
-} {logdest2 *.alert-debug
-logdest3 *.alert-debug
-logdest0 *.alert-debug
+} {logdest0 *.alert-debug
 logdest1 *.alert-debug
 logdest2 *.alert-debug
 logdest3 *.alert-debug
 logdest0 *.alert-debug
-logdest1 *.alert-debug}
+logdest1 *.alert-debug
+logdest2 *.alert-debug
+logdest3 *.alert-debug}
+
+test log-4.1 {fill up log filters} {
+    set res {}
+    web::logfilter delete
+    web::logfilter add *.-debug
+    web::logfilter add *.-debug
+    web::logfilter add *.-debug
+    lappend res [web::logfilter names]
+    web::logfilter delete logfilter1
+    lappend res [web::logfilter names]
+    web::logfilter add *.-error
+    lappend res [web::logfilter names]
+    lappend res [web::logfilter levels]
+} {{logfilter0 logfilter1 logfilter2} {logfilter0 logfilter2} {logfilter0 logfilter1 logfilter2} {logfilter0 *.alert-debug
+logfilter1 *.alert-error
+logfilter2 *.alert-debug}}
 
 # cleanup
 ::tcltest::cleanupTests

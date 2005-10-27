@@ -66,10 +66,6 @@
 #define WEB_LOG_SUBCMD_LEVELS "levels"
 
 /* ----------------------------------------------------------------------------
- * Switches (like "string -binary")
- * ------------------------------------------------------------------------- */
-
-/* ----------------------------------------------------------------------------
  * Parameters (like "web::cmdurl -cmd aCommand", where there is an argument
  * ------------------------------------------------------------------------- */
 #define WEB_LOG_PARAM_FORMAT "-format"
@@ -86,6 +82,12 @@
 #define WEB_LOG_USAGE_LOGDEST_ADD \
   "add ?options? level type ?type-specific-arguments ...?"
 
+/* --------------------------------------------------------------------------
+ * other
+ * ------------------------------------------------------------------------*/
+#define LOG_LIST_INITIAL_SIZE 10
+#define LOG_FILTER_PREFIX "logfilter"
+#define LOG_DEST_PREFIX "logdest"
 
 /* ----------------------------------------------------------------------------
  * list of possible categories
@@ -157,16 +159,14 @@ char *createLogDestName(char *prefix, int cnt);
  * ------------------------------------------------------------------------- */
 typedef struct LogData
 {
-    Tcl_HashTable *listOfFilters;
-    int filterCnt; /* actual count of filters */
-    int filterInx; /* highest index in use */
-    Tcl_HashTable *listOfDests;
-    int destCnt; /* actual count of destinations */
-    int destInx; /* highest index in use */ 
-    Tcl_HashTable *listOfPlugIns;
-    int logSubst;		/* 1: subst log message, 0: don't (default 1) */
-    /* needed so that global settings can be accessed */
-    RequestData * requestData;
+  LogLevel **listOfFilters;
+  int filterSize; /* size of filter list */
+  LogDest **listOfDests;
+  int destSize; /* site of destination list */
+  Tcl_HashTable *listOfPlugIns;
+  int logSubst;	/* 1: subst log message, 0: don't (default 0) */
+  /* needed so that global settings can be accessed */
+  RequestData * requestData;
 }
 LogData;
 
@@ -198,7 +198,7 @@ LogLevel *parseLogLevel(Tcl_Interp * interp,
 Tcl_Obj *formatMessage(LogLevel * level, char *fmt, long maxCharInMsg,
 		       Tcl_Obj * msg);
 int doesPass(LogLevel * level, LogLevel * filter);
-int doesPassFilters(LogLevel * logLevel, Tcl_HashTable * hash);
+int doesPassFilters(LogLevel * logLevel, LogLevel ** logLevels, int size);
 int logImpl(Tcl_Interp * interp, LogData * logData,
 	    char *levelStr, Tcl_Obj * msg);
 int webLog(Tcl_Interp * interp, char *levelStr, char *msg);
@@ -206,6 +206,8 @@ int webLog(Tcl_Interp * interp, char *levelStr, char *msg);
 void sendMsgToDestList(Tcl_Interp * interp,
 		       LogData * logData, LogLevel * level, Tcl_Obj * msg);
 
+char * insertIntoDestList(LogData *logData, LogDest *logDest);
+char * insertIntoFilterList(LogData *logData, LogLevel *logLevel);
 
 /* ----------------------------------------------------------------------------
  * Logging 
