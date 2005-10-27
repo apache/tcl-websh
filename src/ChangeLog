@@ -1,3 +1,47 @@
+2005-10-27 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* generic/script.ws3, tests/log.test:
+	Moved cleanup from web::ap::perReqInit to web::ap::perReqCleanup
+	to speed up request handling
+	Delete only log filters and destinations created during the
+	request and	not the ones created
+	in web::initializer
+	Wrote a test for it
+
+	* generic/log.[hc], generic/modwebsh_ap.c, generic/modwebsh_cgi.c:
+	Added keep flag to LogDest and LogLevel structs to keep track of
+	levels and filters to keep across requests (the ones created in
+	web::initializer code)
+	Added special command to delete all but these levels and filters
+	(web::logfilter delete -requests and web::logdest delete -requests)
+	to be used in web::ap::perReqCleanup
+	Adapted Web_Initializer to accommodate this functionality
+
+	* src/test/log.test, src/generic/log.[hc], src/generic/logutl.c:
+	Changed behaviour of web::logdest names and web::logfilter names
+	to return proper list of names (for consistency reasons)
+	Added web::logdest levels and web::logfilter levels options to
+	replace function of previous names option (needed for test suite only)
+	Internal names of logfilters and logdests with decimal counter
+	for consistency with other internal Tcl names (files sockets etc.)
+	Modified usage error messages for web::logdest and web::logfilter
+	to comply to Tcl standard
+	Refactored log filters and levels to reside in an array so that
+	names can be reused after deletion (needed for mod_websh, because
+	otherwise, we run out of names sooner or later)
+	Adapted and added tests accordingly
+
+	* src/tests/dispatch.test, src/tests/webtest.ws3:
+	optimized output during test runs
+
+	* src/generic/mod_websh.c:
+	typo in log msg
+
+2005-10-16 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* makedist:
+	Adapted to run under SVN (after migration from CVS)
+	
 2005-09-09 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/unix/configure.in:
