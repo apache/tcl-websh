@@ -297,10 +297,10 @@ static int run_websh_script(request_rec * r)
     if (Tcl_Eval(webInterp->interp, "web::ap::perReqInit") != TCL_OK) {
 #ifndef APACHE2
 	ap_log_printf(r->server,
-		      "mod_websh - cannot init per-request webshell code\n");
+		      "mod_websh - cannot init per-request Websh code\n");
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - cannot init per-request webshell code\n");
+		      "mod_websh - cannot init per-request Websh code\n");
 #endif /* APACHE2 */
 	return 0;
     }
