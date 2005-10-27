@@ -45,9 +45,18 @@ int Web_Initializer(ClientData clientData,
 
     if (webInterp->numrequests == 0) {
 
+	/* keep track of log stuff */
+	LogData * logData = (LogData *) Tcl_GetAssocData(interp, WEB_LOG_ASSOC_DATA, NULL);
+	if (logData != NULL)
+	  logData->keep = 1;
+
 	Tcl_IncrRefCount(objv[1]);
 	res = Tcl_EvalObjEx(interp, objv[1], 0);
 	Tcl_DecrRefCount(objv[1]);
+
+	/* reset log flag */
+	if (logData != NULL)
+	  logData->keep = 0;
 
 	if (res != TCL_OK) {
 

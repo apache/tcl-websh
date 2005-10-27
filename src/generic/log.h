@@ -103,6 +103,7 @@ Severity;
  * ------------------------------------------------------------------------- */
 typedef struct LogLevel
 {
+    int keep;
     char *facility;
     Severity minSeverity;
     Severity maxSeverity;	/* only used for filter */
@@ -140,6 +141,7 @@ int registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * plugIn);
  * ------------------------------------------------------------------------- */
 typedef struct LogDest
 {
+    int keep;
     LogLevel *filter;
     char *format;
     long maxCharInMsg;
@@ -165,6 +167,7 @@ typedef struct LogData
   int destSize; /* site of destination list */
   Tcl_HashTable *listOfPlugIns;
   int logSubst;	/* 1: subst log message, 0: don't (default 0) */
+  int keep;  /* flag for log config to keep during initializer code */
   /* needed so that global settings can be accessed */
   RequestData * requestData;
 }

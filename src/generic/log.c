@@ -147,6 +147,7 @@ LogData *createLogData()
 
 	HashUtlAllocInit(logData->listOfPlugIns, TCL_STRING_KEYS);
 	logData->logSubst = 0;
+	logData->keep = 0;
     }
 
     return logData;
@@ -224,6 +225,7 @@ LogLevel *createLogLevel()
     logLevel = WebAllocInternalData(LogLevel);
     if (logLevel != NULL) {
 
+	logLevel->keep = 0;
 	logLevel->facility = NULL;
 	logLevel->minSeverity = -1;
 	logLevel->maxSeverity = -1;
@@ -347,14 +349,14 @@ char * insertIntoFilterList(LogData *logData, LogLevel *logLevel) {
 /* ----------------------------------------------------------------------------
  * createLogDest --
  * ------------------------------------------------------------------------- */
-LogDest *createLogDest(void)
+LogDest *createLogDest()
 {
 
     LogDest *logDest = NULL;
 
     logDest = WebAllocInternalData(LogDest);
 
-    logDest->filter = NULL;
+    logDest->keep = 0;
     logDest->format = NULL;
     logDest->maxCharInMsg = -1;	/* Tcl_Append... --> -1 is all chars */
     logDest->plugIn = NULL;
@@ -613,6 +615,7 @@ int Web_LogDest(ClientData clientData,
 	    logDest->plugIn = logPlugIn;
 	    logDest->plugInData = logPlugInData;
 	    logDest->maxCharInMsg = maxCharInMsg;
+	    logDest->keep = logData->keep;
 
 	    /* ----------------------------------------------------------
 	     * and add to list
@@ -685,20 +688,32 @@ int Web_LogDest(ClientData clientData,
 
 	    switch (objc) {
 	    case 3: {
-	      int inx = getIndexFromLogName(LOG_DEST_PREFIX"%d", Tcl_GetString(objv[2]));
 	      LogDest ** logDests = logData->listOfDests;
-	      if (inx < 0 
-		  || inx >= logData->destSize
-		  || logDests[inx] == NULL) {
-		Tcl_SetResult(interp, "no such log destination \"", NULL);
-		Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
-				     NULL);
-		return TCL_ERROR;
+	      if (!strcmp("-requests", Tcl_GetString(objv[2]))) {
+		/* special case: delete all destinations NOT created during web::initializer */
+		int i;
+		for (i = 0; i < logData->destSize; i++) {
+		  if (logDests[i] != NULL && !logDests[i]->keep) {
+		    destroyLogDest(logDests[i], interp);
+		    logDests[i] = NULL;
+		  }
+		}
+		return TCL_OK;
+	      } else {
+		int inx = getIndexFromLogName(LOG_DEST_PREFIX"%d", Tcl_GetString(objv[2]));
+		if (inx < 0 
+		    || inx >= logData->destSize
+		    || logDests[inx] == NULL) {
+		  Tcl_SetResult(interp, "no such log destination \"", NULL);
+		  Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
+				   NULL);
+		  return TCL_ERROR;
+		}
+		destroyLogDest(logDests[inx], interp);
+		logDests[inx] = NULL;
+		return TCL_OK;
+		break;
 	      }
-	      destroyLogDest(logDests[inx], interp);
-	      logDests[inx] = NULL;
-	      return TCL_OK;
-	      break;
 	    }
 	    case 2:
 		/* --------------------------------------------------------
@@ -798,6 +813,7 @@ int Web_LogFilter(ClientData clientData,
 		WebFreeIfNotNull(name);
 		return TCL_ERROR;
 	    }
+	    logLevel->keep = logData->keep;
 
 	    /* ------------------------------------------------------------------------
 	     * and add to list
@@ -871,20 +887,32 @@ int Web_LogFilter(ClientData clientData,
 
 	    switch (objc) {
 	    case 3: {
-	      int inx = getIndexFromLogName(LOG_FILTER_PREFIX"%d", Tcl_GetString(objv[2]));
 	      LogLevel ** logLevels = logData->listOfFilters;
-	      if (inx < 0 
-		  || inx >= logData->filterSize
-		  || logLevels[inx] == NULL) {
-		Tcl_SetResult(interp, "no such log filter \"", NULL);
-		Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
-				     NULL);
-		return TCL_ERROR;
+	      if (!strcmp("-requests", Tcl_GetString(objv[2]))) {
+		/* special case: delete all levels NOT created during web::initializer */
+		int i;
+		for (i = 0; i < logData->filterSize; i++) {
+		  if (logLevels[i] != NULL && !logLevels[i]->keep) {
+		    destroyLogLevel(logLevels[i], interp);
+		    logLevels[i] = NULL;
+		  }
+		}
+		return TCL_OK;
+	      } else {
+		int inx = getIndexFromLogName(LOG_FILTER_PREFIX"%d", Tcl_GetString(objv[2]));
+		if (inx < 0 
+		    || inx >= logData->filterSize
+		    || logLevels[inx] == NULL) {
+		  Tcl_SetResult(interp, "no such log filter \"", NULL);
+		  Tcl_AppendResult(interp, Tcl_GetString(objv[2]), "\"",
+				   NULL);
+		  return TCL_ERROR;
+		}
+		destroyLogLevel(logLevels[inx], interp);
+		logLevels[inx] = NULL;
+		return TCL_OK;
+		break;
 	      }
-	      destroyLogLevel(logLevels[inx], interp);
-	      logLevels[inx] = NULL;
-	      return TCL_OK;
-	      break;
 	    }
 	    case 2:
 		/* -----------------------------------------------------
