@@ -61,6 +61,11 @@ int log_Init(Tcl_Interp * interp)
 			 Web_Log,
 			 (ClientData) logData, (Tcl_CmdDeleteProc *) NULL);
 
+    Tcl_CreateObjCommand(interp, "web::loglevel",
+			 Web_LogFilter,
+			 (ClientData) logData, (Tcl_CmdDeleteProc *) NULL);
+
+    /* for compatibility with Websh 3.5 and earlier*/
     Tcl_CreateObjCommand(interp, "web::logfilter",
 			 Web_LogFilter,
 			 (ClientData) logData, (Tcl_CmdDeleteProc *) NULL);
@@ -789,8 +794,8 @@ int Web_LogFilter(ClientData clientData,
     case ADD:{
 
 	    /* ------------------------------------------------------------------------
-	     * web::logfilter add sytnax is as follows:
-	     * web::logfilter add level
+	     * web::loglevel add sytnax is as follows:
+	     * web::loglevel add level
 	     * 0              1   2
 	     * --------------------------------------------------------------------- */
 	    LogLevel *logLevel = NULL;
@@ -883,7 +888,7 @@ int Web_LogFilter(ClientData clientData,
 	    LogLevel *logLevel = NULL;
 
 	    /*      0              1      2 */
-	    /*      web::logfilter delete logLevel1 */
+	    /*      web::loglevel delete logLevel1 */
 
 	    switch (objc) {
 	    case 3: {

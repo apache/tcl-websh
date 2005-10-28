@@ -21,7 +21,7 @@
  * letter). The post office decides whether the address makes sense by
  * searching through the list of known addresses, and rejects the
  * letter if it does not pass this filter (manage the list of known
- * addresses with web::logfilter). If the letter is accepted, it goes
+ * addresses with web::loglevel). If the letter is accepted, it goes
  * through the distribution system where there are different bags,
  * labeled with "USA", "Zurich" etc. The distributer will put your
  * letter into the correct bag which then will be handled by the
@@ -86,7 +86,7 @@
  * other
  * ------------------------------------------------------------------------*/
 #define LOG_LIST_INITIAL_SIZE 10
-#define LOG_FILTER_PREFIX "logfilter"
+#define LOG_FILTER_PREFIX "loglevel"
 #define LOG_DEST_PREFIX "logdest"
 
 /* ----------------------------------------------------------------------------
