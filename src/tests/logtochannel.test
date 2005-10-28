@@ -27,15 +27,15 @@ test logToChannel-1.1 {websh3_weblog: add dest} {
 
 test logToChannel-1.1 {websh3_weblog: use file} {
     set res "Failed"
-    web::logfilter delete
+    web::loglevel delete
     web::logdest delete
-    web::logfilter add tochannel.alert-info
+    web::loglevel add tochannel.alert-info
     set curTim [clock seconds]
     set fileName "tochannel-[info hostname]-$curTim-[pid].dat"
     set fileId [open $fileName "a"]
     set res [web::logdest add tochannel.-debug channel -unbuffered $fileId]
     web::log tochannel.info ">>> T E S T <<< $curTim"
-    web::logfilter delete
+    web::loglevel delete
     web::logdest delete
     close $fileId
     # and see if you find it in the file

@@ -60,9 +60,9 @@ test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly, emptyTest} {
     set curTim [clock seconds]
 
     web::logdest delete
-    web::logfilter delete
+    web::loglevel delete
 
-    web::logfilter add info.-debug
+    web::loglevel add info.-debug
     web::logdest add \
 	-format "T E S T toSyslog -- %x %X \[$curTim\] \$f-\$l-\$m\n" \
 	info.-debug \
@@ -92,7 +92,7 @@ test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly, emptyTest} {
 
     ## clean up
     web::logdest delete
-    web::logfilter delete
+    web::loglevel delete
 
     set res
 } {Ok}

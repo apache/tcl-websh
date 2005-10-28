@@ -77,7 +77,7 @@ test logtofile-2.3 {web::logdest add file but file exists} {
 test logtofile-3.1 {web::log to file} {
     web::logdest delete
     web::logdest add info2.-debug file -unbuffered test.dat
-    web::logfilter add *.-debug
+    web::loglevel add *.-debug
     web::log info3.debug ""
     web::readfile test.dat empty
     web::log info2.debug "hi"

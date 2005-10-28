@@ -48,7 +48,7 @@ if {![string length [info commands web::htmlify]]} {
 # -----------------------------------------------------------------------------
 # log to local file
 # -----------------------------------------------------------------------------
-## web::logfilter add *.-debug
+## web::loglevel add *.-debug
 ## web::logdest add *.-debug channel stdout
 ## web::logdest add *.-debug file [file join . webtest.log]
 ## web::log websh3.debug {== tests started ==}

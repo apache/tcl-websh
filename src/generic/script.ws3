@@ -132,7 +132,7 @@ proc web::ap::perReqInit {} {
 
 proc web::ap::perReqCleanup {} {
     # reset logging (except stuff from web::initializer)
-    web::logfilter delete -requests
+    web::loglevel delete -requests
     web::logdest delete -requests
     # reset request data
     web::request -reset

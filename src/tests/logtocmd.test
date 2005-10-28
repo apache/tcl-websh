@@ -38,9 +38,9 @@ test logToCmd-1.1 {websh3_logToCmd: logdest add returns id} {
 
 test logToCmd-1.2 {websh3_logToCmd: test log to command} {
     web::logdest delete
-    web::logfilter delete
+    web::loglevel delete
     web::logdest add info2.-debug command testLogHandler
-    web::logfilter add info2.-debug
+    web::loglevel add info2.-debug
     set curTim [clock seconds]
     set res [web::log info2.info $curTim]
 } {testLogHandler -- T E S T -- ok}

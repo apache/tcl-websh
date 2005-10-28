@@ -121,22 +121,22 @@ test time-1.7 {putx} {
 test time-1.7 {log} {
 
     web::logdest delete
-    web::logfilter delete
+    web::loglevel delete
 
     set fh [open [set fn [web::tempfile]] w]
 
-    web::logfilter add a.-info
-    web::logfilter add goo1.alert-warning
-    web::logfilter add b.info-info
-    web::logfilter add goo2.-debug
-    web::logfilter add c.-debug
-    web::logfilter add goo3.-debug
-    web::logfilter add d.-debug
-    web::logfilter add good.info-info
-    web::logfilter add good.debug-debug
-    web::logfilter add e.-debug
-    web::logfilter add f.-debug
-    web::logfilter add goo4.-debug
+    web::loglevel add a.-info
+    web::loglevel add goo1.alert-warning
+    web::loglevel add b.info-info
+    web::loglevel add goo2.-debug
+    web::loglevel add c.-debug
+    web::loglevel add goo3.-debug
+    web::loglevel add d.-debug
+    web::loglevel add good.info-info
+    web::loglevel add good.debug-debug
+    web::loglevel add e.-debug
+    web::loglevel add f.-debug
+    web::loglevel add goo4.-debug
 
     web::logdest add a.-info channel $fh
     web::logdest add goo1.alert-warning channel $fh
