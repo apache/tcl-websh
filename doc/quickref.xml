@@ -191,12 +191,11 @@ and temporary files created when files are uploaded in multipart forms (see
     <example>
       <title>web::config</title>
       <programlisting>
-	% web::config decryptchain
-	web::encryptd
-	% web::config filepermissions
-	0644
-	%
-      </programlisting>
+% web::config decryptchain
+web::encryptd
+% web::config filepermissions
+0644
+%      </programlisting>
     </example>
     </section>
   </section>
@@ -371,10 +370,9 @@ and temporary files created when files are uploaded in multipart forms (see
       <example>
 	<title>web::cmdurl</title>
 	<programlisting>
-	  % web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
-	  http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
-	  %
-	</programlisting>
+% web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
+http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
+%	</programlisting>
       </example>
     </section>
     <section id="web::cmdurlcfg">
@@ -540,16 +538,15 @@ and temporary files created when files are uploaded in multipart forms (see
       <example>
 	<title>web::cmdurl</title>
 	<programlisting>
-	  % web::cmdurl &quot;&quot;
-	  ?XDqPtk34XvyPh41gUBo
-	  % web::cmdurlcfg -scriptname bin/test_script
-	  % web::cmdurl &quot;&quot;
-	  bin/test_script?XDqPtk34XvyPh41gUBo
-	  % web::cmdurlcfg -scriptname &quot;&quot;
-	  % web::cmdurl &quot;&quot;
-	  ?XDqPtk34XvyPh41gUBo
-	  %
-	</programlisting>
+% web::cmdurl &quot;&quot;
+?XDqPtk34XvyPh41gUBo
+% web::cmdurlcfg -scriptname bin/test_script
+% web::cmdurl &quot;&quot;
+bin/test_script?XDqPtk34XvyPh41gUBo
+% web::cmdurlcfg -scriptname &quot;&quot;
+% web::cmdurl &quot;&quot;
+?XDqPtk34XvyPh41gUBo
+%	</programlisting>
       </example>
     </section>
     <section id="web::dispatch">
@@ -606,9 +603,9 @@ and temporary files created when files are uploaded in multipart forms (see
 	  </varlistentry>
 	  <varlistentry>
 	    <term>
-	      <option>-postdata</option> <option><optional>#</optional><replaceable>channelName</replaceable></option>
-	      <option><optional><replaceable>content_length</replaceable></optional></option>
-	      <option><optional><replaceable>content_type</replaceable></optional></option>
+	      <option>-postdata</option> <optional><option>#</option></optional><option><replaceable>channelName</replaceable></option>
+	      <option><replaceable><optional>content_length</optional></replaceable></option>
+	      <option><replaceable><optional>content_type</optional></replaceable></option>
 	    </term>
 	    <listitem>
 	      <para>
@@ -676,23 +673,22 @@ In the case of multipat form data,
       <example>
 	<title>web::command and web::dispatch</title>
 	<programlisting>
-	  % set tst {puts &quot;On the hook&quot;}
-	  puts &quot;On the hook&quot;
-	  % web::command acmd {puts &quot;this is acmd&quot;}
-	  % web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
-	  this is acmd
-	  % web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
-	  On the hook
-	  this is acmd
-	  % set data &quot;a=b&amp;c=d&quot;
-	  a=b&amp;c=d
-	  % web::dispatch -cmd &quot;&quot; -querystring &quot;&quot; -postdata #data
-	  % web::formvar a
-	  b
-	  % web::formvar c
-	  d
-	  %
-	</programlisting>
+% set tst {puts &quot;On the hook&quot;}
+puts &quot;On the hook&quot;
+% web::command acmd {puts &quot;this is acmd&quot;}
+% web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot;
+this is acmd
+% web::dispatch -cmd acmd -querystring &quot;&quot; -postdata &quot;&quot; -hook $tst
+On the hook
+this is acmd
+% set data &quot;a=b&amp;c=d&quot;
+a=b&amp;c=d
+% web::dispatch -cmd &quot;&quot; -querystring &quot;&quot; -postdata #data
+% web::formvar a
+b
+% web::formvar c
+d
+%	</programlisting>
       </example>
     </section>
     <section id="session_management">
@@ -1060,18 +1056,17 @@ Note that the temporary files are created with the permissions configured by
       <example>
 	<title>web::param</title>
       	<programlisting>
-	  % web::request CONTENT_LENGTH
-	  % web::dispatch -querystring &quot;cmd=default&amp;t=100&quot; -postdata &quot;&quot; -cmd &quot;&quot;
-	  % web::param -names
-	  t cmd
-	  % web::param cmd
-	  default
-	  % web::param -set k v
-	  v
-	  % web::param -names
-	  t cmd k
-	  %
-	</programlisting>
+% web::request CONTENT_LENGTH
+% web::dispatch -querystring &quot;cmd=default&amp;t=100&quot; -postdata &quot;&quot; -cmd &quot;&quot;
+% web::param -names
+t cmd
+% web::param cmd
+default
+% web::param -set k v
+v
+% web::param -names
+t cmd k
+%	</programlisting>
       </example>
     </section>
   </section>
@@ -1260,29 +1255,28 @@ Note that the temporary files are created with the permissions configured by
 	<example>
 	  <title>web::response</title>
 	  <programlisting>
-	    % web::response
-	    stdout
-	    % web::response -select stderr
-	    stdout
-	    % web::response
-	    stderr
-	    % web::response -sendheader
-	    1
-	    % web::response -names
-	    Content-Type Generator
-	    % web::response Content-Type
-	    text/html
-	    % web::response -bytessent
-	    0
-	    % web::response -set Set-Cookie &quot;my cookie that contains data&quot;
-	    % web::put &quot;Hello, world\n&quot;
-	    Content-Type: text/html
-	    Set-Cookie: my cookie that contains data
-	    Generator: websh3.5.1
+% web::response
+stdout
+% web::response -select stderr
+stdout
+% web::response
+stderr
+% web::response -sendheader
+1
+% web::response -names
+Content-Type Generator
+% web::response Content-Type
+text/html
+% web::response -bytessent
+0
+% web::response -set Set-Cookie &quot;my cookie that contains data&quot;
+% web::put &quot;Hello, world\n&quot;
+Content-Type: text/html
+Set-Cookie: my cookie that contains data
+Generator: websh3.5.1
 
-	    Hello, world
-	    %
-	  </programlisting>
+Hello, world
+%	  </programlisting>
 	</example>
       </para>
     </section>
@@ -1359,13 +1353,14 @@ Note that the temporary files are created with the permissions configured by
     <para>
       Logging consists of two parts. <command>web::log</command>
       issues a logging message, while
-      <command>web::logfilter</command> and
+      <command>web::loglevel</command> and
       <command>web::logdest</command> determine where to send a
       message. Websh uses a two-step filtering. First, Websh
       determines whether it should handle a message, or not, using the
-      filters configured with <command>web::logfilter</command>. Then,
+      levels configured with <command>web::loglevel</command>. Then,
       Websh determines which message is to be sent where, using the
-      filters configured with <command>web::logdest</command>.
+      the additional filters and destinations configured with <command>web::logdest</command>.
+      There is no logging per default. Setting levels with <command>web::loglevel</command> is mandatory.
     </para>
     <para>
       A filter consists of a tag and a level, separated by a
@@ -1387,13 +1382,22 @@ Note that the temporary files are created with the permissions configured by
 	<cmdsynopsis>
 	  <command>web::logdest</command>
 	  <arg choice="req"><replaceable>subcommand</replaceable></arg> <arg
-							     choice="opt"><replaceable>options</replaceable></arg>
-	  <arg choice="req"><replaceable>level</replaceable></arg> <arg choice="req"><replaceable>plugin</replaceable></arg>
+		     choice="opt"><replaceable>options</replaceable></arg>
+	  <arg choice="req"><replaceable>args</replaceable></arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>add</option>,
-	<option>delete</option>, and <option>names</option>.  Options
-	are: <option>-maxchar n</option>, and
+	<option>delete</option>, <option>names</option>, and <option>levels</option>.  
+      </para>
+	<variablelist>
+	  <varlistentry>
+	    <term><command>web::logdest</command> <option>add</option> <optional><option><replaceable>options</replaceable></option></optional>
+	  <option><replaceable>level</replaceable></option> <option><replaceable>plugin</replaceable></option> <optional><option><replaceable>plugin-specific options</replaceable></option></optional></term>
+
+	    <listitem>
+
+      <para>
+	Options are: <option>-maxchar n</option>, and
 	<option>-format &quot;format string&quot;</option>.
 	<literal>-maxchar n</literal> truncates the message to a 
 	maximum of <literal>n</literal> characters.
@@ -1409,41 +1413,77 @@ Note that the temporary files are created with the permissions configured by
 	  remap="tt">$m</literal> (the message), and <literal
 	  remap="tt">$$</literal> (dollar sign).
 
+      </para>
+      <para>
+
 	Default format is <literal>&quot;%x %X [\$p] \$f.\$l: \$m\n&quot;</literal>
       </para>
       <para>
 	Known plug-ins are: <option>file</option>,
-	<option>syslog</option>, <option>command</option>,
+	<option>syslog</option> (Unix only), <option>command</option>,
 	<option>channel</option>, and
-	<option>apache</option>. <emphasis>Note</emphasis>: the
-	plugins may have indiviudal options
+	<option>apache</option> (mod_websh only).
+	<emphasis>Note</emphasis>: plugins may have indiviudal options
 	(<option>-unbuffered</option>), see documentation below.
       </para>
       <para>
 	<programlisting>
-	  web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug command logTest</programlisting>
+web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug command logTest</programlisting>
       </para>
-
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><command>web::logdest</command>
+	      <option>delete</option>
+	      <optional><option><replaceable>name</replaceable></option></optional></term>
+	    <listitem>
+	      <para>
+		remove destination <option>name</option> from list, or remove all
+		destinations if <option>name</option> is omitted.
+		(The special case <literal remap="tt">-requests</literal> to delete all destinations except the one defined from within <command>web::initializer</command> code is only used internally.)
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><command>web::logdest</command>
+	      <option><replaceable>names</replaceable></option></term>
+	    <listitem>
+	      <para>
+		return a list of all destination ids that have been set.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><command>web::loglevel</command>
+	      <option><replaceable>levels</replaceable></option></term>
+	    <listitem>
+	      <para>
+		list all destination ids and their actual log levels in a readable format
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
     </section>
-    <section id="web::logfilter">
-      <title>web::logfilter</title>
+    <section id="web::loglevel">
+      <title>web::loglevel</title>
       <para>
 
-
 	<cmdsynopsis>
-	  <command>web::logfilter</command>
+	  <command>web::loglevel</command>
 	  <arg choice="req">subcommand</arg>
 	  <arg choice="req">args</arg>
 	</cmdsynopsis>
 
 	Subcommands are: <option>add</option>,
-	<option>delete</option>, and <option>names</option>.
+	<option>delete</option>, <option>names</option>,
+	and <option>levels</option>.
+
+        Levels defined using <command>web::loglevel</command> act as a filter for log messages sent by Websh. Only messages that pass at least one level defined using this command are passed to the log destinations configured using <command>web::logdest</command>
       </para>
       <para>
-	Add a filter to the list.
 	<variablelist>
 	  <varlistentry>
-	    <term><command>web::logfilter</command>
+	    <term><command>web::loglevel</command>
 	      <option>add</option> <option><replaceable>level</replaceable></option></term>
 	    <listitem>
 	      <para>
@@ -1452,22 +1492,32 @@ Note that the temporary files are created with the permissions configured by
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command>web::logfilter</command>
+	    <term><command>web::loglevel</command>
 	      <option>delete</option>
 	      <optional><option><replaceable>name</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		remove a <option>name</option> from list, or remove all
-		filters if <option>name</option> is omitted.
+		remove level <option>name</option> from list, or remove all
+		levels if <option>name</option> is omitted.
+		(The special case <literal remap="tt">-requests</literal> to delete all levels except the one defined from within <command>web::initializer</command> code is only used internally.)
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><command>web::logfilter</command>
+	    <term><command>web::loglevel</command>
 	      <option><replaceable>names</replaceable></option></term>
 	    <listitem>
 	      <para>
-		list all filters that have been set.
+		return a list of all level ids that have been set.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><command>web::loglevel</command>
+	      <option><replaceable>levels</replaceable></option></term>
+	    <listitem>
+	      <para>
+		list all level ids and their actual log levels in a readable format
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1507,6 +1557,12 @@ Note that the temporary files are created with the permissions configured by
 	  </cmdsynopsis>
 	  Option is: <option>-unbuffered</option>
 	</para>
+	<para>
+Log messages are sent to the file <option>filename</option>, which is opened at in append mode at time of this calls and stys open until this destination is deleted. This is either at the end of the request (mod_websh) or when the interpreter is deleted.
+	</para>
+	<para>
+The file opened using the permissions configured with <command>web::config filepermissions</command>. Default is 0644.
+	</para>
       </section>
       <section id="syslog">
 	<title>Syslog</title>
@@ -1519,9 +1575,8 @@ Note that the temporary files are created with the permissions configured by
 	    <arg choice="req">syslog</arg>
 	    <arg choice="opt"><replaceable>level</replaceable></arg>
 	  </cmdsynopsis>
-
 	  See the man page for syslog for levels on your system. Typical: 10.
-
+	  Available under Unix only.
 	</para>
       </section>
       <section id="command">
@@ -1536,11 +1591,29 @@ Note that the temporary files are created with the permissions configured by
 	    <arg choice="req"><replaceable>cmdName</replaceable></arg>
 	  </cmdsynopsis>
 	</para>
+	<para>
+The log message is sent to a Tcl command taking the message as an argument. E.g.
+	  <programlisting>
+% proc logCommand {msg} {
+      puts "---- here comes the message ----"
+      puts -nonewline $msg
+      puts "----- that was the message -----"
+}
+%
+% web::loglevel add *.-debug
+loglevel0
+% web::logdest add *.-debug command logCommand
+logdest0
+% web::log debug " a log message"
+---- here comes the message ----
+10/28/05 13:44:26 [20596] user.debug:  a log message
+----- that was the message -----
+%	  </programlisting>
+	</para>
       </section>
       <section id="channel">
 	<title>Channel</title>
 	<para>
-
 
 	  <cmdsynopsis>
 	    <command>web::logdest</command>
@@ -1552,6 +1625,10 @@ Note that the temporary files are created with the permissions configured by
 	  </cmdsynopsis>
 	  Option is: <option>-unbuffered</option>
 	</para>
+	<para>
+	Write the message to the Tcl channel <option>channel</option>.
+	</para>
+
       </section>
       <section id="apache">
 	<title>Apache</title>
@@ -1563,7 +1640,7 @@ Note that the temporary files are created with the permissions configured by
 	  <arg choice="plain">apache</arg>
 	</cmdsynopsis>
 	<para>
-	  Available in mod_websh only.
+	  Sends the message to the Apache ErrorLog file. Available in mod_websh only.
 	</para>
       </section>
       <section>
@@ -1571,23 +1648,22 @@ Note that the temporary files are created with the permissions configured by
 	<example>
 	  <title>web::log</title>
 	  <programlisting>
-	    % web::logfilter add *.-debug
-	    logfilter0
-	    % web::logdest add *.-debug channel stdout
-	    logdest0
-	    % web::log info {Websh is cool}
-	    03/01/00 00:00:00 [111] user.info: Websh is cool
-	    % web::logdest delete logdest0
-	    % web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
-	    logdest1
-	    % web::log info {Websh is cool}
-	    --&gt; Websh is cool
-	    % web::logdest delete logdest1
-	    % web::logdest add -maxchar 5 *.-debug channel stdout
-	    % web::log info {Websh is cool}
-	    03/01/00 00:00:00 [111] user.info: Websh
-	    %
-	  </programlisting>
+% web::loglevel add *.-debug
+loglevel0
+% web::logdest add *.-debug channel stdout
+logdest0
+% web::log info {Websh is cool}
+03/01/00 00:00:00 [111] user.info: Websh is cool
+% web::logdest delete
+% web::logdest add -format &quot;--&gt; \$m\n&quot; *.-debug channel stdout
+logdest0
+% web::log info {Websh is cool}
+--&gt; Websh is cool
+% web::logdest delete
+% web::logdest add -maxchar 5 *.-debug channel stdout
+% web::log info {Websh is cool}
+03/01/00 00:00:00 [111] user.info: Websh
+%	  </programlisting>
 	</example>
       </section>
     </section>
@@ -1728,14 +1804,13 @@ Note that the temporary files are created with the permissions configured by
 	<example>
 	  <title>web::context</title>
 	  <programlisting>
-	    % web::context sc
-	    % sc::cset lang FR
-	    FR
-	    % # ... some code ...
-	    % set lang [sc::cget lang EN]
-	    FR
-	    %
-	  </programlisting>
+% web::context sc
+% sc::cset lang FR
+FR
+% # ... some code ...
+% set lang [sc::cget lang EN]
+FR
+%	  </programlisting>
 	</example>
       </para>
     </section>
@@ -2223,17 +2298,16 @@ Note that the temporary files are created with the permissions configured by
       <example>
 	<title>web::filecounter</title>
 	<programlisting>
-	  % web::filecounter handleName -filename &quot;test.dat&quot;
-	  handleName
-	  % # from now on, use handleName &lt;curval|nextval|config&gt;
-	  % handleName config
-	  file test.dat handle handleName seed 0 min 0 max 2147483647 incr 1 wrap false curr {not valid}
-	  % web::filecounter otherHandleName -filename &quot;othertest.dat&quot; -min 1 -max 10 -seed 1 -incr 2 -wrap 1
-	  otherHandleName
-	  % otherHandleName config
-	  file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
-	  %
-	</programlisting>
+% web::filecounter handleName -filename &quot;test.dat&quot;
+handleName
+% # from now on, use handleName &lt;curval|nextval|config&gt;
+% handleName config
+file test.dat handle handleName seed 0 min 0 max 2147483647 incr 1 wrap false curr {not valid}
+% web::filecounter otherHandleName -filename &quot;othertest.dat&quot; -min 1 -max 10 -seed 1 -incr 2 -wrap 1
+otherHandleName
+% otherHandleName config
+file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
+%	</programlisting>
       </example>
 
 
@@ -2314,12 +2388,11 @@ Note that the temporary files are created with the permissions configured by
       <example>
 	<title>web::lockfile</title>
 	<programlisting>
-	  set fh [open [web::tempfile] w]
-	  web::lockfile $fh
-	  puts $fh foo
-	  web::unlockfile $fh
-	  close $fh
-	</programlisting>
+set fh [open [web::tempfile] w]
+web::lockfile $fh
+puts $fh foo
+web::unlockfile $fh
+close $fh	</programlisting>
       </example>
     </section>
   </section>
@@ -2360,12 +2433,11 @@ Note that the temporary files are created with the permissions configured by
 	<example>
 	  <title>web::encrypt</title>
 	  <programlisting>
-	    % web::encrypt &quot;Hello, world!&quot;
-	    XDIVAhkgkxRjcfA7UTwpD7
-	    % web::decrypt [web::encrypt &quot;Hello, world!&quot;]
-	    Hello, world!
-	    %
-	  </programlisting>
+% web::encrypt &quot;Hello, world!&quot;
+XDIVAhkgkxRjcfA7UTwpD7
+% web::decrypt [web::encrypt &quot;Hello, world!&quot;]
+Hello, world!
+%	  </programlisting>
 	</example>
       </para>
     </section>
@@ -2522,18 +2594,17 @@ Note that the temporary files are created with the permissions configured by
       <example>
 	<title>web::htmlify</title>
 	<programlisting>
-	  % web::htmlify &lt;
-	  &amp;lt;
-	  % web::htmlify -numeric &lt;
-	  &amp;#60;
-	  % web::dehtmlify &quot;&amp;lt; &amp;#60;&quot;
-	  &lt; &lt;
-	  % web::uriencode &quot;Hello, world!&quot;
-	  Hello%2c+world%21
-	  % web::uridecode &quot;Hello%2c+world%21&quot;
-	  Hello, world!
-	  %
-	</programlisting>
+% web::htmlify &lt;
+&amp;lt;
+% web::htmlify -numeric &lt;
+&amp;#60;
+% web::dehtmlify &quot;&amp;lt; &amp;#60;&quot;
+&lt; &lt;
+% web::uriencode &quot;Hello, world!&quot;
+Hello%2c+world%21
+% web::uridecode &quot;Hello%2c+world%21&quot;
+Hello, world!
+%	</programlisting>
       </example>
     </section>
   </section>
@@ -2666,12 +2737,53 @@ Note that the temporary files are created with the permissions configured by
 	<command>source</command> several modules which each call
 	their initialization code.
 
+Also note that this code eval'd when it is first requested and read in its normal script sequence, and not prior to any other code in the script.
       </para>
+      <para>
+Calling <command>web::loglevel</command> and <command>web::logdest</command> in any <command>web::initializer</command> will tag these log levels and destinations as not to be deleted, after the request ends. This log condifguration will therefore also be available in the finalizer code, which is only eval'd after
+the last request in the interpreter has been cleaned up.
+      </para>
+
+	<example>
+	  <title>logging in web::initializer</title>
+	  <programlisting>
+&gt; cat test.ws3
+web::initializer {
+    web::logdest add user.-debug file -unbuffered /tmp/test.log
+    web::logfilter add *.-debug
+    web::log info "initializing interp"
+}
+
+web::command default {
+    web::log info "command default call number [web::interpcfg  numreq]"
+    web::putxfile /tmp/dummypage.html
+}
+
+
+web::finalizer {
+    web::log info "shutting down interp"
+}
+
+web::dispatch
+
+&gt; # requesting test.ws3 three times over mod_websh:
+&gt; more /tmp/test.log
+10/28/05 14:13:45 [20639] user.info: initializing interp
+10/28/05 14:13:45 [20639] user.info: command default call number 0
+10/28/05 14:13:46 [20639] user.info: command default call number 1
+10/28/05 14:13:47 [20639] user.info: command default call number 2
+10/28/05 14:13:47 [20639] user.info: shutting down interp</programlisting>
+	</example>
+      <para>
+Note that in the above example the lifetime of the interpreter class is set to 3 requests. (See command <command>web::interpclasscfg</command>.)
+
+      </para>
+
+
     </section>
     <section id="web::finalizer">
       <title>web::finalizer</title>
       <para>
-
 
 	<cmdsynopsis>
 	  <command>web::finalizer</command> <arg choice="req"><replaceable>code</replaceable></arg>
@@ -2702,15 +2814,14 @@ Note that the temporary files are created with the permissions configured by
 	interpreter is deleted:
 
 	<example>
-	  <title>web::finalize</title>
+	  <title>web::finalize hook</title>
 	  <programlisting>
-	    rename web::finalize web::finalize.orig
-	    proc web::myFinalize {} {
-	        # code to eval before finalize.orig
-	        finalize.orig
-	        # code to eval after finalize.orig
-	    }
-	  </programlisting>
+rename web::finalize web::finalize.orig
+proc web::myFinalize {} {
+    # code to eval before finalize.orig
+    finalize.orig
+    # code to eval after finalize.orig
+}	  </programlisting>
 	</example>
 
       </para>
@@ -2900,25 +3011,22 @@ Note that the temporary files are created with the permissions configured by
 	<title>Example</title>
 	<para>
 	  <programlisting>
-	    proc web::interpmap {filename} {
-	        if {[string match "/path/to/myApp" $filename]} {
-	            # this is my special app
-	            return /real/path/to/myApp
-	        }
-	        if {[string match "*.ws3"]} {
-	            # scripts have their own interp class
-	            return $filename
-	        }
-	        # default: all templates are handled by my handler
-	        return /my/special/template/handler
-	    }
-	  </programlisting>
+proc web::interpmap {filename} {
+    if {[string match "/path/to/myApp" $filename]} {
+        # this is my special app
+        return /real/path/to/myApp
+    }
+    if {[string match "*.ws3"]} {
+        # scripts have their own interp class
+        return $filename
+    }
+    # default: all templates are handled by my handler
+    return /my/special/template/handler
+}	  </programlisting>
 	</para>
       <para>
         The default implementation of web::interpmap is
-	<programlisting>
-	  proc web::interpmap {filename} {return $filename}
-	</programlisting>
+	<programlisting>proc web::interpmap {filename} {return $filename}</programlisting>
         which sets up a separate interpreter class for every requested URL
 	and takes the file itself as script.
       </para>
