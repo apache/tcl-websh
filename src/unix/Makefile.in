@@ -175,9 +175,9 @@ LDFLAGS = $(LDFLAGS_DEFAULT)
 
 INCLUDES = @TCL_INCLUDES@ $(HTTPD_INCLUDES)
 
-EXTRA_CFLAGS = $(TCL_DEFS) $(PROTO_FLAGS) $(SECURITY_FLAGS) $(MEM_DEBUG_FLAGS) $(KEYSYM_FLAGS) $(NO_DEPRECATED_FLAGS)
-
-DEFS = @DEFS@ $(EXTRA_CFLAGS)
+EXTRA_CFLAGS = $(TCL_DEFS) $(PROTO_FLAGS) $(SECURITY_FLAGS) $(MEM_DEBUG_FLAGS) $(KEYSYM_FLAGS) $(NO_DEPRECATED_FLAGS) $(TCL_EXTRA_FLAGS)
+ 
+DEFS = -DVERSION=\"@VERSION@\" -D@PLATFORM@=1 -DUSE_TCL_STUBS=@USE_TCL_STUBS@ $(EXTRA_CFLAGS)
 
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -201,7 +201,7 @@ all: binaries libraries
 
 binaries: $(BINARIES) $(OBJECTS) websh
 
-libraries:
+libraries: mod_websh.so
 
 doc:
 
@@ -292,11 +292,11 @@ mod_websh.so: mod_websh$(SHARED_LIB_SUFFIX)
 
 websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_LIBS) -o websh$(VERSION)
+	$(TCL_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) -o websh$(VERSION)
 
 
 mod_websh$(SHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
-	$(SHLIB_LD) -o mod_websh$(SHARED_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
+	$(SHLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(SHARED_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
 
 mod_websh.a: $(web_ap_OBJECTS)
 	echo "proto: $(PROTO_FLAGS)"
@@ -313,12 +313,12 @@ mod_websh.a: $(web_ap_OBJECTS)
 
 pure: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	purify $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) -o websh$(VERSION).pure
+	$(TCL_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).pure
 	-rm -f *_pure_*.o
 
 cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	purecov $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) -o websh$(VERSION).cov
+	$(TCL_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).cov
 	-rm -f *_pure_*.o
 
 # =============================================================================
@@ -327,22 +327,26 @@ cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 # =============================================================================
 
 clean:
-	-test -z "$(BINARIES)" || rm -f $(BINARIES)
+	-rm -f $(BINARIES)
+	-rm -f $(bin_BINARIES)
 	-rm -f *.o core *.core
 	-rm -f *.$(OBJEXT)
-	-rm -f *pure*
+	-rm -f *pure* .*pure*
 	-rm -f ../generic/script.h
+	-rm -f *~
+	-rm -f ../tests/locktest.*
 	-rm -f $(web_OBJECTS) $(web_ap_OBJECTS) mod_websh$(SHARED_LIB_SUFFIX) mod_websh$(UNSHARED_LIB_SUFFIX)
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 
 distclean: clean
 	-rm -f *.tab.c
-	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 	-rm -f config.status
+	-rm -rf autom4te*.cache
 	-rm -f configure
 	( cd ../../ && find . -name "*~" -exec rm -f {} \;)
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 
 # =============================================================================
 # Install binary object libraries.  On Windows this includes both .dll and

@@ -30,21 +30,14 @@ AC_INIT(../generic/web.c)
 PACKAGE=web
 
 MAJOR_VERSION=3
-MINOR_VERSION=5
-PATCHLEVEL=1b1
+MINOR_VERSION=6
+PATCHLEVEL=0b2
 
 VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${PATCHLEVEL}
 NODOT_VERSION=${MAJOR_VERSION}${MINOR_VERSION}${PATCHLEVEL}
 
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
-
-#--------------------------------------------------------------------
-# We put this here so that you can compile with -DVERSION="1.2" to
-# encode the package version directly into the source files.
-#--------------------------------------------------------------------
-
-eval AC_DEFINE_UNQUOTED(VERSION, "${VERSION}")
 
 #--------------------------------------------------------------------
 # Check whether --enable-gcc or --disable-gcc was given.  Do this 
@@ -123,7 +116,6 @@ AC_SUBST(CYGPATH)
 #--------------------------------------------------------------------
 
 SC_PUBLIC_TCL_HEADERS
-#SC_PRIVATE_TCL_HEADERS
 
 #--------------------------------------------------------------------
 # Load the tclConfig.sh file
@@ -136,15 +128,30 @@ SC_LOAD_TCLCONFIG
 #--------------------------------------------------------------------
 # --with-httpd-include
 #--------------------------------------------------------------------
-AC_ARG_WITH(httpdinclude, [  --with-httpdinclude     directory containing the apache header files.], with_httpdinclude=${withval})
+AC_ARG_WITH(httpdinclude, [  --with-httpdinclude     directory containing the apache header files.], with_httpdinclude=${withval}, with_httpdinclude=NA)
 
-if test x"${with_httpdinclude}" != x ; then
+if test x"${with_httpdinclude}" != xNA ; then
   if test -f "${with_httpdinclude}/httpd.h" ; then
       echo "httpd header files found"
       HTTPD_INCLUDES=-I\"${with_httpdinclude}\"
       AC_SUBST(HTTPD_INCLUDES)
   else
-      AC_MSG_ERROR([${with_httpdinclude}: directory does not contain httpd.h])
+      AC_MSG_ERROR([${with_httpdinclude}: directory does not contain Apache httpd header file httpd.h])
+  fi
+else
+  eval "temp_includedir=${includedir}"
+  for i in \
+    `ls -d ${temp_includedir} 2>/dev/null` \
+    /usr/local/include /usr/include ; do
+    if test -f "$i/httpd.h" ; then
+      echo "httpd header files found"
+      HTTPD_INCLUDES=-I\"$i\"
+      AC_SUBST(HTTPD_INCLUDES)
+      break
+    fi
+  done
+  if test x"${HTTPD_INCLUDES}" = x ; then
+    AC_MSG_ERROR(httpd.h not found.  Please specify its location with --with-httpdinclude)
   fi
 fi
 
@@ -166,14 +173,13 @@ fi
 
 case "`uname -s`" in
     *win32* | *WIN32* | *CYGWIN_NT*)
-	AC_DEFINE(BUILD_web)
 	CLEANFILES="*.lib *.dll *.exp *.ilk *.pdb vc50.pch"
-	AC_SUBST(CLEANFILES)
     ;;
     *)
 	CLEANFILES="*pure* *.cov* ../tests/webtest.log ../tests/*.dat"
     ;;
 esac
+AC_SUBST(CLEANFILES)
 
 
 #--------------------------------------------------------------------
@@ -181,21 +187,22 @@ esac
 #--------------------------------------------------------------------
 case "`uname -s`" in
     *win32* | *WIN32* | *CYGWIN_NT*)
-	AC_DEFINE(WIN32)
+	PLATFORM="WIN32"
     ;;
     *aix* | *AIX* )
-	AC_DEFINE(AIX)
+	PLATFORM="AIX"
     ;;
     *freebsd* | *FreeBSD* )
-	AC_DEFINE(FREEBSD)
+	PLATFORM="FREEBSD"
     ;;
     *bsd/os* | *BSD/OS* )
-	AC_DEFINE(BSDI)
+	PLATFORM="BSDI"
     ;;
     *)
-	AC_DEFINE(SYSV)
+	PLATFORM="SYSV"
     ;;
 esac
+AC_SUBST(PLATFORM)
 
 #--------------------------------------------------------------------
 # Check whether --enable-threads or --disable-threads was given.
@@ -252,7 +259,8 @@ fi
 # link against the non-stubbed Tcl library.
 #--------------------------------------------------------------------
 
-AC_DEFINE(USE_TCL_STUBS)
+USE_TCL_STUBS=1
+AC_SUBST(USE_TCL_STUBS)
 
 #--------------------------------------------------------------------
 # This macro generates a line to use when building a library.  It
@@ -322,7 +330,7 @@ AC_PATH_PROGS(TCLSH_PROG, \
   :${TCL_PACKAGE_PATH}/../bin:.:${prefix}:${exec_prefix}:${PATH})
 
 if test "x${TCLSH_PROG}" = "x:" ; then
-    AC_ERROR(needed tclsh 8.5 not found)
+    AC_ERROR(needed tclsh not found)
 fi
 
 AC_SUBST(TCL_LIB_SPEC)
