@@ -6,7 +6,7 @@
 # \
 exec tclsh "$0" "$@"
 
-set repository "https://svn.apache.org/repos/test/tcl/websh"
+set repository "https://svn.apache.org/repos/asf/tcl/websh"
 
 proc usage {} {
     global argv0
