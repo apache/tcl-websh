@@ -1,6 +1,36 @@
+2005-10-28 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* <various sources>:
+	Changed version to Websh 3.6.0b2
+	
+	* src/unix/configure.in, src/unix/Makefile.in:
+	Adapted for Tcl 8.5
+	Major cleanup started
+	Changed version to Websh 3.6.0b2 (too many changes in the
+	commands for a successor Websh 3.5.x version)
+	
+	* src/generic/mod_websh.c:
+	Fixed call to ap_log_error for Apache 2 (prevent compiler
+	warning due to NULL to 0 conversion)
+	
+	* doc/Makefile, doc/quickref.xml:
+	Documentation of recent changes in logging
+	Renamed web::logfilter to new web::loglevel
+	Various minor fixes
+
+	* src/generic/log.[hc], src/tests/log.test:
+	Renamed web::logfilter to web::loglevel
+	(web::logfilter is still available for backward compatibility,
+	but considered deprecated)
+	Adapted tests accordingly
+
+	* src/generic/script.ws3, src/tests/*.test:
+	Use new web::loglevel instead of web::logfilter, which is 
+	now deprecated.
+	
 2005-10-27 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
-	* generic/script.ws3, tests/log.test:
+	* src/generic/script.ws3, src/tests/log.test:
 	Moved cleanup from web::ap::perReqInit to web::ap::perReqCleanup
 	to speed up request handling
 	Delete only log filters and destinations created during the
@@ -8,7 +38,7 @@
 	in web::initializer
 	Wrote a test for it
 
-	* generic/log.[hc], generic/modwebsh_ap.c, generic/modwebsh_cgi.c:
+	* src/generic/log.[hc], src/generic/modwebsh_ap.c, src/generic/modwebsh_cgi.c:
 	Added keep flag to LogDest and LogLevel structs to keep track of
 	levels and filters to keep across requests (the ones created in
 	web::initializer code)

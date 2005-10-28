@@ -1,8 +1,8 @@
 
-                         Websh, Version 3.5
+                         Websh, Version 3.6
 
             Copyright 1996-2001, Netcetera AG, Switzerland
-	    Copyright 2001-2002, Apache Software Foundation.
+	    Copyright 2001-2005, Apache Software Foundation.
 
                          All rights reserved.
 
@@ -61,7 +61,7 @@ you try to compile Websh using a GNU version of make (or gmake) when
 compiling under UNIX.
 
 Websh is a pure Tcl extension, Tk is not required. You need
-Tcl8.3 or newer to compile and install Websh 3.5.
+Tcl8.3 or newer to compile and install Websh 3.6.
 
 typically:
 
@@ -71,17 +71,18 @@ typically:
   make
   make test
 
-Make will create two targets: websh3.5.<patch>, which is the standalone 
-Websh application (dynamically linked to Tcl) and libwebsh3.5.<patch>.so,
+Make will create two targets: websh3.6.<patch>, which is the standalone 
+Websh application (dynamically linked to Tcl) and libwebsh3.6.<patch>.so,
 which is a TEA (Tcl Extension Architecture) shared object that can
-be dynamically loaded from within Tcl using [load libwebsh3.5.<patch>.so].
+be dynamically loaded from within Tcl using [load libwebsh3.6.<patch>.so].
 Both provide the Tcl package websh.
 
 If you have several versions of Tcl installed on your system, you
 might want to specify which one should be used for Websh, e.g.
 
   ./configure --with-tcl=/usr/local/tcl8.3.4/lib \
-      --with-tclinclude=/usr/local/tcl8.3.4/include/
+      --with-tclinclude=/usr/local/tcl8.3.4/include \
+      --with_httpd-include=/usr/local/httpd-2.0/include
 
 Note that to compile mod_websh for Apache 2, the corresponding Tcl
 library must be compiled using threads.

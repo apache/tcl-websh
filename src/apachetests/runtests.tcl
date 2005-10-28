@@ -8,7 +8,7 @@ apachetest::getbinname $argv
 
 apachetest::makeconf server.conf {
 
-LoadModule websh_module [file join $CWD .. unix "mod_websh3.5.0[info sharedlibextension]"]
+LoadModule websh_module [file join $CWD .. unix "mod_websh3.6.0[info sharedlibextension]"]
 AddHandler websh .ws3
 
 WebshConfig [file join $CWD websh.conf]

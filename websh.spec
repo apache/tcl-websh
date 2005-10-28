@@ -3,7 +3,7 @@
 
 Summary: Tcl scripting for the web, both a CGI and Apache module.
 Name: websh
-Version: 3.5.0
+Version: 3.6.0
 Release: 1
 Copyright: Freely distributable and usable
 Group: System Environment/Daemons
@@ -27,9 +27,8 @@ customization.
 
 %build
 cd src/unix
-./configure --with-tclinclude=/usr/include/tcl8.3 --with-tcl=/usr/lib/tcl8.3/ --prefix=/usr --with-httpdinclude=/usr/include/apache-1.3/
+./configure --with-tclinclude=/usr/include/tcl8.4 --with-tcl=/usr/lib/tcl8.4/ --prefix=/usr --with-httpdinclude=/usr/include/httpd-2.0/
 make
-make mod_websh.so
 
 %install
 cd src/unix
@@ -48,6 +47,9 @@ make clean
 %{_libdir}/apache/mod_websh%{version}.so
 
 %changelog
+* Fri Oct 28 2005 Ronnie Brunner <ronnie.brunner@netcetera.ch>
+- moved to version 3.6.0
+- removed make mod_websh.so (now in default)
 * Fri Aug 01 2002 Ronnie Brunner <ronnie.brunner@netcetera.ch>
 - dynamic version number of mod_websh
 - also make and install websh itself

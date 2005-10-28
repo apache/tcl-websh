@@ -20,7 +20,7 @@ $Id$
     <section id="general_remarks">
       <title>General remarks</title>
       <para>
-	Websh 3.5 (pronounced "web shell") embeds a Tcl interpreter,
+	Websh 3.6 (pronounced "web shell") embeds a Tcl interpreter,
 	(version 8.3 or higher) and all Tcl commands are available.
       </para>
       <para>
@@ -1273,7 +1273,7 @@ text/html
 % web::put &quot;Hello, world\n&quot;
 Content-Type: text/html
 Set-Cookie: my cookie that contains data
-Generator: websh3.5.1
+Generator: websh3.6.0
 
 Hello, world
 %	  </programlisting>
