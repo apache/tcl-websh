@@ -116,6 +116,8 @@ test filecontext-1.7 {test truncation of old file context} {
     
     set filename [web::tempfile]
     set fh [open $filename {CREAT WRONLY}]
+    fconfigure $fh -translation binary
+
     web::lockfile $fh
     puts $fh "longmessage and more"
     web::unlockfile $fh
@@ -123,21 +125,26 @@ test filecontext-1.7 {test truncation of old file context} {
 
     ## without truncation
     set fh [open $filename {CREAT WRONLY}]
+    fconfigure $fh -translation binary
+
     web::lockfile $fh
     puts $fh "shortmsg"
     web::unlockfile $fh
     close $fh
     # test read
     set fh [open $filename r]
+    fconfigure $fh -translation binary
     set res [read $fh]
     close $fh
     append res " - "
 
     ## with truncation
     set fh [open $filename {CREAT WRONLY}]
+    fconfigure $fh -translation binary
     web::lockfile $fh
     flush $fh
     set fh2 [open $filename {CREAT WRONLY TRUNC}]
+    fconfigure $fh -translation binary
     close $fh2
     seek $fh 0 start
 
@@ -147,6 +154,7 @@ test filecontext-1.7 {test truncation of old file context} {
 
     # test read
     set fh [open $filename r]
+    fconfigure $fh -translation binary
     append res [read $fh]
     close $fh
 

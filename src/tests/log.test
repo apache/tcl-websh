@@ -246,13 +246,14 @@ test log-2.5 {websh3_weblog: add a logdest} {
     set res [string compare $tmp "$curTim AABBCCDD"]
 } {0}
 
-test log-2.6 {websh3_weblog: test delete from logdest} {emptyTest} {
+test log-2.6 {websh3_weblog: test delete from logdest} {
 
     web::logdest delete
+    set fh [open test.dat w]
 
     web::logdest add test0.alert file "test.dat"
     web::logdest add test1.error command dummy
-    web::logdest add test2.warning syslog 10
+    web::logdest add test2.warning channel $fh
     set id [web::logdest add test3.info command dummy]
     web::logdest add test4.debug command dummy
 
@@ -260,13 +261,15 @@ test log-2.6 {websh3_weblog: test delete from logdest} {emptyTest} {
     web::logdest delete $id
 
     ## and see what we have
-    set res [web::logdest names]
+    set res [web::logdest levels]
+    close $fh
+    web::logdest delete
     file delete test.dat
     set res
-} {logdest0 test0.alert-alert file
-logdest1 test1.error-error command
-logdest2 test2.warning-warning syslog
-logdest4 test4.debug-debug command}
+} {logdest0 test0.alert-alert
+logdest1 test1.error-error
+logdest2 test2.warning-warning
+logdest4 test4.debug-debug}
 
 test log-2.7 {websh3_weblog: try to delete non-existing logdest} {
 

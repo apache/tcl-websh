@@ -27,23 +27,16 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # -----------------------------------------------------------------------------
 proc scanFileForPattern {fileName pattern} {
 
-    set res "Failed"
     if {[file exists $fileName]} {
 	if {[catch {
-	    set fileId [open $fileName "r"]
-	    while {[eof $fileId] == 0} {
-		gets $fileId tLine
-		if {[string match $pattern $tLine] == 1} {
-		    set res "Ok"
-		    break
-		}
-	    }
-	    close $fileId
+	    exec grep $pattern $fileName
 	} msg]} {
-	    return "$res: $msg" 
+	    return 0
+	} else {
+	    return 1
 	}
     }
-    return $res
+    return 0
 }
 
 # -----------------------------------------------------------------------------
@@ -55,37 +48,28 @@ test logToSyslog-1.1 {websh3_toSyslog: logdest add returns id} {unixOnly} {
     set res [web::logdest add info2.-debug syslog 0]
 } {logdest0}
 
-test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly, emptyTest} {
+test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly} {
     set res "Failed"
+
     set curTim [clock seconds]
 
     web::logdest delete
     web::loglevel delete
 
+    set format "Websh T E S T toSyslog \[$curTim\]\n"
     web::loglevel add info.-debug
-    web::logdest add \
-	-format "T E S T toSyslog -- %x %X \[$curTim\] \$f-\$l-\$m\n" \
-	info.-debug \
-	syslog 10
+    web::logdest add -format $format info.-debug syslog 10
 
     web::log info.info {toSyslog}
 
-    # and see if you find it in the file
-    #fixme: generic filename please!
-
-    set pat1 "[file dirname [web::tempfile]]/messages"
-
     set srclst [list /var/adm/messages /var/log/messages /var/log/syslog]
 
+    ## give syslog a little time to feed the message to the file
+    after 1000
+
     foreach tmp $srclst {
-        set res "Failed"
-        set res [scanFileForPattern $tmp "T E S T toSyslog*$curTim*"]
-        if {[string equal $res "Failed"]} {
-            ## give syslog a little time to feed the message to the file
-            after 1000
-            set res [scanFileForPattern $pat1 "T E S T toSyslog*$curTim*"]
-        }
-        if {[string equal $res "Ok"]} {
+        if {[scanFileForPattern $tmp $format]} {
+	    set res "Ok"
             break
         }
     }

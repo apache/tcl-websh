@@ -26,14 +26,14 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 test truncatefile-1.1 {create file, truncate it, and test size} {
 
     set fh [open [set fn [web::tempfile]] w]
-    puts $fh [string repeat "a" 10000]
+    puts -nonewline $fh [string repeat "a" 10000]
     flush $fh
     set res [file size $fn]
     web::truncatefile $fh
     close $fh
 
     lappend res [file size $fn]
-} {10001 0}
+} {10000 0}
 
 test truncatefile-1.2 {wrong args} {
 

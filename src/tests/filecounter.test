@@ -89,7 +89,7 @@ test filecounter-2.7 {web::filecounter with wrap} {
 
 test filecounter-2.8 {get config of previous filecounter} {
     set res [handle3 config]
-    string compare $res "file $filename handle handle3 seed 2 min 2 max 3 incr 1 perms 0644 wrap true curr 2"
+    string compare $res "file [list $filename] handle handle3 seed 2 min 2 max 3 incr 1 perms 0644 wrap true curr 2"
 } {0}
 
 test filecounter-2.9 {use invalid param/switch} {

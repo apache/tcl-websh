@@ -24,37 +24,37 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # -----------------------------------------------------------------------------
 # errors
 # -----------------------------------------------------------------------------
-test messages-1.1 {web::send wrong number of arguments} {unixOnly} {
+test messages-1.1 {web::send wrong number of arguments} {
     catch {web::send} msg
     set msg
 } {wrong # args: should be "web::send channel cmdnr string ??#?flags?"}
 
-test messages-1.2 {web::send wrong number of arguments} {unixOnly} {
+test messages-1.2 {web::send wrong number of arguments} {
     catch {web::send 1 2 3 4 5} msg
     set msg
 } {wrong # args: should be "web::send channel cmdnr string ??#?flags?"}
 
-test messages-1.3 {web::recv wrong number of arguments} {unixOnly} {
+test messages-1.3 {web::recv wrong number of arguments} {
     catch {web::recv} msg
     set msg
 } {wrong # args: should be "web::recv channel cmdvarname resvarname flagsvarname"}
 
-test messages-1.4 {web::recv wrong number of arguments} {unixOnly} {
+test messages-1.4 {web::recv wrong number of arguments} {
     catch {web::recv 1 2 3 4 5} msg
     set msg
 } {wrong # args: should be "web::recv channel cmdvarname resvarname flagsvarname"}
 
-test messages-1.5 {web::msgflag wrong number of arguments} {unixOnly} {
+test messages-1.5 {web::msgflag wrong number of arguments} {
     catch {web::msgflag 1 2 3 4 5} msg
     set msg
 } {wrong # args: should be "web::msgflag ?flags? ?testflags?"}
 
-test messages-1.6 {web::msgflag set unknown flag} {unixOnly} {
+test messages-1.6 {web::msgflag set unknown flag} {
     catch {set flag [web::msgflag gugus]} msg
     set msg
 } {unknown flag "gugus"}
 
-test messages-1.7 {web::msgflag test for unknown flag} {unixOnly} {
+test messages-1.7 {web::msgflag test for unknown flag} {
     set flag [web::msgflag multiple]
     catch {set res  [web::msgflag $flag gugus]} msg
     set msg
@@ -63,75 +63,76 @@ test messages-1.7 {web::msgflag test for unknown flag} {unixOnly} {
 # -----------------------------------------------------------------------------
 # normal operation
 # -----------------------------------------------------------------------------
-test messages-2.1 {web::send and recieve} {unixOnly} {
+test messages-2.1 {web::send and receive} {
 
     set curTim [clock clicks]
     set fileName [web::tempfile]
 
     set fileId [open $fileName "w"]
-    set cmd  10011
-    set flags 131072
+    set icmd  10011
+    set iflag 131072
     set text "T E S T $curTim"
-    web::send $fileId $cmd $text \#$flags
+    web::send $fileId $icmd $text \#$iflag
     close $fileId
 
     set fileId [open $fileName "r"]
-    web::recv $fileId cmd res flag
+    web::recv $fileId ocmd res oflag
 
-    set expected "$cmd-$text-$flags"
-    set res "$cmd-$res-$flag"
+    set in "$icmd-$text-$iflag"
+    set out "$ocmd-$res-$oflag"
 
-    set res [string compare $expected $res]
+    set res [string compare $in $out]
 } {0}
 
-test messages-2.1b {web::send and recieve} {unixOnly} {
+# problems with large messages on WIndows (don't know why)
+test messages-2.1b {web::send and receive large} {unixOnly} {
 
     set fileName [web::tempfile]
 
     set fileId [open $fileName "w"]
-    set cmd   10011
-    set flags 131072
+    set icmd  10011
+    set iflag 131072
     set text [string repeat "Test" 100000]
-    web::send $fileId $cmd $text \#$flags
+    web::send $fileId $icmd $text \#$iflag
     close $fileId
 
     set fileId [open $fileName "r"]
-    web::recv $fileId cmd res flag
+    web::recv $fileId ocmd res oflag
     close $fileId
 
-    set expected "$cmd-$text-$flags"
-    set res "$cmd-$res-$flag"
+    set in "$icmd-$text-$iflag"
+    set out "$ocmd-$res-$oflag"
 
-    set res [string compare $expected $res]
+    set res [string compare $in $out]
 } {0}
 
-test messages-2.1c {web::send and recieve unicode} {} {
+test messages-2.1c {web::send and receive unicode} {
 
     set fileName [web::tempfile]
 
     set fileId [open $fileName "w"]
-    set cmd  10011
-    set flags 131072
+    set icmd  10011
+    set iflag 131072
     set text "abc\u00c2defä1ö2ü3"
-    web::send $fileId $cmd $text \#$flags
+    web::send $fileId $icmd $text \#$iflag
     close $fileId
 
     set fileId [open $fileName "r"]
 
-    set expected "$cmd-$text-$flags"
+    set in "$icmd-$text-$iflag"
 
-    web::recv $fileId cmd res flag
+    web::recv $fileId ocmd res oflag
 
-    set res "$cmd-$res-$flag"
+    set out "$ocmd-$res-$oflag"
 
-    set res [string compare $expected $res]
+    set res [string compare $in $out]
 } {0}
 
-test messages-2.2 {web::msgflag no arg} {unixOnly} {
+test messages-2.2 {web::msgflag no arg} {
     set res [web::msgflag]
 } {multiple}
 
-test messages-2.3 {web::msgflag set and test flag} {unixOnly} {
+test messages-2.3 {web::msgflag set and test flag} {
     set flag [web::msgflag multiple]
     set res  [web::msgflag $flag multiple]
 } {1}

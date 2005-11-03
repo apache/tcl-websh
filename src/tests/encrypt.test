@@ -93,15 +93,13 @@ test decrypt-1.5 {cryptlist symmetry} {
 
 } {1}
 
-test decrypt-1.6 {string with spaces} {emptyTest } {
-
-    ## fixme: think about this one
+test decrypt-1.6 {string with spaces} {
 
     web::config decryptchain web::decryptd
-    set res [catch {web::decrypt [web::uridecode "a+b"]} msg]
+    set res [catch {set str [web::decrypt [web::uridecode "a+b"]]} msg]
     web::config decryptchain web::decryptd
-    set res
-} {0}
+    lappend res $str
+} {0 {a b}}
 
 # -----------------------------------------------------------------------------
 # error signaling

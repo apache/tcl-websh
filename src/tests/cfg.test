@@ -90,7 +90,7 @@ test cfg-4.2 {change filepermissions} {
     lappend res [web::config filepermissions]
 } {0644 0600 0604 0604 0644 0600 0644}
 
-test cfg-4.3 {filecounter file permissions} {
+test cfg-4.3 {filecounter file permissions} {unixOnly} {
     catch {
 	set umask [exec umask]
 	if {$umask != 0} {
@@ -126,7 +126,7 @@ test cfg-4.3 {filecounter file permissions} {
     set res
 } {00644 00600 00666 00604 00666}
 
-test cfg-4.4 {formdata file upload file permissions} {
+test cfg-4.4 {formdata file upload file permissions} {unixOnly} {
 
     web::config uploadfilesize 500
     global data
@@ -152,7 +152,7 @@ A small text file\u0d
     set res
 } {00600 17 00602 17 00660 17 00640 17 00666 17 00400 17}
 
-test cfg-4.5 {session context file permissions} {
+test cfg-4.5 {session context file permissions} {unixOnly} {
 
     set res {}
     foreach {ctx perm} {a 0644 b 0600 c 0640 d 0602 e 0666} {
@@ -170,7 +170,7 @@ test cfg-4.5 {session context file permissions} {
 } {00644 00600 00640 00602 00666}
 
 
-test cfg-4.6 {log file permissions} {
+test cfg-4.6 {log file permissions} {unixOnly} {
     set res {}
     foreach perm {0644 0600 0602 0660 0640 0666 0400} {
 	web::config filepermissions $perm
