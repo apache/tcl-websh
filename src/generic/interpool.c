@@ -121,7 +121,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 
 
 #ifdef USE_TCL_STUBS
-    if (Tcl_InitStubs(interp,"8.2.0",0) == NULL) {
+    if (Tcl_InitStubs(webInterp->interp,"8.2.0",0) == NULL) {
 	return TCL_ERROR;
     }
 #endif
