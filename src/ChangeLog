@@ -1,3 +1,36 @@
+2005-11-03 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/win/Makefile, src/win/README:
+	Attempt to provide a working Windows Makefile
+	(for use with Visual Studio 6's nmake utility)
+	
+	* src/unix/Makefile.in:
+	Moved generated script.h to output directory to
+	prevent clash with generated script.h under Windows
+	
+	* src/tests/filecounter.test, src/tests/filecontext.test,
+	  src/tests/messages.test, src/tests/cfg.test,
+	  src/tests/filelock.test, src/tests/logtosyslog.test,
+	  src/tests/log.test, src/tests/encrypt.test:
+	Tests activated and fixed for Windows
+	Activated some previsously unused tests
+	Deactivated file permission tests for Windows (n/a)
+	
+	* src/generic/logutl.c, src/generic/tclAppInit.c,
+	  src/generic/response_ap.c, src/generic/apchannel.c,
+	  src/generic/request_ap.c, src/generic/interpool.c,
+	  src/generic/mod_websh.c, src/generic/messages.c,
+	  src/generic/webout.h, src/generic/messages.h,
+	  src/generic/web.c, src/generic/log.c:
+	Removed unused local variables
+	Proper Tcl_InitStubs initialization (websh and mod_websh)
+	Some includes added (for Windows)
+	Minor WIN32 fixes
+
+	* src/generic/weboutint.c:
+	Set channel translation to send HTTP headers correctly under Windows
+
+	
 2005-10-28 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* <various sources>:
