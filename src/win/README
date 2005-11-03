@@ -1,19 +1,40 @@
 Websh 3.6 Windows version
 =========================
 
-Please note that the Windows version is not being maintained properly at 
-this time. Any volunteers?
-
-
 Compiling Websh 3.6
 -------------------
 
-Websh 3.6 needs a file src\win\script.h which is not in the distribution.
-This file is created from some tcl sources in the src\generic directory.
+The provided Makefile runs with the Microsoft Visual Studio 6.0 nmake utility.
 
-To create this file, open your favorite command shell ;-) and change to 
-the directory src\win. The command
+The following variables in the Makefile must be adapted to your system:
 
-tclsh84.exe ..\generic\tcldecmt.tcl ..\generic\context.tcl ..\generic\script.ws3 ..\generic\cookie.ws3 ..\generic\sessctx.ws3 > script.h
+TCL_PREFIX=C:/Program Files/Tcl
+TCL_VERSION=83
+HTTPD_PREFIX=C:/Program Files/Apache Group/Apache2
+INSTALL_PREFIX=C:/Program Files/Apache Group/Websh
 
-will do the trick.
+
+To compile Websh just run nmake with the corresponding target:
+
+nmake websh.exe
+      Compile websh<version>.exe and websh<version>.dll
+      (Used for CGI and other commandline script handling. 
+      websh<version>.dll is a TEA compliant Tcl extension.)
+
+nmake mod_websh.so
+      Compile mod_websh<version>.so Apache module.
+      (websh<version>.exe and websh<version>.dll are not needed to run
+      the Websh Apache module.)
+
+nmake test
+      Run test suite that checks websch<version>.exe and websch<version>.dll
+
+nmake clean
+      Clean up all output files
+
+nmake install
+      Install Websh
+
+
+To create debug symbols in your objects, just add DEBUG=1 to the
+commandline. E.g. nmake websh.exe DEBUG=1
