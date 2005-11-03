@@ -372,7 +372,7 @@ int destroyOutData(ClientData clientData, Tcl_Interp * interp)
  * webout_eval_tag (code in <? ?>)
  * ------------------------------------------------------------------------- */
 int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
-		    Tcl_Obj * in, const char *strstart, const char *strend)
+		    Tcl_Obj * in, TCLCONST char *strstart, TCLCONST char *strend)
 {
   Tcl_Obj *outbuf;
   Tcl_Obj *tclo;
@@ -483,6 +483,7 @@ int putsCmdImpl(Tcl_Interp * interp, ResponseObj * responseObj, Tcl_Obj * str)
     Tcl_Obj *sendString = NULL;
     long bytesSent = 0;
     Tcl_Channel channel;
+    Tcl_DString translation;
 
     /* --------------------------------------------------------------------------
      * sanity
@@ -500,9 +501,15 @@ int putsCmdImpl(Tcl_Interp * interp, ResponseObj * responseObj, Tcl_Obj * str)
 
     if (responseObj->sendHeader) {
 	responseObj->headerHandler(interp, responseObj, sendString);
+
     }
 
     Tcl_AppendObjToObj(sendString, str);
+
+    /* make sure there is no additional newline translation */
+    Tcl_DStringInit(&translation);
+    Tcl_GetChannelOption(interp, channel, "-translation", &translation);
+    Tcl_SetChannelOption(interp, channel, "-translation", "lf");
 
     if ((bytesSent = Tcl_WriteObj(channel, sendString)) == -1) {
 
@@ -512,9 +519,13 @@ int putsCmdImpl(Tcl_Interp * interp, ResponseObj * responseObj, Tcl_Obj * str)
 		"error writing to response object:",
 		Tcl_GetStringResult(interp), NULL);
 	Tcl_DecrRefCount(sendString);
+	Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+	Tcl_DStringFree(&translation);
 	return TCL_ERROR;
     }
 
+    Tcl_SetChannelOption(interp, channel, "-translation", Tcl_DStringValue(&translation));
+    Tcl_DStringFree(&translation);
     responseObj->bytesSent += bytesSent;
 
     /* flush varchannel */
