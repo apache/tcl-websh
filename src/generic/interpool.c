@@ -22,12 +22,14 @@
 #include "modwebsh.h"
 #include "tcl.h"
 #include "webutl.h"
+#include "web.h"
 #include "mod_websh.h"
 #include "request.h"
 #include <time.h>
 #include <sys/stat.h>
+#ifndef WIN32
 #include <unistd.h>
-
+#endif
 
 /* init script for main interpreter */
 
@@ -117,6 +119,12 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 	return NULL;
     }
 
+
+#ifdef USE_TCL_STUBS
+    if (Tcl_InitStubs(interp,"8.2.0",0) == NULL) {
+	return TCL_ERROR;
+    }
+#endif
 
     /* now register here all websh modules */
     result = Tcl_Init(webInterp->interp);
@@ -330,8 +338,13 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     /* get last modified time for id */
     if (strcmp(id, filename)) {
 	struct stat statPtr;
-	if (Tcl_Access(id, R_OK) != 0 ||
+#ifdef WIN32
+	if (Tcl_Access(id, _S_IREAD) != 0 ||
 	    Tcl_Stat(id, &statPtr) != TCL_OK)
+#else
+	if (Tcl_Access(id, R_OK) != 0 ||
+ 	    Tcl_Stat(id, &statPtr) != TCL_OK)
+#endif
 	{
 	    Tcl_MutexUnlock(&(conf->mainInterpLock));
 	    Tcl_DecrRefCount(idObj);
@@ -569,8 +582,12 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
     if (mainInterp == NULL)
 	return NULL;
 
-    /* init with tcl >= 8.2 is allowed */
-    Tcl_InitStubs(mainInterp, "8.2", 0);
+#ifdef USE_TCL_STUBS
+    if (Tcl_InitStubs(mainInterp,"8.2.0",0) == NULL) {
+	Tcl_DeleteInterp(mainInterp);
+	return NULL;
+    }
+#endif
 
     /* standard Init */
     if (Tcl_Init(mainInterp) == TCL_ERROR) {

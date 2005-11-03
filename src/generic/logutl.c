@@ -113,7 +113,6 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 {
 
     LogDest *logDest = NULL;
-    HashTableIterator iterator;
     Tcl_Obj *fmsg = NULL;
     Tcl_Obj *emsg = NULL;	/* eval'd message */
     Tcl_Obj *subst = NULL;
@@ -402,7 +401,6 @@ Tcl_Obj *formatMessage(LogLevel * level, char *fmt,
 {
 
     time_t t;
-    struct tm ts;
     char timeStr[2048];
     char tmpStr[32] = "no pid";
     char *c;
@@ -427,8 +425,11 @@ Tcl_Obj *formatMessage(LogLevel * level, char *fmt,
 	strftime(timeStr, sizeof(timeStr) - 1, fmt, badts);
     }
 #else
-    localtime_r(&t, &ts);
-    strftime(timeStr, sizeof(timeStr) - 1, fmt, &ts);
+    {
+	struct tm ts;
+	localtime_r(&t, &ts);
+	strftime(timeStr, sizeof(timeStr) - 1, fmt, &ts);
+    }
 #endif
     /* --------------------------------------------------------------------------
      * add our special fields

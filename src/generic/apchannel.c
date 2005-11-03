@@ -15,7 +15,11 @@
 
 
 #include <stdio.h>
+#ifdef HAVE_SYS_ERRNO_H
 #include <sys/errno.h>
+#else
+#include <errno.h>
+#endif
 #include "tcl.h"
 
 #include "httpd.h"

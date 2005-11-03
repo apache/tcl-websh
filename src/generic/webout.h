@@ -89,7 +89,7 @@ int putsCmdImpl(Tcl_Interp * interp, ResponseObj * responseObj,
 int webout_eval_brace(Tcl_Interp * interp, ResponseObj * responseObj,
 		      Tcl_Obj * in);
 int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
-		    Tcl_Obj * in, const char *strstart, const char *strend);
+		    Tcl_Obj * in, TCLCONST char *strstart, TCLCONST char *strend);
 
 /* need this for all "real channel based" (vs apache) output */
 int objectHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,

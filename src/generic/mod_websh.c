@@ -86,6 +86,7 @@
 #include "web.h"		/* websh headers */
 #include "mod_websh.h"		/* apchannel stuff */
 #include "interpool.h"
+#include "logtoap.h"
 
 #ifndef APACHE2
 #include "http_conf_globals.h"
@@ -257,7 +258,7 @@ static int run_websh_script(request_rec * r)
 #else /* APACHE2 */
 
     /* ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, r, "mtime of %s: %ld\n",r->filename,r->finfo.mtime); */
-    webInterp = poolGetWebInterp(conf, r->filename, r->finfo.mtime, r);
+    webInterp = poolGetWebInterp(conf, r->filename, (long) r->finfo.mtime, r);
     /* ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, r, "got pool %p", webInterp); */
     if (webInterp == NULL || webInterp->interp == NULL) {
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,

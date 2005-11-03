@@ -45,7 +45,6 @@ int Web_Send(ClientData clientData,
     int len = 0;
     Tcl_Channel tc;
     char *tmpStr = NULL;
-    Tcl_DString ds;
 
     /* ------------------------------------------------------------------------
      * arg check
@@ -115,7 +114,6 @@ int Web_Recv(ClientData clientData,
 {
 
     int mode = 0;
-    Tcl_DString ds;
     char *data = NULL;
     TCLCONST char *res = NULL;
     int cmdcode = 0;
@@ -228,7 +226,6 @@ int parseFlags(Tcl_Interp * interp, char *flaglist, int *flags)
     TCLCONST char **argv;
     int argc;
     int count;
-    Tcl_DString ds;
 
     *flags = 0;
 
@@ -298,7 +295,7 @@ int send_msg(Tcl_Channel f, int command, int flags, int size, void *data)
 #endif
 	    return (-1);
 	}
-	if (ret != (size * sizeof(char))) {
+	if (ret != (int) (size * sizeof(char))) {
 	    /*signal(SIGPIPE,origsig); */
 #ifdef MSGDEBUG
 	    printf("Could only write %d instead of %d bytes\n", ret,
@@ -367,7 +364,7 @@ int receive_msg(Tcl_Channel f, int *command, int *flags, int *size,
     }
     if (ret != sizeof(MsgHeader) - sizeof(u_long)) {
 #ifdef MSGDEBUG
-	printf("Incomplete read: %d but expected %d\n", ret,
+	printf("Incomplete header read: %d but expected %d\n", ret,
 	       sizeof(MsgHeader) - sizeof(u_long));
 #endif
 	errno = EIO;
@@ -379,7 +376,12 @@ int receive_msg(Tcl_Channel f, int *command, int *flags, int *size,
 #ifdef MSGDEBUG
 	printf("Got unknown version %d\n", version);
 #endif
-	errno = EPROTONOSUPPORT;
+
+#ifdef EPROTONOSUPPORT
+        errno = EPROTONOSUPPORT;
+#else
+        errno = EIO;
+#endif
 	return (-1);		/* unknown version */
     }
 
@@ -417,7 +419,7 @@ int receive_msg(Tcl_Channel f, int *command, int *flags, int *size,
 	}
 	if (ret != *size) {
 #ifdef MSGDEBUG
-	    printf("Incomplete read: expected %d got %d\n", *size, ret);
+	    printf("Incomplete data read: expected %d got %d (%d)\n", *size, ret, Tcl_Eof(f));
 #endif
 	    errno = EIO;
 	    return (-1);	/* incomplete read */

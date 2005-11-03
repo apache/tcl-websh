@@ -17,6 +17,7 @@
 #include "web.h"
 #include "nca_d.h"
 #include <stdio.h>
+#include "messages.h"
 
 /* ----------------------------------------------------------------------------
  * init --
@@ -51,10 +52,8 @@ int Websh_Init(Tcl_Interp * interp)
     /* --------------------------------------------------------------------------
      * messages on streams
      * ----------------------------------------------------------------------- */
-#ifndef WIN32
     if (messages_Init(interp) == TCL_ERROR)
 	return TCL_ERROR;
-#endif
 
     /* --------------------------------------------------------------------------
      * cryptography

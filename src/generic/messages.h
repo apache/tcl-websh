@@ -22,6 +22,10 @@
 #include <stdio.h>
 #include <tcl.h>
 
+#ifdef WIN32
+#include <windows.h> /* for u_long */
+#endif
+
 #define WMSG_MAGIC        0xa5a53333
 #define WMSG_VERSION      0x1
 #define WMSG_TIMEOUT 100	/* seconds */

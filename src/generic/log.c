@@ -685,7 +685,6 @@ int Web_LogDest(ClientData clientData,
 	}
     case DELETE:{
 
-	    /* HashTableIterator iterator; */
 	    LogDest *logDest = NULL;
 
 	    /*      0               1      2 */
@@ -852,7 +851,6 @@ int Web_LogFilter(ClientData clientData,
 
     case LEVELS:{
 
-	    HashTableIterator iterator;
 	    LogLevel *logLevel = NULL;
 	    int namesIsFirst = TCL_OK;
 
@@ -884,7 +882,6 @@ int Web_LogFilter(ClientData clientData,
 	}
     case DELETE:{
 
-	    /* HashTableIterator iterator; */
 	    LogLevel *logLevel = NULL;
 
 	    /*      0              1      2 */

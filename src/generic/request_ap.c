@@ -17,6 +17,7 @@
 #include "hashutl.h"
 #include "webutl.h"
 #include "request.h"
+#include "paramlist.h"
 
 #include "mod_websh.h"
 
