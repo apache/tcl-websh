@@ -240,7 +240,7 @@ test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
 	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
 	cd $(TOP_DIR)/tests; \
 	umask 0; \
-	(echo source webtest.ws3) | ../unix/websh$(VERSION)
+	$(TOP_DIR)/unix/websh$(VERSION) webtest.ws3
 
 test.pure: websh$(VERSION).pure
 	@LD_LIBRARY_PATH="$(TCL_PACKAGE_PATH):$(TCL_LIB_DIR):`pwd`:$(LD_LIBRARY_PATH)"; \
@@ -271,11 +271,11 @@ $(web_LIB_FILE): $(web_OBJECTS)
 	$(RANLIB) $(web_LIB_FILE)
 
 # generic
-../generic/script.h: ../generic/tcldecmt.tcl $(SCRIPT_SOURCES)
+script.h: ../generic/tcldecmt.tcl $(SCRIPT_SOURCES)
 	$(TCLSH_PROG) ../generic/tcldecmt.tcl $(SCRIPT_SOURCES) > $@
 
-script.o: ../generic/script.c ../generic/script.h
-	$(COMPILE) -c $<
+script.o: ../generic/script.c script.h
+	$(COMPILE) -I. -c $<
 
 interpool.o: ../generic/interpool.c
 	$(COMPILE) -UUSE_TCL_STUBS -c $<
@@ -332,7 +332,7 @@ clean:
 	-rm -f *.o core *.core
 	-rm -f *.$(OBJEXT)
 	-rm -f *pure* .*pure*
-	-rm -f ../generic/script.h
+	-rm -f script.h
 	-rm -f *~
 	-rm -f ../tests/locktest.*
 	-rm -f $(web_OBJECTS) $(web_ap_OBJECTS) mod_websh$(SHARED_LIB_SUFFIX) mod_websh$(UNSHARED_LIB_SUFFIX)
