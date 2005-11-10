@@ -83,14 +83,14 @@ test htmlify-2.2 {"websh3_htmlify: is deHtmlify(htmlify(in)) == in ?, except for
 # -----------------------------------------------------------------------------
 # look for memory problems
 # -----------------------------------------------------------------------------
-test htmlify-3.1 {start and stop interpreter (without use of htmlify)} {unixOnly} {
+test htmlify-3.1 {start and stop interpreter (without use of htmlify)} {} {
     interp create htmlify3_1
     htmlify3_1 eval "load $env(WEB_LIBRARY)"
     interp delete htmlify3_1
     set res ""
 } {}
 
-test htmlify-3.2 {start interp, use htmlify, and stop again} {unixOnly} {
+test htmlify-3.2 {start interp, use htmlify, and stop again} {} {
     interp create htmlify3_2
     htmlify3_2 eval "load $env(WEB_LIBRARY)"
     set res [htmlify3_2 eval web::htmlify " !\"#\$%&'()*+"]

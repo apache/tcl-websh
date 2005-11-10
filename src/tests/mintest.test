@@ -23,9 +23,9 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # -----------------------------------------------------------------------------
 # 
 # -----------------------------------------------------------------------------
-test mintest-1.1 {create an interpreter, load websh3 library} {unixOnly} {
-    set fn "mintest1_1.tcl"
-    set fh [open $fn "w"]
+test mintest-1.1 {create an interpreter, load websh3 library} {} {
+    set fna "mintest1_1a.tcl"
+    set fh [open $fna "w"]
     puts $fh {catch {web::encrypt test} msg}
     puts $fh {set res $msg}
     puts $fh {load $env(WEB_LIBRARY)}
@@ -33,22 +33,28 @@ test mintest-1.1 {create an interpreter, load websh3 library} {unixOnly} {
     puts $fh {lappend res $msg}
     puts $fh {puts $res}
     close $fh
+    set fnb "mintest1_1b.tcl"
+    set fh [open $fnb "w"]
+    puts $fh return
+    close $fh
+
     # find a late available tclsh
     set ok 0
-    foreach tclsh {tclsh8.5 tclsh8.4 tclsh8.3 tclsh8.2 tclsh} {
-	if {![catch {exec echo return | $tclsh}]} {
+    foreach tclsh {8.5 85 8.4 84 8.3 83 8.2 82 {}} {
+	if {![catch {exec tclsh$tclsh < $fnb}]} {
 	    set ok 1
 	    break
 	}
     }
     set res ""
     if {$ok} {
-	puts "using $tclsh to test loading of $env(WEB_LIBRARY)"
-	catch {set res [exec $tclsh $fn]}
+	puts "Using tclsh$tclsh to test loading of $env(WEB_LIBRARY)"
+	catch {set res [exec tclsh$tclsh $fna]}
     } else {
-	error "no reasonable tclsh found"
+	error "No reasonable tclsh found"
     }
-    file delete -force $fn
+    file delete -force $fna
+    file delete -force $fnb
     set res
 } {invalid command name web::encrypt XDq3pUAU8b}
 
