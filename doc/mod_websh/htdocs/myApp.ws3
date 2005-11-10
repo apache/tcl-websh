@@ -1,0 +1,48 @@
+# Websh script
+
+web::initializer {
+    # code only evaled when interpreter is run for the first request
+    proc page {code} {
+
+	web::put "<html>
+
+<head>
+<title>sample mod_websh App</title>
+</head>
+
+<body>
+
+<h1>Welcome to Websh</h1>
+"
+	uplevel $code
+
+	web::put {
+Back to <a href="index.html">index.html</a>
+</body>
+</html>
+}
+    }
+
+    proc requestCounter {} {
+	web::put "<p>This is request [web::interpcfg numreq] in this specific interpreter</p>"
+    }
+}
+
+web::command default {
+    page {
+	web::put "<h2>Main page</h2>"
+	web::put "<p>Link to <a href=\"[web::cmdurl other]\">other</a> page</p>"
+	requestCounter
+    }
+}
+
+
+web::command other {
+    page {
+	web::put "<h2>Other page</h2>"
+	web::put "<p>Back to <a href=\"[web::cmdurl default]\">main</a> page</p>"
+	requestCounter
+    }
+}
+
+web::dispatch

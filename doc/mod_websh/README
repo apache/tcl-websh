@@ -1,0 +1,50 @@
+Run mod_websh in your Apache
+============================
+
+1. Add the lines from ./conf/httpd.conf to your Apache httpd.conf file.
+   (Make sure the paths of LoadModule and WebshConfig point to
+   the correct locations)
+
+2. Adapt the DocumentRoot config in your Apache httpd.conf file to
+   point to ./htdocs or copy the file from ./htdocs to your preferred
+   document root
+
+3. Adapt the path in the sample ./conf/websh.conf to point to your
+   installation (i.e. set webshroot correctly)
+
+4. Start Apache and access the demo page /index.html
+
+
+Documentation
+=============
+
+For Websh documentation, please refer to http://tcl.apache.org/websh
+
+
+Files
+=====
+
+- Apache module for Apache 1.3 or Apache2 (needs recompile for a 
+  different Apache version):
+	mod_websh.so            (Unix symbolic link)
+	mod_websh<version>.so   (Unix)
+	mod_websh.so            (Windows)
+	mod_websh<version>.so   (Windows)
+
+- Websh binary for commandline and scripts w/o Apache:
+	websh                   (Unix symbolic link)
+	websh<version>          (Unix)
+	websh.exe               (Windows)
+	websh<version>.exe      (Windows)
+
+- Tcl extension (to be loaded into a Tclsh):
+	libwebsh.so             (Unix symbolic link)
+	libwebsh<version>.so    (Unix)
+	websh.dll               (Windows)
+	websh<version>.dll      (Windows)
+
+Note
+====
+
+To run the Apache module, only modules/mod_websh.so (or 
+mod_websh<version>.so respectively) is needed.

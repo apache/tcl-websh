@@ -1,0 +1,11 @@
+# sample html wrapper for mod_websh (using tag syntax)
+
+web::initializer {
+    # this code is only run once per interpreter
+
+    # setup markup to be "<? ... ?>" instead of default "{ ...}"
+    web::config putxmarkup tag
+}
+
+# process the actual HTML file
+web::putxfile [web::config script]

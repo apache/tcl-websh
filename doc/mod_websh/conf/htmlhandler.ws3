@@ -1,0 +1,10 @@
+# sample html wrapper for mod_websh
+
+web::initializer {
+    # this code is only run once per interpreter
+
+    # usually you load/source your common source for all pages here
+}
+
+# process the actual HTML file
+web::putxfile [web::config script]
