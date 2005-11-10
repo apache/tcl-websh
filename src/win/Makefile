@@ -101,13 +101,13 @@ web_ap_OBJECTS = $(web_OBJECTS_gen) $(web_OBJECTS_ap)
 # install directories
 bindir = $(INSTALL_PREFIX)/bin
 moddir = $(INSTALL_PREFIX)/modules
-docdir = $(INSTALL_PREFIX)/docs
+docdir = $(INSTALL_PREFIX)/htdocs
 cfgdir = $(INSTALL_PREFIX)/conf
 
 # compiler, linker, and other binaries
 CC = cl
 CCLD = $(CC)
-INSTALL = copy /y
+INSTALL = xcopy /y
 
 
 PACKAGE = web
@@ -237,7 +237,7 @@ distclean: clean
 # once with version number and once without.
 # =============================================================================
 
-install: installdirs installtargets installdocs
+install: installdirs installtargets installdocs installsample
 
 installtargets:
 	@echo. 
@@ -248,21 +248,26 @@ installtargets:
 	if exist mod_websh$(VERSION).so \
 		$(INSTALL) mod_websh$(VERSION).so "$(moddir)"
 	if exist mod_websh$(VERSION).so \
-		$(INSTALL) mod_websh$(VERSION).so "$(moddir)/mod_websh.so"
+		copy /Y mod_websh$(VERSION).so "$(moddir)/mod_websh.so"
 	if exist websh$(VERSION).exe \
 		$(INSTALL) websh$(VERSION).exe "$(bindir)"
 	if exist websh$(VERSION).exe \
-		$(INSTALL) websh$(VERSION).exe "$(bindir)/websh.exe"
+		copy/Y websh$(VERSION).exe "$(bindir)/websh.exe"
 	if exist websh$(VERSION).dll \
 		$(INSTALL) websh$(VERSION).dll "$(bindir)"
 	if exist websh$(VERSION).dll \
-		$(INSTALL) websh$(VERSION).dll "$(bindir)/websh.dll"
+		copy /Y websh$(VERSION).dll "$(bindir)/websh.dll"
 
 installdocs:
 #	$(INSTALL) "$(TOP_DIR)\..\doc\html\*.html" "$(docdir)"
 
+installsample:
+	$(INSTALL) "$(TOP_DIR)\..\doc\mod_websh\conf\*.*" "$(cfgdir)"
+	$(INSTALL) "$(TOP_DIR)\..\doc\mod_websh\htdocs\*.*" "$(docdir)"
+	copy /Y "$(TOP_DIR)\..\doc\mod_websh\README" "$(INSTALL_PREFIX)\README.txt"
+
 installdirs:
 	-mkdir "$(bindir)"
 	-mkdir "$(moddir)"
-#	-mkdir "$(docdir)"
+	-mkdir "$(docdir)"
 	-mkdir "$(cfgdir)"
