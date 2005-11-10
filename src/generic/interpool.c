@@ -119,13 +119,6 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 	return NULL;
     }
 
-
-#ifdef USE_TCL_STUBS
-    if (Tcl_InitStubs(webInterp->interp,"8.2.0",0) == NULL) {
-	return TCL_ERROR;
-    }
-#endif
-
     /* now register here all websh modules */
     result = Tcl_Init(webInterp->interp);
     /* checkme: test result */
