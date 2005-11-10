@@ -8,13 +8,15 @@ The provided Makefile runs with the Microsoft Visual Studio 6.0 nmake utility.
 
 The following variables in the Makefile must be adapted to your system:
 
-TCL_PREFIX=C:/Program Files/Tcl
-TCL_VERSION=83
-HTTPD_PREFIX=C:/Program Files/Apache Group/Apache2
-INSTALL_PREFIX=C:/Program Files/Apache Group/Websh
-
+  TCL_PREFIX=C:/Program Files/Tcl
+  TCL_VERSION=83
+  HTTPD_PREFIX=C:/Program Files/Apache Group/Apache2
+  INSTALL_PREFIX=C:/Program Files/Apache Group/Websh
 
 To compile Websh just run nmake with the corresponding target:
+
+nmake all
+      Compile websh<version>.exe, websh<version>.dll, and mod_websh<version>.so
 
 nmake websh.exe
       Compile websh<version>.exe and websh<version>.dll
@@ -23,17 +25,19 @@ nmake websh.exe
 
 nmake mod_websh.so
       Compile mod_websh<version>.so Apache module.
-      (websh<version>.exe and websh<version>.dll are not needed to run
-      the Websh Apache module.)
+      (Note that websh<version>.exe and websh<version>.dll are not needed
+      to run the Websh Apache module. Also note that the module can be built
+      for Apache 1.3 and Apache2 without any additional changes: just point
+      HTTPD_PREFIX to either an Apache 1.3 or Apache 2 installation)
 
 nmake test
-      Run test suite that checks websch<version>.exe and websch<version>.dll
+      Run test suite that checks websh<version>.exe and websh<version>.dll
 
 nmake clean
       Clean up all output files
 
 nmake install
-      Install Websh
+      Install all compiled targets
 
 
 To create debug symbols in your objects, just add DEBUG=1 to the
