@@ -103,97 +103,6 @@ AC_DEFUN(SC_PATH_TCLCONFIG, [
 ])
 
 #------------------------------------------------------------------------
-# SC_PATH_TKCONFIG --
-#
-#	Locate the tkConfig.sh file
-#
-# Arguments:
-#	none
-#
-# Results:
-#
-#	Adds the following arguments to configure:
-#		--with-tk=...
-#
-#	Defines the following vars:
-#		TK_BIN_DIR	Full path to the directory containing
-#				the tkConfig.sh file
-#------------------------------------------------------------------------
-
-AC_DEFUN(SC_PATH_TKCONFIG, [
-    #
-    # Ok, lets find the tk configuration
-    # First, look for one uninstalled.
-    # the alternative search directory is invoked by --with-tk
-    #
-
-    if test x"${no_tk}" = x ; then
-	# we reset no_tk in case something fails here
-	no_tk=true
-	AC_ARG_WITH(tk, [  --with-tk               directory containing tk configuration (tkConfig.sh)], with_tkconfig=${withval})
-	AC_MSG_CHECKING([for Tk configuration])
-	AC_CACHE_VAL(ac_cv_c_tkconfig,[
-
-	    # First check to see if --with-tkconfig was specified.
-	    if test x"${with_tkconfig}" != x ; then
-		if test -f "${with_tkconfig}/tkConfig.sh" ; then
-		    ac_cv_c_tkconfig=`(cd ${with_tkconfig}; pwd)`
-		else
-		    AC_MSG_ERROR([${with_tkconfig} directory doesn't contain tkConfig.sh])
-		fi
-	    fi
-
-	    # then check for a private Tk library
-	    if test x"${ac_cv_c_tkconfig}" = x ; then
-		for i in \
-			../tk \
-			`ls -dr ../tk[[8-9]].[[0-9]]* 2>/dev/null` \
-			../../tk \
-			`ls -dr ../../tk[[8-9]].[[0-9]]* 2>/dev/null` \
-			../../../tk \
-			`ls -dr ../../../tk[[8-9]].[[0-9]]* 2>/dev/null` ; do
-		    if test -f "$i/unix/tkConfig.sh" ; then
-			ac_cv_c_tkconfig=`(cd $i/unix; pwd)`
-			break
-		    fi
-		done
-	    fi
-	    # check in a few common install locations
-	    if test x"${ac_cv_c_tkconfig}" = x ; then
-		for i in `ls -d ${prefix}/lib 2>/dev/null` \
-			`ls -d /usr/local/lib 2>/dev/null` ; do
-		    if test -f "$i/tkConfig.sh" ; then
-			ac_cv_c_tkconfig=`(cd $i; pwd)`
-			break
-		    fi
-		done
-	    fi
-	    # check in a few other private locations
-	    if test x"${ac_cv_c_tkconfig}" = x ; then
-		for i in \
-			${srcdir}/../tk \
-			`ls -dr ${srcdir}/../tk[[8-9]].[[0-9]]* 2>/dev/null` ; do
-		    if test -f "$i/unix/tkConfig.sh" ; then
-			ac_cv_c_tkconfig=`(cd $i/unix; pwd)`
-			break
-		    fi
-		done
-	    fi
-	])
-	if test x"${ac_cv_c_tkconfig}" = x ; then
-	    TK_BIN_DIR="# no Tk configs found"
-	    AC_MSG_WARN(Can't find Tk configuration definitions)
-	    exit 0
-	else
-	    no_tk=
-	    TK_BIN_DIR=${ac_cv_c_tkconfig}
-	    AC_MSG_RESULT(found $TK_BIN_DIR/tkConfig.sh)
-	fi
-    fi
-
-])
-
-#------------------------------------------------------------------------
 # SC_LOAD_TCLCONFIG --
 #
 #	Load the tclConfig.sh file
@@ -244,37 +153,6 @@ AC_DEFUN(SC_LOAD_TCLCONFIG, [
     AC_SUBST(TCL_BUILD_LIB_SPEC)
     AC_SUBST(TCL_STUB_LIB_SPEC)
     AC_SUBST(TCL_BUILD_STUB_LIB_SPEC)
-])
-
-#------------------------------------------------------------------------
-# SC_LOAD_TKCONFIG --
-#
-#	Load the tkConfig.sh file
-#
-# Arguments:
-#	
-#	Requires the following vars to be set:
-#		TK_BIN_DIR
-#
-# Results:
-#
-#	Sets the following vars that should be in tkConfig.sh:
-#		TK_BIN_DIR
-#------------------------------------------------------------------------
-
-AC_DEFUN(SC_LOAD_TKCONFIG, [
-    AC_MSG_CHECKING([for existence of $TCLCONFIG])
-
-    if test -f "$TK_BIN_DIR/tkConfig.sh" ; then
-        AC_MSG_CHECKING([loading $TK_BIN_DIR/tkConfig.sh])
-	. $TK_BIN_DIR/tkConfig.sh
-    else
-        AC_MSG_RESULT([could not find $TK_BIN_DIR/tkConfig.sh])
-    fi
-
-    AC_SUBST(TK_BIN_DIR)
-    AC_SUBST(TK_SRC_DIR)
-    AC_SUBST(TK_LIB_FILE)
 ])
 
 #------------------------------------------------------------------------
@@ -1154,82 +1032,6 @@ AC_DEFUN(SC_CONFIG_CFLAGS, [
 ])
 
 #--------------------------------------------------------------------
-# SC_SERIAL_PORT
-#
-#	Determine which interface to use to talk to the serial port.
-#	Note that #include lines must begin in leftmost column for
-#	some compilers to recognize them as preprocessor directives.
-#
-# Arguments:
-#	none
-#	
-# Results:
-#
-#	Defines only one of the following vars:
-#		USE_TERMIOS
-#		USE_TERMIO
-#		USE_SGTTY
-#
-#--------------------------------------------------------------------
-
-AC_DEFUN(SC_SERIAL_PORT, [
-    AC_MSG_CHECKING([termios vs. termio vs. sgtty])
-
-    AC_TRY_RUN([
-#include <termios.h>
-
-main()
-{
-    struct termios t;
-    if (tcgetattr(0, &t) == 0) {
-	cfsetospeed(&t, 0);
-	t.c_cflag |= PARENB | PARODD | CSIZE | CSTOPB;
-	return 0;
-    }
-    return 1;
-}], tk_ok=termios, tk_ok=no, tk_ok=no)
-
-    if test $tk_ok = termios; then
-	AC_DEFINE(USE_TERMIOS)
-    else
-	AC_TRY_RUN([
-#include <termio.h>
-
-main()
-{
-    struct termio t;
-    if (ioctl(0, TCGETA, &t) == 0) {
-	t.c_cflag |= CBAUD | PARENB | PARODD | CSIZE | CSTOPB;
-	return 0;
-    }
-    return 1;
-    }], tk_ok=termio, tk_ok=no, tk_ok=no)
-
-    if test $tk_ok = termio; then
-	AC_DEFINE(USE_TERMIO)
-    else
-	AC_TRY_RUN([
-#include <sgtty.h>
-
-main()
-{
-    struct sgttyb t;
-    if (ioctl(0, TIOCGETP, &t) == 0) {
-	t.sg_ospeed = 0;
-	t.sg_flags |= ODDP | EVENP | RAW;
-	return 0;
-    }
-    return 1;
-}], tk_ok=sgtty, tk_ok=none, tk_ok=none)
-    if test $tk_ok = sgtty; then
-	AC_DEFINE(USE_SGTTY)
-    fi
-    fi
-    fi
-    AC_MSG_RESULT($tk_ok)
-])
-
-#--------------------------------------------------------------------
 # SC_MISSING_POSIX_HEADERS
 #
 #	Supply substitutes for missing POSIX header files.  Special
@@ -1321,92 +1123,6 @@ closedir(d);
 ])
 
 #--------------------------------------------------------------------
-# SC_PATH_X
-#
-#	Locate the X11 header files and the X11 library archive.  Try
-#	the ac_path_x macro first, but if it doesn't find the X stuff
-#	(e.g. because there's no xmkmf program) then check through
-#	a list of possible directories.  Under some conditions the
-#	autoconf macro will return an include directory that contains
-#	no include files, so double-check its result just to be safe.
-#
-# Arguments:
-#	none
-#	
-# Results:
-#
-#	Sets the the following vars:
-#		XINCLUDES
-#		XLIBSW
-#
-#--------------------------------------------------------------------
-
-AC_DEFUN(SC_PATH_X, [
-    AC_PATH_X
-    not_really_there=""
-    if test "$no_x" = ""; then
-	if test "$x_includes" = ""; then
-	    AC_TRY_CPP([#include <X11/XIntrinsic.h>], , not_really_there="yes")
-	else
-	    if test ! -r $x_includes/X11/Intrinsic.h; then
-		not_really_there="yes"
-	    fi
-	fi
-    fi
-    if test "$no_x" = "yes" -o "$not_really_there" = "yes"; then
-	AC_MSG_CHECKING(for X11 header files)
-	XINCLUDES="# no special path needed"
-	AC_TRY_CPP([#include <X11/Intrinsic.h>], , XINCLUDES="nope")
-	if test "$XINCLUDES" = nope; then
-	    dirs="/usr/unsupported/include /usr/local/include /usr/X386/include /usr/X11R6/include /usr/X11R5/include /usr/include/X11R5 /usr/include/X11R4 /usr/openwin/include /usr/X11/include /usr/sww/include"
-	    for i in $dirs ; do
-		if test -r $i/X11/Intrinsic.h; then
-		    AC_MSG_RESULT($i)
-		    XINCLUDES=" -I$i"
-		    break
-		fi
-	    done
-	fi
-    else
-	if test "$x_includes" != ""; then
-	    XINCLUDES=-I$x_includes
-	else
-	    XINCLUDES="# no special path needed"
-	fi
-    fi
-    if test "$XINCLUDES" = nope; then
-	AC_MSG_RESULT(couldn't find any!)
-	XINCLUDES="# no include files found"
-    fi
-
-    if test "$no_x" = yes; then
-	AC_MSG_CHECKING(for X11 libraries)
-	XLIBSW=nope
-	dirs="/usr/unsupported/lib /usr/local/lib /usr/X386/lib /usr/X11R6/lib /usr/X11R5/lib /usr/lib/X11R5 /usr/lib/X11R4 /usr/openwin/lib /usr/X11/lib /usr/sww/X11/lib"
-	for i in $dirs ; do
-	    if test -r $i/libX11.a -o -r $i/libX11.so -o -r $i/libX11.sl; then
-		AC_MSG_RESULT($i)
-		XLIBSW="-L$i -lX11"
-		x_libraries="$i"
-		break
-	    fi
-	done
-    else
-	if test "$x_libraries" = ""; then
-	    XLIBSW=-lX11
-	else
-	    XLIBSW="-L$x_libraries -lX11"
-	fi
-    fi
-    if test "$XLIBSW" = nope ; then
-	AC_CHECK_LIB(Xwindow, XCreateWindow, XLIBSW=-lXwindow)
-    fi
-    if test "$XLIBSW" = nope ; then
-	AC_MSG_RESULT(couldn't find any!  Using -lX11.)
-	XLIBSW=-lX11
-    fi
-])
-#--------------------------------------------------------------------
 # SC_BLOCKING_STYLE
 #
 #	The statements below check for systems where POSIX-style
@@ -1471,68 +1187,6 @@ AC_DEFUN(SC_BLOCKING_STYLE, [
 	    AC_MSG_RESULT(O_NONBLOCK)
 	    ;;
     esac
-])
-
-#--------------------------------------------------------------------
-# SC_HAVE_VFORK
-#
-#	Check to see whether the system provides a vfork kernel call.
-#	If not, then use fork instead.  Also, check for a problem with
-#	vforks and signals that can cause core dumps if a vforked child
-#	resets a signal handler.  If the problem exists, then use fork
-#	instead of vfork.
-#
-# Arguments:
-#	none
-#	
-# Results:
-#
-#	Defines some of the following vars:
-#		vfork (=fork)
-#
-#--------------------------------------------------------------------
-
-AC_DEFUN(SC_HAVE_VFORK, [
-    AC_TYPE_SIGNAL()
-    AC_CHECK_FUNC(vfork, tcl_ok=1, tcl_ok=0)
-    if test "$tcl_ok" = 1; then
-	AC_MSG_CHECKING([vfork/signal bug]);
-	AC_TRY_RUN([
-#include <stdio.h>
-#include <signal.h>
-#include <sys/wait.h>
-int gotSignal = 0;
-sigProc(sig)
-    int sig;
-{
-    gotSignal = 1;
-}
-main()
-{
-    int pid, sts;
-    (void) signal(SIGCHLD, sigProc);
-    pid = vfork();
-    if (pid <  0) {
-	exit(1);
-    } else if (pid == 0) {
-	(void) signal(SIGCHLD, SIG_DFL);
-	_exit(0);
-    } else {
-	(void) wait(&sts);
-    }
-    exit((gotSignal) ? 0 : 1);
-}], tcl_ok=1, tcl_ok=0, tcl_ok=0)
-
-	if test "$tcl_ok" = 1; then
-	    AC_MSG_RESULT(ok)
-	else
-	    AC_MSG_RESULT([buggy, using fork instead])
-	fi
-    fi
-    rm -f core
-    if test "$tcl_ok" = 0; then
-	AC_DEFINE(vfork, fork)
-    fi
 ])
 
 #--------------------------------------------------------------------
@@ -1861,70 +1515,6 @@ AC_DEFUN(SC_LIB_SPEC, [
 ])
 
 #------------------------------------------------------------------------
-# SC_PRIVATE_TCL_INCLUDE --
-#
-#	Locate the private Tcl include files
-#
-# Arguments:
-#
-#	Requires:
-#		TCL_SRC_DIR	Assumes that SC_LOAD_TCLCONFIG has
-#				 already been called.
-#
-# Results:
-#
-#	Substs the following vars:
-#		TCL_TOP_DIR_NATIVE
-#		TCL_GENERIC_DIR_NATIVE
-#		TCL_UNIX_DIR_NATIVE
-#		TCL_WIN_DIR_NATIVE
-#		TCL_BMAP_DIR_NATIVE
-#		TCL_TOOL_DIR_NATIVE
-#		TCL_PLATFORM_DIR_NATIVE
-#		TCL_BIN_DIR_NATIVE
-#		TCL_INCLUDES
-#------------------------------------------------------------------------
-
-AC_DEFUN(SC_PRIVATE_TCL_HEADERS, [
-    AC_MSG_CHECKING(for Tcl private include files)
-
-    case "`uname -s`" in
-	*win32* | *WIN32* | *CYGWIN_NT*)
-	    TCL_TOP_DIR_NATIVE=\"`${CYGPATH} ${TCL_SRC_DIR}/..`\"
-	    TCL_GENERIC_DIR_NATIVE=\"`${CYGPATH} ${TCL_SRC_DIR}/../generic`\"
-	    TCL_UNIX_DIR_NATIVE=\"`${CYGPATH} ${TCL_SRC_DIR}/../unix`\"
-	    TCL_WIN_DIR_NATIVE=\"`${CYGPATH} ${TCL_SRC_DIR}/../win`\"
-	    TCL_BMAP_DIR_NATIVE=\"`${CYGPATH} ${TCL_SRC_DIR}/../bitmaps`\"
-	    TCL_TOOL_DIR_NATIVE=\"`${CYGPATH} ${TCL_SRC_DIR}/../tools`\"
-	    TCL_COMPAT_DIR_NATIVE=\"`${CYGPATH} ${TCL_SRC_DIR}/../compat`\"
-	    TCL_PLATFORM_DIR_NATIVE=${TCL_WIN_DIR_NATIVE}
-	;;
-	*)
-	    TCL_TOP_DIR_NATIVE=${TCL_SRC_DIR}
-	    TCL_GENERIC_DIR_NATIVE='$(TCL_TOP_DIR_NATIVE)/generic'
-	    TCL_UNIX_DIR_NATIVE='$(TCL_TOP_DIR_NATIVE)/unix'
-	    TCL_WIN_DIR_NATIVE='$(TCL_TOP_DIR_NATIVE)/win'
-	    TCL_BMAP_DIR_NATIVE='$(TCL_TOP_DIR_NATIVE)/bitmaps'
-	    TCL_TOOL_DIR_NATIVE='$(TCL_TOP_DIR_NATIVE)/tools'
-	    TCL_COMPAT_DIR_NATIVE='$(TCL_TOP_DIR_NATIVE)/compat'
-	    TCL_PLATFORM_DIR_NATIVE=${TCL_UNIX_DIR_NATIVE}
-	;;
-    esac
-
-    AC_SUBST(TCL_TOP_DIR_NATIVE)
-    AC_SUBST(TCL_GENERIC_DIR_NATIVE)
-    AC_SUBST(TCL_UNIX_DIR_NATIVE)
-    AC_SUBST(TCL_WIN_DIR_NATIVE)
-    AC_SUBST(TCL_BMAP_DIR_NATIVE)
-    AC_SUBST(TCL_TOOL_DIR_NATIVE)
-    AC_SUBST(TCL_PLATFORM_DIR_NATIVE)
-
-    TCL_INCLUDES="-I${TCL_GENERIC_DIR_NATIVE} -I${TCL_PLATFORM_DIR_NATIVE}"
-    AC_SUBST(TCL_INCLUDES)
-    AC_MSG_RESULT(Using srcdir found in tclConfig.sh)
-])
-
-#------------------------------------------------------------------------
 # SC_PUBLIC_TCL_HEADERS --
 #
 #	Locate the installed public Tcl header files
@@ -1947,7 +1537,7 @@ AC_DEFUN(SC_PRIVATE_TCL_HEADERS, [
 AC_DEFUN(SC_PUBLIC_TCL_HEADERS, [
     AC_MSG_CHECKING(for Tcl public headers)
 
-    AC_ARG_WITH(tclinclude, [ --with-tclinclude      directory containing the public Tcl header files.], with_tclinclude=${withval})
+    AC_ARG_WITH(tclinclude, [  --with-tclinclude       directory containing the public Tcl header files.], with_tclinclude=${withval})
 
     if test x"${with_tclinclude}" != x ; then
 	if test -f "${with_tclinclude}/tcl.h" ; then

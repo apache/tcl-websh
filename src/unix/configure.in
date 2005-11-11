@@ -128,11 +128,12 @@ SC_LOAD_TCLCONFIG
 #--------------------------------------------------------------------
 # --with-httpd-include
 #--------------------------------------------------------------------
+AC_MSG_CHECKING(for httpd header files)
 AC_ARG_WITH(httpdinclude, [  --with-httpdinclude     directory containing the apache header files.], with_httpdinclude=${withval}, with_httpdinclude=NA)
 
 if test x"${with_httpdinclude}" != xNA ; then
   if test -f "${with_httpdinclude}/httpd.h" ; then
-      echo "httpd header files found"
+      echo "found ${with_httpdinclude}"
       HTTPD_INCLUDES=-I\"${with_httpdinclude}\"
       AC_SUBST(HTTPD_INCLUDES)
   else
@@ -144,7 +145,7 @@ else
     `ls -d ${temp_includedir} 2>/dev/null` \
     /usr/local/include /usr/include ; do
     if test -f "$i/httpd.h" ; then
-      echo "httpd header files found"
+      echo "found $i"
       HTTPD_INCLUDES=-I\"$i\"
       AC_SUBST(HTTPD_INCLUDES)
       break
