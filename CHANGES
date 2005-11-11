@@ -1,0 +1,79 @@
+CHANGES
+=======
+
+This file summarizes bug fixes and changes to the commands
+for different versions.
+Please refer to src/ChangeLog for a detailed log of changes
+
+
+Websh 3.6.b3
+------------
+
+- Windows XP Makefile provided (for Visual Studio 6 nmake)
+
+- Install for Unix fixed
+
+- Added simple setup example for mod_websh
+
+
+Websh 3.6.b2
+------------
+
+- Renamed [web::logfilter] to [web::loglevel] (kept [web::logfilter] for
+  compatibility)
+
+- When logging is setup in [web::initializer], it is kept across
+  requests and is still available in [web::finalizer]
+
+- Internal commands [web::loglevel delete -requests] and [web::logdest
+  delete -requests] to delete log configuration added during request
+  only
+
+- Changed output of [web::loglevel names] and [web::logdest names] to
+  return a list of names (as the command indicates)
+  Added [web::loglevel levels] and [web::logdest levels] to provide
+  the functionality formerly provided by the names subcommand (used
+  for testing only)
+
+
+Websh 3.5.1b1 (unreleased)
+--------------------------
+
+- I18n fixes to support multi-byte character sets
+
+- Unix: All file permissions of created files configurable with
+  [web::config filepermissions]. Default is 0644. (This affects log
+  files, session files, filecounter files, and temporary form upload
+  files) Note that prevously, the default permissions for session
+  files was 0666.
+
+- Fixed some documentation errors/omissions in the reference
+
+- Works with Tcl8.5
+
+- Fixed [web::putx] some problems with tag syntax (<? ?>), selection
+  of response object, and double UTF encoding
+
+- Resolved cookie handling side effects when dealing with different
+  locales and fixed expiry to conform to specs
+
+- Unix: provide config.sub and config.guess for some versions of
+  autoconf
+
+- Fixed minor memory leaks (when dealing with multipart form data)
+
+- Fixed [web::interpmap] to work with spaces in file names
+
+- Fixed [web::cmdurl] when scheme is given in urlformat
+
+
+Websh 3.5.1a1 (unreleased)
+--------------------------
+
+- Works with Tcl 8.4
+
+
+Websh 3.5.0
+-----------
+
+- See src/ChangeLog
