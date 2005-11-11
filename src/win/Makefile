@@ -102,6 +102,7 @@ web_ap_OBJECTS = $(web_OBJECTS_gen) $(web_OBJECTS_ap)
 bindir = $(INSTALL_PREFIX)/bin
 moddir = $(INSTALL_PREFIX)/modules
 docdir = $(INSTALL_PREFIX)/htdocs
+libdir = $(INSTALL_PREFIX)/lib
 cfgdir = $(INSTALL_PREFIX)/conf
 
 # compiler, linker, and other binaries
@@ -247,6 +248,10 @@ installtargets:
 	@echo. 
 	if exist mod_websh$(VERSION).so \
 		$(INSTALL) mod_websh$(VERSION).so "$(moddir)"
+	if exist mod_websh$(VERSION).lib \
+		$(INSTALL) mod_websh$(VERSION).lib "$(libdir)"
+	if exist mod_websh$(VERSION).exp \
+		$(INSTALL) mod_websh$(VERSION).exp "$(libdir)"
 	if exist mod_websh$(VERSION).so \
 		copy /Y mod_websh$(VERSION).so "$(moddir)/mod_websh.so"
 	if exist websh$(VERSION).exe \
@@ -255,6 +260,10 @@ installtargets:
 		copy/Y websh$(VERSION).exe "$(bindir)/websh.exe"
 	if exist websh$(VERSION).dll \
 		$(INSTALL) websh$(VERSION).dll "$(bindir)"
+	if exist websh$(VERSION).lib \
+		$(INSTALL) websh$(VERSION).lib "$(libdir)"
+	if exist websh$(VERSION).exp \
+		$(INSTALL) websh$(VERSION).exp "$(libdir)"
 	if exist websh$(VERSION).dll \
 		copy /Y websh$(VERSION).dll "$(bindir)/websh.dll"
 
@@ -268,6 +277,7 @@ installsample:
 
 installdirs:
 	-mkdir "$(bindir)"
+	-mkdir "$(libdir)"
 	-mkdir "$(moddir)"
 	-mkdir "$(docdir)"
 	-mkdir "$(cfgdir)"
