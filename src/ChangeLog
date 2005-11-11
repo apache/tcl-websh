@@ -1,3 +1,53 @@
+2005-11-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/unix/configure.in, src/win/Makefile, 
+	src/apachetests/runtests.tcl, websh.spec:
+	Changed version to 3.6.b3
+
+	* CHANGES:
+	Added enduser readable summary of ChangeLog
+
+	* README:
+	New hint on Windows installation
+	Added details for Unix installation
+	
+	* src/unix/Makefile.in:
+	Major cleanup: removed lots of unused stuff and rewrote
+	install	rules.
+	
+	* src/unix/configure.in:
+	Nicer output of generated configure
+	
+	* src/unix/tcl.m4:
+	Removed lots of unused stuff
+
+	* src/unix/mkinstalldirs, src/unix/memdbg.tcl:
+	Removed (unused, not working)
+
+	* src/win/Makefile:
+	Also install *.lib files
+
+2005-11-10 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* doc/mod_websh/*:
+	Added sample setup for mod_websh
+
+	* src/test/mintest.test, src/tests/htmlify.test:
+	Enhanced tests to run under Windows
+
+	* src/win/Makefile, src/win/README:
+	Major cleanup (no recurrsive calls)
+	Unified flags for websh.exe and mod_websh.so
+	Proper install rule (including sample setup for mod_websh)
+	Build websh<verion>.dll
+	Adapted README accordingly
+
+	* src/generic/interpool.c:
+	Removed unnecessary TclInitStubs call
+
+	* src/generic/web.c, src/generic/web.h:
+	Make Websh_Init exportable under Windows (for websh.dll)
+
 2005-11-03 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/win/Makefile, src/win/README:
@@ -29,18 +79,16 @@
 
 	* src/generic/weboutint.c:
 	Set channel translation to send HTTP headers correctly under Windows
-
 	
 2005-10-28 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* <various sources>:
-	Changed version to Websh 3.6.0b2
+	Changed version to Websh 3.6.0b2 (too many changes in the
+	commands for a successor Websh 3.5.x version)
 	
 	* src/unix/configure.in, src/unix/Makefile.in:
 	Adapted for Tcl 8.5
 	Major cleanup started
-	Changed version to Websh 3.6.0b2 (too many changes in the
-	commands for a successor Websh 3.5.x version)
 	
 	* src/generic/mod_websh.c:
 	Fixed call to ap_log_error for Apache 2 (prevent compiler
@@ -67,8 +115,7 @@
 	Moved cleanup from web::ap::perReqInit to web::ap::perReqCleanup
 	to speed up request handling
 	Delete only log filters and destinations created during the
-	request and	not the ones created
-	in web::initializer
+	request and not the ones created in web::initializer
 	Wrote a test for it
 
 	* src/generic/log.[hc], src/generic/modwebsh_ap.c, src/generic/modwebsh_cgi.c:
@@ -323,6 +370,10 @@
 	* src/generic/tcldecmt.tcl:
 	tweaked line length of output for win32
 	
+2002-08-01  Ronnie Brunner <ronnie.brunner@netcetera.ch>
+
+	* Released Version 3.5.0
+
 2002-08-01  Ronnie Brunner <ronnie.brunner@netcetera.ch>
 
 	* makedist:
