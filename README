@@ -1,26 +1,28 @@
-
+                         ------------------
                          Websh, Version 3.6
+                         ------------------
 
             Copyright 1996-2001, Netcetera AG, Switzerland
 	    Copyright 2001-2005, Apache Software Foundation.
 
                          All rights reserved.
 
-    This software is distributed under the terms of the Apache
-    Software License, available as "license.terms".
+      This software is distributed under the terms of the Apache
+            Software License, available as "license.terms".
 
-    Websh is available from
+                      Websh is available from
 
-        http://tcl.apache.org/websh/
+                    http://tcl.apache.org/websh/
 
 Contents
 --------
 
     1. Introduction
     2. Documentation
-    3. Compiling and installing Websh
-    4. mod_websh: Websh as Apache Module
-    5. Support
+    3. Compiling and installing Websh (Unix)
+    4. mod_websh: Websh as Apache Module (Unix)
+    5. Compiling and installing Websh (Windows XP)
+    6. Support
 
 
 1. Introduction
@@ -53,8 +55,8 @@ Documentation is available at
         http://tcl.apache.org/websh/
 
 
-3. Compiling and installing Websh
----------------------------------
+3. Compiling and installing Websh (Unix)
+----------------------------------------
 
 Please note that we use some GNU make extensions, so make sure that 
 you try to compile Websh using a GNU version of make (or gmake) when
@@ -70,22 +72,36 @@ typically:
   ./configure
   make
   make test
+  make install
 
-Make will create two targets: websh3.6.<patch>, which is the standalone 
+Make will create three targets: websh3.6.<patch>, which is the standalone 
 Websh application (dynamically linked to Tcl) and libwebsh3.6.<patch>.so,
 which is a TEA (Tcl Extension Architecture) shared object that can
 be dynamically loaded from within Tcl using [load libwebsh3.6.<patch>.so].
-Both provide the Tcl package websh.
+Both provide the Tcl package websh. The third target is 
+mod_websh3.6.<patch>.so, which is the Websh Apache module
 
-If you have several versions of Tcl installed on your system, you
-might want to specify which one should be used for Websh, e.g.
+If you have several versions of Tcl and Apache installed on your system,
+you might want to specify which one should be used for Websh, e.g.
 
   ./configure --with-tcl=/usr/local/tcl8.3.4/lib \
       --with-tclinclude=/usr/local/tcl8.3.4/include \
-      --with_httpd-include=/usr/local/httpd-2.0/include
+      --with-httpdinclude=/usr/local/apache_1.3.29/include
 
 Note that to compile mod_websh for Apache 2, the corresponding Tcl
-library must be compiled using threads.
+library must be compiled using threads and threads should be enabled
+for Websh:
+
+  ./configure --enable-threads
+
+By default, Websh is installed to /usr/local
+To change this location, provide the --prefix option to configure:
+
+  ./configure --prefix=/opt
+
+Note that Websh will install all files in <prefix>/websh and will then 
+try to add symbolic links in <prefix>/bin and <prefix>/lib if these
+directories exist.
 
 
 4. mod_websh: Websh as Apache Module
@@ -105,7 +121,8 @@ After this,
 
   make mod_websh.so
 
-will compile and build mod_websh.
+will compile and build mod_websh. Note that mod_websh3.6.<patch>.so will
+also be compiled by default when 'make all' is invoked.
 
 In order to use mod_websh in your Apache web server, you have
 to do the following:
@@ -124,8 +141,20 @@ to do the following:
 
 From now on, httpd will pass files ending in .ws3 to mod_websh.
 
+A sample setup to server SSI-type HTML with Websh-snipplets and CGI-type
+scripts is found in doc/mod_websh and will be installed with the 
+'make install' command.
 
-5. Support
+
+5. Compiling and installing Websh (Windows XP)
+----------------------------------------------
+
+Websh currently provides a Makefile forMicrosoft Visual Studio 6.0 nmake.
+
+Please refer to the file src/win/README for details.
+
+
+6. Support
 ----------
 
 For support please try the following mailing list on tcl.apache.org:
@@ -150,7 +179,7 @@ and
 
   info@websh.com
 
- == Thank you for your interest in Websh ==
 
+== Thank you for your interest in Websh ==
 
 @(#) $Id$
