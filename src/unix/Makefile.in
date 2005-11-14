@@ -112,6 +112,7 @@ OBJEXT = @OBJEXT@
 RANLIB = @RANLIB@
 SHLIB_CFLAGS = @SHLIB_CFLAGS@
 SHLIB_LD = @SHLIB_LD@
+SHLIB_LD_DARWIN = $(CC) -bundle -bundle_loader $(HTTPD_BIN) $(LDFLAGS)
 SHLIB_LDFLAGS = @SHLIB_LDFLAGS@
 SHLIB_LD_LIBS = @SHLIB_LD_LIBS@
 STLIB_LD = @STLIB_LD@
@@ -130,9 +131,12 @@ TCLSH_PROG = @TCLSH_PROG@
 TCL_PACKAGE_PATH = @TCL_PACKAGE_PATH@
 
 SHARED_LIB_SUFFIX = @SHARED_LIB_SUFFIX@
+MODULE_LIB_SUFFIX = $(VERSION).so
 UNSHARED_LIB_SUFFIX = @UNSHARED_LIB_SUFFIX@
 
 HTTPD_INCLUDES = @HTTPD_INCLUDES@
+# needed for Darwin (OS X) only
+HTTPD_BIN = @HTTPD_BIN@
 
 AUTOCONF = autoconf
 
@@ -239,9 +243,9 @@ interpool.o: ../generic/interpool.c
 %.o: ../generic/%.c
 	$(COMPILE) -c $<
 
-websh: websh$(VERSION)
+websh: websh$(VERSION) $(web_LIB_FILE)
 
-mod_websh.so: mod_websh$(SHARED_LIB_SUFFIX)
+mod_websh.so: mod_websh$(MODULE_LIB_SUFFIX)
 
 
 websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
@@ -249,21 +253,15 @@ websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	$(TCL_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) -o websh$(VERSION)
 
 
-mod_websh$(SHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
-	$(SHLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(SHARED_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
+mod_websh$(MODULE_LIB_SUFFIX): $(web_ap_OBJECTS)
+	if test "`uname -s`" = "Darwin" ; then \
+	$(SHLIB_LD_DARWIN) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC); \
+	else \
+	$(SHLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC); \
+	fi
 
-mod_websh.a: $(web_ap_OBJECTS)
-	echo "proto: $(PROTO_FLAGS)"
-	echo "sec: $(SECURITY_FLAGS)"
-	echo "mem: $(MEM_DEBUG_FLAGS)"
-	echo "key: $(KEYSYM_FLAGS)"
-	echo "depre: $(NO_DEPRECATED_FLAGS)"
-	echo "tcl_defs: $(TCL_DEFS)"
-	echo "defs: $(DEFS)"
-	echo "cflags $(CFLAGS)"
-	echo "compile $(COMPILE)"
-	exit
-	$(STLIB_LD) mod_websh$(UNSHARED_LIB_SUFFIX) $(web_ap_OBJECTS)
+mod_websh$(UNSHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
+	$(STLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(UNSHARED_LIB_SUFFIX) $(web_ap_OBJECTS)
 
 pure: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	purify $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \

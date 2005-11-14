@@ -135,6 +135,7 @@ if test x"${with_httpdinclude}" != xNA ; then
   if test -f "${with_httpdinclude}/httpd.h" ; then
       echo "found ${with_httpdinclude}"
       HTTPD_INCLUDES=-I\"${with_httpdinclude}\"
+      HTTPD_INCDIR=${with_httpdinclude}
       AC_SUBST(HTTPD_INCLUDES)
   else
       AC_MSG_ERROR([${with_httpdinclude}: directory does not contain Apache httpd header file httpd.h])
@@ -143,10 +144,11 @@ else
   eval "temp_includedir=${includedir}"
   for i in \
     `ls -d ${temp_includedir} 2>/dev/null` \
-    /usr/local/include /usr/include ; do
+    /usr/local/include /usr/include /usr/include/httpd ; do
     if test -f "$i/httpd.h" ; then
       echo "found $i"
       HTTPD_INCLUDES=-I\"$i\"
+      HTTPD_INCDIR=$i
       AC_SUBST(HTTPD_INCLUDES)
       break
     fi
@@ -155,6 +157,35 @@ else
     AC_MSG_ERROR(httpd.h not found.  Please specify its location with --with-httpdinclude)
   fi
 fi
+
+if test "`uname -s`" = "Darwin" ; then
+  AC_MSG_CHECKING(for httpd binary)
+  AC_ARG_WITH(httpd, [  --with-httpd            apache binary], with_httpd=${withval}, with_httpd=NA)
+  if test x"${with_httpd}" != xNA ; then
+    if test -f "${with_httpd}" ; then
+      echo "found ${with_httpd}"
+      HTTPD_BIN=${with_httpd}
+    else
+      AC_MSG_ERROR(httpd binary not found.  Invalid specification --with-httpd)
+    fi
+  else
+    if test -f "${HTTPD_INCDIR}/../bin/httpd" ; then
+      echo "found ${HTTPD_INCDIR}/../bin/httpd"
+      HTTPD_BIN=${HTTPD_INCDIR}/../bin/httpd
+    else
+      httpd=`which httpd`
+      if test -f "${httpd}" ; then
+        echo "found ${httpd}"
+        HTTPD_BIN=${httpd}
+      else
+        AC_MSG_ERROR(httpd binary not found.  Please specify its location with --with-httpd)
+      fi
+    fi
+  fi
+else
+  HTTPD_BIN=
+fi
+AC_SUBST(HTTPD_BIN)
 
 #--------------------------------------------------------------------
 # A few miscellaneous platform-specific items:
