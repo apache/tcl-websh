@@ -6,11 +6,11 @@
 # \
 exec tclsh "$0" "$@"
 
-set repository "https://svn.apache.org/repos/asf/tcl/websh"
+set repository "http://svn.apache.org/repos/asf/tcl/websh"
 
 proc usage {} {
     global argv0
-    fatal "usage: $argv0 <build>\nwhere <build> is the name of a tagged build (e.g. 3.5.0)"
+    fatal "usage: $argv0 <build>\n  where <build> is the name of a tagged build (e.g. 3.5.0)\n  or trunk for the latest repository version\n  or builds for a list of available tagged builds"
 }
 
 proc fatal {msg} {
@@ -24,25 +24,44 @@ if {$argc != 1} {
 
 # get build from command line
 set build [lindex $argv 0]
+if {"$build" == "trunk"} {
+    set trunk 1
+    append build "-[clock format [clock seconds] -format "%Y%m%d"]"
+} elseif {"$build" == "builds"} {
+    set builds ""
+    regsub -all "/" [exec svn list $repository/tags] "" builds
+    puts $builds
+    puts "trunk"
+    exit
+} else {
+    set trunk 0
+}
 
-# check whether build is valid
-puts "checking for build $build"
+if {!$trunk} {
+    # check whether build is valid
+    puts "checking for build $build"
 
-if {[catch {
-    set svnlist [exec svn list $repository/tags]
-    if {![regexp "$build/" $svnlist]} {
-	fatal "build $build is not tagged"
-    }
-} msg]} {fatal $msg}
+    if {[catch {
+	set svnlist [exec svn list $repository/tags]
+	if {![regexp "$build/" $svnlist]} {
+	    fatal "build $build is not tagged"
+	}
+    } msg]} {fatal $msg}
+}
 
 # checkout build in a temporary directory
 set tmpdir [pid].tmp
 file mkdir $tmpdir
 cd $tmpdir
 
-puts "checking out build $build in temporary directory"
+if {$trunk} {
+    puts "checking out trunk in temporary directory"
+    catch {exec svn co $repository/trunk websh-$build}
+} else {
+    puts "checking out build $build in temporary directory"
+    catch {exec svn co $repository/tags/$build websh-$build}
+}
 
-catch {exec svn co $repository/tags/$build websh-$build}
 if {![file exists websh-$build/README]} {
     cd ..
     fatal "checkout in directory $tmpdir failed"
