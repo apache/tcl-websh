@@ -78,7 +78,15 @@ test tempfile-1.2 {web::tempfile reject invalid dir} {
     set tmp [web::tempfile -path "/tmp/yoyoy" -prefix "prefix"]
     set msg ""
     if {[string match "/tmp/yoyoy*" $tmp]} {
-	set msg "error: accepted $tmp"
+	global tcl_platform
+	if {"$tcl_platform(platform)" == "unix"
+	    && "$tcl_platform(os)" == "Darwin"} {
+	    # OSX does not complain if directory does not exist
+	    # It just returns the nonexistig path anyway
+	    set msg "ok"
+	} else {
+	    set msg "error: accepted non-existing dir $tmp"
+	}
     } elseif {[string match "*prefi*" $tmp]} {
 	set msg "ok"
     } else {

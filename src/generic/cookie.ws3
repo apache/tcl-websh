@@ -168,7 +168,7 @@ proc web::cookiecontext {ctxmgrname args} {
 		    scan [clock format $expsec -format "%m" -gmt true] "%d" monthNum
 		    # monthNum is not zero based -> dummy entry in the list
 		    set month [lindex "NaM Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec" $monthNum]
-		    set expstr [clock format $expsec -format "$day, %d-$month-%Y %H:%M:%S %Z" -gmt true]
+		    set expstr [clock format $expsec -format "$day, %d-$month-%Y %H:%M:%S GMT" -gmt true]
 		    append cookie "; expires=$expstr"
 		}
 	    }

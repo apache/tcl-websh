@@ -62,7 +62,7 @@ test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly} {
 
     web::log info.info {toSyslog}
 
-    set srclst [list /var/adm/messages /var/log/messages /var/log/syslog]
+    set srclst [list /var/adm/messages /var/log/messages /var/log/syslog /var/log/system.log]
 
     ## give syslog a little time to feed the message to the file
     after 1000
