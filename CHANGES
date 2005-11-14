@@ -6,6 +6,12 @@ for different versions.
 Please refer to src/ChangeLog for a detailed log of changes
 
 
+Trunk
+-----
+
+- Configuration and test compatibility fixes for OSX Darwin
+
+
 Websh 3.6.b3
 ------------
 

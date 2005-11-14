@@ -1,3 +1,17 @@
+2005-11-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* doc/mod_websh/conf/websh.conf, src/tests/msc.test,
+	src/tests/logtosyslog.test src/generic/cookie.ws3:
+	Compatibility fixes with OSX (Darwin)
+
+	* src/unix/config.sub, src/unix/config.guess:
+	Replaced with newer versions that support OSX
+
+	* src/unix/Makefile.in, src/unix/configure.in:
+	Changed linking of mod_websh.so for OSX (Darwin)
+	Added --with-httpd option for Apache binary (needed 
+	for -bundle linking on OSX)
+
 2005-11-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/unix/configure.in, src/win/Makefile, 
