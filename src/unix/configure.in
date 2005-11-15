@@ -144,7 +144,8 @@ else
   eval "temp_includedir=${includedir}"
   for i in \
     `ls -d ${temp_includedir} 2>/dev/null` \
-    /usr/local/include /usr/include /usr/include/httpd ; do
+    /usr/local/include /usr/include /usr/include/httpd /usr/include/apache2\
+    /usr/include/apache /usr/include/httpd2 ; do
     if test -f "$i/httpd.h" ; then
       echo "found $i"
       HTTPD_INCLUDES=-I\"$i\"
