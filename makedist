@@ -87,13 +87,13 @@ cd ..
 puts "creating tar ball quickref-$build.tar.gz"
 cd doc
 file rename html quickref-$build
-exec tar czvf ../../../quickref-$build.tar.gz --exclude .svn quickref-$build
+exec tar czf ../../../quickref-$build.tar.gz --exclude .svn quickref-$build
 file rename quickref-$build html
 cd ../..
 
 # creating tar ball
 puts "creating tar ball websh-$build.tar.gz"
-exec tar czvf ../websh-$build.tar.gz --exclude .svn websh-$build
+exec tar czf ../websh-$build.tar.gz --exclude .svn websh-$build
 
 
 # cleanup
