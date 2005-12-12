@@ -185,13 +185,17 @@ static void *merge_websh_config(APPOOL * p, void *basev, void *overridesv)
     return basev;
 }
 
-static const char *set_webshscript(cmd_parms * cmd, void *dummy, char *arg)
+static const char *set_webshscript(cmd_parms * cmd, void *dummy, const char *arg)
 {
     server_rec *s = cmd->server;
     websh_server_conf *conf =
 	(websh_server_conf *) ap_get_module_config(s->module_config,
 						   &websh_module);
+#ifdef APACHE2
     conf->scriptName = ap_server_root_relative(cmd->pool, arg);
+#else /* APACHE2 */
+    conf->scriptName = ap_server_root_relative(cmd->pool, (char *) arg);
+#endif
 
     return NULL;
 }
@@ -227,7 +231,7 @@ static void websh_init_child(server_rec *s, pool *p)
 #endif
 
 static const command_rec websh_cmds[] = {
-    {"WebshConfig", set_webshscript, NULL, RSRC_CONF, TAKE1,
+    {"WebshConfig", CMDFUNC set_webshscript, NULL, RSRC_CONF, TAKE1,
      "the name of the main websh configuration file"},
     {NULL}
 };

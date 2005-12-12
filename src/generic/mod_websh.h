@@ -29,11 +29,17 @@
 #include "http_log.h"
 #include "util_script.h"
 
-/* define APACHE2 is appropriate */
+/* define APACHE2 if appropriate */
 #ifdef AP_SERVER_BASEREVISION
 #define APACHE2
+#if AP_SERVER_MINORVERSION_NUMBER < 2
+#define CMDFUNC
+#else
+#define CMDFUNC (cmd_func)
+#endif
 #else
 #define APACHE1
+#define CMDFUNC
 #endif
 
 #ifndef APACHE2
