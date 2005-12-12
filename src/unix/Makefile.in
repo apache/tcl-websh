@@ -85,7 +85,7 @@ SHELL = @SHELL@
 srcdir = @srcdir@
 prefix = @prefix@
 
-DESTDIR = $(prefix)/websh
+DESTDIR = $(prefix)
 
 bindir = $(DESTDIR)/bin
 libdir = $(DESTDIR)/lib
@@ -112,7 +112,12 @@ OBJEXT = @OBJEXT@
 RANLIB = @RANLIB@
 SHLIB_CFLAGS = @SHLIB_CFLAGS@
 SHLIB_LD = @SHLIB_LD@
-SHLIB_LD_DARWIN = $(CC) -bundle -bundle_loader $(HTTPD_BIN) $(LDFLAGS)
+Platform=$(shell uname -s)
+ifeq ($(Platform),Darwin)
+SHLIB_LD_CURRENT = $(CC) -bundle -bundle_loader $(HTTPD_BIN) $(LDFLAGS)
+else
+SHLIB_LD_CURRENT = $(SHLIB_LD) $(TCL_LD_FLAGS)
+endif
 SHLIB_LDFLAGS = @SHLIB_LDFLAGS@
 SHLIB_LD_LIBS = @SHLIB_LD_LIBS@
 STLIB_LD = @STLIB_LD@
@@ -172,7 +177,7 @@ binaries: $(BINARIES) $(OBJECTS) websh
 
 libraries: mod_websh.so
 
-install: all install-binaries install-libraries install-links install-doc
+install: all install-binaries install-libraries install-doc
 
 # =============================================================================
 # Dist target - to make the tarball.
@@ -252,13 +257,8 @@ websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
 	$(TCL_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) -o websh$(VERSION)
 
-
 mod_websh$(MODULE_LIB_SUFFIX): $(web_ap_OBJECTS)
-	if test "`uname -s`" = "Darwin" ; then \
-	$(SHLIB_LD_DARWIN) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC); \
-	else \
-	$(SHLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC); \
-	fi
+	$(SHLIB_LD_CURRENT) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
 
 mod_websh$(UNSHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
 	$(STLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(UNSHARED_LIB_SUFFIX) $(web_ap_OBJECTS)
@@ -321,19 +321,6 @@ install-binaries: install-dirs binaries
 install-libraries: install-dirs libraries
 	cp -f mod_websh$(VERSION).so $(moddir)
 	ln -s mod_websh$(VERSION).so $(moddir)/mod_websh.so
-
-# links to installation
-install-links: install-dirs
-	@if [ -d $(prefix)/lib ]; then \
-	echo "Linking libs to $(prefix)/lib"; \
-	ln -s $(libdir)/libmo $(prefix)/lib/libmo; \
-	ln -s $(libdir)/libvermo $(prefix)/lib/libvermo; \
-	fi
-	@if [ -d $(prefix)/bin ]; then \
-	echo "Linking exectable to $(prefix)/bin"; \
-	ln -s $(bindir)/websh $(prefix)/lib/websh; \
-	ln -s $(bindir)/webshver $(prefix)/lib/webshver; \
-	fi
 
 # documentation / sample mod_websh setup
 install-doc: install-dirs
