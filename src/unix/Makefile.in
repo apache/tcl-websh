@@ -84,17 +84,13 @@ SHELL = @SHELL@
 
 srcdir = @srcdir@
 prefix = @prefix@
+exec_prefix = @exec_prefix@
 
-DESTDIR = $(prefix)
-
-bindir = $(DESTDIR)/bin
-libdir = $(DESTDIR)/lib
-moddir = $(DESTDIR)/modules
-docdir = $(DESTDIR)/htdocs
-cfgdir = $(DESTDIR)/conf
-
-linklibdir = $(perfix)/lib
-linkbindir = $(perfix)/bin
+bindir = @bindir@
+libdir = @libdir@
+moddir = $(exec_prefix)/modules
+docdir = $(prefix)/htdocs
+cfgdir = $(prefix)/conf
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
@@ -307,26 +303,30 @@ distclean: clean
 # websh
 install-binaries: install-dirs binaries
 	cp -f websh$(VERSION) $(bindir)
+	rm -f $(bindir)/websh
 	ln -s websh$(VERSION) $(bindir)/websh
 	if [ -f libwebsh$(SHARED_LIB_SUFFIX) ]; then \
 	cp -f libwebsh$(SHARED_LIB_SUFFIX) $(libdir); \
+	rm -f $(libdir)/libwebsh.so; \
 	ln -s libwebsh$(SHARED_LIB_SUFFIX) $(libdir)/libwebsh.so; \
 	fi
 	if [ -f libwebsh$(UNSHARED_LIB_SUFFIX) ]; then \
 	cp -f libwebsh$(UNSHARED_LIB_SUFFIX) $(libdir); \
+	rm -f $(libdir)/libwebsh.a; \
 	ln -s libwebsh$(UNSHARED_LIB_SUFFIX) $(libdir)/libwebsh.a; \
 	fi
 
 # mod_websh
 install-libraries: install-dirs libraries
 	cp -f mod_websh$(VERSION).so $(moddir)
+	rm -f $(moddir)/mod_websh.so
 	ln -s mod_websh$(VERSION).so $(moddir)/mod_websh.so
 
 # documentation / sample mod_websh setup
 install-doc: install-dirs
 	cp -f $(TOP_DIR)/../doc/mod_websh/conf/*.* $(cfgdir)
 	cp -f $(TOP_DIR)/../doc/mod_websh/htdocs/*.* $(docdir)
-	cp -f $(TOP_DIR)/../doc/mod_websh/README $(DESTDIR)
+	cp -f $(TOP_DIR)/../doc/mod_websh/README $(prefix)
 
 # create destination directories
 install-dirs:
