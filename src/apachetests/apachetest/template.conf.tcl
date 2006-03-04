@@ -7,9 +7,6 @@ ServerRoot "$CWD"
 
 PidFile "$CWD/httpd.pid"
 
-#ResourceConfig "$CWD/srm.conf"
-#AccessConfig "$CWD/access.conf"
-
 Timeout 300
 
 MaxRequestsPerChild 0

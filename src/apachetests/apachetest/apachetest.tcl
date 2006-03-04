@@ -21,6 +21,19 @@ namespace eval apachetest {
 	mod_access	      access_module
 	mod_auth		auth_module
     }
+
+    ## Apache 2.2 has different names for some modules
+    array set module_assoc_22 {
+	mod_log_config           config_log_module
+	mod_mime                       mime_module
+	mod_negotiation         negotiation_module
+	mod_dir                         dir_module
+	mod_authz_host           authz_host_module
+	mod_auth_basic           auth_basic_module
+	mod_authn_file           authn_file_module
+	mod_authz_user           authz_user_module
+	mod_authz_groupfile authz_groupfile_module
+    }
     # name of the apache binary, such as /usr/sbin/httpd
     variable binname ""
     # this file should be in the same directory this script is.
@@ -93,7 +106,7 @@ proc apachetest::getbinname { argv } {
 # we need to load the shared object in the directory above...
 
 proc apachetest::getcompiledin { binname } {
-    variable module_assoc
+    variable modules
     set bin [open [list | "$binname" -l] r]
     set compiledin [read $bin]
     close $bin
@@ -105,8 +118,8 @@ proc apachetest::getcompiledin { binname } {
 	    if { $modname == "mod_so" } {
 		set mod_so_present 1
 	    }
-	    if { [info exists module_assoc($modname)] } {
-		lappend compiledin $module_assoc($modname)
+	    if { [info exists modules($modname)] } {
+		lappend compiledin $modules($modname)
 	    }
 	}
     }
@@ -158,10 +171,19 @@ proc apachetest::getloadmodules { conffile needtoget } {
 
 proc apachetest::determinemodules { binname } {
     variable module_assoc
+    variable module_assoc_22
+    variable modules
+
+    set ver [exec $binname -v]
+    if {[regexp {Apache/1\.3\.} $ver] || [regexp {Apache/2\.0\.} $ver]} {
+	array set modules [array get module_assoc]
+    } else {
+	array set modules [array get module_assoc_22]
+    }
     set compiledin [lsort [getcompiledin $binname]]
     set conffile [gethttpdconf $binname]
 
-    foreach {n k} [array get module_assoc] {
+    foreach {n k} [array get modules] {
 	lappend needed $k
     }
     set needed [lsort $needed]
