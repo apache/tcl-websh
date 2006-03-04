@@ -120,7 +120,49 @@ test filecounter-2.11 {forwards} {
     set res
 } {0-1000-2000-3000-4000-5000}
 
+test filecounter-3.0 {getval} {
+    web::filecounter cur -filename [web::tempfile] -seed 0 -incr 1 -max 1000
+    set res [cur nextval]
+    append res "-[cur getval]"
+    append res "-[cur nextval]"
+    append res "-[cur getval]"
+    append res "-[cur nextval]"
+    append res "-[cur getval]"
+    append res "-[cur nextval]"
+    set res
+} {0-0-1-1-2-2-3}
+
+test filecounter-3.1 {wrong option} {
+    catch {cur fooval} msg
+    set msg
+} {bad option "fooval": must be curval, nextval, getval, or config}
+
+set multifile [web::tempfile]
+
+test filecounter-3.2 {getval seed} {
+    web::filecounter c1 -filename $multifile -seed 0 -incr 1 -max 1000
+    set res [c1 getval]
+    append res "-[c1 nextval]"
+    append res "-[c1 getval]"
+    append res "-[c1 nextval]"
+    append res "-[c1 getval]"
+    append res "-[c1 nextval]"
+    append res "-[c1 getval]"
+    set res
+} {0-1-1-2-2-3-3}
+
+test filecounter-3.2 {getval from two counters} {
+    web::filecounter c2 -filename $multifile -seed 0 -incr 1 -max 1000
+    catch {c2 curval} result
+    append result "-[c2 getval]"
+    append result "-[c2 curval]"
+    append result "-[c1 nextval]"
+    append result "-[c2 curval]"
+    append result "-[c2 nextval]"
+} {web::filecounter: no current value available-3-3-4-3-5}
+
 file delete $filename
+file delete $multifile
 
 # cleanup
 ::tcltest::cleanupTests

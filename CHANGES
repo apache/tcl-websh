@@ -9,6 +9,9 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Added getval option to filecounter handle to retrieve current value from 
+  filecounter file (see documentation of web::filecounter)
+
 - Compatibility with Apache 2.2
 
 - Installation under Unix directly to prefix, not prefix/websh, 

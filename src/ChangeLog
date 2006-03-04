@@ -1,5 +1,11 @@
 2006-03-04 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
+	* src/generic/filecounter.[hc], src/tests/filecounter.test
+	doc/quickref.xml:
+	Added filecounterHandle getval to retrieve current value
+	from filecounter file.
+	Added documentation and tests.
+
 	* src/apachetests/apachetest/*:
 	Compatibility with Apache 2.2 module structure
 

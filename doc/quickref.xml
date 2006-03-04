@@ -2271,9 +2271,17 @@ FR
 	</variablelist>
 
 	After creation, a new command <option>name</option> is
-	registered with the following two subcommands:
+	registered with the following subcommands:
 
 	<variablelist>
+	  <varlistentry>
+	    <term><option><replaceable>name</replaceable></option> config</term>
+	    <listitem>
+	      <para>
+		Return a flat list of key value pairs with the filecounter's configuration.
+	      </para>
+	    </listitem>
+	  </varlistentry>
 	  <varlistentry>
 	    <term><option><replaceable>name</replaceable></option> nextval</term>
 	    <listitem>
@@ -2287,8 +2295,16 @@ FR
 	    <listitem>
 	      <para>
 		Return the current value, that is, the value that the
-		last call to &quot;nextval&quot; reported (as opposed
+		last call to &quot;nextval&quot; or &quot;getval&quot; reported (as opposed
 		to the current value in the file).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><option><replaceable>name</replaceable></option> getval</term>
+	    <listitem>
+	      <para>
+		Return the current value in the file. (Do not increment file as in &quot;nextval&quot;.)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2298,15 +2314,42 @@ FR
       <example>
 	<title>web::filecounter</title>
 	<programlisting>
-% web::filecounter handleName -filename &quot;test.dat&quot;
-handleName
-% # from now on, use handleName &lt;curval|nextval|config&gt;
-% handleName config
-file test.dat handle handleName seed 0 min 0 max 2147483647 incr 1 wrap false curr {not valid}
-% web::filecounter otherHandleName -filename &quot;othertest.dat&quot; -min 1 -max 10 -seed 1 -incr 2 -wrap 1
-otherHandleName
-% otherHandleName config
-file othertest.dat handle otherHandleName seed 1 min 1 max 10 incr 2 wrap true curr {not valid}
+% web::filecounter fc1 -filename test.dat
+fc1
+% fc1 config
+file test.dat handle fc1 seed 0 min 0 max 2147483647 incr 1 perms 0644 wrap false curr {not valid}
+% fc1 curval
+web::filecounter: no current value available
+% fc1 nextval
+0
+% fc1 config
+file test.dat handle fc1 seed 0 min 0 max 2147483647 incr 1 perms 0644 wrap false curr 0
+% fc1 nextval
+1
+% web::filecounter fc2 -filename test.dat
+fc2
+% fc2 curval
+web::filecounter: no current value available
+% fc2 getval
+1
+% fc2 nextval
+2
+% fc2 curval
+2
+% fc1 curval
+1
+% fc1 nextval
+3
+% fc2 getval
+3
+% web::filecounter fc3 -filename othertest.dat -min 1 -max 10 -seed 1 -incr 2 -wrap 1
+fc3
+% fc3 config
+file othertest.dat handle fc3 seed 1 min 1 max 10 incr 2 perms 0644 wrap true curr {not valid}
+% fc3 nextval
+1
+% fc3 nextval
+3
 %	</programlisting>
       </example>
 

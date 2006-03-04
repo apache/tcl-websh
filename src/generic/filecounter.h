@@ -55,7 +55,7 @@ SeqNoGenerator *createSeqNoGenerator(RequestData * requestData,
 
 int deleteSeqNoGenerator(SeqNoGenerator * seqnogen);
 int destroySeqNoGenerator(ClientData clientData, Tcl_Interp * interp);
-int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno);
+int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno, int next);
 
 /* --------------------------------------------------------------------------
  * The function to register with TCL

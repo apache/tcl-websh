@@ -55,9 +55,9 @@ int Web_Filecounter(ClientData clientData,
 {
 
     SeqNoGenerator *seqnogen = (SeqNoGenerator *) clientData;
-    static TCLCONST char *subCommands[] = { "curval", "nextval", "config", NULL };
+    static TCLCONST char *subCommands[] = { "curval", "nextval", "getval", "config", NULL };
     enum subCommands
-    { CURVAL, NEXTVAL, CONFIG };
+    { CURVAL, NEXTVAL, GETVAL, CONFIG };
     char **ptr = (char **) subCommands;
 
     int idx;
@@ -69,7 +69,7 @@ int Web_Filecounter(ClientData clientData,
      * ------------------------------------------------------------------- */
 
     if (objc != 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "curval|nextval|config");
+	Tcl_WrongNumArgs(interp, 1, objv, "curval|nextval|getval|config");
 	return TCL_ERROR;
     }
 
@@ -86,7 +86,17 @@ int Web_Filecounter(ClientData clientData,
 
     switch ((enum subCommands) idx) {
     case NEXTVAL:{
-	    if (nextSeqNo(interp, seqnogen, &seqno) != TCL_OK) {
+	    if (nextSeqNo(interp, seqnogen, &seqno, 1) != TCL_OK) {
+		/* error reporting done in subfunction */
+		return TCL_ERROR;
+	    }
+	    result = Tcl_NewIntObj(seqno);
+	    Tcl_SetObjResult(interp, result);
+	    return TCL_OK;
+	    break;
+	}
+    case GETVAL:{
+	    if (nextSeqNo(interp, seqnogen, &seqno, 0) != TCL_OK) {
 		/* error reporting done in subfunction */
 		return TCL_ERROR;
 	    }
@@ -318,13 +328,14 @@ int destroySeqNoGenerator(ClientData clientData, Tcl_Interp * interp)
 /* ------------------------------------------------------------------------
  * nextSeqNo
  * --------------------------------------------------------------------- */
-int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
+int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno, int next)
 {
-
+  /* if next == 1: incr filecounter, if next == 0: just get current value of filecounter */ 
     int currentSeqNo = -1;
     Tcl_Channel channel;
     Tcl_Obj *lineObj = NULL;
     int bytesRead = -1;
+    int newfile = 0;
 
     if (seqnogen == NULL)
 	return TCL_ERROR;
@@ -394,7 +405,7 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 		"web::filecounter", WEBLOG_INFO, "new file", NULL);
 
 	currentSeqNo = seqnogen->seed;
-
+	newfile = 1;
     }
     else {
 
@@ -424,9 +435,10 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 	/* --------------------------------------------------------------------
 	 * get value (and wrap)
 	 * ----------------------------------------------------------------- */
-	currentSeqNo += seqnogen->incrValue;
+	if (next == 1) {
+	  currentSeqNo += seqnogen->incrValue;
 
-	if (currentSeqNo > seqnogen->maxValue) {
+	  if (currentSeqNo > seqnogen->maxValue) {
 
 	    if (seqnogen->doWrap) {
 
@@ -447,17 +459,24 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 
 		return TCL_ERROR;
 	    }
+	  }
 	}
     }
 
     /* ------------------------------------------------------------------------
-     * write new value
+     * set result to return
      * --------------------------------------------------------------------- */
     *seqno = currentSeqNo;
 
-    Tcl_SetIntObj(lineObj, *seqno);
+    /* ------------------------------------------------------------------------
+     * write new value, but only if we need to:
+     * either next == 1 (i.e. we have a new value)
+     * or newfile == 1 (we have a new file to write)
+     * --------------------------------------------------------------------- */
+    if (next == 1 || newfile == 1) {
+      Tcl_SetIntObj(lineObj, *seqno);
 
-    if (Tcl_Seek(channel, 0, SEEK_SET) < 0) {
+      if (Tcl_Seek(channel, 0, SEEK_SET) < 0) {
 
 	LOG_MSG(interp, WRITE_LOG | SET_RESULT,
 		__FILE__, __LINE__,
@@ -470,25 +489,11 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 	Tcl_DecrRefCount(lineObj);
 
 	return TCL_ERROR;
-    }
+      }
 
-    /* truncate existing file while holding lock ! */
-    /*
-       {
-       Tcl_Channel channel2 = NULL;
+      Tcl_AppendToObj(lineObj, "\n", 1);
 
-       Tcl_Flush(channel);
-       channel2 = Tcl_OpenFileChannel(interp,
-       seqnogen->fileName,
-       "CREAT WRONLY TRUNC",0644);
-       Tcl_Close(interp,channel2);
-       Tcl_Seek(channel,0,SEEK_SET);
-       }
-     */
-
-    Tcl_AppendToObj(lineObj, "\n", 1);
-
-    {
+      {
 
 	int written = 0;
 	int expected = 0;
@@ -517,12 +522,14 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno)
 
 	    return TCL_ERROR;
 	}
+      }
+
+      /* ------------------------------------------------------------------------
+       * that's it
+       * --------------------------------------------------------------------- */
+      Tcl_Flush(channel);
     }
 
-    /* ------------------------------------------------------------------------
-     * that's it
-     * --------------------------------------------------------------------- */
-    Tcl_Flush(channel);
     unlock_TclChannel(interp, channel);
     Tcl_Close(interp, channel);
 
