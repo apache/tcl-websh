@@ -92,8 +92,8 @@ file rename quickref-$build html
 cd ../..
 
 # creating tar ball
-puts "creating tar ball websh-$build.tar.gz"
-exec tar czf ../websh-$build.tar.gz --exclude .svn websh-$build
+puts "creating tar ball websh-$build-src.tar.gz"
+exec tar czf ../websh-$build-src.tar.gz --exclude .svn websh-$build
 
 
 # cleanup
