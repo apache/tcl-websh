@@ -1,3 +1,21 @@
+2006-03-04 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/apachetests/apachetest/*:
+	Compatibility with Apache 2.2 module structure
+
+	* makedist:
+	renamed dist package to websh-<version>-src.tar.gz 
+	(consistend with other source packages in the ASF)
+	
+2005-12-12 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/generic/mod_websh.h, src/generic/mod_websh.c:
+	Compatibility with Apache 2.2 (command_struct)
+
+	* src/unix/Makefile.in:
+	Install directly to prefix (not into websh subdirectory)
+	Refactored ugly hack for Darwin bundle linking of mod_websh
+
 2005-11-16 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* doc/quickref.xml:
