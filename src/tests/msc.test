@@ -46,7 +46,7 @@ test tempfile-1.0a {web::tempfile dir prefix} {unixOnly} {
 	if {[file exists $tmp]} {
 	    set msg ok
 	    close $fh
-	    ## websh will try to remove file at end
+	    ## Websh will try to remove file at end
 	} else {
 	    set msg "filename $tmp not on file system"
 	}
@@ -64,7 +64,7 @@ test tempfile-1.0b {web::tempfile dir prefix} {pcOnly} {
 	if {[file exists $tmp]} {
 	    set msg ok
 	    close $fh
-	    ## websh will try to remove file at end
+	    ## Websh will try to remove file at end
 	} else {
 	    set msg "filename $tmp not on file system"
 	}
@@ -100,40 +100,57 @@ test tempfile-1.3 {temporary file name} {
     file exists $fn
 } {0}
 
+proc createFile filename {
+    set fh [open $filename w]
+    puts $fh x
+    close $fh
+}
+
+test tempfile-1.4 {remove temporary files} {} {
+    foreach f {f1 f2 f3 f4 f5 f6} {
+	set $f [web::tempfile]
+	createFile [set $f]
+    }
+    web::tempfile -remove
+    set exist 0
+    foreach f {f1 f2 f3 f4 f5 f6} {
+	incr exist [file exists [set $f]]
+    }
+    set exist
+} {0}
+
 test request-1.1 {access env var} {
 
-    set res [web::request -set webshell_test_11 "the webshell guy"]
-    lappend res [web::request -set webshell_test_11]
+    set res [web::request -set websh_test_11 "the Websh guy"]
+    lappend res [web::request -set websh_test_11]
     lappend res [web::request -set FOO_ENV_VAR]
-    #fixme: request should not modify env directly
-    #unset env(webshell_test_11)
     set res
-} {the webshell guy {the webshell guy} {}}
+} {the Websh guy {the Websh guy} {}}
 
 test request-1.2 {without subcommand} {
 
-    web::request -set webshell_test_12 "the webshell guy"
-    set res [web::request webshell_test_12]
+    web::request -set websh_test_12 "the Websh guy"
+    set res [web::request websh_test_12]
     lappend res [web::request FOO_ENV_VAR "bar_env"]
     set res
-} {the webshell guy bar_env}
+} {the Websh guy bar_env}
 
 test request-1.3 {-exists} {
 
-    set res [web::request -count webshell_test_13]
-    web::request -set webshell_test_13 "the webshell guy" "and the test guy"
-    lappend res [web::request -count webshell_test_13]
-    web::request -unset webshell_test_13
-    lappend res [web::request -count webshell_test_13]
+    set res [web::request -count websh_test_13]
+    web::request -set websh_test_13 "the Websh guy" "and the test guy"
+    lappend res [web::request -count websh_test_13]
+    web::request -unset websh_test_13
+    lappend res [web::request -count websh_test_13]
     set res
 } {0 2 0}
 
 test request-1.4 {-names} {
 
-    web::request -set webshell_test_14 "the webshell guy"
+    web::request -set websh_test_14 "the Websh guy"
     set tmp [web::request -names]
     set res [expr [llength $tmp] > 1]
-    lappend res [expr [lsearch $tmp "webshell_test_14"] != -1]
+    lappend res [expr [lsearch $tmp "websh_test_14"] != -1]
     set res
 } {1 1}
 
