@@ -105,7 +105,7 @@ typedef struct RequestData
 RequestData;
 
 
-/*void dRequestData(ClientData clientData);*/
+void destroyRequestDataHook(ClientData clientData);
 
 RequestData *createRequestData(Tcl_Interp * interp);
 int resetRequestData(Tcl_Interp * interp, RequestData * requestData);

@@ -26,10 +26,10 @@
 #include <sys/errno.h>
 #endif
 
-/*void dRequestData(ClientData clientData)
+void destroyRequestDataHook(ClientData clientData)
 {
     destroyRequestData(clientData, NULL);
-}*/
+}
 
 /* ----------------------------------------------------------------------------
  * Init --
@@ -83,11 +83,12 @@ int request_Init(Tcl_Interp * interp)
 		     destroyRequestData, (ClientData) requestData);
 
     /* -------------------------------------------------------------------------
-     * need an exit handler too (if this is the main interp)
+     * we need an exit handler (if this is the main interp)
+     * because we need to delete temp files on regular exit too
      * ---------------------------------------------------------------------- */
-    /*fixme: do we really need this? (it's leaking memory) */
-    /*if (Tcl_GetMaster(interp) == NULL)
-      Tcl_CreateThreadExitHandler(dRequestData, (ClientData) requestData);*/
+    if (Tcl_GetMaster(interp) == NULL) {
+      Tcl_CreateExitHandler(destroyRequestDataHook, (ClientData) requestData);
+    }
 
     /* -------------------------------------------------------------------------
      * done
@@ -240,6 +241,9 @@ void destroyRequestData(ClientData clientData, Tcl_Interp * interp)
     if (clientData != NULL) {
 
 	requestData = (RequestData *) clientData;
+
+	/* delete exit handler to prevent memory leak */
+	Tcl_DeleteExitHandler(destroyRequestDataHook, (ClientData) requestData);
 
 	WebDecrRefCountIfNotNull(requestData->cmdTag);
 	WebDecrRefCountIfNotNull(requestData->timeTag);
