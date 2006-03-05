@@ -389,9 +389,13 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
 
   next = Tcl_GetStringFromObj(in, &inLen);
   outbuf = Tcl_NewStringObj("", -1);
+  Tcl_IncrRefCount(outbuf);
 
-  if (inLen == 0)
+  if (inLen == 0) {
+    Tcl_DecrRefCount(outbuf);
     return 0;
+  }
+
 
   while (*next != 0) {
     cur = next;
@@ -470,7 +474,10 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
     tclo = outbuf;
   }
   Tcl_AppendToObj(tclo, "\"", -1);
+  Tcl_IncrRefCount(tclo); 
   res = Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
+  Tcl_DecrRefCount(tclo); 
+  Tcl_DecrRefCount(outbuf);
   return res;
 }
 
