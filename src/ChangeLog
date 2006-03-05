@@ -1,11 +1,23 @@
 2006-03-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
+	* src/generic/interpool.c:
+	Call Tcl_InitMemory to allow debugging when compiled with TCL_MEM_DEBUG
+
+	* src/generic/log.c:
+	Fxed memory leak when initializing logData->listOfFilters
+	and logData->listOfDests"
+
+	* src/generic/weboutint.c:
+	Fixed memory leak in webout_eval_tag
+	
 	* src/generic/request.[hc]:
 	Added ExitHandler to make sure tempfiles created with names
 	from [web::tempfile] are deleted correctly when process 
 	terminates properly (e.g. not killed)
 	
 	* src/unix/Makefile.in:
+	Added hint on TCL_MEM_DEBUG
+	Fixed typo in EXTRA_CFLAGS definition
 	Fixed purify and purecov targets
 
 	* src/tests/msc.test, src/test/webout.test:

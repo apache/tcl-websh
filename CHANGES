@@ -9,6 +9,11 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Added Tcl [memory] command to mod_websh when compiled with TCL_MEM_DEBUG
+  (Note: Tcl must also be compiled with TCL_MEM_DEBUG for this to work)
+
+- Memory leaks fixed (logging and web::putx)
+
 - Files created using filenames from [web::tempfile] are now always deleted 
   as long as the process terminates properly (e.g. is not killed)
 
