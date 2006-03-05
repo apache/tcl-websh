@@ -119,6 +119,12 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 	return NULL;
     }
 
+    /* just to be sure the memory command is imported if 
+       the corresponding Tcl features it */
+#ifdef TCL_MEM_DEBUG
+    Tcl_InitMemory(webInterp->interp);
+#endif
+
     /* now register here all websh modules */
     result = Tcl_Init(webInterp->interp);
     /* checkme: test result */
@@ -574,6 +580,12 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
 
     if (mainInterp == NULL)
 	return NULL;
+
+    /* just to be sure the memory command is imported if 
+       the corresponding Tcl features it */
+#ifdef TCL_MEM_DEBUG
+    Tcl_InitMemory(mainInterp);
+#endif
 
 #ifdef USE_TCL_STUBS
     if (Tcl_InitStubs(mainInterp,"8.2.0",0) == NULL) {
