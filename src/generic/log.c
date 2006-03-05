@@ -81,7 +81,7 @@ int log_Init(Tcl_Interp * interp)
     WebAssertData(interp, logtochannel, "log_Init/logtochannel plugin",
 		  TCL_ERROR)
 
-	logtochannel->constructor = createLogToChannel;
+    logtochannel->constructor = createLogToChannel;
     logtochannel->destructor = destroyLogToChannel;
     logtochannel->handler = logToChannel;
 
@@ -118,7 +118,7 @@ int log_Init(Tcl_Interp * interp)
     logtosyslog = createLogPlugIn();
     WebAssertData(interp, logtocmd, "log_Init/logtosyslog plugin", TCL_ERROR)
 
-	logtosyslog->constructor = createLogToSyslog;
+    logtosyslog->constructor = createLogToSyslog;
     logtosyslog->destructor = destroyLogToSyslog;
     logtosyslog->handler = logToSyslog;
 
@@ -147,6 +147,7 @@ LogData *createLogData()
 	logData->filterSize = 0;
 	logData->listOfDests = NULL;
 	logData->destSize = 0;
+	/* fake calls to initialize filters and destinations */
 	insertIntoFilterList(logData, (LogLevel *) NULL);
 	insertIntoDestList(logData, (LogDest *) NULL);
 
@@ -318,7 +319,12 @@ char * insertIntoDestList(LogData *logData, LogDest *logDest) {
     logData->listOfDests = newLogDests;
     logData->destSize += LOG_LIST_INITIAL_SIZE;
     WebFreeIfNotNull(logDests);
-    return insertIntoDestList(logData, logDest);
+    if (logDest != NULL) {
+      /* only when not fake call to inizialize listOfDests*/
+      return insertIntoDestList(logData, logDest);
+    } else {
+      return NULL;
+    }
   }
 }
 
@@ -347,7 +353,12 @@ char * insertIntoFilterList(LogData *logData, LogLevel *logLevel) {
     logData->listOfFilters = newLogLevels;
     logData->filterSize += LOG_LIST_INITIAL_SIZE;
     WebFreeIfNotNull(logLevels);
-    return insertIntoFilterList(logData, logLevel);
+    if (logLevel != NULL) {
+      /* only when not fake call to inizialize listOfDests*/
+      return insertIntoFilterList(logData, logLevel);
+    } else {
+      return NULL;
+    }
   }
 }
 
