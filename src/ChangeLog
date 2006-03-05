@@ -1,5 +1,10 @@
 2006-03-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
+	* <various sources>:
+	Changed version to 3.6.0b4
+
+2006-03-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
 	* src/generic/interpool.c:
 	Call Tcl_InitMemory to allow debugging when compiled with TCL_MEM_DEBUG
 
@@ -81,7 +86,7 @@
 
 	* src/unix/configure.in, src/win/Makefile, 
 	src/apachetests/runtests.tcl, websh.spec:
-	Changed version to 3.6.b3
+	Changed version to 3.6.0b3
 
 	* CHANGES:
 	Added enduser readable summary of ChangeLog

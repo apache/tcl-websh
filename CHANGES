@@ -6,8 +6,8 @@ for different versions.
 Please refer to src/ChangeLog for a detailed log of changes
 
 
-Trunk
------
+Websh 3.6.b4 (2006-03-05)
+-------------------------
 
 - Added Tcl [memory] command to mod_websh when compiled with TCL_MEM_DEBUG
   (Note: Tcl must also be compiled with TCL_MEM_DEBUG for this to work)
@@ -30,8 +30,8 @@ Trunk
 - Configuration and test compatibility fixes for OSX Darwin
 
 
-Websh 3.6.b3
-------------
+Websh 3.6.b3 (2005-11-11)
+-------------------------
 
 - Windows XP Makefile provided (for Visual Studio 6 nmake)
 
@@ -40,8 +40,8 @@ Websh 3.6.b3
 - Added simple setup example for mod_websh
 
 
-Websh 3.6.b2
-------------
+Websh 3.6.b2 (2005-10-28)
+-------------------------
 
 - Renamed [web::logfilter] to [web::loglevel] (kept [web::logfilter] for
   compatibility)
