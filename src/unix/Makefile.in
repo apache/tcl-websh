@@ -200,7 +200,7 @@ test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
 	umask 0; \
 	$(TOP_DIR)/unix/websh$(VERSION) webtest.ws3
 
-test.pure: websh$(VERSION).pure
+test.pure: websh$(VERSION).pure $(web_LIB_FILE) $(web_OBJECTS)
 	@LD_LIBRARY_PATH="$(TCL_PACKAGE_PATH):$(TCL_LIB_DIR):`pwd`:$(LD_LIBRARY_PATH)"; \
 	export LD_LIBRARY_PATH; \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
@@ -211,7 +211,7 @@ test.pure: websh$(VERSION).pure
 	umask 0; \
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).pure
 
-test.cov: websh$(VERSION).cov
+test.cov: websh$(VERSION).cov $(web_LIB_FILE) $(web_OBJECTS)
 	@LD_LIBRARY_PATH="$(TCL_PACKAGE_PATH):$(TCL_LIB_DIR):`pwd`:$(LD_LIBRARY_PATH)"; \
 	export LD_LIBRARY_PATH; \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
@@ -219,6 +219,7 @@ test.cov: websh$(VERSION).cov
 	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION).cov; export WEB_BIN; \
 	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
 	cd $(TOP_DIR)/tests; \
+	umask 0; \
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).cov
 
 depend:
@@ -259,12 +260,16 @@ mod_websh$(MODULE_LIB_SUFFIX): $(web_ap_OBJECTS)
 mod_websh$(UNSHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
 	$(STLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(UNSHARED_LIB_SUFFIX) $(web_ap_OBJECTS)
 
-pure: tclAppInit.$(OBJEXT) $(web_OBJECTS)
+pure: websh$(VERSION).pure
+
+websh$(VERSION).pure: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	purify $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
 	$(TCL_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).pure
 	-rm -f *_pure_*.o
 
-cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
+cov: websh$(VERSION).cov
+
+websh$(VERSION).cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	purecov $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
 	$(TCL_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).cov
 	-rm -f *_pure_*.o
