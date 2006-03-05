@@ -1,3 +1,17 @@
+2006-03-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/generic/request.[hc]:
+	Added ExitHandler to make sure tempfiles created with names
+	from [web::tempfile] are deleted correctly when process 
+	terminates properly (e.g. not killed)
+	
+	* src/unix/Makefile.in:
+	Fixed purify and purecov targets
+
+	* src/tests/msc.test, src/test/webout.test:
+	Added web::tempfile -remove test
+	String cleanup: webshell -> Websh
+	
 2006-03-04 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/generic/filecounter.[hc], src/tests/filecounter.test

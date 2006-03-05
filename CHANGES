@@ -9,6 +9,11 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Files created using filenames from [web::tempfile] are now always deleted 
+  as long as the process terminates properly (e.g. is not killed)
+
+- Makefile targets for purify and pure coverage fixed
+
 - Added getval option to filecounter handle to retrieve current value from 
   filecounter file (see documentation of web::filecounter)
 
