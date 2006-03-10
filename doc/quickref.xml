@@ -80,7 +80,7 @@ $Id$
 	<option><replaceable>key</replaceable></option> is returned. Note that
         unlike the <command>set</command> command 
 	<command>web::config</command> always returns the value 
-        for the given key before the new value is set. This allows to keep
+        for the given key <emphasis>before</emphasis> the new value is set. This allows to keep
         the old value and set it back later.
       </para>
       <variablelist>
@@ -143,22 +143,6 @@ $Id$
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term><option>version</option></term>
-	  <listitem>
-	    <para>
-	      Returns the version info string.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term><option>copyright</option></term>
-	  <listitem>
-	    <para>
-	      Returns a copyright message string.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
 	  <term><option>encryptchain</option> <optional><option><replaceable>list</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
@@ -188,14 +172,61 @@ and temporary files created when files are uploaded in multipart forms (see
 	  </listitem>
 	</varlistentry>
       </variablelist>
+
+      <para>
+The following special subcommand is used to reset all configuration options to their default values:
+      </para>
+      <variablelist>
+	<varlistentry>
+	  <term><option>reset</option></term>
+	  <listitem>
+	    <para>
+	      Resets all values to their defaults.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+      <para>
+The following two subcommands are read-only and just return their predefined values:
+      </para>
+      <variablelist>
+	<varlistentry>
+	  <term><option>version</option></term>
+	  <listitem>
+	    <para>
+	      Returns the version info string.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>copyright</option></term>
+	  <listitem>
+	    <para>
+	      Returns a copyright message string.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+
+
     <example>
       <title>web::config</title>
       <programlisting>
 % web::config decryptchain
 web::encryptd
+% web::config filepermissions 0666
+0644
+% web::config filepermissions
+0666
+% web::config putxmarkup tag
+brace
+% web::config reset
 % web::config filepermissions
 0644
-%      </programlisting>
+% web::config putxmarkup
+brace
+%     </programlisting>
     </example>
     </section>
   </section>
@@ -223,6 +254,39 @@ web::encryptd
 	Registers <option>cmdBody</option> as
 	<option>cmdName</option>. If <option>cmdName</option> is
 	omitted, "default" is used.
+
+	<example>
+	  <title>Simple command dispatching</title>
+	  <programlisting>
+proc page {title code} {
+    web::put &quot;&lt;html&gt;&lt;title&gt;[web::htmlify $title]&lt;/title&gt;&lt;body&gt;&quot;
+    web::put &quot;&lt;h1&gt;[web::htmlify $title]&lt;/h1&gt;&quot;
+    uplevel 1 $code
+    web::put {&lt;/body&gt;&lt;/html&gt;}
+}
+
+web::command default {
+    page &quot;Home&quot; {
+	web::put &quot;&lt;a href=\&quot;[web::cmdurl page1]\&quot;&gt;Link to Page 1&lt;/a&gt;&quot;
+	web::put &quot;&lt;br/&gt;&quot;
+	web::put &quot;&lt;a href=\&quot;[web::cmdurl page2]\&quot;&gt;Link to Page 2&lt;/a&gt;&quot;
+    }
+}
+
+web::command page1 {
+    page &quot;Page 1&quot; {
+	web::put &quot;&lt;a href=\&quot;[web::cmdurl default]\&quot;&gt;Home&lt;/a&gt;&quot;
+    }
+}
+
+web::command page2 {
+    page &quot;Page 2&quot; {
+	web::put &quot;&lt;a href=\&quot;[web::cmdurl default]\&quot;&gt;Home&lt;/a&gt;&quot;
+    }
+}
+
+web::dispatch</programlisting>
+	</example>
 
       </para>
     </section>
@@ -515,7 +579,7 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	  </varlistentry>
 	</variablelist>
 
-	In all cases, &quot;web::cmdurlcfg -option
+	In all these cases, &quot;web::cmdurlcfg -option
 	<option>value</option>&quot; sets the value of the given
 	option and returns the value that was used before the change,
 	while &quot;web::cmdurlcfg -option&quot; returns the current
@@ -524,19 +588,34 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	will be used.  This value, however, can not be retrieved using
 	web::cmdurlcfg.
 
+	<variablelist>
+	  <varlistentry>
+	    <term><option>-reset</option></term>
+	    <listitem>
+	      <para>
+		will reset the <command>web::cmdurlcfg</command> configuration.
+		Note however, that static parameters will not be reset by this option. To get
+		rid of static parameters configured with the <command>-set</command> option,
+		use <command>-unset</command> with (for a specific parameter) or without (for all parameters) key.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
       </para>
       <para>
-	Note that setting a value to an empty string amounts to
-	<command>unset</command>.
-
-	<emphasis>Note also</emphasis>: web::cmdurl compares every key
-	from the static parameters see --&gt;(web::cmdurlcfg) against
+	<emphasis>Note</emphasis> that setting a value to an empty string is the same as using
+	<command>-unset</command>.
+      </para>
+      <para>
+	<emphasis>Also note</emphasis>: <command>web::cmdurl</command> compares every key
+	from the static parameters against
 	the keys from the command line. The static parameter is only
 	used if there is no such parameter on the command line.
 
       </para>
       <example>
-	<title>web::cmdurl</title>
+	<title>web::cmdurl and web::cmdurlcfg</title>
 	<programlisting>
 % web::cmdurl &quot;&quot;
 ?XDqPtk34XvyPh41gUBo
@@ -546,6 +625,25 @@ bin/test_script?XDqPtk34XvyPh41gUBo
 % web::cmdurlcfg -scriptname &quot;&quot;
 % web::cmdurl &quot;&quot;
 ?XDqPtk34XvyPh41gUBo
+% web::cmdurlcfg -urlformat {scheme host port querystring}
+scriptname pathinfo querystring
+% # for clearer view on what happens: disable querystring encryption
+% web::config encryptchain {}
+web::encryptd
+% web::cmdurlcfg -set foo bar
+bar
+% web::cmdurlcfg -host tcl.apache.org
+% web::cmdurl zoo
+http://tcl.apache.org:80?foo=bar&amp;cmd=zoo&amp;t=1141776460
+% web::cmdurlcfg -reset
+% web::cmdurl zoo
+?foo=bar&amp;cmd=zoo&amp;t=1141776496
+% web::config cmdurltimestamp 0
+1
+% web::config cmdparam page
+cmd
+% web::cmdurl zoo
+?foo=bar&amp;page=zoo
 %	</programlisting>
       </example>
     </section>
@@ -2802,7 +2900,6 @@ web::command default {
     web::putxfile /tmp/dummypage.html
 }
 
-
 web::finalizer {
     web::log info "shutting down interp"
 }
@@ -2833,7 +2930,7 @@ Note that in the above example the lifetime of the interpreter class is set to 3
 	</cmdsynopsis>
 
 	Register code to be exectuted when the interpreter for this
-	Websh script is deleted. <command>web::dofinalize</command>
+	Websh script is deleted. <command>web::finalize</command>
 	will then call each <option>code</option> block that has been
 	registered, starting with the most recently added
 	<option>code</option>.
@@ -3049,11 +3146,10 @@ proc web::myFinalize {} {
 	The return value of that command is the name of the interpreter class
 	and at the same time the filename of the script for this interpreter
 	class.
-      </para>
-      <section>
-	<title>Example</title>
-	<para>
-	  <programlisting>
+
+        <example>
+          <title>web::interpmap</title>
+          <programlisting>
 proc web::interpmap {filename} {
     if {[string match "/path/to/myApp" $filename]} {
         # this is my special app
@@ -3066,15 +3162,13 @@ proc web::interpmap {filename} {
     # default: all templates are handled by my handler
     return /my/special/template/handler
 }	  </programlisting>
-	</para>
-      <para>
+	</example>
+
         The default implementation of web::interpmap is
 	<programlisting>proc web::interpmap {filename} {return $filename}</programlisting>
         which sets up a separate interpreter class for every requested URL
 	and takes the file itself as script.
       </para>
-
-      </section>
 
     </section>
 
