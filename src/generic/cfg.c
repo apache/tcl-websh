@@ -15,6 +15,7 @@
 #include <tcl.h>
 #include "cfg.h"
 #include "log.h"
+#include "webout.h"
 #include "request.h"
 #include "crypt.h"
 
@@ -276,14 +277,14 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	}
     case CMDTAG:{
 	    if (cfgData->requestData != NULL) {
+	      if (cfgData->requestData->cmdTag != NULL) {
+		Tcl_SetObjResult(interp,
+				 cfgData->requestData->cmdTag);
+	      }
 		switch (objc) {
 		case 2:
-		    if (cfgData->requestData->cmdTag != NULL) {
-			Tcl_SetObjResult(interp,
-					 cfgData->requestData->cmdTag);
-			return TCL_OK;
-		    }
-		    break;
+		  return TCL_OK;
+		  break;
 		case 3:
 		    WebDecrOldIncrNew(cfgData->requestData->cmdTag,
 				      Tcl_DuplicateObj(objv[2]));
@@ -304,14 +305,14 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	}
     case TIMETAG:{
 	    if (cfgData->requestData != NULL) {
+	      if (cfgData->requestData->timeTag != NULL) {
+		Tcl_SetObjResult(interp,
+				 cfgData->requestData->timeTag);
+	      }
 		switch (objc) {
 		case 2:
-		    if (cfgData->requestData->timeTag != NULL) {
-			Tcl_SetObjResult(interp,
-					 cfgData->requestData->timeTag);
-			return TCL_OK;
-		    }
-		    break;
+		  return TCL_OK;
+		  break;
 		case 3:
 		    WebDecrOldIncrNew(cfgData->requestData->timeTag,
 				      Tcl_DuplicateObj(objv[2]));
@@ -451,9 +452,8 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    Tcl_ResetResult(interp);
 	    Tcl_AppendResult(interp,
 	      "Copyright (c) 1996-2000 by Netcetera AG, http://netcetera.ch\n",
-	      "Copyright (c) 2001-2002 by Apache Software Foundation\n",
-	      "For license and information details, see http://tcl.apache.org/websh/\n",
-	      "Send comments and requests for help to info@websh.com",
+	      "Copyright (c) 2001-2006 by Apache Software Foundation\n",
+	      "For license and information details, see http://tcl.apache.org/websh/",
 	      NULL);
 	    return TCL_OK;
 	}
@@ -490,20 +490,39 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	}
     }
     case RESET: {
+	CryptData *cryptData = NULL;
+	Tcl_Obj *tmp = NULL;
+
 	WebAssertObjc(objc != 2, 2, NULL);
 
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->upLoadFileSize);
-	cfgData->requestData->upLoadFileSize = Tcl_NewLongObj(0);
+	cfgData->requestData->upLoadFileSize = Tcl_NewLongObj(UPLOADFILESIZEDEFAULT);
 
 	cfgData->requestData->filePermissions = DEFAULT_FILEPERMISSIONS;
 
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->timeTag);
-	WebNewStringObjFromStringIncr(cfgData->requestData->timeTag, "t");
+	WebNewStringObjFromStringIncr(cfgData->requestData->timeTag, TIMETAGDEFAULT);
 
 	WebDecrRefCountIfNotNullAndSetNull(cfgData->requestData->cmdTag);
-	WebNewStringObjFromStringIncr(cfgData->requestData->cmdTag, "cmd");
+	WebNewStringObjFromStringIncr(cfgData->requestData->cmdTag, CMDTAGDEFAULT);
 
 	Tcl_SetBooleanObj(cfgData->requestData->cmdUrlTimestamp, 1);
+
+	cfgData->outData->putxMarkup = PUTXMARKUPDEFAULT;
+
+	cryptData = cfgData->cryptData;
+	tmp = Tcl_NewStringObj(WEB_ENCRYPTDEFAULT, -1);
+	Tcl_IncrRefCount(tmp);
+	handleConfig(interp, &cryptData->encryptChain, tmp, 0);
+	Tcl_DecrRefCount(tmp);
+	tmp = Tcl_NewStringObj(WEB_DECRYPTDEFAULT, -1);
+	Tcl_IncrRefCount(tmp);
+	handleConfig(interp, &cryptData->decryptChain, tmp, 0);
+	Tcl_DecrRefCount(tmp);
+
+	cfgData->logData->logSubst = LOG_SUBSTDEFAULT;
+
+	Tcl_ResetResult(interp);
 
 	return TCL_OK;
     }
