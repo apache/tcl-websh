@@ -192,8 +192,10 @@ int handleConfig(Tcl_Interp * interp, Tcl_Obj ** tclo, Tcl_Obj * newValue,
     Tcl_DecrRefCount(*tclo);
     if (deleteIfEmpty && !strcmp(Tcl_GetString(newValue), ""))
 	*tclo = NULL;
-    else
+    else {
 	*tclo = Tcl_DuplicateObj(newValue);
+	Tcl_IncrRefCount(*tclo);
+    }
 
     return TCL_OK;
 }
