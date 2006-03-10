@@ -171,7 +171,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
      * --------------------------------------------------------------------- */
     code =
 	Tcl_NewStringObj
-	("rename exit exit.apache; proc exit {} {uplevel #0 return}", -1);
+	("rename exit exit.apache; proc exit {} {if {[info tclversion] >= 8.5} {return -level [expr {[info level] + 1}]} else {return -code error \"cannot exit script in mod_websh because process would terminate (use Tcl 8.5 or later if you want to use exit)\"}}", -1);
 
     Tcl_IncrRefCount(code);
     Tcl_EvalObjEx(webInterp->interp, code, 0);
