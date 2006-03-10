@@ -73,6 +73,9 @@ http://www3.netcetera.ch/bin/hefti/test.ws2/some/test/path?HalloDuDa
 #define CGICHANNEL "stdout"
 
 #define DEFAULT_FILEPERMISSIONS 0644
+#define TIMETAGDEFAULT "t"
+#define CMDTAGDEFAULT "cmd"
+#define UPLOADFILESIZEDEFAULT 0
 
 /* ----------------------------------------------------------------------------
  * RequestData

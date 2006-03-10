@@ -109,12 +109,12 @@ RequestData *createRequestData(Tcl_Interp * interp)
 
     if (requestData != NULL) {
 
-	WebNewStringObjFromStringIncr(requestData->cmdTag, "cmd");
-	WebNewStringObjFromStringIncr(requestData->timeTag, "t");
+	WebNewStringObjFromStringIncr(requestData->cmdTag, CMDTAGDEFAULT);
+	WebNewStringObjFromStringIncr(requestData->timeTag, TIMETAGDEFAULT);
 	requestData->cmdUrlTimestamp = Tcl_NewBooleanObj(1);
 	HashUtlAllocInit(requestData->request, TCL_STRING_KEYS);
 
-	requestData->upLoadFileSize = Tcl_NewLongObj(0);
+	requestData->upLoadFileSize = Tcl_NewLongObj(UPLOADFILESIZEDEFAULT);
 	requestData->filePermissions = DEFAULT_FILEPERMISSIONS;
 
 	HashUtlAllocInit(requestData->paramList, TCL_STRING_KEYS);
