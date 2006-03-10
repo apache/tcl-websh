@@ -28,6 +28,8 @@
 #define HTTP_RESPONSE "HTTP/1.0 200 OK"
 #define HEADER "Content-Type","text/html", "Generator", WEBSH " " VERSION
 
+#define PUTXMARKUPDEFAULT 0
+
 /* ----------------------------------------------------------------------------
  * typedefs
  * ------------------------------------------------------------------------- */

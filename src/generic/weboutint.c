@@ -312,7 +312,7 @@ OutData *createOutData(Tcl_Interp * interp)
 	    return NULL;
 	}
 
-	outData->putxMarkup = 0;
+	outData->putxMarkup = PUTXMARKUPDEFAULT;
     }
 
     return outData;
