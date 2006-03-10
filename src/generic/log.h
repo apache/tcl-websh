@@ -88,6 +88,7 @@
 #define LOG_LIST_INITIAL_SIZE 10
 #define LOG_FILTER_PREFIX "loglevel"
 #define LOG_DEST_PREFIX "logdest"
+#define LOG_SUBSTDEFAULT 0
 
 /* ----------------------------------------------------------------------------
  * list of possible categories

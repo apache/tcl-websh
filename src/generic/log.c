@@ -152,7 +152,7 @@ LogData *createLogData()
 	insertIntoDestList(logData, (LogDest *) NULL);
 
 	HashUtlAllocInit(logData->listOfPlugIns, TCL_STRING_KEYS);
-	logData->logSubst = 0;
+	logData->logSubst = LOG_SUBSTDEFAULT;
 	logData->keep = 0;
     }
 
