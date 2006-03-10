@@ -20,6 +20,9 @@
 #define CRYPT_H
 
 #define WEB_CRYPT_ASSOC_DATA  "web::crypt"
+#define WEB_ENCRYPTDEFAULT "web::encryptd"
+#define WEB_DECRYPTDEFAULT "web::decryptd"
+
 
 /* ----------------------------------------------------------------------------
  * crypt data structure

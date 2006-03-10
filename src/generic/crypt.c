@@ -57,10 +57,10 @@ int crypt_Init(Tcl_Interp * interp)
     /* --------------------------------------------------------------------------
      * default encrypt and decrypt chains
      * ----------------------------------------------------------------------- */
-    tmp = Tcl_NewStringObj("web::encryptd", -1);
+    tmp = Tcl_NewStringObj(WEB_ENCRYPTDEFAULT, -1);
     cryptData->encryptChain = Tcl_NewListObj(1, &tmp);
 
-    tmp = Tcl_NewStringObj("web::decryptd", -1);
+    tmp = Tcl_NewStringObj(WEB_DECRYPTDEFAULT, -1);
     cryptData->decryptChain = Tcl_NewListObj(1, &tmp);
 
     /* --------------------------------------------------------------------------
