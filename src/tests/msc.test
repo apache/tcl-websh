@@ -28,9 +28,8 @@ test copyright-1.0 {web::config copyright} {
     set tmp [web::config copyright]
     lappend res [regexp {http://netcetera\.ch} $tmp]
     lappend res [regexp {http://tcl\.apache\.org/websh} $tmp]
-    lappend res [regexp {info@websh\.com} $tmp]
     set res
-} {1 1 1}
+} {1 1}
 
 test tempfile-1.0a {web::tempfile dir prefix} {unixOnly} {
     set home "/tmp"
