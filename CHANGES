@@ -6,6 +6,24 @@ for different versions.
 Please refer to src/ChangeLog for a detailed log of changes
 
 
+Trunk
+-----
+
+- Added documentation of [web::config reset] and [web::cmdurlcfg]
+  and other minor fixes in quickref
+
+- Updated [web::config copyright] output
+
+- Fixed [web::config key ?value?] to always return old value
+
+- Fixed [web::config reset] to reset all configuration options
+
+- Use Tcl8.5 feature [return -level <lvl>] to rewrite exit so that script
+  in mod_websh terminates w/o terminating the process. (Only attempts this
+  with Tcl >= 8.5. In older versions of Tcl mod_websh will throw an 
+  error when exit is called, but not terminate the process either.)
+
+
 Websh 3.6.b4 (2006-03-05)
 -------------------------
 

@@ -1,3 +1,39 @@
+2006-03-10 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* doc/quickref.xml, doc/quickref.xsl:
+	Added docu for [web::config reset] and clarified [web::config]
+	documentation in general.
+	Added docu for [web::cmdurlcfg -reset] and enhanced example
+	Changed import to docbook release 1.69.1
+	Fixed old [web::dofinalize] typo and [web::interpmap] example format
+
+	* src/tests/msc.test:
+	Changed test for [web::config copyright]
+
+	* src/generic/cfg.c:
+	Fixed result of [web::config cmdparam newvalue] (return old value)
+	Fixed result of [web::config timeparam newvalue] (return old value)
+	Updated output for [web::config copyright]
+	Fixed [wweb::config reset]: also reset encrytchain, decryptchain,
+	putxmarkup, and logsubst
+
+	* src/generic/cfg.c, src/generic/crypt.[hc], src/generic/weboutint.c
+	  src/generic/request.[hc], src/generic/webout.h, src/generic/log.[hc]:
+	Use #define for Default values of [web::config options] uploadfilesize, 
+	timeparam, cmdparam, encryptchain, decryptchain, and logsubst
+	
+	* src/tests/cfg.test:
+	Added test for [web::config reset] and other [web::config] bugs
+
+	* src/generic/webutl.c:
+	Better Tcl RefCount handling in handleConfig()
+
+	* src/generic/interpool.c:
+	Adopt Tcl 8.5 [return -level <lvl>] syntax for redefinition of [exit]
+	(Exiting the script w/o terminating the process in mod_websh)
+	The broken old behavior was exchanged with an error.
+
+	
 2006-03-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* <various sources>:
