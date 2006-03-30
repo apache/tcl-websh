@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl"?>
+<rdf:RDF xml:lang="en"
+         xmlns="http://usefulinc.com/ns/doap#" 
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:asfext="http://projects.apache.org/ns/asfext#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/">
+<!--
+  =======================================================================
+
+   Copyright (c) 2006 The Apache Software Foundation.  
+   All rights reserved.
+
+  =======================================================================
+  
+  This file is used for the automated Apache project site
+  http://projects.apache.org
+
+-->
+  <Project rdf:about="http://tcl.apache.org/websh">
+    <created>2006-03-30</created>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/asl20" />
+    <name>Apache Websh</name>
+    <homepage rdf:resource="http://tcl.apache.org/websh" />
+    <asfext:pmc rdf:resource="http://tcl.apache.org" />
+    <shortdesc>Websh is a rapid development environment for building powerful, fast, and reliable web applications in Tcl</shortdesc>
+    <description>Websh is a rapid development environment for building powerful, fast, and reliable web applications in Tcl. Websh is versatile and handles everything from HTML generation to data-base driven one-to-one page customization. Websh can be run CGI environments and as Apache module.
+</description>
+    <bug-database rdf:resource="http://issues.apache.org/bugzilla/buglist.cgi?product=WebSH" />
+    <mailing-list rdf:resource="http://tcl.apache.org/websh/subscribe.ws3" />
+    <download-page rdf:resource="http://tcl.apache.org/websh/download.ws3" />
+    <programming-language>C</programming-language>
+    <programming-language>Tcl</programming-language>
+    <category rdf:resource="http://projects.apache.org/category/web-framework" />
+    <category rdf:resource="http://projects.apache.org/category/http-modules" />
+    <release>
+      <Version>
+        <name>Websh 3.6.0b4</name>
+        <created>2006-03-05</created>
+        <revision>3.6.0b4</revision>
+      </Version>
+    </release>
+    <repository>
+      <SVNRepository>
+        <location rdf:resource="http://svn.apache.org/repos/asf/tcl/websh/trunk"/>
+        <browse rdf:resource="http://svn.apache.org/viewcvs.cgi/tcl/websh/trunk"/>
+      </SVNRepository>
+    </repository>
+    <maintainer>
+      <foaf:Person>
+        <foaf:name>Websh Team</foaf:name>
+          <foaf:mbox rdf:resource="mailto:websh-dev@tcl.apache.org"/>
+      </foaf:Person>
+    </maintainer>
+  </Project>
+</rdf:RDF>
