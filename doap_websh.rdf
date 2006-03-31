@@ -32,7 +32,7 @@
     <programming-language>C</programming-language>
     <programming-language>Tcl</programming-language>
     <category rdf:resource="http://projects.apache.org/category/web-framework" />
-    <category rdf:resource="http://projects.apache.org/category/http-modules" />
+    <category rdf:resource="http://projects.apache.org/category/httpd-module" />
     <release>
       <Version>
         <name>Websh 3.6.0b4</name>
