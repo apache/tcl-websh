@@ -29,6 +29,14 @@
 #include <sys/stat.h>
 #ifndef WIN32
 #include <unistd.h>
+#else
+/* define access mode constants if they are not defined yet 
+   if we're under Windows (they are defined in unistd.h, which doesn't
+   exist under Windows) currently only R_OK is used.
+ */
+#ifndef R_OK
+#define R_OK 4
+#endif
 #endif
 
 /* init script for main interpreter */
@@ -337,13 +345,8 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     /* get last modified time for id */
     if (strcmp(id, filename)) {
 	struct stat statPtr;
-#ifdef WIN32
-	if (Tcl_Access(id, _S_IREAD) != 0 ||
-	    Tcl_Stat(id, &statPtr) != TCL_OK)
-#else
 	if (Tcl_Access(id, R_OK) != 0 ||
  	    Tcl_Stat(id, &statPtr) != TCL_OK)
-#endif
 	{
 	    Tcl_MutexUnlock(&(conf->mainInterpLock));
 	    Tcl_DecrRefCount(idObj);
