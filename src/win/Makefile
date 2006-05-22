@@ -18,7 +18,7 @@
 ## configuration variables
 
 TCL_PREFIX=C:/Program Files/Tcl
-TCL_VERSION=83
+TCL_VERSION=84
 HTTPD_PREFIX=C:/Program Files/Apache Group/Apache2
 INSTALL_PREFIX=C:/Program Files/Apache Group/Websh
 
