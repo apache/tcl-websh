@@ -1,3 +1,12 @@
+2006-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/generic/interpool.c:
+	Fixed call to Tcl_Access under Windows (newer Tcl versions)
+	(define R_OK locally instead of using external Windows variable)
+
+	* src/win/Makefile:
+	Default Tcl version set to 8.4
+	
 2006-03-10 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* doc/quickref.xml, doc/quickref.xsl:

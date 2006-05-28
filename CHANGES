@@ -9,6 +9,8 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Fix of html file handling in mod_websh under Windows
+
 - Added documentation of [web::config reset] and [web::cmdurlcfg]
   and other minor fixes in quickref
 
