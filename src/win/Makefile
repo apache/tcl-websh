@@ -141,8 +141,15 @@ TCLSH_PROG = "$(TCL_PREFIX)\bin\tclsh$(TCL_VERSION)"
 HTTPD_INCLUDES = "$(HTTPD_PREFIX)/include"
 !IF EXIST("$(HTTPD_PREFIX)/include/apr_strings.h")
 # Apache 2
+!IF EXIST("$(HTTPD_PREFIX)/lib/libapr.lib")
+# Apache 2.0
 HTTPD_LIBS = "$(HTTPD_PREFIX)/lib/libhttpd.lib" \
 	"$(HTTPD_PREFIX)/lib/libapr.lib"
+!ELSE
+# Apache 2.2
+HTTPD_LIBS = "$(HTTPD_PREFIX)/lib/libhttpd.lib" \
+	"$(HTTPD_PREFIX)/lib/libapr-1.lib"
+!ENDIF
 !ELSE
 # Apache 1.3
 HTTPD_LIBS = "$(HTTPD_PREFIX)/lib/ap.lib" \
