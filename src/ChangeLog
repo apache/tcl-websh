@@ -1,3 +1,8 @@
+2007-01-03 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/win/Makefile:
+	Apache 2.2 compatibility: reference new apr lib if needed
+
 2006-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/generic/interpool.c:
