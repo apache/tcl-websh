@@ -265,15 +265,12 @@ Tcl_Obj *webHtmlify(ConvData * convData, Tcl_Obj * in, int useNumeric)
 int webDeHtmlify(ConvData * convData, Tcl_Obj * in, Tcl_Obj * out)
 {
 
-    int length = 0;		/* length of input */
+    int length;			/* length of input */
     int pos = 0;		/* actual position in string */
-    Tcl_UniChar *unic = NULL;
+    Tcl_UniChar *unic;
     int plainfirst = 0;
     int plainend = 0;
-    int dump = 0;
     int err = 0;		/* temporary use, may be removed */
-
-    Tcl_Obj *err_buffer = NULL;
 
     if (in == NULL || out == NULL) {
 	return TCL_ERROR;

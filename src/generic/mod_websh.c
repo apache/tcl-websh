@@ -366,9 +366,6 @@ static int websh_handler(request_rec * r)
 {
 
     int res;
-    void *sconf = r->server->module_config;
-    websh_server_conf *conf =
-	(websh_server_conf *) ap_get_module_config(sconf, &websh_module);
 
 #ifdef APACHE2
     if (strcmp(r->handler, WEBSHHANDLER))

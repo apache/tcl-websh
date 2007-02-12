@@ -58,9 +58,8 @@ int Web_Filecounter(ClientData clientData,
     static TCLCONST char *subCommands[] = { "curval", "nextval", "getval", "config", NULL };
     enum subCommands
     { CURVAL, NEXTVAL, GETVAL, CONFIG };
-    char **ptr = (char **) subCommands;
 
-    int idx;
+    int idx = 0;
     int seqno;
     Tcl_Obj *result = NULL;
 

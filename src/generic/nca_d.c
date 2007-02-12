@@ -258,15 +258,14 @@ int Web_DecryptD(ClientData clientData,
 Tcl_Obj *encryptNcaD(Tcl_Interp * interp, ClientData clientData, Tcl_Obj * in)
 {
 
-    Tcl_Obj *out = NULL;
-    int pack = 0, type = 0, prev = 0, newc = 0, pos = 0;
-    Tcl_Obj *key = NULL;
-    unsigned char *keyBytes = NULL;
+    Tcl_Obj *out;
+    int pack, type, prev = 0, newc, pos = 0;
+    Tcl_Obj *key;
+    unsigned char *keyBytes;
     int keyLen = -1;
     char outc;
-    Tcl_Obj *tmp = NULL;
-    int i = 0;
-    char *str = NULL;
+    int i;
+    char *str;
     int strLen = -1;
 
     if ((clientData == NULL) || (in == NULL))

@@ -108,7 +108,6 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 {
 
     int result = 0;
-    time_t t = 0;
     LogPlugIn *logtoap = NULL;
     Tcl_Obj *code = NULL;
 
@@ -306,7 +305,6 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     Tcl_HashEntry *entry = NULL;
     WebInterp *found = NULL;
     WebInterpClass *webInterpClass = NULL;
-    LogToApData *logToApData = NULL;
     char *id = NULL;
     Tcl_Obj *idObj = NULL;
     Tcl_Obj *mapCmd = NULL;

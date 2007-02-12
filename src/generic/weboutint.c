@@ -28,8 +28,6 @@
 Tcl_Channel getChannel(Tcl_Interp * interp, ResponseObj * responseObj)
 {
 
-    char *varName = NULL;
-    char *channelName = NULL;
     int mode = 0;
     Tcl_Channel channel = NULL;
 
@@ -133,18 +131,12 @@ ResponseObj *createResponseObj(Tcl_Interp * interp, char *channelName,
 {
 
     Tcl_HashTable *hash = NULL;
-    ResponseObj *responseObj = NULL;
-    int err = 0;
-    int mode = 0;
-    char *name = NULL;
-    Tcl_Obj *tmp = NULL;
-    Tcl_Obj *tmp2 = NULL;
+    ResponseObj *responseObj;
     char *defheaders[] = { HEADER, NULL };
     int i;
 
     if (channelName == NULL)
 	return NULL;
-    name = channelName;
 
 /*   fprintf(stderr,"creating '%s'\n",channelName); fflush(stderr); */
 
@@ -173,8 +165,8 @@ ResponseObj *createResponseObj(Tcl_Interp * interp, char *channelName,
     i = 0;
 
     while (defheaders[i]) {
-	char *key = NULL;
-	Tcl_Obj *val = NULL;
+	char *key;
+	Tcl_Obj *val;
 
 	key = defheaders[i++];
 	val = Tcl_NewStringObj(defheaders[i++], -1);
@@ -185,7 +177,7 @@ ResponseObj *createResponseObj(Tcl_Interp * interp, char *channelName,
     responseObj->sendHeader = 1;
     responseObj->bytesSent = 0;
     responseObj->headers = hash;
-    responseObj->name = Tcl_NewStringObj(name, -1);
+    responseObj->name = Tcl_NewStringObj(channelName, -1);
     responseObj->httpresponse = NULL;
     responseObj->headerHandler = headerHandler;
 
@@ -351,9 +343,8 @@ int resetOutData(Tcl_Interp * interp, OutData * outData)
 int destroyOutData(ClientData clientData, Tcl_Interp * interp)
 {
 
-    OutData *outData = NULL;
+    OutData *outData;
     /* HashTableIterator iterator; */
-    ResponseObj *responseObj = NULL;
 
     if (clientData == NULL)
 	return TCL_ERROR;
@@ -383,7 +374,7 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
   int startseqlen = strlen(strstart);
   int begin = 1;
   int firstScan = 1;
-  int inside = 0, p = 0;
+  int inside = 0;
   int inLen = 0;
   int res = 0;
 

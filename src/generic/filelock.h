@@ -23,6 +23,8 @@
 #endif
 #ifdef WIN32
 #  include <windows.h>
+/* intptr_t needed for 64 Bit platforms -> dummy in Win32*/
+typedef	int	intptr_t;
 #endif
 #ifdef FREEBSD
 #    include <unistd.h>

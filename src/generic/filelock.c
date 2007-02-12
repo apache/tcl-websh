@@ -24,9 +24,7 @@ int truncate_file(ClientData handle)
 {
 
     int res = -1;
-    int filedes = -1;
-
-    filedes = (int) handle;
+    int filedes = (int)(intptr_t)handle;
 
 #ifdef SYSV
     /* since lockf takes size as argument,
@@ -68,9 +66,7 @@ int lock_file(ClientData handle)
 {
 
     int res = -1;
-    int filedes = -1;
-
-    filedes = (int) handle;
+    int filedes = (int)(intptr_t)handle;
 
 #ifdef SYSV
     /* since lockf takes size as argument,
@@ -105,10 +101,8 @@ int lock_file(ClientData handle)
 int unlock_file(ClientData handle)
 {
 
-    int res = 0;
-    int filedes = -1;
-
-    filedes = (int) handle;
+    int res = -1;
+    int filedes = (int)(intptr_t)handle;
 
 #ifdef SYSV
     /* since lockf takes size as argument,
@@ -146,7 +140,6 @@ int lock_TclChannel(Tcl_Interp * interp, Tcl_Channel channel)
 {
 
     ClientData handle;
-    int res = 0;
 
     if (Tcl_GetChannelHandle(channel, TCL_WRITABLE, &handle) != TCL_OK) {
 
@@ -174,7 +167,6 @@ int unlock_TclChannel(Tcl_Interp * interp, Tcl_Channel channel)
 {
 
     ClientData handle;
-    int res = 0;
 
     if (Tcl_GetChannelHandle(channel, TCL_WRITABLE, &handle) != TCL_OK) {
 	LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
@@ -243,7 +235,6 @@ int Web_TruncateFile(ClientData clientData,
 
     Tcl_Channel channel;
     ClientData handle;
-    int res = 0;
 
     WebAssertObjc(objc != 2, 1, "channel");
 

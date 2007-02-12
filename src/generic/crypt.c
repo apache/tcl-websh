@@ -25,9 +25,8 @@
 int crypt_Init(Tcl_Interp * interp)
 {
 
-    CryptData *cryptData = NULL;
-    int ires = 0;
-    Tcl_Obj *tmp = NULL;
+    CryptData *cryptData;
+    Tcl_Obj *tmp;
 
     /* --------------------------------------------------------------------------
      * interpreter running ?

@@ -562,7 +562,6 @@ long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
     long rBytes = 0;
     long rBytesPrev = 0;
     long wBytes = 0;
-    char *tmpCurLine = NULL;
 
     /* --------------------------------------------------------------------------
      * sanity

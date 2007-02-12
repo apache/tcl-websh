@@ -82,7 +82,6 @@ int Web_Finalizer(ClientData clientData,
 {
 
     WebInterp *webInterp = (WebInterp *) clientData;
-    int res = 0;
 
     if (objc != 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "code");

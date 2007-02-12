@@ -79,14 +79,12 @@ int Web_UriDecode(ClientData clientData,
 Tcl_Obj *uriEncode(Tcl_Obj * inString)
 {
 
-    long length = 0;
-    long i = 0;
-    char str[32];		/* for hex representation of i. 64 bit -> string
-				   with 16 chars. 32 should be long enough, then. */
-    Tcl_Obj *tclo = NULL;
-    char *utfs = NULL;
-    Tcl_UniChar unic = 0;
-    unsigned char *bytes = NULL;
+    long i;
+    char str[32];	/* for hex representation of i. 64 bit -> string
+			   with 16 chars. 32 should be long enough, then. */
+    Tcl_Obj *tclo;
+    Tcl_UniChar unic;
+    unsigned char *bytes;
     int bytesLen = -1;
 
     IfNullLogRetNull(NULL, inString, "uriEncode: got NULL as input.");

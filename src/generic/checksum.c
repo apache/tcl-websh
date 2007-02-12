@@ -84,7 +84,6 @@ Tcl_Obj *crcAsciify(unsigned short crc)
     Tcl_Obj *tmp = NULL;
     char tmpc1 = 0;
     char tmpc2 = 0;
-    int i = 0;
     unsigned char byte = 0;
 
     tmp = Tcl_NewObj();
@@ -143,8 +142,7 @@ Tcl_Obj *crcCheck(Tcl_Obj * in)
 {
 
     Tcl_Obj *crcObj = NULL;
-    char *str = NULL;
-    int len = 0;
+    int len;
     int crc1;
     int crc2;
 

@@ -263,9 +263,8 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		return resetOutData(interp, outData);
 
 	    case RESET:{
-		    Tcl_Obj *tmp = NULL;
-		    int err = 0;
-		    char *tname = NULL;
+		    Tcl_Obj *tmp;
+		    char *tname;
 
 		    WebAssertObjc(objc != 2, 2, NULL);
 

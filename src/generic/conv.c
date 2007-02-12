@@ -162,8 +162,7 @@ int Web_DeHtmlify(ClientData clientData,
 {
 
     ConvData *convData = NULL;
-    Tcl_Obj *res1 = NULL;
-    Tcl_Obj *res2 = NULL;
+    Tcl_Obj *res1;
 
     /* --------------------------------------------------------------------------
      * check for private data

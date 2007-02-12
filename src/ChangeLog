@@ -1,3 +1,19 @@
+2007-02-12 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/generic/dispatch.c, src/generic/crypt.c, src/generic/logutl.c, 
+	src/generic/htmlify.c, src/generic/formdata.c, src/generic/checksum.c,
+	src/generic/conv.c, src/generic/request_ap.c, src/generic/interpool.c,
+	src/generic/weboutint.c, src/generic/request.c,
+	src/generic/modwebsh_ap.c, src/generic/nca_d.c,
+	src/generic/mod_websh.c, src/generic/uricode.c, src/generic/webout.c,
+	src/generic/filecounter.c, src/generic/log.c, src/generic/filelock.c,
+	src/generic/filelock.h, generic/paramlist.c, src/generic/args.c:
+	Adapted patch from Mikhail Teterin <mi+apache@aldan.algebra.com>
+	- Removed unused local variables to allow compile w/o complaints 
+	  when using -Wall -Werror
+	- Removed some redundant initialization of variables
+        Thanks Mikhail
+	
 2007-01-03 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/win/Makefile:

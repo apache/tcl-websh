@@ -434,15 +434,13 @@ int Web_Log(ClientData clientData,
 	    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
 
-    LogData *logData = NULL;
-    int iTmp = 0;
-    int iCur = 0;
+    LogData *logData;
 
     /* ------------------------------------------------------------------------
      * check for internal data
      * --------------------------------------------------------------------- */
-    WebAssertData(interp, clientData, "Web_Log", TCL_ERROR)
-	logData = (LogData *) clientData;
+    WebAssertData(interp, clientData, "Web_Log", TCL_ERROR);
+    logData = (LogData *) clientData;
 
     /* ------------------------------------------------------------------------
      * try to be fast
@@ -696,8 +694,6 @@ int Web_LogDest(ClientData clientData,
 	}
     case DELETE:{
 
-	    LogDest *logDest = NULL;
-
 	    /*      0               1      2 */
 	    /*      web::loglogDest delete logDest1 */
 
@@ -892,8 +888,6 @@ int Web_LogFilter(ClientData clientData,
 	    break;
 	}
     case DELETE:{
-
-	    LogLevel *logLevel = NULL;
 
 	    /*      0              1      2 */
 	    /*      web::loglevel delete logLevel1 */

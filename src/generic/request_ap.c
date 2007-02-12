@@ -39,7 +39,6 @@ char *requestGetDefaultOutChannelName()
 int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
 {
 
-    int res = 0;
     /*Tcl_Obj *reso = NULL;*/
     request_rec *r = NULL;
 #ifndef APACHE2

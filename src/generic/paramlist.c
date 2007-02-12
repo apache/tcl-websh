@@ -85,9 +85,8 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
 int paramListSet(ParamList * hash, char *key, Tcl_Obj * value)
 {
 
-    Tcl_Obj *existingValue = NULL;
-    Tcl_Obj *copy = NULL;
-    int len = 0;
+    Tcl_Obj *existingValue;
+    Tcl_Obj *copy;
 
     if ((hash == NULL) || (key == NULL) || (value == NULL))
 	return TCL_ERROR;
@@ -537,7 +536,7 @@ void emptyParamList(ParamList * paramList)
     Tcl_HashEntry *he;
 
     if (hash != NULL) {
-	while (he = Tcl_FirstHashEntry(hash, &hs)) {
+	while ((he = Tcl_FirstHashEntry(hash, &hs))) {
 	    tclo = (Tcl_Obj *) Tcl_GetHashValue(he);
 	    if (tclo != NULL)
 		Tcl_DecrRefCount(tclo);

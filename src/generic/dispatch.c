@@ -54,11 +54,8 @@ int Web_Dispatch(ClientData clientData,
     };
 
     int idx = 0;
-    Tcl_Obj *post_data = NULL;
-    Tcl_Obj *query_string = NULL;
-    Tcl_Obj *formDataChannel = NULL;
-    Tcl_Obj *formDataBoundary = NULL;
-    Tcl_Obj *urlEncString = NULL;
+    Tcl_Obj *post_data;
+    Tcl_Obj *query_string;
 
     /* --------------------------------------------------------------------------
      * check for private data
@@ -407,8 +404,7 @@ int parsePostData(Tcl_Interp * interp, Tcl_Obj * name,
 		  Tcl_Obj * len, Tcl_Obj * type, RequestData * requestData)
 {
 
-    char *content_type = NULL;
-    int iTmp = 0;
+    char *content_type;
 
 /*   printf("DBG parsePostData - starting\n"); fflush(stdout); */
 

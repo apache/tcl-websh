@@ -72,7 +72,7 @@ int argOptionType(Tcl_Obj * in)
 
 	if (tmpLen > 1) {
 	    if (tmp[1] != '-') {
-		if (isdigit(tmp[1]))
+		if (isdigit((int)tmp[1]))
 		    return OPTION_TYPE_NUMBER;
 		return OPTION_TYPE_PARAM;
 	    }
@@ -94,7 +94,6 @@ int argIndexOfNextKey(int objc, Tcl_Obj * CONST objv[], int previous)
 {
 
     int pos = 0;
-    char *tmp = NULL;
 
     for (pos = (previous + 1); pos < objc; pos++) {
 
@@ -309,7 +308,6 @@ int argHasOnlyAccepted(int objc, Tcl_Obj * CONST objv[],
 
     int i;
     char *tmp = NULL;
-    int tmpLen = -1;
 
     if (scanc < 0)
 	scanc = objc;

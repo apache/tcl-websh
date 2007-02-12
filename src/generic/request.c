@@ -444,14 +444,12 @@ int Web_Request(ClientData clientData,
 		Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
 
-    int idx = -1;
-
     static char *params[] = { "-reset", "-channel", NULL };
     enum params
     { REQUESTRESET, DEFAULTCHANNELNAME };
 
-    int res = 0;
-    RequestData *requestData = NULL;
+    int res;
+    RequestData *requestData;
 
     /* --------------------------------------------------------------------------
      * sanity
