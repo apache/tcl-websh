@@ -7,12 +7,12 @@ Version: 3.6.0b4
 Release: 1
 Copyright: Freely distributable and usable
 Group: System Environment/Daemons
-Source:	http://tcl.apache.org/websh/download/%{name}-%{version}.tar.gz
-URL: http://websh.com/
+Source: http://www.apache.org/dyn/closer.cgi/tcl/websh/source/%{name}-%{version}-src.tar.gz
+URL: http://tcl.apache.org/websh/
 Packager: David N. Welton <davidw@dedasys.com>
 BuildRoot: %{_tmppath}/%{name}-root
 Requires: webserver, tcl = %{tclver}
-BuildPrereq: apache-devel, tcl
+BuildPrereq: tcl, tcl-devel, apr, apr-devel
 Prereq: tcl
 
 %description
@@ -23,19 +23,17 @@ everything from HTML generation to data-base driven one-to-one page
 customization.
 
 %prep
-%setup -n %{name}
+%setup -n %{name}-%{version}
 
 %build
 cd src/unix
-./configure --with-tclinclude=/usr/include/tcl8.4 --with-tcl=/usr/lib/tcl8.4/ --prefix=/usr --with-httpdinclude=/usr/include/httpd-2.0/
-make
+/usr/bin/autoconf
+./configure --with-tclinclude=/usr/include --with-tcl=/usr/lib --prefix=$RPM_BUILD_ROOT/usr --with-httpdinclude=/usr/include/httpd
+make CFLAGS="-I/usr/include/apr-0"
 
 %install
 cd src/unix
 make install DESTDIR=$RPM_BUILD_ROOT
-mkdir $RPM_BUILD_ROOT/usr/lib/apache/
-cp mod_websh%{version}.so $RPM_BUILD_ROOT/usr/lib/apache/
-cp %{name}%{version} $RPM_BUILD_ROOT/usr/lib/apache/
 
 %clean
 cd src/unix
@@ -44,9 +42,21 @@ make clean
 %files
 %defattr(-,root,root)
 %doc doc
-%{_libdir}/apache/mod_websh%{version}.so
+/usr/bin/websh3.6.0b4
+/usr/lib/httpd/modules/mod_websh3.6.0b4.so
+/usr/lib/libwebsh3.6.0b4.so
+/usr/share/websh3/conf/htmlhandler.ws3
+/usr/share/websh3/conf/httpd.conf
+/usr/share/websh3/conf/otherhandler.ws3
+/usr/share/websh3/conf/websh.conf
+/usr/share/websh3/htdocs/README
+/usr/share/websh3/htdocs/index.html
+/usr/share/websh3/htdocs/myApp.ws3
+/usr/share/websh3/htdocs/other.html
 
 %changelog
+* Fri Dec 15 2006 Peter Kohler <peter.kohler@netcetera.ch>
+- fixed paths, dependencies, and installation
 * Fri Oct 28 2005 Ronnie Brunner <ronnie.brunner@netcetera.ch>
 - moved to version 3.6.0
 - removed make mod_websh.so (now in default)
