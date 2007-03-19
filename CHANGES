@@ -9,6 +9,12 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Fixed websh.spec dependencies, paths, and improved installation 
+  directories (more common rpm style) for Unix
+
+- Cleanup of unused local variables and some redundant initializations 
+  of local variables throughout the code (compile with -Wall w/o warnings)
+
 - Fix of html file handling in mod_websh under Windows
 
 - Added documentation of [web::config reset] and [web::cmdurlcfg]

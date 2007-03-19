@@ -1,3 +1,15 @@
+2007-03-19 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* src/unix/Makefile.in, doc/mod_websh/conf/websh.conf, websh.spec:
+	- more consistent installation directories (rpm style)
+	
+2007-03-18 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* websh.spec:
+	- fixed dependencies, paths, and installation
+	  (Thanks to Peter Kohler <peter.kohler@netcetera.ch> for the 
+	  contribution)
+	
 2007-02-12 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
 	* src/generic/dispatch.c, src/generic/crypt.c, src/generic/logutl.c, 

@@ -88,9 +88,10 @@ exec_prefix = @exec_prefix@
 
 bindir = @bindir@
 libdir = @libdir@
-moddir = $(exec_prefix)/modules
-docdir = $(prefix)/htdocs
-cfgdir = $(prefix)/conf
+moddir = $(libdir)/httpd/modules
+sharedir = $(prefix)/share/websh3.6
+docdir = $(sharedir)/htdocs
+cfgdir = $(sharedir)/conf
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
@@ -335,13 +336,14 @@ install-libraries: install-dirs libraries
 install-doc: install-dirs
 	cp -f $(TOP_DIR)/../doc/mod_websh/conf/*.* $(cfgdir)
 	cp -f $(TOP_DIR)/../doc/mod_websh/htdocs/*.* $(docdir)
-	cp -f $(TOP_DIR)/../doc/mod_websh/README $(prefix)
+	cp -f $(TOP_DIR)/../doc/mod_websh/README $(sharedir)
 
 # create destination directories
 install-dirs:
 	mkdir -p $(bindir)
 	mkdir -p $(libdir)
 	mkdir -p $(moddir)
+	mkdir -p $(sharedir)
 	mkdir -p $(docdir)
 	mkdir -p $(cfgdir)
 

@@ -45,14 +45,14 @@ make clean
 /usr/bin/websh3.6.0b4
 /usr/lib/httpd/modules/mod_websh3.6.0b4.so
 /usr/lib/libwebsh3.6.0b4.so
-/usr/share/websh3/conf/htmlhandler.ws3
-/usr/share/websh3/conf/httpd.conf
-/usr/share/websh3/conf/otherhandler.ws3
-/usr/share/websh3/conf/websh.conf
-/usr/share/websh3/htdocs/README
-/usr/share/websh3/htdocs/index.html
-/usr/share/websh3/htdocs/myApp.ws3
-/usr/share/websh3/htdocs/other.html
+/usr/share/websh3.6/conf/htmlhandler.ws3
+/usr/share/websh3.6/conf/httpd.conf
+/usr/share/websh3.6/conf/otherhandler.ws3
+/usr/share/websh3.6/conf/websh.conf
+/usr/share/websh3.6/htdocs/index.html
+/usr/share/websh3.6/htdocs/myApp.ws3
+/usr/share/websh3.6/htdocs/other.html
+/usr/share/websh3.6/README
 
 %changelog
 * Fri Dec 15 2006 Peter Kohler <peter.kohler@netcetera.ch>
