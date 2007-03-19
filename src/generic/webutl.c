@@ -21,7 +21,7 @@
  * allocAndSet --
  *   wrapper to Tcl_Alloc for zero-terminated char * (or 8-bit) strings
  * ------------------------------------------------------------------------- */
-char *allocAndSet(const char *aString)
+char __declspec(dllexport) *allocAndSet(const char *aString)
 {
 
     char *cPtr = NULL;

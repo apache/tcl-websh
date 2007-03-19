@@ -28,6 +28,10 @@
 #  define TCLCONST
 #endif
 
+#ifndef WIN32
+#define __declspec(dllexport)
+#endif
+
 #include "log.h"
 
 #define WEBSH     "websh"

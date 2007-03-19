@@ -132,9 +132,9 @@ typedef struct LogPlugIn
     LogPlugInHandler *handler;
 }
 LogPlugIn;
-LogPlugIn *createLogPlugIn();
+LogPlugIn __declspec(dllexport) *createLogPlugIn();
 int destroyLogPlugIn(void *plugIn, void *dum);
-int registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * plugIn);
+int __declspec(dllexport) registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * plugIn);
 
 
 /* ----------------------------------------------------------------------------
@@ -181,7 +181,7 @@ void destroyLogData(ClientData clientData, Tcl_Interp * interp);
 /* ----------------------------------------------------------------------------
  * Tcl interface and commands
  * ------------------------------------------------------------------------- */
-int log_Init(Tcl_Interp * interp);
+int __declspec(dllexport) log_Init(Tcl_Interp * interp);
 
 int Web_Log(ClientData clientData,
 	    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]);
@@ -227,7 +227,7 @@ char * insertIntoFilterList(LogData *logData, LogLevel *logLevel);
   LOG_MSG(,0,...) --> don't do this
 */
 
-void LOG_MSG(Tcl_Interp * interp, int flag, char *filename, int linenr,
+void __declspec(dllexport) LOG_MSG(Tcl_Interp * interp, int flag, char *filename, int linenr,
 	     char *cmd, char *level, char *msg, ...);
 
 #endif

@@ -51,7 +51,7 @@ typedef struct ResponseObj
 }
 ResponseObj;
 
-ResponseObj *createResponseObj(Tcl_Interp * interp, char *name,
+ResponseObj __declspec(dllexport) *createResponseObj(Tcl_Interp * interp, char *name,
 			       ResponseHeaderHandler * headerHandler);
 int destroyResponseObj(ClientData clientData, Tcl_Interp * interp);
 

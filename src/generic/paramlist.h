@@ -25,8 +25,8 @@ int paramListGetValueToResult(Tcl_Interp * interp, ParamList * paramList,
 			      Tcl_Obj * key, Tcl_Obj * defaultObj);
 
 int paramListSet(ParamList * hash, char *key, Tcl_Obj * value);
-int paramListSetAsWhole(ParamList * hash, char *key, Tcl_Obj * value);
-int paramListAdd(ParamList * hash, char *key, Tcl_Obj * value);
+int __declspec(dllexport) paramListSetAsWhole(ParamList * hash, char *key, Tcl_Obj * value);
+int __declspec(dllexport) paramListAdd(ParamList * hash, char *key, Tcl_Obj * value);
 int paramListDel(ParamList * hash, char *key);
 Tcl_Obj *paramListAsListObj(ParamList * hash);
 int listObjAsParamList(Tcl_Obj * list, ParamList * hash);

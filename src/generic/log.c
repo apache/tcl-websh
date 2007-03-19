@@ -26,7 +26,7 @@
  * Init --
  *   entry point for module weblog of websh3
  * ------------------------------------------------------------------------- */
-int log_Init(Tcl_Interp * interp)
+int __declspec(dllexport) log_Init(Tcl_Interp * interp)
 {
 
     LogData *logData = NULL;
@@ -951,7 +951,7 @@ int Web_LogFilter(ClientData clientData,
 /* ----------------------------------------------------------------------------
  * createLogPlugIn --
  * ------------------------------------------------------------------------- */
-LogPlugIn *createLogPlugIn()
+LogPlugIn __declspec(dllexport) *createLogPlugIn()
 {
 
     LogPlugIn *logPlugIn = NULL;
@@ -985,7 +985,7 @@ int destroyLogPlugIn(void *plugIn, void *dum)
 /* ----------------------------------------------------------------------------
  * registerLogPlugIn --
  * ------------------------------------------------------------------------- */
-int registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * logPlugIn)
+int __declspec(dllexport) registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * logPlugIn)
 {
 
     LogData *logData;
@@ -1018,7 +1018,7 @@ int registerLogPlugIn(Tcl_Interp * interp, char *type, LogPlugIn * logPlugIn)
  * <level>    webshell log level
  * <msg>      message parts (NULL-terminated list)
  * ------------------------------------------------------------------------- */
-void LOG_MSG(Tcl_Interp * interp, int flag, char *filename, int linenr,
+void __declspec(dllexport) LOG_MSG(Tcl_Interp * interp, int flag, char *filename, int linenr,
 	     char *cmd, char *level, char *msg, ...)
 {
 

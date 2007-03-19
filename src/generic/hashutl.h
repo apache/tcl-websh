@@ -45,11 +45,11 @@ int appendToHashTable(Tcl_HashTable * hash, char *key, ClientData data);
 ClientData removeFromHashTable(Tcl_HashTable * hash, char *key);
 ClientData getFromHashTable(Tcl_HashTable * hash, char *key);
 
-int assignIteratorToHashTable(Tcl_HashTable * hash,
+int __declspec(dllexport) assignIteratorToHashTable(Tcl_HashTable * hash,
 			      HashTableIterator * iterator);
-int nextFromHashIterator(HashTableIterator * iterator);
+int __declspec(dllexport) nextFromHashIterator(HashTableIterator * iterator);
 
-char *keyOfCurrent(HashTableIterator * iterator);
-ClientData valueOfCurrent(HashTableIterator * iterator);
+char __declspec(dllexport) *keyOfCurrent(HashTableIterator * iterator);
+ClientData __declspec(dllexport) valueOfCurrent(HashTableIterator * iterator);
 
 #endif

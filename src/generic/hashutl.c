@@ -123,7 +123,7 @@ ClientData getFromHashTable(Tcl_HashTable * hash, char *key)
 /* ----------------------------------------------------------------------------
  * assignIteratorToHashTable -- init iterator
  * ------------------------------------------------------------------------- */
-int assignIteratorToHashTable(Tcl_HashTable * hash,
+int __declspec(dllexport) assignIteratorToHashTable(Tcl_HashTable * hash,
 			      HashTableIterator * iterator)
 {
 
@@ -140,7 +140,7 @@ int assignIteratorToHashTable(Tcl_HashTable * hash,
 /* ----------------------------------------------------------------------------
  * nextFromIterator -- get value from iterator
  * ------------------------------------------------------------------------- */
-int nextFromHashIterator(HashTableIterator * iterator)
+int __declspec(dllexport) nextFromHashIterator(HashTableIterator * iterator)
 {
 
     if (iterator == NULL)
@@ -157,7 +157,7 @@ int nextFromHashIterator(HashTableIterator * iterator)
 /* ----------------------------------------------------------------------------
  * keyOfCurrent -- get key for current value of iterator
  * ------------------------------------------------------------------------- */
-char *keyOfCurrent(HashTableIterator * iterator)
+char __declspec(dllexport) *keyOfCurrent(HashTableIterator * iterator)
 {
 
     if (iterator == NULL)
@@ -172,7 +172,7 @@ char *keyOfCurrent(HashTableIterator * iterator)
 /* ----------------------------------------------------------------------------
  * valueOfCurrent -- get current value from iterator
  * ------------------------------------------------------------------------- */
-ClientData valueOfCurrent(HashTableIterator * iterator)
+ClientData __declspec(dllexport) valueOfCurrent(HashTableIterator * iterator)
 {
 
     if (iterator == NULL)

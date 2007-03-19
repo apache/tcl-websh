@@ -22,7 +22,7 @@
 #ifndef WEBUTL_H
 #define WEBUTL_H
 
-char *allocAndSet(const char *aString);
+char __declspec(dllexport) *allocAndSet(const char *aString);
 char *allocAndSetN(const char *aString, int N);
 char *strchrchr(const char *cs, const char c0, const char c1, char *tag);
 char *myUtfStrStr(const char *s1, const char *s2);

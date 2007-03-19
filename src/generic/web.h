@@ -32,11 +32,7 @@
 #include "filecounter.h"
 #include "modwebsh.h"
 
-#ifdef WIN32
 int __declspec(dllexport) Websh_Init(Tcl_Interp * interp);
-#else
-int Websh_Init(Tcl_Interp * interp);
-#endif
 
 int Script_Init(Tcl_Interp * interp);
 

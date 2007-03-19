@@ -126,7 +126,7 @@ ResponseObj *getResponseObj(Tcl_Interp * interp, OutData * outData,
 /* ----------------------------------------------------------------------------
  * createResponseObj
  * ------------------------------------------------------------------------- */
-ResponseObj *createResponseObj(Tcl_Interp * interp, char *channelName,
+ResponseObj __declspec(dllexport) *createResponseObj(Tcl_Interp * interp, char *channelName,
 			       ResponseHeaderHandler * headerHandler)
 {
 

@@ -110,7 +110,7 @@ int paramListSet(ParamList * hash, char *key, Tcl_Obj * value)
  * paramListSetAsWhole -- set value to new ListObj with just the given value
  *                        without listifying the element
  * ------------------------------------------------------------------------- */
-int paramListSetAsWhole(ParamList * hash, char *key, Tcl_Obj * value)
+int __declspec(dllexport) paramListSetAsWhole(ParamList * hash, char *key, Tcl_Obj * value)
 {
 
     Tcl_Obj *existingValue = NULL;
@@ -131,7 +131,7 @@ int paramListSetAsWhole(ParamList * hash, char *key, Tcl_Obj * value)
 /* ----------------------------------------------------------------------------
  * paramListAdd -- append value to existing ListObj under key
  * ------------------------------------------------------------------------- */
-int paramListAdd(ParamList * hash, char *key, Tcl_Obj * value)
+int __declspec(dllexport) paramListAdd(ParamList * hash, char *key, Tcl_Obj * value)
 {
 
     Tcl_Obj *existing = NULL;
