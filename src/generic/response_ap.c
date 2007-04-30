@@ -69,6 +69,17 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 		r->status_line = ap_pstrdup(r->pool, ++response);
 #else /* APACHE2 */
 		r->status_line = (char *) apr_pstrdup(r->pool, ++response);
+		/* as of Apache 2.2.1, r->status_line must be in line with
+		   r->status, therefore r->status must be set too */
+		if (strlen(response) > 3) {
+		  /* status code must be 3 digit numeric, which is supposed
+		     to be followed by a blank in the status line */
+		  char tmp = response[3];
+		  response[3] = 0;
+		  Tcl_GetInt(interp, response, &(r->status));
+		  response[3] = tmp;
+		}
+		
 #endif /* APACHE2 */
 	}
 	assignIteratorToHashTable(responseObj->headers, &iterator);

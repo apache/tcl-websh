@@ -9,6 +9,8 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Fixed http response problem with Apache 2.2.1 and later
+
 - Fixed websh.spec dependencies, paths, and improved installation 
   directories (more common rpm style) for Unix
 

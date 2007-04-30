@@ -1,4 +1,16 @@
+2007-04-30 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* generic/response_ap.c:
+	- fix http response for Apache 2.2.1 and later
+
 2007-03-19 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+
+	* generic/hashutl.c, src/generic/hashutl.h, src/generic/log.c,
+	  src/generic/log.h, src/generic/macros.h, src/generic/paramlist.c,
+	  src/generic/paramlist.h, src/generic/web.c, src/generic/web.h,
+	  src/generic/webout.h, src/generic/weboutint.c, src/generic/webutl.c,
+	  src/generic/webutl.h:
+	- export some functions to allow dynamic linking on Windows
 
 	* src/unix/Makefile.in, doc/mod_websh/conf/websh.conf, websh.spec:
 	- more consistent installation directories (rpm style)
