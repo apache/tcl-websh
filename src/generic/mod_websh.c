@@ -209,7 +209,7 @@ static void websh_init_child(apr_pool_t * p, server_rec * s)
 						   &websh_module);
     if (!initPool(conf)) {
 	ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
-		     "Could not init interp pool\n");
+		     "Could not init interp pool");
 	return;
     }
     apr_pool_cleanup_register(p, s, exit_websh_pool, exit_websh_pool);
@@ -224,7 +224,7 @@ static void websh_init_child(server_rec *s, pool *p)
 						   &websh_module);
     if (!initPool(conf)) {
 	ap_log_error(APLOG_MARK, APLOG_ERR, s,
-		     "Could not init interp pool\n");
+		     "Could not init interp pool");
 	return;
     }
 }
@@ -252,21 +252,21 @@ static int run_websh_script(request_rec * r)
 
 #ifndef APACHE2
 
-    /* ap_log_printf(r->server,"mtime of %s: %ld\n",r->filename,r->finfo.st_mtime); */
+    /* ap_log_printf(r->server,"mtime of %s: %ld",r->filename,r->finfo.st_mtime); */
     webInterp = poolGetWebInterp(conf, r->filename, r->finfo.st_mtime, r);
     if (webInterp == NULL || webInterp->interp == NULL) {
-	ap_log_printf(r->server, "mod_websh - no interp !\n");
+	ap_log_printf(r->server, "mod_websh - no interp!");
 	return 0;
     }
 
 #else /* APACHE2 */
 
-    /* ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, r, "mtime of %s: %ld\n",r->filename,r->finfo.mtime); */
+    /* ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, r, "mtime of %s: %ld",r->filename,r->finfo.mtime); */
     webInterp = poolGetWebInterp(conf, r->filename, (long) r->finfo.mtime, r);
     /* ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, r, "got pool %p", webInterp); */
     if (webInterp == NULL || webInterp->interp == NULL) {
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - no interp !\n");
+		      "mod_websh - no interp!");
 	return 0;
     }
 
@@ -275,10 +275,10 @@ static int run_websh_script(request_rec * r)
     if (Tcl_InterpDeleted(webInterp->interp)) {
 #ifndef APACHE2
 	ap_log_printf(r->server,
-		      "mod_websh - hey, somebody is deleting the interp !\n");
+		      "mod_websh - hey, somebody is deleting the interp!");
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - hey, somebody is deleting the interp !\n");
+		      "mod_websh - hey, somebody is deleting the interp!");
 #endif /* APACHE2 */
 	return 0;
     }
@@ -291,10 +291,10 @@ static int run_websh_script(request_rec * r)
 
     if (createApchannel(webInterp->interp, r) != TCL_OK) {
 #ifndef APACHE2
-	ap_log_printf(r->server, "mod_websh - cannot create apchannel\n");
+	ap_log_printf(r->server, "mod_websh - cannot create apchannel");
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - cannot create apchannel\n");
+		      "mod_websh - cannot create apchannel");
 #endif /* APACHE2 */
 	return 0;
     }
@@ -302,10 +302,10 @@ static int run_websh_script(request_rec * r)
     if (Tcl_Eval(webInterp->interp, "web::ap::perReqInit") != TCL_OK) {
 #ifndef APACHE2
 	ap_log_printf(r->server,
-		      "mod_websh - cannot init per-request Websh code\n");
+		      "mod_websh - cannot init per-request Websh code");
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - cannot init per-request Websh code\n");
+		      "mod_websh - cannot init per-request Websh code");
 #endif /* APACHE2 */
 	return 0;
     }
@@ -330,20 +330,20 @@ static int run_websh_script(request_rec * r)
 
     if (Tcl_Eval(webInterp->interp, "web::ap::perReqCleanup") != TCL_OK) {
 #ifndef APACHE2
-	ap_log_printf(r->server, "mod_websh - error while cleaning-up\n");
+	ap_log_printf(r->server, "mod_websh - error while cleaning-up");
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - error while cleaning-up\n");
+		      "mod_websh - error while cleaning-up");
 #endif /* APACHE2 */
 	return 0;
     }
 
     if (destroyApchannel(webInterp->interp) != TCL_OK) {
 #ifndef APACHE2
-	ap_log_printf(r->server, "mod_websh - error closing ap-channel\n");
+	ap_log_printf(r->server, "mod_websh - error closing ap-channel");
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - error closing ap-channel\n");
+		      "mod_websh - error closing ap-channel");
 #endif /* APACHE2 */
 	return 0;
     }
@@ -394,11 +394,13 @@ static int websh_handler(request_rec * r)
     if (!run_websh_script(r)) {
 #ifndef APACHE2
 	ap_log_rerror(APLOG_MARK, APLOG_ERR, r,
-#else /* APACHE2 */
-	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-#endif /* APACHE2 */
 		      "couldn't run websh script: %s",
 		      r->filename);
+#else /* APACHE2 */
+	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
+		      "couldn't run websh script: %s",
+		      r->filename);
+#endif /* APACHE2 */
 	return HTTP_INTERNAL_SERVER_ERROR;
     }
 

@@ -1,11 +1,16 @@
+2007-08-21 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/mod_websh.c, src/generic/interpool.c:
+	- better logging when no interpreter can be found
+	- removed unnecessary newlines from error log
+	
 2007-04-30 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
-	* generic/response_ap.c:
+	* src/generic/response_ap.c:
 	- fix http response for Apache 2.2.1 and later
 
 2007-03-19 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 
-	* generic/hashutl.c, src/generic/hashutl.h, src/generic/log.c,
+	* src/generic/hashutl.c, src/generic/hashutl.h, src/generic/log.c,
 	  src/generic/log.h, src/generic/macros.h, src/generic/paramlist.c,
 	  src/generic/paramlist.h, src/generic/web.c, src/generic/web.h,
 	  src/generic/webout.h, src/generic/weboutint.c, src/generic/webutl.c,

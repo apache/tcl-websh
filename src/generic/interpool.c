@@ -118,10 +118,10 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     if (webInterp->interp == NULL) {
 	Tcl_Free((char *) webInterp);
 #ifndef APACHE2
-	ap_log_printf(conf->server, "createWebInterp: Could not create interpreter (id %ld, class %s)\n", webInterpClass->nextid, filename);
+	ap_log_printf(conf->server, "createWebInterp: Could not create interpreter (id %ld, class %s)", webInterpClass->nextid, filename);
 #else /* APACHE2 */
 	ap_log_error(APLOG_MARK, APLOG_ERR, 0, conf->server,
-		     "createWebInterp: Could not create interpreter (id %ld, class %s)\n", webInterpClass->nextid, filename);
+		     "createWebInterp: Could not create interpreter (id %ld, class %s)", webInterpClass->nextid, filename);
 #endif /* APACHE2 */
 	return NULL;
     }
@@ -221,11 +221,11 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 	    webInterp->code = NULL;
 #ifndef APACHE2
 	    ap_log_printf(r->server, 
-			  "Could not readWebInterpCode (id %ld, class %s): %s\n",
+			  "Could not readWebInterpCode (id %ld, class %s): %s",
 			  webInterp->id, filename, Tcl_GetStringResult(webInterp->interp));
 #else /* APACHE2 */
 	    ap_log_error(APLOG_MARK, APLOG_ERR, 0, r->server,
-			 "Could not readWebInterpCode (id %ld, class %s): %s\n",
+			 "Could not readWebInterpCode (id %ld, class %s): %s",
 			 webInterp->id, filename, Tcl_GetStringResult(webInterp->interp));
 #endif /* APACHE2 */
 	}
@@ -251,11 +251,11 @@ void destroyWebInterp(WebInterp * webInterp)
 	    r = (request_rec *) Tcl_GetAssocData(webInterp->interp, WEB_AP_ASSOC_DATA, NULL);
 #ifndef APACHE2
 	    ap_log_printf(r->server,
-			 "web::finalize error: %s\n",
+			 "web::finalize error: %s",
 			 Tcl_GetStringResult(webInterp->interp));
 #else /* APACHE2 */
 	    ap_log_error(APLOG_MARK, APLOG_ERR, 0, r->server,
-			 "web::finalize error: %s\n",
+			 "web::finalize error: %s",
 			 Tcl_GetStringResult(webInterp->interp));
 #endif /* APACHE2 */
 	}
@@ -326,15 +326,23 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     Tcl_DecrRefCount(cmdList[0]);
     Tcl_DecrRefCount(cmdList[1]);
 
-    idObj = Tcl_DuplicateObj(Tcl_GetObjResult(conf->mainInterp));
-    Tcl_ResetResult(conf->mainInterp);
-
     if (res != TCL_OK) {
 	/* no valid id for filename */
 	Tcl_MutexUnlock(&(conf->mainInterpLock));
-	Tcl_DecrRefCount(idObj);
+#ifndef APACHE2
+	ap_log_printf(r->server,
+		      "web::interpmap: %s",
+		      Tcl_GetStringResult(conf->mainInterp));
+#else /* APACHE2 */
+	ap_log_error(APLOG_MARK, APLOG_ERR, 0, r->server,
+		      "web::interpmap: %s",
+		      Tcl_GetStringResult(conf->mainInterp));
+#endif /* APACHE2 */
 	return NULL;
     }
+
+    idObj = Tcl_DuplicateObj(Tcl_GetObjResult(conf->mainInterp));
+    Tcl_ResetResult(conf->mainInterp);
 
     /* get absolute filename (if already absolute, same as
        Tcl_GetString(idObj) -> no DecrRefCount yet) */
@@ -347,6 +355,13 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
  	    Tcl_Stat(id, &statPtr) != TCL_OK)
 	{
 	    Tcl_MutexUnlock(&(conf->mainInterpLock));
+#ifndef APACHE2
+	    ap_log_printf(r->server,
+			  "cannot access or stat webInterpClass file '%s'", id);
+#else /* APACHE2 */
+	    ap_log_error(APLOG_MARK, APLOG_ERR, 0, r->server,
+			 "cannot access or stat webInterpClass file '%s'", id);
+#endif /* APACHE2 */
 	    Tcl_DecrRefCount(idObj);
 	    return NULL;
 	}
@@ -438,14 +453,14 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
 	else {
 
 	    Tcl_MutexUnlock(&(conf->webshPoolLock));
-	    Tcl_DecrRefCount(idObj);
 #ifndef APACHE2
 	    ap_log_printf(conf->server, 
-			  "panic - cannot create webInterpClass '%s'\n", id);
+			  "cannot create webInterpClass '%s'", id);
 #else /* APACHE2 */
 	    ap_log_error(APLOG_MARK, APLOG_NOERRNO|APLOG_ERR, 0, conf->server,
-			 "panic - cannot create webInterpClass '%s'\n", id);
+			 "cannot create webInterpClass '%s'", id);
 #endif /* APACHE2 */
+	    Tcl_DecrRefCount(idObj);
 	    return NULL;
 	}
     }
@@ -514,10 +529,10 @@ int initPool(websh_server_conf * conf)
     if (conf->mainInterp != NULL || conf->webshPool != NULL) {
 	/* we have to cleanup */
 #ifndef APACHE2
- 	ap_log_printf(conf->server, "initPool: mainInterp or webshPool not NULL\n");
+ 	ap_log_printf(conf->server, "initPool: mainInterp or webshPool not NULL");
 #else /* APACHE2 */
 	ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, conf->server,
-		     "initPool: mainInterp or webshPool not NULL\n");
+		     "initPool: mainInterp or webshPool not NULL");
 #endif /* APACHE2 */
 	return 0;
     }
@@ -528,10 +543,10 @@ int initPool(websh_server_conf * conf)
     if (conf->mainInterp == NULL) {
 	errno = 0;
 #ifndef APACHE2
-	ap_log_printf(conf->server, "could'nt create main interp\n");
+	ap_log_printf(conf->server, "could'nt create main interp");
 #else /* APACHE2 */
 	ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, conf->server,
-		     "could'nt create main interp\n");
+		     "could'nt create main interp");
 #endif /* APACHE2 */
 	return 0;
     }
