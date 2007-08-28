@@ -60,6 +60,7 @@ char *allocAndSetN(const char *aString, int N)
 
 /* ----------------------------------------------------------------------------
  * strchrchr -- strchr for c0 first, or c1 if c0 fails. tag reports which trig.
+ * returns earlier match!
  * ------------------------------------------------------------------------- */
 char *strchrchr(const char *cs, const char c0, const char c1, char *tag)
 {
@@ -70,17 +71,31 @@ char *strchrchr(const char *cs, const char c0, const char c1, char *tag)
 
     if (cs != NULL) {
 
-	res = strchr(cs, c0);
+      char *res0 = NULL;
+      char *res1 = NULL;
+    
+      res0 = strchr(cs, c0);
+      res1 = strchr(cs, c1);
 
-	if (res != NULL)
+      if (res0 != NULL) {
+	if (res1 != NULL) {
+	  if (res1 > res0) {
+	    res = res0;
 	    *tag = 0;
-	else {
-
-	    res = strchr(cs, c1);
-
-	    if (res != NULL)
-		*tag = 1;
+	  } else {
+	    res = res1;
+	    *tag = 1;
+	  }
+	} else {
+	  res = res0;
+	  *tag = 0;
 	}
+      } else {
+	if (res1 != NULL) {
+	  res = res1;
+	  *tag = 1;
+	}
+      }	
     }
     return res;
 }

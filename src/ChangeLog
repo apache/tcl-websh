@@ -1,3 +1,8 @@
+2007-08-28 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/webutl.c, src/test/dispatch.test:
+	- properly handle multi part forms with extended content-type
+	  this fixes bug 43212 as reported by Dennis Parker
+	
 2007-08-21 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/mod_websh.c, src/generic/interpool.c:
 	- better logging when no interpreter can be found

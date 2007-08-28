@@ -9,6 +9,8 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Bug fix when handling multipart forms (Bug 43212)
+
 - Better logging when mod_websh cannot get a Tcl interpreter for a request
 
 - Fixed http response problem with Apache 2.2.1 and later
