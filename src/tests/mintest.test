@@ -38,9 +38,11 @@ test mintest-1.1 {create an interpreter, load websh3 library} {} {
     puts $fh return
     close $fh
 
-    # find a late available tclsh
+    # find a late available tclsh, but preferrably the current version
     set ok 0
-    foreach tclsh {8.5 85 8.4 84 8.3 83 8.2 82 {}} {
+    set v [info tclversion]
+    regsub {\.} $v {} win
+    foreach tclsh "$v $win 8.5 85 8.4 84 8.3 83 8.2 82 {}" {
 	if {![catch {exec tclsh$tclsh < $fnb}]} {
 	    set ok 1
 	    break
