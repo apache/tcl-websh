@@ -158,17 +158,21 @@ int Web_Recv(ClientData clientData,
 	return TCL_ERROR;
 
     to = Tcl_NewIntObj(cmdcode);
+    Tcl_IncrRefCount(to);
     if (Tcl_ObjSetVar2(interp, objv[2], NULL, to, TCL_LEAVE_ERR_MSG) == NULL) {
 	Tcl_DecrRefCount(to);
 	return TCL_ERROR;
     }
 
+    Tcl_DecrRefCount(to);
     to = Tcl_NewIntObj(flags);
+    Tcl_IncrRefCount(to);
     if (Tcl_ObjSetVar2(interp, objv[4], NULL, to, TCL_LEAVE_ERR_MSG) == NULL) {
 	Tcl_DecrRefCount(to);
 	return TCL_ERROR;
     }
 
+    Tcl_DecrRefCount(to);
     Tcl_SetObjResult(interp, Tcl_NewIntObj(size));
     return TCL_OK;
 }

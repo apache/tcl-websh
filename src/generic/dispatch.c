@@ -92,15 +92,20 @@ int Web_Dispatch(ClientData clientData,
      * ----------------------------------------------------------------------- */
     if (query_string != NULL) {
 
+	Tcl_IncrRefCount(query_string);
+
 	/* ------------------------------------------------------------------------
 	 * empty string means: skip
 	 * --------------------------------------------------------------------- */
 	if (Tcl_GetCharLength(query_string) > 0) {
 
 	    if (parseQueryString(requestData, interp, query_string) ==
-		TCL_ERROR)
+		TCL_ERROR) {
+	      	Tcl_DecrRefCount(query_string);
 		return TCL_ERROR;
+	    }
 	}
+	Tcl_DecrRefCount(query_string);
     }
 
     /* ==========================================================================
@@ -191,6 +196,8 @@ int Web_Dispatch(ClientData clientData,
 	    Tcl_Obj *tmp = NULL;
 
 	    tmp = requestGetDefaultChannelName();
+
+	    Tcl_IncrRefCount(tmp);
 
 	    parsePostData(interp, tmp, content_length, content_type,
 			  requestData);

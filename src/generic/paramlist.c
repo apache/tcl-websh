@@ -38,6 +38,7 @@ int paramGetIndexFromObj(Tcl_Interp * interp, Tcl_Obj * obj, char **tablePtr,
     char **allopts = NULL;
     int i = 0, numprivateopts, po;
     Tcl_Obj *objCopy = Tcl_DuplicateObj(obj);
+    Tcl_IncrRefCount(objCopy);
 
     /* dynamically determine size of allopts */
     while (tablePtr[i]) {i++;}
@@ -217,6 +218,7 @@ Tcl_Obj *paramListAsListObj(ParamList * hash)
     res = Tcl_NewObj();
     if (res == NULL)
 	return NULL;
+    Tcl_IncrRefCount(res);
 
     while (nextFromHashIterator(&iterator) != TCL_ERROR) {
 

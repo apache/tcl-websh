@@ -37,6 +37,7 @@ int Web_UriEncode(ClientData clientData,
      * --------------------------------------------------------------------- */
     if (tclo != NULL) {
 	Tcl_SetObjResult(interp, tclo);
+	Tcl_DecrRefCount(tclo);
 	return TCL_OK;
     }
 
@@ -65,6 +66,7 @@ int Web_UriDecode(ClientData clientData,
 
     if (res != NULL) {
 	Tcl_SetObjResult(interp, res);
+	Tcl_DecrRefCount(res);
 	return TCL_OK;
     }
 
@@ -90,6 +92,7 @@ Tcl_Obj *uriEncode(Tcl_Obj * inString)
     IfNullLogRetNull(NULL, inString, "uriEncode: got NULL as input.");
 
     tclo = Tcl_NewStringObj("", 0);
+    Tcl_IncrRefCount(tclo);
 
     bytes = Tcl_GetByteArrayFromObj(inString, &bytesLen);
 
@@ -146,6 +149,7 @@ Tcl_Obj *uriDecode(Tcl_Obj * in)
     utf = Tcl_GetStringFromObj(in, &length);
 
     res = Tcl_NewObj();
+    Tcl_IncrRefCount(res);
 
     while (utf[0] != 0) {
 

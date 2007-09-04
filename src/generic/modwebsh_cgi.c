@@ -166,8 +166,10 @@ int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
   }
   /* reset errors from getting invalid env vars */
   Tcl_ResetResult(interp);
-  if (res)
+  if (res) {
     Tcl_SetObjResult(interp, res);
+    Tcl_DecrRefCount(res);
+  }
   return TCL_OK;
 }
 

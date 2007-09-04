@@ -155,12 +155,14 @@ Tcl_Obj *crcCheck(Tcl_Obj * in)
 	return NULL;
 
     crcObj = Tcl_GetRange(in, len - 4, len - 1);
+    Tcl_IncrRefCount(crcObj);
 
     crc1 = crcDeAsciify(crcObj);
 
     Tcl_DecrRefCount(crcObj);
 
     crcObj = Tcl_GetRange(in, 0, len - 5);
+    Tcl_IncrRefCount(crcObj);
 
     crc2 = crcCalc(crcObj);
 
@@ -191,6 +193,8 @@ int crcAdd(Tcl_Obj * in)
 
     if (tmp2 == NULL)
 	return TCL_ERROR;
+
+    Tcl_IncrRefCount(tmp2);
 
     Tcl_AppendObjToObj(in, tmp2);
 

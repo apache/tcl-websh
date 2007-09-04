@@ -148,6 +148,7 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 
 			    /* no, evaluate now */
 			    subst = Tcl_NewStringObj("subst", 5);
+			    Tcl_IncrRefCount(subst);
 
 			    if (Tcl_ListObjAppendElement(NULL, subst, msg) !=
 				TCL_OK) {
@@ -158,7 +159,6 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 			    }
 			    else {
 
-				Tcl_IncrRefCount(subst);
 				res =
 				    Tcl_EvalObjEx(interp, subst,
 						  TCL_EVAL_DIRECT);
@@ -179,6 +179,7 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 						      logDest->format,
 						      logDest->maxCharInMsg,
 						      emsg);
+				    Tcl_IncrRefCount(fmsg);
 				}
 			    }
 			}
@@ -186,6 +187,7 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 			    /* already evaluated. format */
 			    fmsg = formatMessage(logLevel, logDest->format,
 						 logDest->maxCharInMsg, emsg);
+			    Tcl_IncrRefCount(fmsg);
 			}
 
 		    }
@@ -196,15 +198,17 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 			 * ------------------------------------------------------------- */
 			fmsg = formatMessage(logLevel, logDest->format,
 					     logDest->maxCharInMsg, msg);
+			Tcl_IncrRefCount(fmsg);
 		    }
 
 		    /* ------------------------------------------------------------------
 		     * fallback if subst did not work
 		     * --------------------------------------------------------------- */
-		    if (err) {
+		    if (fmsg == NULL) {
 
 			fmsg = formatMessage(logLevel, logDest->format,
 					     logDest->maxCharInMsg, msg);
+			Tcl_IncrRefCount(fmsg);
 		    }
 
 		    /* ------------------------------------------------------------------

@@ -156,6 +156,7 @@ int varchannelOutputProc(ClientData clientData,
 	Tcl_Free(dest);
 	return -1;
     }
+    Tcl_IncrRefCount(tmp);
 
     /* and append it to the global var */
     var = Tcl_ObjSetVar2(varChannel->interp,

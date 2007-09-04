@@ -342,6 +342,7 @@ WebInterp *poolGetWebInterp(websh_server_conf * conf, char *filename,
     }
 
     idObj = Tcl_DuplicateObj(Tcl_GetObjResult(conf->mainInterp));
+    Tcl_IncrRefCount(idObj);
     Tcl_ResetResult(conf->mainInterp);
 
     /* get absolute filename (if already absolute, same as
@@ -749,6 +750,7 @@ int readWebInterpCode(WebInterp * webInterp, char *filename)
     Tcl_Interp *interp = webInterp->interp;
 
     objPtr = Tcl_NewObj();
+    Tcl_IncrRefCount(objPtr);
     chan = Tcl_OpenFileChannel(interp, filename, "r", 0644);
     if (chan == (Tcl_Channel) NULL) {
 	Tcl_ResetResult(interp);
@@ -765,7 +767,6 @@ int readWebInterpCode(WebInterp * webInterp, char *filename)
 	    if (Tcl_Close(interp, chan) == TCL_OK) {
 		/* finally success ... */
 		webInterp->code = objPtr;
-		Tcl_IncrRefCount(objPtr);
 		return TCL_OK;
 	    }
 	}

@@ -276,6 +276,7 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 					Tcl_GetString(responseObj->name));
 
 		    tmp = Tcl_DuplicateObj(responseObj->name);
+		    Tcl_IncrRefCount(tmp);
 		    tname = Tcl_GetString(tmp);
 
 		    destroyResponseObj((ClientData) responseObj, interp);
@@ -292,6 +293,7 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		    else
 			responseObj = getResponseObj(interp, outData, tname);
 
+		    Tcl_DecrRefCount(tmp);
 		    if (responseObj == NULL) {
 			Tcl_SetResult(interp,
 				      "could not reset response object",
@@ -299,7 +301,6 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 			return TCL_ERROR;
 		    }
 
-		    Tcl_DecrRefCount(tmp);
 		    if (outData->defaultResponseObj == NULL)
 			outData->defaultResponseObj = responseObj;
 

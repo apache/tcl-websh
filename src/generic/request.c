@@ -398,6 +398,7 @@ Tcl_Obj *tempFileName(Tcl_Interp * interp, RequestData * requestData,
     }
 
     tclo = Tcl_NewStringObj(tmpn, -1);
+    Tcl_IncrRefCount(tclo);
 
 #ifndef WIN32
     free(tmpn);
@@ -408,9 +409,10 @@ Tcl_Obj *tempFileName(Tcl_Interp * interp, RequestData * requestData,
     while ((appendToHashTable(requestData->tmpFnList,
 			      Tcl_GetString(tclo),
 			      (void *) tclo) == TCL_ERROR)
-	   && (trycnt < 100)) {
+	   && (trycnt++ < 100)) {
 
 	mytime = Tcl_NewLongObj(((unsigned long) clock()) % 1000);
+	Tcl_IncrRefCount(mytime);
 	Tcl_AppendObjToObj(tclo, mytime);
 	Tcl_DecrRefCount(mytime);
     }
@@ -427,10 +429,6 @@ Tcl_Obj *tempFileName(Tcl_Interp * interp, RequestData * requestData,
 	Tcl_DecrRefCount(tclo);
 	return NULL;
     }
-
-    /* ok, done */
-
-    Tcl_IncrRefCount(tclo);
 
     /* fixme-later: should I check for for TMP_MAX filenames per app ?
     */

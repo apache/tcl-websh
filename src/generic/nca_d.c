@@ -72,6 +72,7 @@ ClientData createNcaD()
     Tcl_Obj *key = NULL;
 
     key = Tcl_NewObj();
+    Tcl_IncrRefCount(key);
 
     setKeyNcaD(key, NULL);
 
@@ -141,6 +142,7 @@ int Web_EncryptD(ClientData clientData,
      * ----------------------------------------------------------------------- */
 
     in = Tcl_DuplicateObj(objv[1]);
+    Tcl_IncrRefCount(in);
 
     /* --------------------------------------------------------------------------
      * empty string
@@ -160,6 +162,7 @@ int Web_EncryptD(ClientData clientData,
     }
 
     Tcl_SetObjResult(interp, out);
+    Tcl_DecrRefCount(out);
 
     return TCL_OK;
 }
@@ -241,6 +244,7 @@ int Web_DecryptD(ClientData clientData,
 
 	Tcl_SetObjResult(interp, out);
 
+	Tcl_DecrRefCount(out);
 	return TCL_OK;
 
     }
@@ -286,6 +290,7 @@ Tcl_Obj *encryptNcaD(Tcl_Interp * interp, ClientData clientData, Tcl_Obj * in)
     str = Tcl_GetStringFromObj(in, &strLen);
 
     out = Tcl_NewStringObj("XD", 2);
+    Tcl_IncrRefCount(out);
 
     for (i = 0; i < strLen; i++) {
 
@@ -347,6 +352,7 @@ Tcl_Obj *decryptNcaD(Tcl_Obj * key, Tcl_Obj * in)
     str = Tcl_GetStringFromObj(in, &strLen);
 
     out = Tcl_NewObj();
+    Tcl_IncrRefCount(out);
 
     for (i = 2; i < strLen; i++) {
 

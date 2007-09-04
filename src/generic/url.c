@@ -296,6 +296,7 @@ Tcl_Obj *mergeLists(Tcl_Interp * interp, Tcl_Obj * cmdlineP,
     }
 
     res = Tcl_NewObj();
+    Tcl_IncrRefCount(res);
 
     for (i = 0; i < staticPLen; i += 2) {
 
@@ -368,6 +369,8 @@ Tcl_Obj *createQueryList(Tcl_Interp * interp, Tcl_Obj * cmd, Tcl_Obj * plist,
     if (qStr == NULL)
 	return NULL;
 
+    Tcl_IncrRefCount(qStr);
+
     if (plist != NULL)
 	if (Tcl_ListObjAppendList(interp, qStr, plist) == TCL_ERROR)
 	    errCnt++;
@@ -404,13 +407,14 @@ Tcl_Obj *createQueryList(Tcl_Interp * interp, Tcl_Obj * cmd, Tcl_Obj * plist,
 		Tcl_DecrRefCount(tmp);
 		tmp = tmp2;
 	    }
+
+	    if (Tcl_ListObjAppendList(interp, qStr, tmp) == TCL_ERROR)
+	      errCnt++;
+
+	    Tcl_DecrRefCount(tmp);
+
 	}
     }
-
-    if (Tcl_ListObjAppendList(interp, qStr, tmp) == TCL_ERROR)
-	errCnt++;
-
-    Tcl_DecrRefCount(tmp);
 
     /* After appending each element in elemListPtr,
      * Tcl_ListObjAppendList increments the element's reference count
@@ -550,6 +554,7 @@ int Web_CmdUrl(ClientData clientData,
 	if (urlData->querystring != NULL) {
 	    /* take the one which was configured in web::cmdurlcfg */
 	    qStrList = Tcl_DuplicateObj(urlData->querystring);
+	    Tcl_IncrRefCount(qStrList);
 
 	}
 	else {
@@ -597,13 +602,18 @@ int Web_CmdUrl(ClientData clientData,
 		plist = Tcl_NewObj();
 		if (plist == NULL)
 		    return TCL_ERROR;
+		Tcl_IncrRefCount(plist);
 		for (i = iCurArg; i < objc; i += 2) {
 		    if (Tcl_ListObjAppendElement(interp, plist, objv[i]) ==
-			TCL_ERROR)
-			return TCL_ERROR;
+			TCL_ERROR) {
+		      Tcl_DecrRefCount(plist);
+		      return TCL_ERROR;
+		    }
 		    if (Tcl_ListObjAppendElement(interp, plist, objv[i + 1])
-			== TCL_ERROR)
-			return TCL_ERROR;
+			== TCL_ERROR) {
+		      Tcl_DecrRefCount(plist);
+		      return TCL_ERROR;
+		    }
 		}
 		qStrList = createQueryList(interp, cmd, plist, urlData, flag);
 		Tcl_DecrRefCount(plist);
@@ -612,22 +622,23 @@ int Web_CmdUrl(ClientData clientData,
 	    /* ------------------------------------------------------------------
 	     * crypt
 	     * ------------------------------------------------------------------ */
-	    Tcl_IncrRefCount(qStrList);
 	    if (doencrypt(interp, qStrList, 1) != TCL_OK) {
 
 		LOG_MSG(interp, WRITE_LOG, __FILE__, __LINE__,
 			"web::cmdurl", WEBLOG_ERROR,
 			"error encrypting \"", Tcl_GetString(qStrList), "\"",
 			NULL);
-		Tcl_DecrRefCount(qStrList);
+		if (qStrList != NULL)
+		  Tcl_DecrRefCount(qStrList);
 		return TCL_ERROR;
 
-	    }
-	    else {
+	    } else {
 
+	      if (qStrList != NULL)
 		Tcl_DecrRefCount(qStrList);
-		qStrList = Tcl_DuplicateObj(Tcl_GetObjResult(interp));
-		Tcl_ResetResult(interp);
+	      qStrList = Tcl_DuplicateObj(Tcl_GetObjResult(interp));
+	      Tcl_IncrRefCount(qStrList);
+	      Tcl_ResetResult(interp);
 	    }
 	}
     }
@@ -636,6 +647,7 @@ int Web_CmdUrl(ClientData clientData,
      * url (stuff before query_string)
      * ======================================================================= */
     res = Tcl_NewObj();
+    Tcl_IncrRefCount(res);
 
     if ((urlformat & WEB_URL_WITH_SCHEME) != 0) {
 	if (urlData->defaultscheme != NULL) {
@@ -707,11 +719,14 @@ int Web_CmdUrl(ClientData clientData,
 	if (qStrList != NULL) {
 	    Tcl_AppendToObj(res, WEBURL_QUERY_STRING_SEP, -1);
 	    Tcl_AppendObjToObj(res, qStrList);
-	    Tcl_DecrRefCount(qStrList);
 	}
+    }
+    if (qStrList != NULL) {
+      Tcl_DecrRefCount(qStrList);
     }
 
     Tcl_SetObjResult(interp, res);
+    Tcl_DecrRefCount(res);
 
     return TCL_OK;
 }
@@ -856,6 +871,7 @@ int Web_CmdUrlCfg(ClientData clientData,
 		WebAssertObjc(objc > 3, 2, "?value?");
 		/* format current */
 		res = Tcl_NewObj();
+		Tcl_IncrRefCount(res);
 		for (i = SCHEME; i <= QUERYSTRING; i++) {
 		    if (((urlData->urlformat) & urlElementFlags[i]) != 0) {
 			tmpres =
@@ -875,6 +891,7 @@ int Web_CmdUrlCfg(ClientData clientData,
 		    urlData->urlformat = urlformat;
 		}
 		Tcl_SetObjResult(interp, res);
+		Tcl_DecrRefCount(res);
 		return TCL_OK;
 		break;
 	    }

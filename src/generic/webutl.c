@@ -192,6 +192,7 @@ int handleConfig(Tcl_Interp * interp, Tcl_Obj ** tclo, Tcl_Obj * newValue,
 
     if (*tclo == NULL) {
 	*tclo = Tcl_NewObj();
+	Tcl_IncrRefCount(*tclo);
     }
     Tcl_SetObjResult(interp, Tcl_DuplicateObj(*tclo));
 
@@ -248,8 +249,10 @@ Tcl_Obj *tclSetEnv(Tcl_Interp * interp, char *key, Tcl_Obj * val)
 	return NULL;
 
     arrayName = Tcl_NewStringObj("::env", 5);
+    Tcl_IncrRefCount(arrayName);
 
     keyObj = Tcl_NewStringObj(key, -1);
+    Tcl_IncrRefCount(keyObj);
 
     if (val == NULL) {
 
@@ -269,6 +272,9 @@ Tcl_Obj *tclSetEnv(Tcl_Interp * interp, char *key, Tcl_Obj * val)
     Tcl_DecrRefCount(arrayName);
     Tcl_DecrRefCount(keyObj);
 
+    if (res) {
+      Tcl_IncrRefCount(res);
+    }
     return res;
 }
 

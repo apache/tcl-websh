@@ -34,6 +34,7 @@ void htmlifyAppendNum(Tcl_Obj * tclo, int num)
     intObj = Tcl_NewIntObj(num);
 
     if (intObj != NULL) {
+	Tcl_IncrRefCount(intObj);
 	Tcl_AppendToObj(tclo, "&#", 2);
 	Tcl_AppendObjToObj(tclo, intObj);
 	Tcl_DecrRefCount(intObj);
@@ -236,6 +237,7 @@ Tcl_Obj *webHtmlify(ConvData * convData, Tcl_Obj * in, int useNumeric)
   /* use lookup table */ \
   Tcl_Obj* iObj = NULL; \
   Tcl_Obj* entity = Tcl_NewUnicodeObj(&(unic[first]),end-first); \
+  Tcl_IncrRefCount(entity); \
   iObj   = (Tcl_Obj *)getFromHashTable(convData->etu, \
 				      Tcl_GetString(entity)); \
   Tcl_DecrRefCount(entity); \

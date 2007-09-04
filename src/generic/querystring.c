@@ -45,6 +45,7 @@ int parseQueryString(RequestData * requestData, Tcl_Interp * interp,
     if (dodecrypt(interp, query_string, 1) == TCL_OK) {
 
 	tclo = Tcl_DuplicateObj(Tcl_GetObjResult(interp));
+	Tcl_IncrRefCount(tclo);
 	Tcl_ResetResult(interp);
 	Tcl_DecrRefCount(query_string);
 
@@ -82,6 +83,7 @@ int parseQueryString(RequestData * requestData, Tcl_Interp * interp,
 		NULL);
     }
 
+    Tcl_DecrRefCount(query_string);
     return TCL_OK;
 
 }

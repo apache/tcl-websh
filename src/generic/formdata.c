@@ -105,6 +105,7 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
      * ok, read
      * --------------------------------------------------------------------- */
     formData = Tcl_NewObj();
+    Tcl_IncrRefCount(formData);
 
     if (readToEnd) {
 
@@ -174,7 +175,7 @@ int parseUrlEncodedFormData(RequestData * requestData, Tcl_Interp * interp,
      * only add if list length > 0
      * ----------------------------------------------------------------------- */
     if ((listLen = tclGetListLength(interp, tclo)) == -1) {
-	/* no Tcl_DecrRefCount(tclo); */
+	Tcl_DecrRefCount(tclo);
 	return TCL_ERROR;
     }
 
@@ -287,6 +288,7 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
     pro = Tcl_NewObj();
     if (pro == NULL)
 	return TCL_ERROR;
+    Tcl_IncrRefCount(pro);
     mimeReadBody(channel, pro, boundary, &isLast);
 /*   printf("DBG prolog: %s\n",Tcl_GetString(pro)); fflush(stdout); */
     Tcl_DecrRefCount(pro);
@@ -305,6 +307,7 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 	hdr = Tcl_NewObj();
 	if (hdr == NULL)
 	    return TCL_ERROR;
+	Tcl_IncrRefCount(hdr);
 	mimeReadHeader(channel, hdr);
 	mimeContDispData =
 	    mimeGetContDispFromHeader(interp, Tcl_GetString(hdr));
@@ -389,6 +392,7 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 		}
 
 		fileUploadList = Tcl_NewObj();
+		Tcl_IncrRefCount(fileUploadList);
 		Tcl_ListObjReplace(interp, fileUploadList, 0, 0, 4, lobjv);
 
 		if (paramListAdd(requestData->formVarList,
@@ -408,6 +412,7 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 		    destroyMimeContDispData(mimeContDispData);
 		    return TCL_ERROR;
 		}
+		Tcl_DecrRefCount(fileUploadList);
 	    }
 	    else {
 
@@ -419,6 +424,7 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 		    destroyMimeContDispData(mimeContDispData);
 		    return TCL_ERROR;
 		}
+		Tcl_IncrRefCount(bdy);
 		mimeReadBody(channel, bdy, boundary, &isLast);
 
 /*         printf("DBG mimeSplitMultipart - '%s' -> '%s'\n",mimeContDispData->name,Tcl_GetString(bdy)); fflush(stdout); */
@@ -436,7 +442,7 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 		    Tcl_DecrRefCount(bdy);
 		    return TCL_ERROR;
 		}
-		/* NO Tcl_DecrRefCount(bdy); */
+		Tcl_DecrRefCount(bdy);
 	    }
 	}
 	destroyMimeContDispData(mimeContDispData);
@@ -511,6 +517,7 @@ void mimeReadHeader(Tcl_Channel channel, Tcl_Obj * hdr)
 
     tclo = Tcl_NewObj();
     first = TCL_OK;
+    Tcl_IncrRefCount(tclo);
 
     while (Tcl_GetsObj(channel, tclo) != -1) {
 
@@ -534,6 +541,7 @@ void mimeReadHeader(Tcl_Channel channel, Tcl_Obj * hdr)
 
 	Tcl_DecrRefCount(tclo);
 	tclo = Tcl_NewObj();
+	Tcl_IncrRefCount(tclo);
     }
 
     Tcl_DecrRefCount(tclo);
@@ -592,6 +600,7 @@ long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
      * first line
      * ----------------------------------------------------------------------- */
     prevline = Tcl_NewObj();
+    Tcl_IncrRefCount(prevline);
     rBytesPrev = Tcl_GetsObj(in, prevline);
 
     if (rBytesPrev != -1) {
@@ -600,6 +609,7 @@ long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
 	 * read line-by-line, write delayed
 	 * --------------------------------------------------------------------- */
 	curline = Tcl_NewObj();
+	Tcl_IncrRefCount(curline);
 
 	while ((rBytes = Tcl_GetsObj(in, curline)) != -1) {
 
@@ -672,6 +682,7 @@ long readAndDumpBody(Tcl_Interp * interp, Tcl_Channel in,
 	    Tcl_DecrRefCount(prevline);
 	    prevline = curline;
 	    curline = Tcl_NewObj();
+	    Tcl_IncrRefCount(curline);
 	    rBytesPrev = rBytes;
 	}
 	Tcl_DecrRefCount(curline);
@@ -702,6 +713,7 @@ void mimeReadBody(Tcl_Channel in, Tcl_Obj * bdy, const char *boundary,
     first = 1;
 
     prevline = Tcl_NewObj();
+    Tcl_IncrRefCount(prevline);
     if (Tcl_GetsObj(in, prevline) != -1) {
 
 /*     printf("DBG mimeReadBody - first line: %s\n",Tcl_GetString(prevline)); fflush(stdout); */
@@ -713,6 +725,7 @@ void mimeReadBody(Tcl_Channel in, Tcl_Obj * bdy, const char *boundary,
 	}
 
 	curline = Tcl_NewObj();
+	Tcl_IncrRefCount(curline);
 
 	while (Tcl_GetsObj(in, curline) != -1) {
 
@@ -743,6 +756,7 @@ void mimeReadBody(Tcl_Channel in, Tcl_Obj * bdy, const char *boundary,
 	    Tcl_DecrRefCount(prevline);
 	    prevline = curline;
 	    curline = Tcl_NewObj();
+	    Tcl_IncrRefCount(curline);
 
 	    if (isBoundary)
 		break;

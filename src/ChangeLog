@@ -1,3 +1,16 @@
+2007-09-04 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/dispatch.c, src/generic/webutl.c, src/generic/logutl.c,
+	  src/generic/htmlify.c, src/generic/varchannel.c,
+	  src/generic/modwebsh_cgi.c, src/generic/formdata.c,
+	  src/generic/checksum.c, src/generic/interpool.c,
+	  src/generic/weboutint.c, src/generic/request.c,
+	  src/generic/nca_d.c, src/generic/uricode.c,
+	  src/generic/querystring.c, src/generic/url.c, src/generic/webout.c,
+	  src/generic/messages.c, src/generic/filecounter.c,
+	  src/generic/paramlist.c:
+	- Fixed lots of potentially wrong/missing Tcl_IncrRefCount() and 
+	  Tcl_DecrRefCount() calls.
+
 2007-08-28 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/webutl.c, src/test/dispatch.test:
 	- properly handle multi part forms with extended content-type

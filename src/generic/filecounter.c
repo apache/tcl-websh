@@ -371,6 +371,7 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno, int ne
      * Try to read file
      * ----------------------------------------------------------------- */
     lineObj = Tcl_NewObj();
+    Tcl_IncrRefCount(lineObj);
 
     if ((bytesRead = Tcl_GetsObj(channel, lineObj)) < 0) {
 
@@ -419,14 +420,14 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno, int ne
 	    unlock_TclChannel(interp, channel);
 	    Tcl_Close(interp, channel);
 
-	    Tcl_DecrRefCount(lineObj);
-
 	    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
 		    __FILE__, __LINE__,
 		    "web::filecounter", WEBLOG_ERROR,
 		    "file \"", seqnogen->fileName,
 		    "\" contains invalid data: ",
 		    Tcl_GetStringResult(interp), NULL);
+
+	    Tcl_DecrRefCount(lineObj);
 
 	    return TCL_ERROR;
 	}
@@ -449,12 +450,12 @@ int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno, int ne
 		unlock_TclChannel(interp, channel);
 		Tcl_Close(interp, channel);
 
-		Tcl_DecrRefCount(lineObj);
-
 		LOG_MSG(interp, WRITE_LOG | SET_RESULT,
 			__FILE__, __LINE__,
 			"web::filecounter", WEBLOG_ERROR,
 			"counter overflow", NULL);
+
+		Tcl_DecrRefCount(lineObj);
 
 		return TCL_ERROR;
 	    }

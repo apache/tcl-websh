@@ -460,15 +460,15 @@ int webout_eval_tag(Tcl_Interp * interp, ResponseObj * responseObj,
   }
   if (begin) {
     tclo = Tcl_NewStringObj("web::put \"", -1);
+    Tcl_IncrRefCount(tclo); 
     Tcl_AppendObjToObj(tclo, outbuf);
+    Tcl_DecrRefCount(outbuf);
   } else {
     tclo = outbuf;
   }
   Tcl_AppendToObj(tclo, "\"", -1);
-  Tcl_IncrRefCount(tclo); 
   res = Tcl_EvalObjEx(interp, tclo, TCL_EVAL_DIRECT);
   Tcl_DecrRefCount(tclo); 
-  Tcl_DecrRefCount(outbuf);
   return res;
 }
 
@@ -496,6 +496,7 @@ int putsCmdImpl(Tcl_Interp * interp, ResponseObj * responseObj, Tcl_Obj * str)
 	return TCL_ERROR;
 
     sendString = Tcl_NewObj();
+    Tcl_IncrRefCount(sendString);
 
     if (responseObj->sendHeader) {
 	responseObj->headerHandler(interp, responseObj, sendString);
