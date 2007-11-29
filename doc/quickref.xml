@@ -1140,12 +1140,13 @@ d
 	In addition to this, <command>web::formvar</command> can also 
 	handle files uploaded
 	via Netscape 2.0 file upload mechanism. In this case, the result of
-	<command>web::formvar</command> is a list with three elements:
+	<command>web::formvar</command> is a list with four elements:
 	The first element contains the name of the locally saved file;
 	the second element contains the remote file name; the third element 
 	is set to 0 if the upload was successful, -1 if upload is disabled 
 	(see <command>web::config uploadfilesize</command>) and n > 0 if n
-	Bytes have been truncated, because the file was too big.
+	Bytes have been truncated, because the file was too big. The last 
+	element contains the mime type of the file.
       </para>
       <para>
 Note that the temporary files are created with the permissions configured by
