@@ -31,6 +31,8 @@ web::config timeparam t
 # -----------------------------------------------------------------------------
 proc cleanParam {} {
     web::cmdurlcfg -unset
+    web::cmdurlcfg -reset
+    web::request -reset
     web::formvar -unset
     web::param -unset
 }
@@ -187,7 +189,6 @@ test cmdurl-2.3 {web::cmdurlcfg -reset} {
     lappend res [web::cmdurlcfg -scheme]
     ## for the subsequent tests: go back to funny values
     set keys [list -scheme -host -port -scriptname -pathinfo]
-    if { [info exists values] } { unset values}
     set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
     foreach key $keys val $values {
 	web::cmdurlcfg $key $val
@@ -259,6 +260,12 @@ test cmdurl-3.7 {web::cmdurl -urlformat $ufservername aCmd [list k1 v1]} {
 
     cleanParam
 
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+    set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
+    foreach key $keys val $values {
+	web::cmdurlcfg $key $val
+    }
+
     set res [web::cmdurl -urlformat $ufservername aCmd [list k1 v1]]
     set res [string range $res 0 27]
 } {httpa://www.websh.com/websh3}
@@ -269,6 +276,11 @@ test cmdurl-3.7 {web::cmdurl -urlformat $ufservername aCmd [list k1 v1]} {
 test cmdurl-3.8 {web::cmdurl -urlformat $ufnameport aCmd [list k1 v1]} {
 
     cleanParam
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+    set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
+    foreach key $keys val $values {
+	web::cmdurlcfg $key $val
+    }
 
     set res [web::cmdurl -urlformat $ufnameport aCmd [list k1 v1]]
     set res [string range $res 0 30]
@@ -279,6 +291,11 @@ test cmdurl-3.8 {web::cmdurl -urlformat $ufnameport aCmd [list k1 v1]} {
 test cmdurl-3.9 {web::cmdurl -urlformat $ufpathinfo1 aCmd [list k1 v1]} {
 
     cleanParam
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+    set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
+    foreach key $keys val $values {
+	web::cmdurlcfg $key $val
+    }
 
     set res [web::cmdurl -urlformat $ufpathinfo1 aCmd [list k1 v1]]
     set res [string range $res 0 15]
@@ -290,6 +307,11 @@ test cmdurl-3.10 {web::cmdurl -urlformat $ufpathinfo2 -withservername \
   -withserverport aCmd [list k1 v1]} {
 			  
     cleanParam    
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+    set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
+    foreach key $keys val $values {
+	web::cmdurlcfg $key $val
+    }
     set res [web::cmdurl -urlformat $ufpathinfo2 \
 		 aCmd [list k1 v1]]
     set res [string range $res 0 39]
@@ -302,6 +324,11 @@ test cmdurl-3.11 {web::cmdurl w/o query-string} {
 
     cleanParam
 
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+    set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
+    foreach key $keys val $values {
+	web::cmdurlcfg $key $val
+    }
     set res [web::cmdurl -urlformat $ufpathinfo3 aCmd [list k1 v1]]
     set res [string range $res 0 39]
 } {httpa://www.websh.com:25/websh3/somepath}
@@ -443,6 +470,11 @@ test cmdurl-3.20 {full web::param syntax for web::cmdurlcfg, all-in-one} {
 test cmdurl-3.21 {add static params only in not on cmdline} {
 
     cleanParam
+    set keys [list -scheme -host -port -scriptname -pathinfo]
+    set values [list httpa "www.websh.com" 25 /websh3 "/somepath"]
+    foreach key $keys val $values {
+	web::cmdurlcfg $key $val
+    }
     web::cmdurlcfg -lappend lang EN
     web::config encryptchain ""
     set res [web::cmdurl -notimestamp ""]
@@ -454,6 +486,12 @@ test cmdurl-3.21 {add static params only in not on cmdline} {
 test cmdurl-3.22 {try all URL gen features} {
 
     cleanParam
+
+    web::cmdurlcfg -port 25
+    web::cmdurlcfg -host "www.websh.com"
+    web::cmdurlcfg -pathinfo "/somepath"
+    web::cmdurlcfg -scriptname /websh3
+    web::cmdurlcfg -scheme httpa
 
     set uf [list scheme host port scriptname pathinfo querystring]
     set res "[web::cmdurl -notimestamp -urlformat $uf ""]\n"
@@ -500,6 +538,8 @@ test cmdurl-3.25 {setting -urlformat fails} {
 
 test cmdurl-3.26 {setting has effect} {
 
+    web::cmdurlcfg -host "www.websh.com"
+    web::cmdurlcfg -pathinfo "/somepath"
     set res [web::cmdurlcfg -urlformat {host pathinfo}]
     lappend res [web::cmdurl -notimestamp ""]
     web::cmdurlcfg -urlformat {host querystring}
@@ -511,6 +551,7 @@ test cmdurl-3.27 {tests from specification, all-in-one} {
     web::config encryptchain web::encryptd
     web::config decryptchain web::decryptd
 
+    web::cmdurlcfg -port 25
     web::cmdurlcfg -host "websh.com"
     web::cmdurlcfg -scriptname ""
     set res [web::cmdurl -notimestamp "" k v]
@@ -533,6 +574,28 @@ test cmdurl-3.28 {--} {
     web::dispatch -cmd "" -postdata "" -querystring $tst
     web::param cmd
 } {-urlformat}
+
+test cmdurl-4.1 {get URL scheme from environment} {
+    set res {}
+    cleanParam
+    set env(HTTPS) off
+    append res [string equal http: [web::cmdurl -urlformat scheme foo]]
+    cleanParam
+    set env(HTTPS) onn
+    append res [string equal http: [web::cmdurl -urlformat scheme foo]]
+    cleanParam
+    unset env(HTTPS)
+    append res [string equal http: [web::cmdurl -urlformat scheme foo]]
+    cleanParam
+    set env(HTTPS) on
+    append res [string equal https: [web::cmdurl -urlformat scheme foo]]
+    cleanParam
+    set env(HTTPS) ON
+    append res [string equal https: [web::cmdurl -urlformat scheme foo]]
+    unset env(HTTPS)
+    cleanParam
+    set res
+} {11111}
 
 # cleanup
 ::tcltest::cleanupTests

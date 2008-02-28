@@ -9,7 +9,11 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
-- Bug fixes regarding wrng usage of Tcl API
+- Dynamically link libwebsh.so/websh.dll to mod_websh.so and websh/websh.exe
+
+- CGI https scheme detection compatibility with Sunone web server
+
+- Bug fixes regarding wrong usage of Tcl API
 
 - Bug fix when handling multipart forms (Bug 43212)
 

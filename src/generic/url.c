@@ -661,8 +661,10 @@ int Web_CmdUrl(ClientData clientData,
 		if (schemeObj != NULL)
 		    scheme = Tcl_GetString(schemeObj);
 	    }
-	    if (scheme != NULL && !strcmp(scheme, "on")) {
-		Tcl_AppendObjToObj(res, Tcl_NewStringObj("https", -1));
+	    /* scheme detection: HTTPS variable can be upper case too 
+	       (e.g. on Sunone) */
+	    if (scheme != NULL && !strcasecmp(scheme, "on")) {
+		Tcl_AppendObjToObj(res, Tcl_NewStringObj(WEB_SECURE_SCHEME, -1));
 		Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
 	    } else {
 		Tcl_AppendObjToObj(res, Tcl_NewStringObj(WEB_DEFAULT_SCHEME, -1));
