@@ -126,7 +126,7 @@ SC_LOAD_TCLCONFIG
 
 
 #--------------------------------------------------------------------
-# --with-httpd-include
+# --with-httpd-include and --with-httpd (for Darwin)
 #--------------------------------------------------------------------
 AC_MSG_CHECKING(for httpd header files)
 AC_ARG_WITH(httpdinclude, [  --with-httpdinclude     directory containing the apache header files.], with_httpdinclude=${withval}, with_httpdinclude=NA)
@@ -161,7 +161,7 @@ fi
 
 if test "`uname -s`" = "Darwin" ; then
   AC_MSG_CHECKING(for httpd binary)
-  AC_ARG_WITH(httpd, [  --with-httpd            apache binary], with_httpd=${withval}, with_httpd=NA)
+  AC_ARG_WITH(httpd, [  --with-httpd            apache binary (Darwin only)], with_httpd=${withval}, with_httpd=NA)
   if test x"${with_httpd}" != xNA ; then
     if test -f "${with_httpd}" ; then
       echo "found ${with_httpd}"
@@ -187,6 +187,45 @@ else
   HTTPD_BIN=
 fi
 AC_SUBST(HTTPD_BIN)
+
+#--------------------------------------------------------------------
+# --with-apr and --with-apr-util
+#--------------------------------------------------------------------
+# needed for Apache httpd 2.2.4 (and others) if Apache httpd is configured
+# with --with-apr and/or --with-apr-util -> header files are missing in 
+# installation of httpd
+
+AC_ARG_WITH(aprinclude, [  --with-aprinclude       directory containing apr header files.], with_aprinclude=${withval}, with_aprinclude=NA)
+
+if test x"${with_aprinclude}" != xNA ; then
+  AC_MSG_CHECKING(for apache runtime (apr) header files)
+  if test -f "${with_aprinclude}/apr.h" ; then
+      echo "found ${with_aprinclude}"
+      APR_INCLUDES=" -I\"${with_aprinclude}\""
+      AC_SUBST(APR_INCLUDES)
+  else
+      AC_MSG_ERROR([${with_aprinclude}: directory does not contain apr header file apr.h])
+  fi
+else
+  APR_INCLUDES=
+  AC_SUBST(APR_INCLUDES)
+fi
+
+AC_ARG_WITH(apuinclude, [  --with-apuinclude       directory containing apr util header files.], with_apuinclude=${withval}, with_apuinclude=NA)
+
+if test x"${with_apuinclude}" != xNA ; then
+  AC_MSG_CHECKING(for apache runtime utils (apu) header files)
+  if test -f "${with_apuinclude}/apr_hooks.h" ; then
+      echo "found ${with_apuinclude}"
+      APU_INCLUDES=" -I\"${with_apuinclude}\""
+      AC_SUBST(APU_INCLUDES)
+  else
+      AC_MSG_ERROR([${with_apuinclude}: directory does not contain apu header file apr_hooks.h])
+  fi
+else
+  APU_INCLUDES=
+  AC_SUBST(APU_INCLUDES)
+fi
 
 #--------------------------------------------------------------------
 # A few miscellaneous platform-specific items:
