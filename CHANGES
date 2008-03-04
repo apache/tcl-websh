@@ -9,7 +9,7 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
-- Dynamically link libwebsh.so/websh.dll to mod_websh.so and websh/websh.exe
+- Added --with-aprinclude and --with-apuinclude variables to configure
 
 - CGI https scheme detection compatibility with Sunone web server
 

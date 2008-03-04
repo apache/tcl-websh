@@ -1,3 +1,8 @@
+2008-03-04 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/unix/configure.in, src/unix/Makefile.in:
+	- added --with-aprinclude and --with-apuinclude variables 
+	  to configure apr if needed
+
 2008-02-28 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/url.c, src/generic/url.h, src/tests/cmdurl.test:
 	- fixed URL scheme detection (compatibility with Sunone web server)
