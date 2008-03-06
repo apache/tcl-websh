@@ -20,7 +20,7 @@
 #include "crypt.h"
 #include "stdlib.h"		/* getenv */
 #include "log.h"
-
+#include "request.h"
 
 
 
@@ -663,7 +663,7 @@ int Web_CmdUrl(ClientData clientData,
 	    }
 	    /* scheme detection: HTTPS variable can be upper case too 
 	       (e.g. on Sunone) */
-	    if (scheme != NULL && !strcasecmp(scheme, "on")) {
+	    if (scheme != NULL && !STRCASECMP(scheme, "on")) {
 		Tcl_AppendObjToObj(res, Tcl_NewStringObj(WEB_SECURE_SCHEME, -1));
 		Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
 	    } else {

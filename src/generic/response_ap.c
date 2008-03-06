@@ -102,7 +102,7 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 
 		    if (lobjc) {
 #ifndef APACHE2
-		      if (strcasecmp(key, "Content-Type") == 0) {
+		      if (STRCASECMP(key, "Content-Type") == 0) {
 			r->content_type =
 			  ap_pstrdup(r->pool, Tcl_GetString(lobjv[0]));
 		      } else {
@@ -116,7 +116,7 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 			}
 		      }
 #else /* APACHE2 */
-		      if (strcasecmp(key, "Content-Type") == 0) {
+		      if (STRCASECMP(key, "Content-Type") == 0) {
 			r->content_type =
 			  (char *) apr_pstrdup(r->pool, Tcl_GetString(lobjv[0]));
 		      } else {
