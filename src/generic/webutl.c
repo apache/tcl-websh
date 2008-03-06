@@ -323,6 +323,7 @@ Tcl_Obj *Web_GetOrCreateGlobalVar(Tcl_Interp * interp, Tcl_Obj * name,
 			     Tcl_NewObj(),
 			     TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
 	*isNew = 1;
+	Tcl_IncrRefCount(var);
     }
 
     return var;

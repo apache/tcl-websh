@@ -322,6 +322,7 @@ Tcl_Channel Web_GetVarChannel(Tcl_Interp * interp, char *name, int *mode)
      * create name
      * ----------------------------------------------------------------------- */
     varNameObj = Tcl_NewStringObj(&name[1], -1);
+    Tcl_IncrRefCount(varNameObj);
 
     varChannel->varName = varNameObj;
     varChannel->interp = interp;
@@ -341,8 +342,6 @@ Tcl_Channel Web_GetVarChannel(Tcl_Interp * interp, char *name, int *mode)
 
 /*   printf("DBG Web_GetVarChannel - gonna register '%s'\n",name); fflush(stdout); */
     Tcl_RegisterChannel(interp, channel);
-
-    /* Tcl_DecrRefCount(varNameObj); */
 
     return channel;
 }
