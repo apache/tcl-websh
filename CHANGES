@@ -9,6 +9,10 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Easier ./configure handling (--with-tcl can now cover lib and include)
+
+- Bug fix Unix Makefile test rule was broken on some systems 
+
 - Added --with-aprinclude and --with-apuinclude variables to configure
 
 - CGI https scheme detection compatibility with Sunone web server

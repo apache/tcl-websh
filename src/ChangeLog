@@ -1,3 +1,18 @@
+2008-03-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/unix/Makefile.in:
+	- fixed test rules (LD_LIBRARY_PATH was not set correctly 
+	  on some systems): now refers to Tcl library specified with configure
+	* src/unix/tcl.m4:
+	- allow to configure tcl using --with-tcl only (no need for 
+	  --with-tclinclude if lib/tclConfig.sh and include/tcl.h are sibling
+	  directories
+	
+2008-03-06 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/webutl.c, src/generic/varchannel.c:
+	- bug fix Tcl_Obj life-cycle (fixed crash under Tcl8.5.1)
+	* src/generic/response_ap.c, src/generic/url.c:
+	- fixed Windows version (strcasecmp)
+
 2008-03-04 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/unix/configure.in, src/unix/Makefile.in:
 	- added --with-aprinclude and --with-apuinclude variables 
