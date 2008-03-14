@@ -37,7 +37,10 @@ AC_DEFUN(SC_PATH_TCLCONFIG, [
     if test x"${no_tcl}" = x ; then
 	# we reset no_tcl in case something fails here
 	no_tcl=true
-	AC_ARG_WITH(tcl, [  --with-tcl              directory containing tcl configuration (tclConfig.sh)], with_tclconfig=${withval})
+	AC_ARG_WITH(tcl, [  --with-tcl              directory containing tcl configuration (tclConfig.sh
+                          or lib/tclConfig.sh). can also contain include/tcl.h,
+                          which can be specified separately with
+                          --with-tclinclude if necessary.], with_tclconfig=${withval})
 	AC_MSG_CHECKING([for Tcl configuration])
 	AC_CACHE_VAL(ac_cv_c_tclconfig,[
 
@@ -46,7 +49,12 @@ AC_DEFUN(SC_PATH_TCLCONFIG, [
 		if test -f "${with_tclconfig}/tclConfig.sh" ; then
 		    ac_cv_c_tclconfig=`(cd ${with_tclconfig}; pwd)`
 		else
-		    AC_MSG_ERROR([${with_tclconfig} directory doesn't contain tclConfig.sh])
+		    if test -f "${with_tclconfig}/lib/tclConfig.sh" ; then
+			ac_cv_c_tclconfig=`(cd ${with_tclconfig}/lib; pwd)`
+		    else
+
+			AC_MSG_ERROR([${with_tclconfig} directory doesn't contain tclConfig.sh])
+		    fi
 		fi
 	    fi
 
@@ -1538,46 +1546,57 @@ AC_DEFUN(SC_LIB_SPEC, [
 AC_DEFUN(SC_PUBLIC_TCL_HEADERS, [
     AC_MSG_CHECKING(for Tcl public headers)
 
-    AC_ARG_WITH(tclinclude, [  --with-tclinclude       directory containing the public Tcl header files.], with_tclinclude=${withval})
+    AC_ARG_WITH(tcl, , with_tclconfig=${withval})
+    AC_ARG_WITH(tclinclude, [  --with-tclinclude       directory containing the public Tcl header files.
+                          note: --with-tclinclude overwrites --with-tcl], with_tclinclude=${withval})
 
+    # Now check if --with-tclinclude is given
     if test x"${with_tclinclude}" != x ; then
 	if test -f "${with_tclinclude}/tcl.h" ; then
 	    ac_cv_c_tclh=${with_tclinclude}
 	else
 	    AC_MSG_ERROR([${with_tclinclude} directory does not contain Tcl public header file tcl.h])
 	fi
-    else
-	AC_CACHE_VAL(ac_cv_c_tclh, [
-	    # Use the value from --with-tclinclude, if it was given
+    fi
 
-	    if test x"${with_tclinclude}" != x ; then
-		ac_cv_c_tclh=${with_tclinclude}
+    # check to see if --with-tcl was specified and works 
+    # but only if --with-tclinclude was not given
+    if test x"${ac_cv_c_tclh}" = x ; then
+	if test x"${with_tclconfig}" != x ; then
+	    if test -f "${with_tclconfig}/include/tcl.h" ; then
+		ac_cv_c_tclh=${with_tclconfig}/include
 	    else
-		# Check in the includedir, if --prefix was specified
-
-		eval "temp_includedir=${includedir}"
-		for i in \
-			`ls -d ${temp_includedir} 2>/dev/null` \
-			/usr/local/include /usr/include ; do
-		    if test -f "$i/tcl.h" ; then
-			ac_cv_c_tclh=$i
-			break
-		    fi
-		done
+		if test -f "${with_tclconfig}/../include/tcl.h" ; then
+		    ac_cv_c_tclh=${with_tclconfig}/../include
+		fi
 	    fi
+	fi
+    fi
+
+    if test x"${ac_cv_c_tclh}" = x ; then
+	AC_CACHE_VAL(ac_cv_c_tclh, [
+
+	    # Check in the includedir, if --prefix was specified
+	    eval "temp_includedir=${includedir}"
+	    for i in \
+		`ls -d ${temp_includedir} 2>/dev/null` \
+		/usr/local/include /usr/include ; do
+		if test -f "$i/tcl.h" ; then
+		    ac_cv_c_tclh=$i
+		    break
+		fi
+	    done
 	])
     fi
 
     # Print a message based on how we determined the include path
-
     if test x"${ac_cv_c_tclh}" = x ; then
-	AC_MSG_ERROR(tcl.h not found.  Please specify its location with --with-tclinclude)
+	AC_MSG_ERROR(tcl.h not found. Please specify its location with --with-tclinclude)
     else
 	AC_MSG_RESULT(${ac_cv_c_tclh})
     fi
 
     # Convert to a native path and substitute into the output files.
-
     INCLUDE_DIR_NATIVE=`${CYGPATH} ${ac_cv_c_tclh}`
 
     TCL_INCLUDES=-I\"${INCLUDE_DIR_NATIVE}\"
