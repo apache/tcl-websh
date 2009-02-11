@@ -42,8 +42,11 @@ test mintest-1.1 {create an interpreter, load websh3 library} {} {
     set ok 0
     set v [info tclversion]
     regsub {\.} $v {} win
-    foreach tclsh "$v $win 8.5 85 8.4 84 8.3 83 8.2 82 {}" {
+    foreach tclsh "$v $win 8.6 86 8.5 85 8.4 84 8.3 83 8.2 82 {}" {
 	if {![catch {exec tclsh$tclsh < $fnb}]} {
+	    if {$tclsh != $v && $tclsh != $win} {
+		puts stderr "Warning: Using tclsh$tclsh instead of tclsh[info tclversion]"
+	    }
 	    set ok 1
 	    break
 	}

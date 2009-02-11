@@ -257,10 +257,10 @@ mod_websh.so: mod_websh$(MODULE_LIB_SUFFIX)
 
 websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) -o websh$(VERSION)
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) -o websh$(VERSION)
 
 mod_websh$(MODULE_LIB_SUFFIX): $(web_ap_OBJECTS)
-	$(SHLIB_LD_CURRENT) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC)
+	$(SHLIB_LD_CURRENT) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC)
 
 mod_websh$(UNSHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
 	$(STLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(UNSHARED_LIB_SUFFIX) $(web_ap_OBJECTS)
@@ -269,14 +269,14 @@ pure: websh$(VERSION).pure
 
 websh$(VERSION).pure: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	purify $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).pure
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).pure
 	-rm -f *_pure_*.o
 
 cov: websh$(VERSION).cov
 
 websh$(VERSION).cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
 	purecov $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).cov
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).cov
 	-rm -f *_pure_*.o
 
 .SUFFIXES: .c .o .obj
