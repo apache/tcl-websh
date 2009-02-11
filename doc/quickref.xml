@@ -762,7 +762,7 @@ In the case of multipat form data,
 	  </varlistentry>
 	</variablelist>
 
-	<emphasis>Note</emphasis> that, if no command is passed to
+	<emphasis>Note</emphasis>: If no command is passed to
 	web::dispatch either in the querystring or with the
 	<option>-cmd</option> option, web::dispatch will call the
 	command &quot;default&quot;.
@@ -1252,7 +1252,7 @@ t cmd k
 		value of the field (like Content-Type) and their
 		values (like text/html).</para><para>
 		Example:</para><para> <literal
-		  remap="tt">web::response -set Status 200</literal>.
+		  remap="tt">web::response -set Content-Type text/plain</literal>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1314,6 +1314,16 @@ t cmd k
 		mod_websh, Apache replaces the protocol
 		&quot;HTTP/??&quot; in the reponse with
 		&quot;HTTP/1.1&quot;.
+	      </para>
+	      <para>
+		<emphasis>Note</emphasis>: Depending on the CGI
+		implementation of your web
+		server, this does not always work. A working alternative 
+		for newer versions of Apache is to set a Status header 
+		in the response as follows:
+	      </para>
+	      <para> <literal
+		  remap="tt">web::response -set Status &quot;400 Bad Request&quot;</literal>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
