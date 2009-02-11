@@ -1,3 +1,27 @@
+2009-02-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* doc/quickref.xml:
+	- Note that web::response -httpresponse does not work with all 
+	  web servers.
+	- Minor fixes
+	* doc/quickref.xsl:
+	- updated to more current docbook version
+	* src/tests/mintest.test:
+	- put a warning when libwebsh is loaded into a tclsh of a 
+	  different version
+	- allow for Tcl8.6
+	* src/unix/tcl.m4:
+	- better help text for configure
+	* src/unix/configure.in:
+	- allow Tcl8.6
+	- try to locate tclsh given in the configuration (not just 
+	  the environment)
+	* src/unix/Makefile.in:
+	- also link to libtclstub for Tcl 8.6
+	* src/win/Makefile:
+	- typo in install rule
+	- fixed dependency of test target
+	- changed default paths and changed Tcl version to 8.5
+	
 2008-03-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/unix/Makefile.in:
 	- fixed test rules (LD_LIBRARY_PATH was not set correctly 
