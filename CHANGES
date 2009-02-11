@@ -9,6 +9,12 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Compiles with Tcl 8.6
+
+- Minor documentation fixes
+
+- Fixed test and install targets in Windows Makefile
+
 - Easier ./configure handling (--with-tcl can now cover lib and include)
 
 - Bug fix Unix Makefile test rule was broken on some systems 
