@@ -1591,7 +1591,7 @@ AC_DEFUN(SC_PUBLIC_TCL_HEADERS, [
 
     # Print a message based on how we determined the include path
     if test x"${ac_cv_c_tclh}" = x ; then
-	AC_MSG_ERROR(tcl.h not found. Please specify its location with --with-tclinclude)
+	AC_MSG_ERROR(tcl.h not found. Please specify its location with --with-tcl or --with-tclinclude)
     else
 	AC_MSG_RESULT(${ac_cv_c_tclh})
     fi
