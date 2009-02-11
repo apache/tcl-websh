@@ -18,9 +18,9 @@
 ## configuration variables
 
 TCL_PREFIX=C:/Program Files/Tcl
-TCL_VERSION=84
-HTTPD_PREFIX=C:/Program Files/Apache Group/Apache2
-INSTALL_PREFIX=C:/Program Files/Apache Group/Websh
+TCL_VERSION=85
+HTTPD_PREFIX=C:/Program Files/Apache Software Foundation/Apache2
+INSTALL_PREFIX=C:/Program Files/Apache Software Foundation/Websh
 
 ## no modifications should be necessary below this line
 #
@@ -220,12 +220,12 @@ mod_websh$(VERSION).so: $(web_ap_OBJECTS)
 	$(web_ap_OBJECTS) $(TCL_LIB_SPEC) $(HTTPD_LIBS) $(TCL_LIBS) \
 	/link /dll /nodefaultlib:msvcrt.lib /subsystem:windows
 
-websh$(VERSION).dll:  $(web_OBJECTS)
+websh$(VERSION).dll: $(web_OBJECTS)
         $(CCLD) $(LD_CFLAGS) $(SHLIB_CFLAGS) -o websh$(VERSION).dll \
 	$(web_OBJECTS) $(TCL_LIB_SPEC) $(TCL_LIBS) /link /dll \
-        /nodefaultlib:$(DEFAULT_MSVCRT) /subsystem:windows
+	/nodefaultlib:$(DEFAULT_MSVCRT) /subsystem:windows
 
-test: websh$(VERSION).exe $(web_OBJECTS)
+test: websh.exe
 	set TCL_LIBRARY="$(TCL_PREFIX)/lib"
 	set TCLLIBPATH=$(TCL_PACKAGE_PATH)
 	set WEB_LIBRARY=$(TOP_DIR)/win/websh$(VERSION).dll
@@ -264,7 +264,7 @@ installtargets:
 	if exist websh$(VERSION).exe \
 		$(INSTALL) websh$(VERSION).exe "$(bindir)"
 	if exist websh$(VERSION).exe \
-		copy/Y websh$(VERSION).exe "$(bindir)/websh.exe"
+		copy /Y websh$(VERSION).exe "$(bindir)/websh.exe"
 	if exist websh$(VERSION).dll \
 		$(INSTALL) websh$(VERSION).dll "$(bindir)"
 	if exist websh$(VERSION).lib \
