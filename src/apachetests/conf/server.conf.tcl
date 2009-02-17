@@ -17,9 +17,9 @@ Listen 8081
 
 ServerName localhost
 
-DocumentRoot "$CWD"
+DocumentRoot "$CWD/docs"
 
-<Directory "$CWD">
+<Directory "$CWD/docs">
 Options All MultiViews
 AllowOverride All
 Order allow,deny
@@ -35,7 +35,7 @@ AccessFileName .htaccess
 HostnameLookups Off
 
 ErrorLog $CWD/error_log
-TypesConfig $CWD/mime.types
+TypesConfig $CWD/conf/mime.types
 LockFile $CWD/httpd.lock
 
 LogLevel debug

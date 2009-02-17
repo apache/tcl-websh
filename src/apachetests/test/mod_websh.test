@@ -22,7 +22,7 @@ package require http
 # block of code.  See man tcltest for more information.
 
 foreach Test {hello.test pool.test headers.test} {
-    source $Test
+    source [file join test $Test]
 }
 
 ::tcltest::cleanupTests

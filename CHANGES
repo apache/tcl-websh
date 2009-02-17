@@ -9,6 +9,9 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Revamped mod_websh tests: better directory structure and integrated
+  into src/unix/Makefile: 'make apachetest' now runs the test suite
+
 - Compiles with Tcl 8.6
 
 - Minor documentation fixes

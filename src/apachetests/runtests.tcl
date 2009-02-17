@@ -2,18 +2,44 @@
 # the next line restarts using tclsh \
 exec tclsh "$0" "$@"
 
-source [file join apachetest apachetest.tcl]
+source apachetest.tcl
 
-apachetest::getbinname $argv
+global env
+if {![info exists env(HTTPD_BIN)] || ![string length $env(HTTPD_BIN)]} {
+    if {[string length [lindex $argv 0]]} {
+	# get from commandline
+	set httpdbin [lindex $argv 0]
+	if {[regexp -- {^-I"?(.*?)"?$} $httpdbin all include]} {
+	    # special case for call by Makefile
+	    set env(HTTPD_BIN) [file join [file dirname $include] bin httpd]
+	} else {
+	    # direct call (just binary on command line)
+	    set env(HTTPD_BIN) [lindex $argv 0]
+	}
+    } elseif {[file exists httpd]} {
+	set env(HTTPD_BIN) [file join [pwd] httpd]
+    } else {
+	# don't know what to do
+	set env(HTTPD_BIN) ""
+    }
+}
 
-apachetest::makeconf server.conf {
+if {![info exists env(MOD_WEBSH)]} {
+    set env(MOD_WEBSH) [lindex [glob [file join [pwd] .. unix "mod_websh*[info sharedlibextension]"]] 0]
+}
 
-LoadModule websh_module [file join $CWD .. unix "mod_websh3.6.0b4[info sharedlibextension]"]
+apachetest::setbinname $env(HTTPD_BIN)
+
+apachetest::makeconf conf/server.conf {
+
+LoadModule websh_module $env(MOD_WEBSH)
 AddHandler websh .ws3
 
-WebshConfig [file join $CWD websh.conf]
+WebshConfig [file join [pwd] conf websh.conf]
 
 }
+
+apachetest::makewebshconf conf/websh.conf
 
 # we do this to keep tcltest happy - it reads argv...
 set commandline [lindex $argv 1]
@@ -24,6 +50,6 @@ switch -exact $commandline {
 	apachetest::startserver
     }
     default {
-	source [file join . mod_websh.test]
+	source [file join test mod_websh.test]
     }
 }

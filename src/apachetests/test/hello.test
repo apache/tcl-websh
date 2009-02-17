@@ -7,10 +7,10 @@ set testinterpclass "hello.ws3"
 
 set CWD [pwd]
 set response "Hello, World\n"
-append response "script: $CWD/$testfilename\n"
+append response "script: $CWD/docs/$testfilename\n"
 append response "server_root: $CWD\n"
-append response "document_root: $CWD\n"
-append response "interpclass: $CWD/$testinterpclass\n"
+append response "document_root: $CWD/docs\n"
+append response "interpclass: $CWD/docs/$testinterpclass\n"
 
 ::tcltest::test hello-1.1 {hello world test} {
     apachetest::start {} {

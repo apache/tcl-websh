@@ -7,7 +7,6 @@
 # the name of the Apache executable, which must, however, be compiled
 # with the right options.
 
-package require Tclx
 package provide apachetest 0.1
 
 namespace eval apachetest {
@@ -37,21 +36,30 @@ namespace eval apachetest {
     # name of the apache binary, such as /usr/sbin/httpd
     variable binname ""
     # this file should be in the same directory this script is.
-    variable templatefile [file join [file dirname [info script]] \
-			       template.conf.tcl]
+    variable templatefile [file join conf server.conf.tcl]
+    variable templatewebshconf [file join conf websh.conf.tcl]
 }
 
 # make sure we can connect to the server
-
 proc apachetest::connect { } {
-    while { 1 } {
+
+    global waiting
+    set waiting 10
+
+    set connect [after 5000 {set waiting 0}]
+
+    while {$waiting > 9} {
 	if { ! [catch {
 	    set sk [socket localhost 8081]
 	} err]} {
 	    close $sk
-	    return
+	    after cancel $connect
+	    return 1
 	}
+	after 10 {incr waiting}
+	vwait waiting
     }
+    return 0
 }
 
 # start - start the server in the background with 'options' and then
@@ -62,18 +70,39 @@ proc apachetest::start { options code } {
     variable binname
 
     # There has got to be a better way to do this, aside from waiting.
-    set serverpid [eval exec  $binname -X -f \
-		       [file join [pwd] server.conf] $options &]
+#    set serverpid [eval exec  $binname -X -f \
+#		       [file join [pwd] server.conf] $options &]
 
-    apachetest::connect
+    set serverhandle [open "|$binname -X -f [file join [pwd] conf server.conf]" r]
+    set serverpid [pid $serverhandle]
+    fconfigure $serverhandle -blocking 0
+
     puts "Apache started as PID $serverpid"
-    if { [catch {
-	uplevel $code
-    } err] } {
-	puts $err
+
+    if {[apachetest::connect]} {
+	if { [catch {
+	    uplevel $code
+	} err] } {
+	    puts $err
+	}
+    } else {
+	error "Could not connect to Apache"
     }
-    kill $serverpid
-    wait $serverpid
+
+    exec kill $serverpid
+    set kill9 [after 2500 "
+	puts stderr \"Can't kill process, trying with kill -9\";
+	exec kill -9 $serverpid
+    "]
+    global waiting
+    set waiting 1
+    while {![eof $serverhandle]} {
+	gets $serverhandle
+	after 500 {incr waiting}
+	vwait waiting
+    }
+    after cancel $kill9
+    puts "Apache stopped"
     catch {file delete httpd.pid}
 }
 
@@ -89,15 +118,19 @@ proc apachetest::startserver { options } {
     }
 }
 
-# getbinname - get the name of the apache binary, and check to make
-# sure it's ok.  The user should supply this parameter.
+# setbinname - set the name of the apache binary
 
-proc apachetest::getbinname { argv } {
+proc apachetest::setbinname { name } {
     variable binname
-    set binname [lindex $argv 0]
-    if { $binname == "" || ! [file exists $binname] } {
-	error "Please supply the full name and path of the Apache executable on the command line!"
+    global argv0
+    if {![file exists $name]} {
+	puts stderr "Please supply the full name and path of the Apache executable"
+	puts stderr "on the command line (or in the HTTPD_BIN environment variable):"
+	puts stderr "$argv0 /path/to/httpd"
+	exit 1
     }
+
+    set binname $name
     return $binname
 }
 
@@ -206,6 +239,7 @@ proc apachetest::determinemodules { binname } {
 # extra is for extra config things we want to tack on.
 
 proc apachetest::makeconf { outfile {extra ""} } {
+    global env
     variable binname
     variable templatefile
     set CWD [pwd]
@@ -215,7 +249,25 @@ proc apachetest::makeconf { outfile {extra ""} } {
 
     set fl [open [file join . $templatefile] r]
     set template [read $fl]
+    close $fl
+
     append template $extra
+
+    set out [subst $template]
+
+    set of [open $outfile w]
+    puts $of "$out"
+    close $of
+}
+
+proc apachetest::makewebshconf {outfile} {
+    global env
+    variable templatewebshconf
+    set CWD [pwd]
+
+    # replace with determinemodules
+    set fl [open [file join . $templatewebshconf] r]
+    set template [read $fl]
     close $fl
 
     set out [subst $template]

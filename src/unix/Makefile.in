@@ -227,6 +227,19 @@ test.cov: websh$(VERSION).cov $(web_LIB_FILE) $(web_OBJECTS)
 	umask 0; \
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).cov
 
+apachetest: mod_websh.so
+	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
+	export LD_LIBRARY_PATH; \
+	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
+	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
+	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION); export WEB_BIN; \
+	MOD_WEBSH=$(TOP_DIR)/unix/mod_websh$(MODULE_LIB_SUFFIX); \
+	export MOD_WEBSH; \
+	HTTPD_BIN=$(HTTPD_BIN); export HTTPD_BIN; \
+	TCLLIBPATH=$(TCL_PACKAGE_PATH); export TCLLIBPATH; \
+	cd $(TOP_DIR)/apachetests; \
+	$(TOP_DIR)/unix/websh$(VERSION) runtests.tcl $(HTTPD_INCLUDES)
+
 depend:
 
 # =============================================================================

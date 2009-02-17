@@ -1,3 +1,11 @@
+2009-02-17 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/apachetests:
+	- Better directory structure
+	- Adapted to invokation through Makefile (in src/unix)
+	* src/unix/Makefile.in:
+	- Added apachetest rule: make apachetest now runs test suite for 
+	  mod_websh
+
 2009-02-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* doc/quickref.xml:
 	- Note that web::response -httpresponse does not work with all 
