@@ -302,10 +302,10 @@ static int run_websh_script(request_rec * r)
     if (Tcl_Eval(webInterp->interp, "web::ap::perReqInit") != TCL_OK) {
 #ifndef APACHE2
 	ap_log_printf(r->server,
-		      "mod_websh - cannot init per-request Websh code");
+		      "mod_websh - cannot init per-request Websh code: %s", Tcl_GetStringResult(webInterp->interp));
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - cannot init per-request Websh code");
+		      "mod_websh - cannot init per-request Websh code: %s", Tcl_GetStringResult(webInterp->interp));
 #endif /* APACHE2 */
 	return 0;
     }
@@ -330,10 +330,10 @@ static int run_websh_script(request_rec * r)
 
     if (Tcl_Eval(webInterp->interp, "web::ap::perReqCleanup") != TCL_OK) {
 #ifndef APACHE2
-	ap_log_printf(r->server, "mod_websh - error while cleaning-up");
+	ap_log_printf(r->server, "mod_websh - error while cleaning-up: %s", Tcl_GetStringResult(webInterp->interp));
 #else /* APACHE2 */
 	ap_log_rerror(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0, r,
-		      "mod_websh - error while cleaning-up");
+		      "mod_websh - error while cleaning-up: %s", Tcl_GetStringResult(webInterp->interp));
 #endif /* APACHE2 */
 	return 0;
     }
