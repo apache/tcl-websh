@@ -468,7 +468,7 @@ test output-4.5 {switch back channel in putx} {
     web::response -resetall
     web::putx #_foo bar
     set cmp $_foo
-    web::put zoo
+    web::put "test completed\n"
     expr {$_foo == $cmp}
 } {1}
 
