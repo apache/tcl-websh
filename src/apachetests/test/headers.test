@@ -4,8 +4,9 @@
 
 set testfilename1 "headers.ws3"
 
-::tcltest::test header-1.1 {websh header test} {
-    apachetest::start {} {
+apachetest::start {} {
+
+    ::tcltest::test header-1.1 {websh header test} {
 	### fixme: this can't work, because state doesn't handle
 	### multiple headers correctly anyway ...
 	#set page [ ::http::geturl "${urlbase}$testfilename1" ]
@@ -24,14 +25,8 @@ set testfilename1 "headers.ws3"
 	    }
 	}
 	close $s
-    }
-    ### fixme: this can't work, because state doesn't handle
-    ### multiple headers correctly anyway ...
-    # upvar 0 $page state
-    #array set meta $state(meta)
-    #array get meta
-    set page
-} {HTTP/1.1 200 OK
+	set page
+    } {HTTP/1.1 200 OK
 Foo: bar
 Foo: bla
 Foo: que
@@ -42,4 +37,15 @@ Connection: close
 Content-Type: text/html
 
 hi world
+}
+
+    ::tcltest::test header-1.1 {websh Basic auth header test (pass through Authorization)} {
+	set auth [list Authorization {Basic d2Vic2g6cGFzcw==}]
+	set page [::http::geturl "${urlbase}/$testfilename1?cmd=auth" -headers $auth]
+	set match [::http::data $page]
+	set auth [list Authorization {Basic d2Vic2g6cGFzczp3b3Jk}]
+	set page [::http::geturl "${urlbase}/$testfilename1?cmd=auth" -headers $auth]
+	append match ! [::http::data $page]
+    } {websh*pass!websh*pass:word}
+
 }

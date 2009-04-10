@@ -10,5 +10,11 @@ web::command default {
     web::put "hi world"
 }
 
+web::command auth {
+    set user [web::request AUTH_USER]
+    set pass [web::request AUTH_PW]
+    web::put "$user*$pass"
+}
+
 web::dispatch
 

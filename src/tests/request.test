@@ -88,5 +88,19 @@ test request-2.4 {defaultchannelname} {
 } {stdin}
 
 
+test request-3.0 {check Basic Auth translation of Apache hack} {
+    set ::env(AUTH_BASIC) {Basic d2Vic2g6cGFzcw==}
+    ::web::request -reset
+    ::web::cgi::copyenv
+    set match "[web::request AUTH_USER]*[web::request AUTH_PW]"
+    set ::env(AUTH_BASIC) {Basic d2Vic2g6cGFzczp3b3Jk}
+    ::web::request -reset
+    ::web::cgi::copyenv
+    append match "![web::request AUTH_USER]*[web::request AUTH_PW]"
+    set match
+
+    } {websh*pass!websh*pass:word}
+}
+
 # cleanup
 ::tcltest::cleanupTests

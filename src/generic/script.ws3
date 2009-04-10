@@ -170,10 +170,60 @@ proc web::cgi::copyenv {} {
 	HTTPS
     }
 
+    # set request headers from environment
     foreach e [array names ::env] {
 	if {![string match HTTP_* $e]} {
 	    if {[lsearch -exact $cgienv $e] == -1} continue
 	}
 	web::request -set $e $::env($e)
     }
-}
+    
+    # check for Authorization
+    if {![info exists ::env(REMOTE_USER)] && [info exists ::env(AUTH_BASIC)]} {
+	# AUTH_BASIC contains the Authorization header
+	# sent by the browser (e.g. created using Apache >= 2.0.51: 
+	#   SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
+	# check the quick reference for security considerations
+	if {[regexp "^Basic (.*)" $::env(AUTH_BASIC) dummy authstring]} {
+	    # base64 decode it
+	    set i 0
+	    foreach char {A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
+		    a b c d e f g h i j k l m n o p q r s t u v w x y z \
+		    0 1 2 3 4 5 6 7 8 9 + / =} {
+		set b64($char) $i
+		incr i
+	    }
+	    set decoded {}
+	    set group 0; set j 18; set eq 0
+	    foreach char [split $authstring {}] {
+
+		# ignore all characters not in base64 character set
+		# should be only newlines, but who knows ;-)
+		if {![info exists b64($char)]} {continue}
+
+		if {[string compare $char "="]} {
+		    set bits $b64($char)
+		    set group [expr {$group | ($bits << $j)}]
+		} else {
+		    incr eq
+		}
+		
+		if {[incr j -6] < 0} {
+		    scan [format %06x $group] %2x%2x%2x a b c
+		    switch $eq {
+			0 {append decoded [format %c%c%c $a $b $c]}
+			1 {append decoded [format %c%c $a $b]}
+			2 {append decoded [format %c $a]}
+		    }
+		    set group 0; set j 18; set eq 0
+		}
+	    }
+	    # set request params
+	    web::request -set AUTH_USER [lindex [split $decoded :] 0]
+	    web::request -set AUTH_PW [join [lrange [split $decoded :] 1 end] :]
+	}
+    }
+    if {[info exists ::env(AUTH_BASIC)]} {
+	unset ::env(AUTH_BASIC)
+    }
+ }

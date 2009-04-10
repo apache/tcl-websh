@@ -1,3 +1,13 @@
+2009-04-10 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/script.ws3, src/generic/request_ap.c:
+	- web::request provides AUTH_USER and AUTH_PW if browser provides
+	  an Authorization header and Apache does not handle it.
+	* src/tests/request.test, src/apachetests/test/headers.test,
+	  src/apachetests/docs/headers.ws3:
+	- test [web::request AUTH_USER] and [web::request AUTH_PW]
+	* doc/quickref.xml
+	- documentation for AUTH_USER and AUTH_PW
+	
 2009-02-17 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/apachetests:
 	- Better directory structure

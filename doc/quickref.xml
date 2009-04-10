@@ -998,6 +998,81 @@ d
 	  </varlistentry>
 	</variablelist>
 
+	Special case for handling Basic Auth:
+
+	<variablelist>
+	  <varlistentry>
+	    <term><command>web::request</command> <option>AUTH_USER</option></term>
+	    <listitem>
+	      <para>
+		returns the username provided by the user when Basic Auth is requested and Apache 
+		does not handle it (i.e. if Apache does not provide REMOTE_USER).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><command>web::request</command> <option>AUTH_PW</option></term>
+	    <listitem>
+	      <para>
+		returns the password provided by the user when Basic Auth is requested and Apache 
+		does not handle it (i.e. if Apache does not provide REMOTE_USER).
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+	
+        The following example provides a basic app that requires Basic Auth and
+        completely bypasses Apache's auth mechanisms.
+
+        <example>
+	  <title>web::request AUTH_USER and web::request AUTH_PW</title>
+      	  <programlisting>
+# returns 1 if user/pass provided is websh/websh
+proc isAuthenticated {} {
+    if {[web::request -count AUTH_USER]} {
+	set user [web::request AUTH_USER]
+	set pass [web::request AUTH_PW]
+	if {[string eq $user "websh"] &amp;&amp; [string eq $pass "websh"]} {
+	    return 1
+	}
+    }
+    return 0
+}
+
+# the default command requests Basic Auth unless provided correctly
+web::command default {
+    if {![isAuthenticated]} {
+	web::response -set Status {401 Authorization Required}
+	web::response -set WWW-Authenticate {Basic realm="Websh auth"}
+	web::put "Sorry, you're out"
+    } else {
+	web::put "You're in"
+    }
+}
+
+# command dispath
+web::dispatch
+	  </programlisting>
+        </example>
+
+        <emphasis>Note:</emphasis> CGI usually does not expose the Basic Auth
+        Authorization header for security reasons. The following configuration
+        for Apache (as of version 2.0.51) will allow Websh to also provide the
+        same functionality when running in CGI (requires mod_setenvif):
+
+        <example>
+	  <title>Apache configuration for AUTH_USER and AUTH_PW to work under CGI</title>
+      	  <programlisting>
+SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
+	  </programlisting>
+        </example>
+
+        <emphasis>Important security consideration:</emphasis> This configuration 
+        will also expose the authentication information to Websh when Apache does
+        handle the authentication. Although Websh hides the information in that 
+        case, it is always available in the CGI environment. Use this configuration
+        carefully!
+
       </para>
     </section>
     <section id="web::param">
