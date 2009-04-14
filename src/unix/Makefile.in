@@ -195,7 +195,7 @@ distdoc: ../../doc/quickref.xml ../../doc/quickref.xsl
 # =============================================================================
 
 test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
-	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(LD_LIBRARY_PATH)"; \
+	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
 	export LD_LIBRARY_PATH; \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
 	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
@@ -206,7 +206,7 @@ test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
 	$(TOP_DIR)/unix/websh$(VERSION) webtest.ws3
 
 test.pure: websh$(VERSION).pure $(web_LIB_FILE) $(web_OBJECTS)
-	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(LD_LIBRARY_PATH)"; \
+	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
 	export LD_LIBRARY_PATH; \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
 	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
@@ -217,7 +217,7 @@ test.pure: websh$(VERSION).pure $(web_LIB_FILE) $(web_OBJECTS)
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).pure
 
 test.cov: websh$(VERSION).cov $(web_LIB_FILE) $(web_OBJECTS)
-	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(LD_LIBRARY_PATH)"; \
+	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
 	export LD_LIBRARY_PATH; \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
 	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
@@ -305,11 +305,11 @@ clean:
 	-rm -f *.$(OBJEXT)
 	-rm -f *pure* .*pure*
 	-rm -f script.h
-	-rm -f *~
+	-rm -f *~ ../*~ ../*/*~
 	-rm -f ../tests/locktest.*
+	-rm -rf ../apachetests/logs ../apachetest/conf/server.conf ../apachetest/conf/websh.conf
 	-rm -f $(web_OBJECTS) $(web_ap_OBJECTS) mod_websh$(SHARED_LIB_SUFFIX) mod_websh$(UNSHARED_LIB_SUFFIX)
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
-
 
 distclean: clean
 	-rm -f *.tab.c

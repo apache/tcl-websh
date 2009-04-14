@@ -5,7 +5,7 @@
 
 ServerRoot "$CWD"
 
-PidFile "$CWD/httpd.pid"
+PidFile "$CWD/logs/httpd.pid"
 
 Timeout 300
 
@@ -34,11 +34,10 @@ AccessFileName .htaccess
 
 HostnameLookups Off
 
-ErrorLog $CWD/error_log
+ErrorLog $CWD/logs/error.log
 TypesConfig $CWD/conf/mime.types
-LockFile $CWD/httpd.lock
 
 LogLevel debug
 
 LogFormat "%h %l %u %t \\"%r\\" %>s %b \\"%{Referer}i\\" \\"%{User-Agent}i\\"" combined
-CustomLog "$CWD/access_log" combined
+CustomLog "$CWD/logs/access.log" combined

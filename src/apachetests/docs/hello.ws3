@@ -9,5 +9,8 @@ web::command default {
     web::put "interpclass: [web::config interpclass]\n"
 }
 
-web::dispatch
+web::command pi {
+    web::put [web::request PATH_INFO]
+}
 
+web::dispatch

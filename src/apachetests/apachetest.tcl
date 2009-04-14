@@ -13,7 +13,7 @@ namespace eval apachetest {
 
     # Associate module names with their internal names.
     array set module_assoc {
-	mod_log_config	  config_log_module
+	mod_log_config	  {config_log_module log_config_module}
 	mod_mime		mime_module
 	mod_negotiation	 negotiation_module
 	mod_dir			 dir_module
@@ -23,7 +23,7 @@ namespace eval apachetest {
 
     ## Apache 2.2 has different names for some modules
     array set module_assoc_22 {
-	mod_log_config           config_log_module
+	mod_log_config           {config_log_module log_config_module}
 	mod_mime                       mime_module
 	mod_negotiation         negotiation_module
 	mod_dir                         dir_module
@@ -73,7 +73,7 @@ proc apachetest::start { options code } {
 #    set serverpid [eval exec  $binname -X -f \
 #		       [file join [pwd] server.conf] $options &]
 
-    set serverhandle [open "|$binname -X -f [file join [pwd] conf server.conf]" r]
+    set serverhandle [open "|\"$binname\" -X -f [file join [pwd] conf server.conf]" r]
     set serverpid [pid $serverhandle]
     fconfigure $serverhandle -blocking 0
 
@@ -89,10 +89,17 @@ proc apachetest::start { options code } {
 	error "Could not connect to Apache"
     }
 
-    exec kill $serverpid
+    global tcl_platform
+    if {[string equal $tcl_platform(platform) "windows"]} {
+	exec taskkill /f /pid $serverpid
+	set forcekill "taskkill /f /pid $serverpid"
+    } else {
+	exec kill $serverpid
+	set forcekill "exec kill -9 $serverpid"
+    }
     set kill9 [after 2500 "
 	puts stderr \"Can't kill process, trying with kill -9\";
-	exec kill -9 $serverpid
+	$forcekill
     "]
     global waiting
     set waiting 1
@@ -142,7 +149,7 @@ proc apachetest::getcompiledin { binname } {
     variable modules
     set bin [open [list | "$binname" -l] r]
     set compiledin [read $bin]
-    close $bin
+    catch {close $bin}
     set modlist [split $compiledin]
     set compiledin [list]
     set mod_so_present 0
@@ -167,18 +174,33 @@ proc apachetest::getcompiledin { binname } {
 proc apachetest::gethttpdconf { binname } {
     set bin [ open [list | "$binname" -V ] r ]
     set options [ read $bin ]
-    close $bin
+    catch {close $bin}
     regexp {SERVER_CONFIG_FILE="(.*?)"} "$options" match filename
-    if { ! [file exists $filename] } {
-	# see if we can find something by combining HTTP_ROOT + SERVER_CONFIG_FILE
-	regexp {HTTPD_ROOT="(.*?)"} "$options" match httpdroot
-	set completename [file join $httpdroot $filename]
-	if { ! [file exists $completename] } {
-	    error "neither '$filename' or '$completename' exists"
-	}
+
+    # try to find conf file relative to installation first
+    set path [file dirname [file dirname $binname]]
+    if {[file exists [file join $path $filename]]} {
+	return [file join $path $filename]
+    }
+
+    # special case of Windows binary distributino for Apache 1.3
+    set path [file dirname $binname]
+    if {[file exists [file join $path $filename]]} {
+	return [file join $path $filename]
+    }
+
+    # try locally
+    if {[file exists $filename]} {
+	return $filename
+    }
+
+    # see if we can find something by combining HTTP_ROOT + SERVER_CONFIG_FILE
+    regexp {HTTPD_ROOT="(.*?)"} "$options" match httpdroot
+    set completename [file join $httpdroot $filename]
+    if {[file exists $completename]} {
 	return $completename
     }
-    return $filename
+    error "Did not find Apache config file '$filename'"
 }
 
 # if we need to load some modules, find out how to do it from the
@@ -189,12 +211,27 @@ proc apachetest::getloadmodules { conffile needtoget } {
     set confdata [read $fl]
     close $fl
     set loadline [list]
+    # get server root
+    if {![regexp -line "^.*?ServerRoot\\s+(.+?)\"?\\s\$" $confdata match serverroot]} {
+	error "ServerRoot not found in configuration"
+    }
     foreach mod $needtoget {
-	if { ! [regexp -line "^.*?(LoadModule\\s+$mod\\s+.+)\$"\
-		    $confdata match line] } {
+	set found 0
+	foreach m $mod {
+	    if {[regexp -line "^.*?LoadModule\\s+$m\\s+(.+)\$"\
+		    $confdata match line]} {
+		set found 1
+		if {[string match "\"*" $serverroot]} {
+		    # Windows path with spaces
+		    lappend loadline "LoadModule $m [file join $serverroot $line]\""
+		} else {
+		    lappend loadline "LoadModule $m [file join $serverroot $line]"
+		}
+		break
+	    }
+	}
+	if {!$found} {
 	    error "No LoadModule line for $mod!"
-	} else {
-	    lappend loadline $line
 	}
     }
     return [join $loadline "\n"]
@@ -207,7 +244,12 @@ proc apachetest::determinemodules { binname } {
     variable module_assoc_22
     variable modules
 
-    set ver [exec $binname -v]
+    set ver ""
+    catch {exec $binname -v} ver
+    if {![regexp "Apache" $ver]} {
+	error "Couldn't get version from Apache binary: $ver"
+    }
+
     if {[regexp {Apache/1\.3\.} $ver] || [regexp {Apache/2\.0\.} $ver]} {
 	array set modules [array get module_assoc]
     } else {
@@ -243,6 +285,9 @@ proc apachetest::makeconf { outfile {extra ""} } {
     variable binname
     variable templatefile
     set CWD [pwd]
+
+    # create directory for log files and lock etc.
+    file mkdir logs
 
     # replace with determinemodules
     set LOADMODULES [determinemodules $binname]

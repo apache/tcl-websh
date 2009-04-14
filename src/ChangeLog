@@ -1,4 +1,23 @@
 2009-04-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/unix/Makefile.in:
+	- enhanced test rules to work with local dynamic library
+	- enhanced clean rule (new apachetest layout)
+	* src/win/Makefile:
+	- added apachetest target
+	- fixed dependencies for new AUTH_USER functionality
+	- enhanced clean rule (new apachetest target)
+	* src/apachetest/runtests.tcl:
+	- Windows compatibility
+	* src/apachetest/apachetest.tcl:
+	- Windows compatibility
+	- Apache 1.3 to 2.2 compatibility (for log config module renaming)
+	- new directory layout (logs subdir)
+	* src/apachetests/conf/server.conf.tcl:
+	- new directory layout (logs subdir)
+	* src/apachetests/test/hello.test, src/apachetests/docs/hello.ws3:
+	- added path_info test
+
+2009-04-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/request_ap.c:
 	- fix AUTH_USER includes for Apache2 and up
 	* src/tests/request.test:

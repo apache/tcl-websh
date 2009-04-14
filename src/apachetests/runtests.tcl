@@ -20,12 +20,18 @@ if {![info exists env(HTTPD_BIN)] || ![string length $env(HTTPD_BIN)]} {
 	set env(HTTPD_BIN) [file join [pwd] httpd]
     } else {
 	# don't know what to do
-	set env(HTTPD_BIN) ""
+	set env(HTTPD_BIN) "unknown"
     }
 }
 
 if {![info exists env(MOD_WEBSH)]} {
-    set env(MOD_WEBSH) [lindex [glob [file join [pwd] .. unix "mod_websh*[info sharedlibextension]"]] 0]
+    global tcl_platform
+    if {[string equal $tcl_platform(platform) "windows"]} {
+	set dir win
+    } else {
+	set dir unix
+    }
+    set env(MOD_WEBSH) [lindex [glob [file join [pwd] .. $dir "mod_websh*.so"]] 0]
 }
 
 apachetest::setbinname $env(HTTPD_BIN)

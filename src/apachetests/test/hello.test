@@ -12,10 +12,16 @@ append response "server_root: $CWD\n"
 append response "document_root: $CWD/docs\n"
 append response "interpclass: $CWD/docs/$testinterpclass\n"
 
-::tcltest::test hello-1.1 {hello world test} {
-    apachetest::start {} {
+apachetest::start {} {
+
+    ::tcltest::test hello-1.1 {hello world test} {
 	set page [::http::geturl "${urlbase}$testfilename/path_info_dummy" ]
 	set match [::http::data $page]
-    }
-    set match
-} $response
+    } $response
+
+    ::tcltest::test hello-1.2 {pathinfo test} {
+	set page [::http::geturl "${urlbase}$testfilename/path_info_dummy?cmd=pi" ]
+	set match [::http::data $page]
+    } /path_info_dummy
+
+}

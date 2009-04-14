@@ -9,12 +9,15 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Enabled mod_websh tests for Windows platform
+  (Use 'nmake apachetest' to test mod_websh within Apache under Windows)
+
 - web::request now provides AUTH_USER and AUTH_PW if Authorization 
   header is sent, and Apache does not handle it (i.e. does not provide 
   the REMOTE_USER variable). Refer to the quick reference for an 
   explanation about how to make it work in CGI.
 
-- Revamped mod_websh tests: better directory structure and integrated
+- Revamped mod_websh tests: better directory structure and integration
   into src/unix/Makefile: 'make apachetest' now runs the test suite
 
 - Compiles with Tcl 8.6

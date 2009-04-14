@@ -13,7 +13,7 @@
 #   1.  set configuration variables bellow
 #   2.  run nmake <target>
 #         where <target> is one of
-#         all websh.exe mod_websh.so clean install
+#         all websh.exe mod_websh.so test apachetest clean install
 #
 ## configuration variables
 
@@ -144,11 +144,13 @@ HTTPD_INCLUDES = "$(HTTPD_PREFIX)/include"
 !IF EXIST("$(HTTPD_PREFIX)/lib/libapr.lib")
 # Apache 2.0
 HTTPD_LIBS = "$(HTTPD_PREFIX)/lib/libhttpd.lib" \
-	"$(HTTPD_PREFIX)/lib/libapr.lib"
+	"$(HTTPD_PREFIX)/lib/libapr.lib" \
+	"$(HTTPD_PREFIX)/lib/libaprutil.lib"
 !ELSE
 # Apache 2.2
 HTTPD_LIBS = "$(HTTPD_PREFIX)/lib/libhttpd.lib" \
-	"$(HTTPD_PREFIX)/lib/libapr-1.lib"
+	"$(HTTPD_PREFIX)/lib/libapr-1.lib" \
+	"$(HTTPD_PREFIX)/lib/libaprutil-1.lib"
 !ENDIF
 !ELSE
 # Apache 1.3
@@ -175,6 +177,21 @@ DEFAULT_MSVCRT=msvcrtd.lib
 !MESSAGE ==================================================
 !MESSAGE Creating objects with debug information (DEBUG=1)
 !MESSAGE ==================================================
+!ENDIF
+
+# find apache binary (needed for apachetest)
+!IF EXIST("$(HTTPD_PREFIX)/bin/Apache.exe")
+HTTPD_BIN = "$(HTTPD_PREFIX)/bin/Apache.exe"
+!ELSE
+!IF EXIST("$(HTTPD_PREFIX)/bin/httpd.exe")
+HTTPD_BIN = "$(HTTPD_PREFIX)/bin/httpd.exe"
+!ELSE
+!IF EXIST("$(HTTPD_PREFIX)/Apache.exe")
+HTTPD_BIN = "$(HTTPD_PREFIX)/Apache.exe"
+!ELSE
+!MESSAGE Warning: Apache binary not found in "$(HTTPD_PREFIX)/bin"
+!ENDIF
+!ENDIF
 !ENDIF
 
 # =============================================================================
@@ -232,10 +249,16 @@ test: websh.exe
 	cd $(TOP_DIR)/tests
 	$(TOP_DIR)\win\websh$(VERSION).exe webtest.ws3
 
+apachetest: mod_websh.so
+	cd $(TOP_DIR)/apachetests
+	$(TCLSH_PROG) runtests.tcl $(HTTPD_BIN)
+
 clean:
 	-del /Q $(CLEANFILES)
-	-del /Q *.$(OBJEXT)
 	-del /Q script.h
+	-rmdir /S /Q ..\apachetests\logs
+	-del /Q ..\apachetests\conf\server.conf
+	-del /Q ..\apachetests\conf\websh.conf
 
 distclean: clean
 
