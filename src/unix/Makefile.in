@@ -227,7 +227,7 @@ test.cov: websh$(VERSION).cov $(web_LIB_FILE) $(web_OBJECTS)
 	umask 0; \
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).cov
 
-apachetest: mod_websh.so
+apachetest: mod_websh.so websh
 	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
 	export LD_LIBRARY_PATH; \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \

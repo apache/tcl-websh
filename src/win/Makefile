@@ -249,7 +249,7 @@ test: websh.exe
 	cd $(TOP_DIR)/tests
 	$(TOP_DIR)\win\websh$(VERSION).exe webtest.ws3
 
-apachetest: mod_websh.so
+apachetest: mod_websh.so websh.exe
 	cd $(TOP_DIR)/apachetests
 	$(TCLSH_PROG) runtests.tcl $(HTTPD_BIN)
 
