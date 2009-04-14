@@ -99,8 +99,7 @@ test request-3.0 {check Basic Auth translation of Apache hack} {
     append match "![web::request AUTH_USER]*[web::request AUTH_PW]"
     set match
 
-    } {websh*pass!websh*pass:word}
-}
+} {websh*pass!websh*pass:word}
 
 # cleanup
 ::tcltest::cleanupTests

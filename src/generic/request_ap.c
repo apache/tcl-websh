@@ -21,6 +21,10 @@
 
 #include "mod_websh.h"
 
+#ifdef APACHE2
+#include "apr_base64.h"
+#endif /* APACHE2 */
+
 /* ----------------------------------------------------------------------------
  * web::request -channel: where input for request obj comes from
  * ------------------------------------------------------------------------- */
