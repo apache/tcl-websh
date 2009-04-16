@@ -206,6 +206,14 @@ Generator: cookiecontext-1.4\u0D
 \u0D
 show me the cookie"
 
+test cookie-1.0 {check cookie handling with strange format} {
+    web::request -set HTTP_COOKIE "x=a; y=b=c; z=cset+test+1"
+    web::cookiecontext testC -crypt 0
+    testC::load z
+    testC::cget test 0
+} {1}
+
+
 # -----------------------------------------------------------------------------
 # cleanup
 # ----------------------------------------------------------------------------
