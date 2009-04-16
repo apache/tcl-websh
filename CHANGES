@@ -9,6 +9,8 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Improved Cookie handling (deal with unusual format)
+
 - Enabled mod_websh tests for Windows platform
   (Use 'nmake apachetest' to test mod_websh within Apache under Windows)
 

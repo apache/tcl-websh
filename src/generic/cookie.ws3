@@ -65,8 +65,13 @@ proc web::cookiecontext {ctxmgrname args} {
     # getCookie - find my cookie
     proc ${ctxmgrname}::_getCookie {id} {
         ::set cookie [web::request HTTP_COOKIE]
-        foreach v [split $cookie "=;"] {
-            lappend kvlist [string trim $v]
+        foreach v [split $cookie ";"] {
+	    # get key and value: note: some cookies (e.g.. Google analytics)
+	    # also use = in the value, so a simple split with =; does 
+	    # not always work...
+	    set key [string trim [lindex [split $v =] 0]]
+	    set value [string trim [join [lrange [split $v =] 1 end] =]]
+	    lappend kvlist $key $value
         }
         # search for $datatag
         foreach {key value} $kvlist {

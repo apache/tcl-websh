@@ -1,3 +1,7 @@
+2009-04-16 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/cookie.ws3:
+	- improved Cookie handling (deal with unusual formats)
+
 2009-04-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/unix/Makefile.in:
 	- enhanced test rules to work with local dynamic library
