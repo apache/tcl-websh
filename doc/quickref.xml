@@ -525,17 +525,17 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 
 	<variablelist>
 	  <varlistentry>
-	    <term><option>-protocol</option> <optional><option><replaceable>value</replaceable></option></optional></term>
+	    <term><option>-scheme</option> <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		protocol to be used. Defaults to the scheme used to
-		access the page, which is overridden if the user gives
+		access the page, which is overridden if the user
 		sets a value.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	  <varlistentry>
-	    <term><option>-servername</option> <optional><option><replaceable>value</replaceable></option></optional></term>
+	    <term><option>-host</option> <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
 		server name to be used. Default: taken from request.
@@ -546,7 +546,8 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><option>-port</option></term>
 	    <listitem>
 	      <para>
-		port number to be used. Default: 80.
+		port number to be used. Default: taken from request, 80 if 
+		not available.
 	      </para>
 	    </listitem>
 	  </varlistentry>
