@@ -41,10 +41,10 @@ hi world
 
     ::tcltest::test header-1.1 {websh Basic auth header test (pass through Authorization)} {
 	set auth [list Authorization {Basic d2Vic2g6cGFzcw==}]
-	set page [::http::geturl "${urlbase}/$testfilename1?cmd=auth" -headers $auth]
+	set page [::http::geturl "${urlbase}$testfilename1?cmd=auth" -headers $auth]
 	set match [::http::data $page]
 	set auth [list Authorization {Basic d2Vic2g6cGFzczp3b3Jk}]
-	set page [::http::geturl "${urlbase}/$testfilename1?cmd=auth" -headers $auth]
+	set page [::http::geturl "${urlbase}$testfilename1?cmd=auth" -headers $auth]
 	append match ! [::http::data $page]
     } {websh*pass!websh*pass:word}
 
