@@ -17,9 +17,9 @@
 #
 ## configuration variables
 
-TCL_PREFIX=C:/Program Files/ActiveTcl/8.5.6
+TCL_PREFIX=C:/Program Files/Tcl
 TCL_VERSION=85
-HTTPD_PREFIX=C:/Program Files/Apache Software Foundation/Apache2.0.63
+HTTPD_PREFIX=C:/Program Files/Apache Software Foundation/Apache2
 INSTALL_PREFIX=C:/Program Files/Apache Software Foundation/Websh
 
 ## no modifications should be necessary below this line
