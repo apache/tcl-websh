@@ -9,6 +9,8 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Bug fix in web::cmdurl when using -urlformat
+
 - Dynamic linking of libwebsh.so|dll to websh binary and mod_websh.so
 
 - Improved Cookie handling (deal with unusual format)

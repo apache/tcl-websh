@@ -1,4 +1,16 @@
 2009-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/url.c:
+	- properly detect host and port in request params
+	  (current servers/browsers deliver port in HTTP_HOST or SERVER_NAME)
+	  this solves a bug reported by Ashok P. Nadkarni in Dec 2008
+	* src/tests/cmdurl.test:
+	- added tests for host different port combinations (that used to
+	  trigger the bug above)
+	* doc/quickref.xml:
+	- fixed wrong option names of web::cmdurlcfg (-scheme and -host)
+	- clarified web::cmdurlcfg defaults.
+
+2009-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* <all changes>:
 	- allow dynamic linking of libwebsh.so|dll to websh, websh.exe and
 	  mod_websh.so

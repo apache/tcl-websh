@@ -24,8 +24,10 @@
 
 
 
-#define WEB_URL_GETFROMREQDATA(scheme,key) \
-    if( urlData->scheme != NULL ) \
+/* if direct is 1: don't try to get configured value, but the one
+   from the environment / requestData */
+#define WEB_URL_GETFROMREQDATA(scheme,key,direct) \
+    if(!direct && urlData->scheme != NULL ) \
       scheme = urlData->scheme; \
     if( scheme == NULL ) \
       if( urlData->requestData != NULL ) \
@@ -676,34 +678,99 @@ int Web_CmdUrl(ClientData clientData,
     if ((urlformat & WEB_URL_WITH_HOST) != 0) {
 	Tcl_Obj *host = NULL;
 	/* try to get requested host */
-	WEB_URL_GETFROMREQDATA(host, "HTTP_HOST");
+	WEB_URL_GETFROMREQDATA(host, "HTTP_HOST", 0);
 	if (host == NULL) {
 	    /* fall back use server name */
-	    WEB_URL_GETFROMREQDATA(host, "SERVER_NAME");
+	    WEB_URL_GETFROMREQDATA(host, "SERVER_NAME", 0);
 	}
 	if (host != NULL) {
+	    char *hostname = Tcl_GetString(host);
+	    char *colon = hostname;
+	    size_t pos = 0;
+	    size_t len = strlen(hostname);
+	    for (; pos < len; pos++) {
+	      if (*colon++ == ':') {
+		break;
+	      }
+	    }
 	    Tcl_AppendToObj(res, WEBURL_HOST_SEP, -1);
-	    Tcl_AppendObjToObj(res, host);
+
+	    if (pos < len) {
+	      /* only insert up to colon */
+	      Tcl_AppendToObj(res, hostname, pos);
+	      Tcl_DecrRefCount(host);
+	    } else {
+	      Tcl_AppendObjToObj(res, host);
+	      /* reset colon */
+	    }
 	}
     }
 
     if ((urlformat & WEB_URL_WITH_PORT) != 0) {
 	Tcl_Obj *port = NULL;
-	WEB_URL_GETFROMREQDATA(port, "SERVER_PORT");
+
+	/* To get the Port, try the following:
+	  1. Take port explicitly configured in Websh if available
+	  2. Take port from HTTP_HOST or SERVER_NAME if available
+	  3. Take port from SERVER_PORT if available
+	  4. Take default port (fallback)
+	*/
+
+	if (urlData->port != NULL) {
+	  port = urlData->port;
+	  Tcl_IncrRefCount(port);
+	}
+
+	if (port == NULL) {
+	  /* nothign found yet */
+	  /* try to get requested host */
+	  Tcl_Obj *host = NULL;
+	  WEB_URL_GETFROMREQDATA(host, "HTTP_HOST", 1);
+	  if (host == NULL) {
+	    /* fall back use server name */
+	    WEB_URL_GETFROMREQDATA(host, "SERVER_NAME", 1);
+	  }
+	  if (host != NULL) {
+	    char *hostname = Tcl_GetString(host);
+	    char *colon = hostname;
+	    size_t pos = 0;
+	    size_t len = strlen(hostname);
+	    for (; pos < len; pos++) {
+	      if (*colon++ == ':') {
+		break;
+	      }
+	    }
+
+	    if (pos < len) {
+	      /* colon points to port */
+	      port = Tcl_NewStringObj(colon, -1);
+	      Tcl_IncrRefCount(port);
+	    }
+	  }
+	}
+
+	if (port == NULL) {
+	  /* still nothing found */
+	  WEB_URL_GETFROMREQDATA(port, "SERVER_PORT", 0);
+	  if (port != NULL) {
+	    Tcl_IncrRefCount(port);
+	  }
+	}
+
 	Tcl_AppendToObj(res, WEBURL_PORT_SEP, -1);
 	if (port != NULL) {
-	    /* found one in the environment */
-	    Tcl_AppendObjToObj(res, port);
-	}
-	else {
-	    /* output the default port */
-	    Tcl_AppendToObj(res, WEB_DEFAULT_PORT, -1);
+	  /* found one */
+	  Tcl_AppendObjToObj(res, port);
+	  Tcl_DecrRefCount(port);
+	} else {
+	  /* output the default port */
+	  Tcl_AppendToObj(res, WEB_DEFAULT_PORT, -1);
 	}
     }
-
+    
     if ((urlformat & WEB_URL_WITH_SCRIPTNAME) != 0) {
 	Tcl_Obj *scriptname = NULL;
-	WEB_URL_GETFROMREQDATA(scriptname, "SCRIPT_NAME");
+	WEB_URL_GETFROMREQDATA(scriptname, "SCRIPT_NAME", 0);
 	if (scriptname != NULL) {
 	    Tcl_AppendObjToObj(res, scriptname);
 	}
@@ -711,7 +778,7 @@ int Web_CmdUrl(ClientData clientData,
 
     if ((urlformat & WEB_URL_WITH_PATHINFO) != 0) {
 	Tcl_Obj *pathinfo = NULL;
-	WEB_URL_GETFROMREQDATA(pathinfo, "PATH_INFO");
+	WEB_URL_GETFROMREQDATA(pathinfo, "PATH_INFO", 0);
 	if (pathinfo != NULL) {
 	    Tcl_AppendObjToObj(res, pathinfo);
 	}

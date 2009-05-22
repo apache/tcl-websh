@@ -597,5 +597,153 @@ test cmdurl-4.1 {get URL scheme from environment} {
     set res
 } {11111}
 
+test cmdurl-5.1 {web::cmdurl with host from env} {
+
+    cleanParam
+
+    set env(HTTP_HOST) "foo.bar.com:8787"
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://foo.bar.com:8787 http://foo.bar.com http::8787}
+
+test cmdurl-5.2 {web::cmdurl with host from env, but given port} {
+
+    cleanParam
+
+    set env(HTTP_HOST) "foo.bar.com:8787"
+    set env(SERVER_NAME) "bar.baz.com:9797"
+
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    web::cmdurlcfg -port 99
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://foo.bar.com:99 http://foo.bar.com http::99}
+
+test cmdurl-5.3 {web::cmdurl with server_name from env} {
+
+    cleanParam
+
+    unset env(HTTP_HOST)
+    set env(SERVER_NAME) "bar.baz.com:9797"
+
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://bar.baz.com:9797 http://bar.baz.com http::9797}
+
+test cmdurl-5.4 {web::cmdurl with server_name from env, but given port} {
+
+    cleanParam
+
+    set env(SERVER_NAME) "bar.baz.com:9797"
+
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    web::cmdurlcfg -port 99
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://bar.baz.com:99 http://bar.baz.com http::99}
+
+test cmdurl-5.5 {web::cmdurl with server_name from env, but given host} {
+
+    cleanParam
+
+    set env(SERVER_NAME) "bar.baz.com:9797"
+
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    web::cmdurlcfg -host tcl.apache.org
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://tcl.apache.org:9797 http://tcl.apache.org http::9797}
+
+test cmdurl-5.6 {web::cmdurl with server_name from env, but given host and port} {
+
+    cleanParam
+
+    set env(SERVER_NAME) "bar.baz.com:9797"
+    set env(SERVER_PORT) "9898"
+
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    web::cmdurlcfg -host tcl.apache.org
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://tcl.apache.org:9797 http://tcl.apache.org http::9797}
+
+test cmdurl-5.7 {web::cmdurl with server_port from env and given host} {
+
+    cleanParam
+
+    unset env(SERVER_NAME)
+    set env(SERVER_PORT) "9898"
+
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    web::cmdurlcfg -host tcl.apache.org
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://tcl.apache.org:9898 http://tcl.apache.org http::9898}
+
+test cmdurl-5.8 {web::cmdurl with server_port from env, but configured too} {
+
+    cleanParam
+
+    set env(SERVER_PORT) "9898"
+
+    set keys [list -scheme -host -port]
+    foreach key $keys {
+	web::cmdurlcfg $key ""
+    }
+    web::cmdurlcfg -host tcl.apache.org
+    web::cmdurlcfg -port 9696
+    set res {}
+    lappend res [web::cmdurl -urlformat {scheme host port} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme host} aCmd]
+    lappend res [web::cmdurl -urlformat {scheme port} aCmd]
+    join $res
+} {http://tcl.apache.org:9696 http://tcl.apache.org http::9696}
+
+unset env(SERVER_PORT)
+
 # cleanup
 ::tcltest::cleanupTests
