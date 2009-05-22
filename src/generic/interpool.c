@@ -110,6 +110,7 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     int result = 0;
     LogPlugIn *logtoap = NULL;
     Tcl_Obj *code = NULL;
+    ApFuncs *apFuncs = NULL;
 
     WebInterp *webInterp = (WebInterp *) Tcl_Alloc(sizeof(WebInterp));
 
@@ -135,6 +136,12 @@ WebInterp *createWebInterp(websh_server_conf * conf,
     /* now register here all websh modules */
     result = Tcl_Init(webInterp->interp);
     /* checkme: test result */
+
+    apFuncs = Tcl_GetAssocData(conf->mainInterp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs == NULL)
+	return NULL;
+    Tcl_SetAssocData(webInterp->interp, WEB_APFUNCS_ASSOC_DATA, NULL, (ClientData *) apFuncs);
+
     result = Websh_Init(webInterp->interp);
 
     /* also register the destrcutor, etc. functions, passing webInterp as
@@ -594,6 +601,7 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
 
     LogPlugIn *logtoap = NULL;
     Tcl_Interp *mainInterp = Tcl_CreateInterp();
+    ApFuncs *apFuncs;
 
     if (mainInterp == NULL)
 	return NULL;
@@ -610,6 +618,13 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
 	return NULL;
     }
 #endif
+
+    apFuncs = createApFuncs();
+    if (apFuncs == NULL) {
+        Tcl_DeleteInterp(mainInterp);
+	return NULL;
+    }
+    Tcl_SetAssocData(mainInterp, WEB_APFUNCS_ASSOC_DATA, destroyApFuncs, (ClientData *) apFuncs);
 
     /* standard Init */
     if (Tcl_Init(mainInterp) == TCL_ERROR) {
@@ -773,4 +788,28 @@ int readWebInterpCode(WebInterp * webInterp, char *filename)
     }
     Tcl_DecrRefCount(objPtr);
     return TCL_ERROR;
+}
+
+ApFuncs *createApFuncs() {
+  ApFuncs *apFuncs = (ApFuncs *) Tcl_Alloc(sizeof(ApFuncs));
+  if (apFuncs == NULL)
+    return NULL;
+  apFuncs->createDefaultResponseObj = createDefaultResponseObj_AP;
+  apFuncs->isDefaultResponseObj = isDefaultResponseObj_AP;
+  apFuncs->requestGetDefaultChannelName = requestGetDefaultChannelName_AP;
+  apFuncs->requestGetDefaultOutChannelName = requestGetDefaultOutChannelName_AP;
+  apFuncs->requestFillRequestValues = requestFillRequestValues_AP;
+  apFuncs->Web_Initializer = Web_Initializer_AP;
+  apFuncs->Web_Finalizer = Web_Finalizer_AP;
+  apFuncs->Web_Finalize = Web_Finalize_AP;
+  apFuncs->Web_InterpCfg = Web_InterpCfg_AP;
+  apFuncs->Web_InterpClassCfg = Web_InterpClassCfg_AP;
+  apFuncs->Web_MainEval = Web_MainEval_AP;
+  apFuncs->Web_ConfigPath = Web_ConfigPath_AP;
+  return apFuncs;
+}
+
+void destroyApFuncs(ClientData apFuncs, Tcl_Interp * interp) {
+  if (apFuncs != NULL)
+    Tcl_Free((char *) apFuncs);
 }

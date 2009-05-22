@@ -472,7 +472,7 @@ int Web_Request(ClientData clientData,
 	switch ((enum params) opt) {
 
 	case DEFAULTCHANNELNAME:
-	    Tcl_SetObjResult(interp, requestGetDefaultChannelName());
+	    Tcl_SetObjResult(interp, requestGetDefaultChannelName(interp));
 	    return TCL_OK;
 	    break;
 	case REQUESTRESET:

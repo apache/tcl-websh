@@ -1,6 +1,86 @@
+2009-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* <all changes>:
+	- allow dynamic linking of libwebsh.so|dll to websh, websh.exe and
+	  mod_websh.so
+	* doc_mod_websh/README, INSTALL, README, src/win/README:
+	- adapted to new dynamic linking
+	- reduced some redundancy
+	- documented (n)make apachetest target
+	* src/unix/Makefile.in, src/win/Makefile:
+	- dynamic linking of libwebsh.so|dll to websh, websh.exe and 
+	  mod_websh.so
+	* src/generic/modwebsh_cgi.h:
+	- created for ApFuncs: a struct with pointers to the
+	  mod_websh implementations of various websh commands that
+	  differ from the CGI implementation.
+	* src/generic/modwebsh_cgi.c:
+	- implemented a switch in all functions according to ApFuncs
+	  content -> call either mod_websh or CGI implementation.
+	* src/generic/request_cgi.c:
+	- implemented a switch in all functions according to ApFuncs
+	  content -> call either mod_websh or CGI implementation.
+	- changed signature in some funtcions to include interp to
+	  allow mod_websh / CGI switch depending on context (ApFuncs)
+	* src/generic/displatch.c:
+	- added interp as parameter to requestGetDefaultChannelName
+	  to allow mod_websh / CGI switch depending on context (ApFuncs)
+	* src/generic/response_ap.c:
+	- changed isDefaultResponseObj to isDefaultResponseObj_AP
+	  to distinguish functions since with dynamic linking, both
+	  versions CGI and mod_websh are present in the code.
+	- added interp as parameter to isDefaultResponseObj_AP
+	  to allow mod_websh / CGI switch depending on context (ApFuncs)
+	* src/generic/request_ap.c:
+	- changed requestGetDefaultChannelName to
+	  requestGetDefaultChannelName_AP and requestFillRequestValues to
+	  requestFillRequestValues_AP to distinguish functions since with
+	  dynamic linking, both versions CGI and mod_websh are present in
+	  the code.
+	- remove duplicate check for requestData->requestIsInitialized
+	* src/generic/interpool.c:
+	- setup apFuncs function pointers for mod_websh interps and set
+	  the struct as Tcl AssocData to the interp (Note: this is how at
+	  runtime, Websh distinguishes whether the CGI or the mod_websh
+	  implementation of certain functions must be invoked)
+	* src/generic/interpool.h:
+	- define prototypes for createApFuncs and destroyApFuncs
+	* src/generic/response_cgi.c:
+	- implemented a switch in all functions according to ApFuncs
+	  content -> call either mod_websh or CGI implementation.
+	- added interp as parameter to isDefaultResponseObj
+	  to allow mod_websh / CGI switch depending on context (ApFuncs)
+	* src/generic/modwebsh_ap.c:
+	- changed various functions from <func> to <func>_AP to allow
+	  mod_websh / CGI switch depending on context (ApFuncs)
+	- removed modwebsh_createcmd, since it's now redundant to the CGI
+	  implementation.
+	* src/generic/request.c:
+	- call requestGetDefaultChannelName with interp as parameter
+	* src/generic/request.h:
+	- changed prototypes for requestGetDefaultChannelName and
+	  requestGetDefaultOutChannelName: both now include interp as
+	  parameter
+	* src/generic/modwebsh.h:
+	- changed prototypes from <func> to <func>_AP for mod_websh
+	  implementation
+	* src/generic/webout.c:
+	- call isDefaultResponseObj and requestGetDefaultOutChannelName
+	  with interp as argument
+	* src/generic/webout.h:
+	- changed prototype of isDefaultResponseObj (added interp as
+	  argument)
+	* src/generic/web.c:
+	- added prototype of modwebsh_createcmd
+
+2009-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/apachetests/test/headers.test:
+	- proper URL in header-1.1 test
+
 2009-04-16 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/cookie.ws3:
 	- improved Cookie handling (deal with unusual formats)
+	* src/tests/cookiecontext.test:
+	- added test for the above fix
 
 2009-04-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/unix/Makefile.in:

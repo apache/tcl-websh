@@ -19,7 +19,7 @@ BINARIES=$(lib_BINARIES)
 
 SCRIPT_SOURCES = ../generic/context.tcl ../generic/script.ws3 ../generic/cookie.ws3 ../generic/sessctx.ws3 
 
-web_OBJECTS_gen = args.o \
+web_OBJECTS = args.o \
 	cfg.o \
 	checksum.o \
 	command.o \
@@ -51,9 +51,8 @@ web_OBJECTS_gen = args.o \
 	weboutint.o \
 	webutl.o \
 	webutlcmd.o \
-	varchannel.o
-
-web_OBJECTS_cgi = modwebsh_cgi.o \
+	varchannel.o \
+	modwebsh_cgi.o \
 	request_cgi.o \
 	response_cgi.o
 
@@ -64,10 +63,6 @@ web_OBJECTS_ap = apchannel.o \
 	modwebsh_ap.o \
 	request_ap.o \
 	response_ap.o
-
-
-web_OBJECTS = $(web_OBJECTS_gen) $(web_OBJECTS_cgi)
-web_ap_OBJECTS := $(web_OBJECTS_gen) $(web_OBJECTS_ap)
 
 OBJECTS = $(web_OBJECTS)
 
@@ -268,28 +263,33 @@ websh: websh$(VERSION) $(web_LIB_FILE)
 mod_websh.so: mod_websh$(MODULE_LIB_SUFFIX)
 
 
-websh$(VERSION): tclAppInit.$(OBJEXT) $(web_OBJECTS)
-	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) -o websh$(VERSION)
+websh$(VERSION): tclAppInit.$(OBJEXT) $(web_LIB_FILE)
+	$(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_LIB_FILE) \
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) \
+	-o websh$(VERSION)
 
-mod_websh$(MODULE_LIB_SUFFIX): $(web_ap_OBJECTS)
-	$(SHLIB_LD_CURRENT) -o mod_websh$(MODULE_LIB_SUFFIX) $(web_ap_OBJECTS) $(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC)
+mod_websh$(MODULE_LIB_SUFFIX): $(web_OBJECTS_ap) $(web_LIB_FILE)
+	$(SHLIB_LD_CURRENT) -o mod_websh$(MODULE_LIB_SUFFIX) \
+	$(web_OBJECTS_ap) $(web_LIB_FILE) $(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC)
 
-mod_websh$(UNSHARED_LIB_SUFFIX): $(web_ap_OBJECTS)
-	$(STLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(UNSHARED_LIB_SUFFIX) $(web_ap_OBJECTS)
+mod_websh$(UNSHARED_LIB_SUFFIX): $(web_OBJECTS_ap) $(web_OBJECTS)
+	$(STLIB_LD) $(TCL_LD_FLAGS) -o mod_websh$(UNSHARED_LIB_SUFFIX) \
+	$(web_OBJECTS_ap) $(web_OBJECTS)
 
 pure: websh$(VERSION).pure
 
-websh$(VERSION).pure: tclAppInit.$(OBJEXT) $(web_OBJECTS)
-	purify $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).pure
+websh$(VERSION).pure: tclAppInit.$(OBJEXT) $(web_LIB_FILE)
+	purify $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_LIB_FILE) \
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) \
+	-o websh$(VERSION).pure
 	-rm -f *_pure_*.o
 
 cov: websh$(VERSION).cov
 
-websh$(VERSION).cov: tclAppInit.$(OBJEXT) $(web_OBJECTS)
-	purecov $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LD_FLAGS) -o websh$(VERSION).cov
+websh$(VERSION).cov: tclAppInit.$(OBJEXT) $(web_LIB_FILE)
+	purecov $(CC) @LDFLAGS@ tclAppInit.$(OBJEXT) $(web_LIB_FILE) \
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) $(TCL_LD_FLAGS) \
+	-o websh$(VERSION).cov
 	-rm -f *_pure_*.o
 
 .SUFFIXES: .c .o .obj
@@ -308,7 +308,7 @@ clean:
 	-rm -f *~ ../*~ ../*/*~
 	-rm -f ../tests/locktest.*
 	-rm -rf ../apachetests/logs ../apachetest/conf/server.conf ../apachetest/conf/websh.conf
-	-rm -f $(web_OBJECTS) $(web_ap_OBJECTS) mod_websh$(SHARED_LIB_SUFFIX) mod_websh$(UNSHARED_LIB_SUFFIX)
+	-rm -f $(web_OBJECTS) $(web_OBJECTS_ap) mod_websh$(SHARED_LIB_SUFFIX) mod_websh$(UNSHARED_LIB_SUFFIX)
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean: clean

@@ -9,7 +9,7 @@ The provided Makefile runs with the Microsoft Visual Studio 6.0 nmake utility.
 The following variables in the Makefile must be adapted to your system:
 
   TCL_PREFIX=C:/Program Files/Tcl
-  TCL_VERSION=83
+  TCL_VERSION=85
   HTTPD_PREFIX=C:/Program Files/Apache Group/Apache2
   INSTALL_PREFIX=C:/Program Files/Apache Group/Websh
 
@@ -32,6 +32,9 @@ nmake mod_websh.so
 
 nmake test
       Run test suite that checks websh<version>.exe and websh<version>.dll
+
+nmake apachetest
+      Run test suite on mod_websh.so running within Apache Web Server.
 
 nmake clean
       Clean up all output files

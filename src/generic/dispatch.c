@@ -24,8 +24,6 @@
 #define FORM_MULTIPART_LEN 19
 #define FORM_DEFAULT_TYPE  FORM_URLENCODED
 
-Tcl_Obj *requestGetDefaultChannelName();
-
 int parsePostData(Tcl_Interp * interp, Tcl_Obj * name,
 		  Tcl_Obj * type, Tcl_Obj * len, RequestData * requestData);
 
@@ -195,7 +193,7 @@ int Web_Dispatch(ClientData clientData,
 
 	    Tcl_Obj *tmp = NULL;
 
-	    tmp = requestGetDefaultChannelName();
+	    tmp = requestGetDefaultChannelName(interp);
 
 	    Tcl_IncrRefCount(tmp);
 

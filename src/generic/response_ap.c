@@ -148,7 +148,7 @@ int apHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 /* ----------------------------------------------------------------------------
  * createDefaultResponseObj
  * ------------------------------------------------------------------------- */
-ResponseObj *createDefaultResponseObj(Tcl_Interp * interp)
+ResponseObj *createDefaultResponseObj_AP(Tcl_Interp * interp)
 {
     return createResponseObj(interp, APCHANNEL, &apHeaderHandler);
 }
@@ -156,7 +156,7 @@ ResponseObj *createDefaultResponseObj(Tcl_Interp * interp)
 /* ----------------------------------------------------------------------------
  * isDefaultResponseObj
  * ------------------------------------------------------------------------- */
-int isDefaultResponseObj(char *name)
+int isDefaultResponseObj_AP(Tcl_Interp * interp, char *name)
 {
     return !strcmp(name, APCHANNEL);
 }

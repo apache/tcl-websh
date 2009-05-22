@@ -21,7 +21,7 @@ Contents
     2. Documentation
     3. Compiling and installing Websh (Unix)
     4. mod_websh: Websh as Apache Module (Unix)
-    5. Compiling and installing Websh (Windows XP)
+    5. Compiling and installing Websh and mod_websh (Windows XP)
     6. Support
 
 
@@ -72,21 +72,23 @@ typically:
   ./configure
   make
   make test
+  make apachetest
   make install
 
 Make will create three targets: websh3.6.<patch>, which is the standalone 
-Websh application (dynamically linked to Tcl) and libwebsh3.6.<patch>.so,
-which is a TEA (Tcl Extension Architecture) shared object that can
-be dynamically loaded from within Tcl using [load libwebsh3.6.<patch>.so].
-Both provide the Tcl package websh. The third target is 
-mod_websh3.6.<patch>.so, which is the Websh Apache module
+Websh application (dynamically linked to Tcl and libwebsh3.6.<patch>.so)
+and libwebsh3.6.<patch>.so, which is a TEA (Tcl Extension Architecture)
+compliant shared object that can be dynamically loaded from within Tcl
+using [load libwebsh3.6.<patch>.so]. Both provide the Tcl package
+websh. The third target is  mod_websh3.6.<patch>.so (also dynamically
+linked to Tcl and libwebsh3.6.<patch>.so), which is the Websh Apache
+module.
 
 If you have several versions of Tcl and Apache installed on your system,
 you might want to specify which one should be used for Websh, e.g.
 
-  ./configure --with-tcl=/usr/local/tcl8.3.4/lib \
-      --with-tclinclude=/usr/local/tcl8.3.4/include \
-      --with-httpdinclude=/usr/local/apache_1.3.29/include
+  ./configure --with-tcl=/usr/local/tcl8.4.19 \
+      --with-httpdinclude=/usr/local/httpd-2.0.63/include
 
 Note that to compile mod_websh for Apache 2, the corresponding Tcl
 library must be compiled using threads and threads should be enabled
@@ -99,16 +101,12 @@ To change this location, provide the --prefix option to configure:
 
   ./configure --prefix=/opt
 
-Note that Websh will install all files in <prefix>/websh and will then 
-try to add symbolic links in <prefix>/bin and <prefix>/lib if these
-directories exist.
-
 
 4. mod_websh: Websh as Apache Module
 ------------------------------------
 
 Websh applications can both run in CGI mode and in mod_websh, the
-module for Apache 1.3 and Apache 2.0. In order to build mod_websh,
+module for Apache 1.3 to Apache 2.2. In order to build mod_websh,
 you have to use the following configure option:
 
   --with-httpdinclude=/path/to/apache/header/files
@@ -124,32 +122,18 @@ After this,
 will compile and build mod_websh. Note that mod_websh3.6.<patch>.so will
 also be compiled by default when 'make all' is invoked.
 
-In order to use mod_websh in your Apache web server, you have
-to do the following:
+In order to use mod_websh in your Apache web server, please refer
+to the file doc/mod_websh/README
 
-1) cp mod_websh.so somewhere where Apache can find it.
-   E.g. SERVER_ROOT/libexec/
-2) edit the httpd.conf file and add the following lines:
-     LoadModule websh_module /path/to/apache/libexec/mod_websh.so
-     AddHandler websh .ws3
-3) Optionally, you can specify a mod_websh configuration file using the
-   following directive:
-     WebshConfig /path/to/websh.conf
-   This configuration file is primarily used to configure the interpreter
-   classes (see documentation)
-4) HUP/restart httpd
-
-From now on, httpd will pass files ending in .ws3 to mod_websh.
-
-A sample setup to server SSI-type HTML with Websh-snipplets and CGI-type
+A sample setup to serve SSI-type HTML with Websh-snipplets and CGI-type
 scripts is found in doc/mod_websh and will be installed with the 
 'make install' command.
 
 
-5. Compiling and installing Websh (Windows XP)
-----------------------------------------------
+5. Compiling and installing Websh and mod_websh (Windows XP)
+------------------------------------------------------------
 
-Websh currently provides a Makefile forMicrosoft Visual Studio 6.0 nmake.
+Websh currently provides a Makefile for Microsoft Visual Studio 6.0 nmake.
 
 Please refer to the file src/win/README for details.
 

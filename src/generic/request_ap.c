@@ -28,19 +28,19 @@
 /* ----------------------------------------------------------------------------
  * web::request -channel: where input for request obj comes from
  * ------------------------------------------------------------------------- */
-Tcl_Obj *requestGetDefaultChannelName()
+Tcl_Obj *requestGetDefaultChannelName_AP(Tcl_Interp * interp)
 {
     return Tcl_NewStringObj(APCHANNEL, -1);
 }
 
 /* default output channel */
 
-char *requestGetDefaultOutChannelName()
+char *requestGetDefaultOutChannelName_AP(Tcl_Interp * interp)
 {
     return APCHANNEL;
 }
 
-int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
+int requestFillRequestValues_AP(Tcl_Interp * interp, RequestData * requestData)
 {
 
     request_rec *r = NULL;
@@ -55,10 +55,6 @@ int requestFillRequestValues(Tcl_Interp * interp, RequestData * requestData)
     int remote_user = 0;
 
     Tcl_Obj *valo = NULL;
-
-    if (requestData->requestIsInitialized)
-	return TCL_OK;
-    requestData->requestIsInitialized = 1;
 
     if (interp == NULL)
 	return TCL_ERROR;

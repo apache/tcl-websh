@@ -44,7 +44,7 @@ SCRIPT_SOURCES = \
 	../generic/sessctx.ws3 
 
 # generic objects
-web_OBJECTS_gen = \
+web_OBJECTS = \
 	args.obj \
 	cfg.obj \
 	checksum.obj \
@@ -76,10 +76,7 @@ web_OBJECTS_gen = \
 	weboutint.obj \
 	webutl.obj \
 	webutlcmd.obj \
-	varchannel.obj
-
-# CGI objects (for websh.exe)
-web_OBJECTS_cgi = \
+	varchannel.obj \
 	modwebsh_cgi.obj \
 	request_cgi.obj \
 	response_cgi.obj
@@ -94,9 +91,6 @@ web_OBJECTS_ap = \
 	request_ap.obj \
 	response_ap.obj
 
-
-web_OBJECTS = $(web_OBJECTS_gen) $(web_OBJECTS_cgi)
-web_ap_OBJECTS = $(web_OBJECTS_gen) $(web_OBJECTS_ap)
 
 # install directories
 bindir = $(INSTALL_PREFIX)/bin
@@ -224,22 +218,24 @@ interpool.obj: ../generic/interpool.c
 
 websh.exe: websh$(VERSION).exe websh$(VERSION).dll
 
-mod_websh.so: mod_websh$(VERSION).so
+mod_websh.so: mod_websh$(VERSION).so websh$(VERSION).dll
 
-websh$(VERSION).exe: tclAppInit.$(OBJEXT) $(web_OBJECTS)
+websh$(VERSION).exe: tclAppInit.$(OBJEXT) websh$(VERSION).dll
 	$(CCLD) $(LD_CFLAGS) $(EXEC_CFLAGS) \
-	tclAppInit.$(OBJEXT) $(web_OBJECTS) \
-	$(TCL_LIB_SPEC) $(TCL_LIBS) -o websh$(VERSION).exe \
+	tclAppInit.$(OBJEXT) websh$(VERSION).lib \
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) -o websh$(VERSION).exe \
 	/link /nodefaultlib:$(DEFAULT_MSVCRT)
 
-mod_websh$(VERSION).so: $(web_ap_OBJECTS)
+mod_websh$(VERSION).so: $(web_OBJECTS_ap) websh$(VERSION).dll
 	$(CCLD) $(LD_CFLAGS) $(SHLIB_CFLAGS) -o mod_websh$(VERSION).so \
-	$(web_ap_OBJECTS) $(TCL_LIB_SPEC) $(HTTPD_LIBS) $(TCL_LIBS) \
+	$(web_OBJECTS_ap) websh$(VERSION).lib $(TCL_LIB_SPEC) \
+	$(TCL_STUB_LIB_SPEC) $(HTTPD_LIBS) $(TCL_LIBS) \
 	/link /dll /nodefaultlib:msvcrt.lib /subsystem:windows
 
 websh$(VERSION).dll: $(web_OBJECTS)
         $(CCLD) $(LD_CFLAGS) $(SHLIB_CFLAGS) -o websh$(VERSION).dll \
-	$(web_OBJECTS) $(TCL_LIB_SPEC) $(TCL_LIBS) /link /dll \
+	$(web_OBJECTS) $(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) \
+	$(TCL_LIBS) /link /dll \
 	/nodefaultlib:$(DEFAULT_MSVCRT) /subsystem:windows
 
 test: websh.exe

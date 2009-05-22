@@ -15,15 +15,19 @@
 
 #include "tcl.h"
 #include "macros.h"
+#include "modwebsh_cgi.h"
 
 /* ----------------------------------------------------------------------------
  * Web_Initializer -- just eval the code
  * ------------------------------------------------------------------------- */
-int Web_Initializer(ClientData clientData,
+int __declspec(dllexport) Web_Initializer(ClientData clientData,
 		    Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
-
     int res = 0;
+
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->Web_Initializer(clientData, interp, objc, objv);
 
     if (objc != 2) {
       Tcl_WrongNumArgs(interp, 1, objv, "code");
@@ -51,11 +55,15 @@ int Web_Initializer(ClientData clientData,
 /* ----------------------------------------------------------------------------
  * Web_Finalizer -- just eval the code
  * ------------------------------------------------------------------------- */
-int Web_Finalizer(ClientData clientData,
+int __declspec(dllexport) Web_Finalizer(ClientData clientData,
 		  Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
 
     int res = 0;
+
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->Web_Finalizer(clientData, interp, objc, objv);
 
     if (objc != 2) {
       Tcl_WrongNumArgs(interp, 1, objv, "code");
@@ -72,9 +80,12 @@ int Web_Finalizer(ClientData clientData,
 /* ----------------------------------------------------------------------------
  * Web_Finalizer -- just return
  * ------------------------------------------------------------------------- */
-int Web_Finalize(ClientData clientData,
+int __declspec(dllexport) Web_Finalize(ClientData clientData,
 		 Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->Web_Finalize(clientData, interp, objc, objv);
 
     return TCL_OK;
 }
@@ -82,9 +93,12 @@ int Web_Finalize(ClientData clientData,
 /* ----------------------------------------------------------------------------
  * Web_InterpClassCfg -- just return
  * ------------------------------------------------------------------------- */
-int Web_InterpClassCfg(ClientData clientData,
+int __declspec(dllexport) Web_InterpClassCfg(ClientData clientData,
 		       Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->Web_InterpClassCfg(clientData, interp, objc, objv);
 
     return TCL_OK;
 }
@@ -92,9 +106,12 @@ int Web_InterpClassCfg(ClientData clientData,
 /* ----------------------------------------------------------------------------
  * Web_InterpCfg -- just return
  * ------------------------------------------------------------------------- */
-int Web_InterpCfg(ClientData clientData,
+int __declspec(dllexport) Web_InterpCfg(ClientData clientData,
 		  Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->Web_InterpCfg(clientData, interp, objc, objv);
 
     return TCL_OK;
 }
@@ -102,9 +119,12 @@ int Web_InterpCfg(ClientData clientData,
 /* ----------------------------------------------------------------------------
  * Web_MainEval -- just return
  * ------------------------------------------------------------------------- */
-int Web_MainEval(ClientData clientData,
+int __declspec(dllexport) Web_MainEval(ClientData clientData,
 		 Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->Web_MainEval(clientData, interp, objc, objv);
 
     return TCL_OK;
 }
@@ -136,6 +156,10 @@ int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
   int index;
   Tcl_Obj *res = NULL;
  
+  ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+  if (apFuncs != NULL)
+    return apFuncs->Web_ConfigPath(interp, objc, objv);
+
   if (Tcl_GetIndexFromObj(interp, objv[1], subCmd, "subcommand", 0, &index)
       != TCL_OK) {
     /* let the caller handle the web::config command */
@@ -179,6 +203,10 @@ int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
  * ------------------------------------------------------------------------- */
 int modwebsh_createcmd(Tcl_Interp * interp)
 {
+    if (NULL != Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL)) {
+      /* no need to do that if we're in mod_websh mode */
+      return TCL_OK;
+    }
 
     Tcl_CreateObjCommand(interp, "web::initializer",
 			 Web_Initializer, NULL, NULL);

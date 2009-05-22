@@ -15,21 +15,29 @@
 
 #include "tcl.h"
 #include "hashutl.h"
-#include "webout.h"
 #include "request.h"
+#include "modwebsh_cgi.h"
 
 /* ----------------------------------------------------------------------------
  * createDefaultResponseObj
  * ------------------------------------------------------------------------- */
 ResponseObj *createDefaultResponseObj(Tcl_Interp * interp)
 {
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->createDefaultResponseObj(interp);
+
     return createResponseObj(interp, CGICHANNEL, &objectHeaderHandler);
 }
 
 /* ----------------------------------------------------------------------------
  * isDefaultResponseObj
  * ------------------------------------------------------------------------- */
-int isDefaultResponseObj(char *name)
+int isDefaultResponseObj(Tcl_Interp * interp, char *name)
 {
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL)
+      return apFuncs->isDefaultResponseObj(interp, name);
+
     return !strcmp(name, CGICHANNEL);
 }

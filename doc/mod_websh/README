@@ -37,7 +37,7 @@ Files
 	websh.exe               (Windows)
 	websh<version>.exe      (Windows)
 
-- Tcl extension (to be loaded into a Tclsh):
+- Tcl extension (loaded by Websh and loadable into a plain Tclsh):
 	libwebsh.so             (Unix symbolic link)
 	libwebsh<version>.so    (Unix)
 	websh.dll               (Windows)
@@ -46,5 +46,7 @@ Files
 Note
 ====
 
-To run the Apache module, only modules/mod_websh.so (or 
-mod_websh<version>.so respectively) is needed.
+To run the Apache module, modules/mod_websh.so (or 
+mod_websh<version>.so respectively), libwebsh.so (or
+libwebsh<version>.so respectively), and the Tcl installation is needed.
+

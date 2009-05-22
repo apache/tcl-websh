@@ -1,13 +1,12 @@
-Notes
-=====
-
-Please note that we use some GNU make extensions, so make sure that 
-you try to compile Websh using a GNU version of make (or gmake) when
-compiling under UNIX.
-
+Unix
+====
 
 Compile Websh 3.6
-=================
+-----------------
+
+Please note that we use some GNU make extensions, so make sure that 
+you compile Websh using a GNU version of make (or gmake) when compiling 
+under UNIX.
 
 from the top level directory,
 
@@ -15,27 +14,56 @@ cd src/unix
 autoconf
 ./configure
 make
+make test;        # runs test suite on websh
+make apachetest;  # runs test suite on mod_websh running within Apache
+make install
 
 You may have to pass special options to configure, such as
 
---with-tcl to indicate where tclConfig.sh is located.
+--with-tcl
+  to indicate where tclConfig.sh is located. (You can provide a 
+  path to tcl where lib/tclConfig.sh and also include/tcl.h is
+  found so that you don't need to specify --with-tclinclude
+  separately)
 
---with-tclinclude to indicate where the Tcl header files are.
+--with-tclinclude
+  to indicate where the Tcl header files are. (overwrites 
+  --with-tcl for header files)
 
---with-httpdinclude to indicate where the Apache header files are
+--with-httpdinclude 
+  to indicate where the Apache header files are
 
---enable-threads if you plan to use it with Apache 2 
-  (don't forget to also compile Tcl with threads enabled).
+--enable-threads
+  if you plan to use it with Apache 2 (don't forget to also 
+  compile Tcl with threads enabled).
+
+--httpd 
+  to indicate where the apache httpd binary resides (only
+  needed to compile Websh on Max OSX)
+
+--with-aprinclude
+--with-apuinclude
+  to indicate where the Apache portable runtime resides if
+  these are not included with the httpd header files  
 
 
 Websh provides the following targets
-====================================
+------------------------------------
 
 websh3.6.<patch>
   standalone tclsh with websh package already loaded
+  (dynamically linked to libwebsh3.6.<patch>.so and Tcl)
 
 libwebsh3.6.<patch>.so
   Tcl package shared object (provides package websh)
 
 mod_websh3.6.<patch>.so
   Apache module for Apache 1.3 and Apache 2.0 respectively
+  (dynamically linked to libwebsh3.6.<patch>.so and Tcl)
+
+
+
+Windows
+=======
+
+Please refer to the file src\win\README.

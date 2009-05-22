@@ -288,7 +288,7 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		     * with our special createDefaultResponseObj function ...
 		     */
 
-		    if (isDefaultResponseObj(tname))
+		    if (isDefaultResponseObj(interp, tname))
 			responseObj = createDefaultResponseObj(interp);
 		    else
 			responseObj = getResponseObj(interp, outData, tname);
@@ -334,7 +334,7 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		    name = Tcl_GetString(objv[2]);
 		    /* we have to find the new channel */
 		    if (!strcmp(name, "default")) {
-			name = (char *) requestGetDefaultOutChannelName();
+			name = (char *) requestGetDefaultOutChannelName(interp);
 		    }
 		    responseObj =
 			getResponseObj(interp, outData, name);

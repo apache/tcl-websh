@@ -100,7 +100,7 @@ int objectHeaderHandler(Tcl_Interp * interp, ResponseObj * responseObj,
 /* cgi/apache dependent prototypes */
 ResponseObj *createDefaultResponseObj(Tcl_Interp * interp);
 
-int isDefaultResponseObj(char *name);
+int isDefaultResponseObj(Tcl_Interp * interp, char *name);
 
 
 

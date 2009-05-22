@@ -23,6 +23,7 @@
 
 #include "modwebsh.h"
 #include "mod_websh.h"
+#include "modwebsh_cgi.h"
 
 /* ----------------------------------------------------------------------------
  * the interp-pool is kept in a hash table where
@@ -144,5 +145,8 @@ void cleanupPool(websh_server_conf * conf);
 void poolReleaseWebInterp(WebInterp * webInterp);
 void deleteInterpClass(WebInterpClass * webInterpClass);
 int readWebInterpCode(WebInterp * wi, char *filename);
+
+ApFuncs* createApFuncs();
+void destroyApFuncs(ClientData apFuncs, Tcl_Interp *interp);
 
 #endif
