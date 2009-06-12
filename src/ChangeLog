@@ -2,6 +2,8 @@
 	* src/tests/logtosyslog.test:
 	- add constraint to only run test when syslog is 
 	  found and readable
+	* src/generic/mod_websh.c:
+	- removed redundant header includes and defines
 
 2009-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/url.c:

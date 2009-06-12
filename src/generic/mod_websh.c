@@ -69,28 +69,13 @@
  */
 
 /* ----------------------------------------------------------------------------
- * httpd includes
- * ------------------------------------------------------------------------- */
-#include "httpd.h"
-#include "http_config.h"
-#include "http_request.h"
-#include "http_core.h"
-#include "http_protocol.h"
-#include "http_main.h"
-#include "http_log.h"
-
-/* ----------------------------------------------------------------------------
  * tcl/websh includes
  * ------------------------------------------------------------------------- */
 #include "tcl.h"		/* tcl headers */
 #include "web.h"		/* websh headers */
-#include "mod_websh.h"		/* apchannel stuff */
+#include "mod_websh.h"		/* apache stuff */
 #include "interpool.h"
 #include "logtoap.h"
-
-#ifndef APACHE2
-#include "http_conf_globals.h"
-#endif /* APACHE2 */
 
 #define WEBSHHANDLER "websh"
 
