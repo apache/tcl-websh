@@ -48,7 +48,23 @@ test logToSyslog-1.1 {websh3_toSyslog: logdest add returns id} {unixOnly} {
     set res [web::logdest add info2.-debug syslog 0]
 } {logdest0}
 
-test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly} {
+
+global srclist
+set srclist [list /var/adm/messages /var/log/messages /var/log/syslog /var/log/system.log]
+
+proc sysLogIsReadable {} {
+    global srclist
+    foreach file $srclist {
+	if {[file readable $file]} {
+	    return 1
+	}
+    }
+    return 0
+}
+
+testConstraint sysLogUnreadableOrNotFound [sysLogIsReadable]
+
+test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly sysLogUnreadableOrNotFound} {
     set res "Failed"
 
     set curTim [clock seconds]
@@ -62,12 +78,11 @@ test logToSyslog-1.2 {websh3_toSyslog: test log} {unixOnly} {
 
     web::log info.info {toSyslog}
 
-    set srclst [list /var/adm/messages /var/log/messages /var/log/syslog /var/log/system.log]
-
     ## give syslog a little time to feed the message to the file
     after 1000
 
-    foreach tmp $srclst {
+    global srclist
+    foreach tmp $srclist {
         if {[scanFileForPattern $tmp $format]} {
 	    set res "Ok"
             break

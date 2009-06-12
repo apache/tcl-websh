@@ -1,3 +1,8 @@
+2009-06-12 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/tests/logtosyslog.test:
+	- add constraint to only run test when syslog is 
+	  found and readable
+
 2009-05-22 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/url.c:
 	- properly detect host and port in request params
