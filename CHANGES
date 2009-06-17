@@ -9,6 +9,8 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Added simple pkgIndex.tcl to installation
+
 - Bug fix in web::cmdurl when using -urlformat
 
 - Dynamic linking of libwebsh.so|dll to websh binary and mod_websh.so

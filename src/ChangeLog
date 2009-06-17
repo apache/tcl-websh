@@ -4,6 +4,10 @@
 	  now needed to run the Apache module
 	* src/apachetests/README:
 	- hint on running apachetests on Windows
+	* src/unix/pkgIndex.tcl, src/win/pkgIndex.tcl:
+	- provide simple pkgIndex.tcl
+	* src/win/Makefile, src/unix/Makefile.in:
+	- also install pkgIndex.tcl
 
 2009-06-12 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/logtosyslog.test:

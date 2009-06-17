@@ -292,6 +292,7 @@ installtargets:
 		$(INSTALL) websh$(VERSION).exp "$(libdir)"
 	if exist websh$(VERSION).dll \
 		copy /Y websh$(VERSION).dll "$(bindir)/websh.dll"
+	copy /Y "$(TOP_DIR)\..\src\win\pkgIndex.tcl" "$(bindir)"
 
 installdocs:
 #	$(INSTALL) "$(TOP_DIR)\..\doc\html\*.html" "$(docdir)"

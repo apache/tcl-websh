@@ -338,6 +338,7 @@ install-binaries: install-dirs binaries
 	rm -f $(libdir)/libwebsh.a; \
 	ln -s libwebsh$(UNSHARED_LIB_SUFFIX) $(libdir)/libwebsh.a; \
 	fi
+	cp -f $(TOP_DIR)/../src/unix/pkgIndex.tcl $(libdir)
 
 # mod_websh
 install-libraries: install-dirs libraries
