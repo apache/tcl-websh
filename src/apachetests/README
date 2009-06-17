@@ -12,7 +12,8 @@ To run the tests, from within the apachetests/ directory, do this:
 ./runtests.tcl /path/to/apache/binary/httpd
 
 Note that the environment needs to be set properly. For easier setup, 
-run this test suite from the ../unix direcotry using 'make apachetest'. 
+run this test suite from the ../unix or ../win direcotry using 
+'make apachetest' (unix) or 'nmake apachetest' (win) respectively. 
 This will setup the environment according to the parameters given when 
 mod_websh was compiled (Tcl library, libwebsh.so, httpd ...)
 
