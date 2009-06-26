@@ -129,7 +129,7 @@ int sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 
     if ((interp == NULL) || (logDests == NULL) ||
 	(logLevel == NULL) || (msg == NULL))
-	return;
+	return TCL_ERROR;
 
     for (i = 0; i < logData->destSize; i++) {
 
