@@ -1,5 +1,6 @@
 2009-06-26 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* doc/quickref.xml:
+	- Added documentation of [web::config] mod_websh subcommands
 	- Fixed minor typos
 	- Added documentation of [web::config safelog]
 	* doc/quickref.xsl:

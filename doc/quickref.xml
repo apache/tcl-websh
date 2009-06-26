@@ -217,6 +217,43 @@ The following two subcommands are read-only and just return their predefined val
 	</varlistentry>
       </variablelist>
 
+      <para>
+The following subcommands are also read-only. They return the current request environment within mod_websh (and if applicable in CGI mode):
+      </para>
+      <variablelist>
+	<varlistentry>
+	  <term><option>script</option></term>
+	  <listitem>
+	    <para>
+	      Returns the path to the currently requestes Websh script.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>server_root</option></term>
+	  <listitem>
+	    <para>
+	      Returns the Apache ServerRoot configuration path.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>document_root</option></term>
+	  <listitem>
+	    <para>
+	      Returns the Apache DocumentRoot configuration path.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><option>interpclass</option></term>
+	  <listitem>
+	    <para>
+	      Returns the interpclass the current request was mapped to (see <command>web::interpmap</command> command).
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
 
     <example>
       <title>web::config</title>
