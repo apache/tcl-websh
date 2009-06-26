@@ -89,6 +89,7 @@
 #define LOG_FILTER_PREFIX "loglevel"
 #define LOG_DEST_PREFIX "logdest"
 #define LOG_SUBSTDEFAULT 0
+#define LOG_SAFEDEFAULT 1
 
 /* ----------------------------------------------------------------------------
  * list of possible categories
@@ -168,6 +169,7 @@ typedef struct LogData
   int destSize; /* site of destination list */
   Tcl_HashTable *listOfPlugIns;
   int logSubst;	/* 1: subst log message, 0: don't (default 0) */
+  int safeLog;	/* 1: web::log never fails, 0: can throw I/O error (default 1) */
   int keep;  /* flag for log config to keep during initializer code */
   /* needed so that global settings can be accessed */
   RequestData * requestData;
@@ -207,7 +209,7 @@ int logImpl(Tcl_Interp * interp, LogData * logData,
 	    char *levelStr, Tcl_Obj * msg);
 int webLog(Tcl_Interp * interp, char *levelStr, char *msg);
 
-void sendMsgToDestList(Tcl_Interp * interp,
+int sendMsgToDestList(Tcl_Interp * interp,
 		       LogData * logData, LogLevel * level, Tcl_Obj * msg);
 
 char * insertIntoDestList(LogData *logData, LogDest *logDest);

@@ -29,9 +29,7 @@ LogToChannelData *createLogToChannelData()
     LogToChannelData *logToChannelData = NULL;
 
     logToChannelData = WebAllocInternalData(LogToChannelData);
-    logToChannelData->channel = NULL;
     logToChannelData->channelName = NULL;
-    logToChannelData->mode = 0;
     logToChannelData->isBuffered = TCL_OK;
 
     return logToChannelData;
@@ -47,8 +45,16 @@ int destroyLogToChannelData(Tcl_Interp * interp,
     if ((interp == NULL) || (logToChannelData == NULL))
 	return TCL_ERROR;
 
-    if (logToChannelData->channel != NULL)
-	Tcl_Flush(logToChannelData->channel);
+    if (logToChannelData->channelName != NULL) {
+      int mode;
+      Tcl_Channel channel = NULL;
+      channel = Tcl_GetChannel(interp, logToChannelData->channelName, &mode);
+
+      if (channel != NULL)
+	if (mode & TCL_WRITABLE)
+	  Tcl_Flush(channel);
+
+    }
 
     WebFreeIfNotNull(logToChannelData->channelName);
     WebFreeIfNotNull(logToChannelData);
@@ -126,9 +132,7 @@ ClientData createLogToChannel(Tcl_Interp * interp, ClientData clientData,
     /* --------------------------------------------------------------------------
      * and set values
      * ----------------------------------------------------------------------- */
-    logToChannelData->channel = channel;
     logToChannelData->channelName = allocAndSet(channelName);
-    logToChannelData->isBuffered = mode;
     if (argKeyExists(objc, objv, "-unbuffered") == TCL_OK)
 	logToChannelData->isBuffered = TCL_ERROR;
     else
@@ -159,14 +163,33 @@ int logToChannel(Tcl_Interp * interp, ClientData clientData, char *msg)
 
     logToChannelData = (LogToChannelData *) clientData;
 
-    /* No seek function because it might well not exist, and we ought
-     * to be at the end anyway. */
-
-    res = Tcl_WriteChars(logToChannelData->channel, msg, -1);
-    if (res < 0)
+    /* get channel every time, as it might have been closed
+       and this can only be detected that way */
+    if (logToChannelData->channelName != NULL) {
+      int mode;
+      Tcl_Channel channel = NULL;
+      channel = Tcl_GetChannel(interp, logToChannelData->channelName, &mode);
+      
+      if (channel == NULL) {
 	return TCL_ERROR;
-    if (logToChannelData->isBuffered == TCL_ERROR)
-	Tcl_Flush(logToChannelData->channel);
+      }
 
-    return TCL_OK;
+      if (!(mode & TCL_WRITABLE)) {
+	return TCL_ERROR;
+      }
+      
+      /* No seek function because it might well not exist, and we ought
+       * to be at the end anyway. */
+
+      res = Tcl_WriteChars(channel, msg, -1);
+      if (res < 0)
+	return TCL_ERROR;
+      if (logToChannelData->isBuffered == TCL_ERROR)
+	return Tcl_Flush(channel);
+
+      return TCL_OK;
+
+    } else {
+      return TCL_ERROR;
+    }
 }

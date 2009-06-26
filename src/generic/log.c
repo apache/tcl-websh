@@ -153,6 +153,7 @@ LogData *createLogData()
 
 	HashUtlAllocInit(logData->listOfPlugIns, TCL_STRING_KEYS);
 	logData->logSubst = LOG_SUBSTDEFAULT;
+	logData->safeLog = LOG_SAFEDEFAULT;
 	logData->keep = 0;
     }
 

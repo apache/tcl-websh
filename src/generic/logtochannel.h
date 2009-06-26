@@ -23,9 +23,7 @@
  * ------------------------------------------------------------------------- */
 typedef struct LogToChannelData
 {
-    Tcl_Channel channel;
     char *channelName;
-    int mode;			/* TCL_READABLE || TCL_WRITEABLE */
     char isBuffered;
 }
 LogToChannelData;

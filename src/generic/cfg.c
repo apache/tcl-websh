@@ -132,6 +132,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	"timeparam",
 	"putxmarkup",
 	"logsubst",
+	"safelog",
 	"version",
 	"copyright",
 	"cmdurltimestamp",
@@ -153,6 +154,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	TIMETAG,
 	PUTXMARKUP,
 	LOGSUBST,
+	SAFELOG,
 	WEBSHVERSION,
 	WEBSHCOPYRIGHT,
 	CMDURLTIMESTAMP,
@@ -435,6 +437,29 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	    return TCL_ERROR;
 	}
 	return TCL_OK;
+    case SAFELOG:
+	Tcl_SetObjResult(interp,
+			 Tcl_NewBooleanObj(cfgData->logData->safeLog));
+	switch (objc) {
+	case 2:
+	    break;
+	case 3:
+	    /* --------------------------------------------------------------------
+	     * only accept integers
+	     * ----------------------------------------------------------------- */
+	    if (Tcl_GetBooleanFromObj(interp, objv[2],
+				      &(cfgData->logData->safeLog)) ==
+		TCL_ERROR)
+		return TCL_ERROR;
+	    break;
+	default:
+	    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
+		    __FILE__, __LINE__,
+		    "web::config safelog", WEBLOG_INFO,
+		    "usage: web::config safelog ?boolean?", NULL);
+	    return TCL_ERROR;
+	}
+	return TCL_OK;
     case WEBSHVERSION:{
 	    WebAssertObjc(objc != 2, 2, NULL);
 
@@ -521,6 +546,7 @@ int Web_Cfg(ClientData clientData, Tcl_Interp * interp,
 	Tcl_DecrRefCount(tmp);
 
 	cfgData->logData->logSubst = LOG_SUBSTDEFAULT;
+	cfgData->logData->safeLog = LOG_SAFEDEFAULT;
 
 	Tcl_ResetResult(interp);
 

@@ -1,3 +1,31 @@
+2009-06-26 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* doc/quickref.xml:
+	- Fixed minor typos
+	- Added documentation of [web::config safelog]
+	* doc/quickref.xsl:
+	- Reference to newer docbook version
+	* src/generic/cfg.c, src/generic/log.c, src/generic/log.h:
+	- Added [web::config safelog] with default 1 to explicitly allow
+	  web::log to throw an error if I/O fails (if safelog is set to 0)
+	* src/generic/logutl.c, src/generic/log.h:
+	- Properly report and pass errors during logging if 
+	  [web::config safelog] is set accordingly
+	  (sendMsgToDestList now returns TCL_OK/TCL_ERROR instead of void)
+	* src/generic/logtochannel.c, src/generic/logtochannel.h:
+	- Properly handle cases when channel is not available (anymore), i.e.
+	  Tcl_GetChannel for every log message and when destination is deleted
+	  instead of only getting channel initially and then produce a segfault
+	  if channel is gone.
+	* src/generic/logtofile.c:
+	- Properly track Tcl_Flush errors
+	* src/test/cfg.test:
+	- Fixed test cfg-1.1 to pass with newsafelog subcommand
+	- New test for [web::config safelog]
+	* src/tests/logtocmd.test:
+	- Added test for error in command and [web::config safelog]
+	* src/tests/logtochannel.test:
+	- Added test for closed channel and [web::config safelog]
+
 2009-06-17 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* doc/mod_websh/README, src/win/README:
 	- Properly document that shared lib libwebsh.so (websh.dll) is

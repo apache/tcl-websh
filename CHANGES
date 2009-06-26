@@ -9,6 +9,12 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Added [web::config safelog] configuration to allow web::log to properly
+  throw errors if I/O fails (if safelog is set to 0). Default is 1 to ensure
+  backward compatibility.
+
+- Fixed log handling for logtochannel plugin: reliable channel handling
+
 - Added simple pkgIndex.tcl to installation
 
 - Bug fix in web::cmdurl when using -urlformat

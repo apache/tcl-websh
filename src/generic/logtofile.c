@@ -157,7 +157,7 @@ int logToFile(Tcl_Interp * interp, ClientData clientData, char *msg)
     if (res < 0)
 	return TCL_ERROR;
     if (logToFileData->isBuffered == TCL_ERROR)
-	Tcl_Flush(logToFileData->channel);
+	return Tcl_Flush(logToFileData->channel);
 
     return TCL_OK;
 }

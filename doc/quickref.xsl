@@ -23,7 +23,7 @@
   <!-- ==================================================================== -->
 
   <xsl:import
-    href="http://docbook.sourceforge.net/release/xsl/1.74.0/html/chunk.xsl"
+    href="http://docbook.sourceforge.net/release/xsl/1.75.1/html/chunk.xsl"
   />
   <!-- local alternatives to the network URL for faster processing 
   <xsl:import

@@ -79,13 +79,14 @@ int webLog(Tcl_Interp * interp, char *levelStr, char *msg)
  * 2: internal data
  * 3: log level definition, like "test.info-alert"
  * 4: message, including special tags
- * R: TCL_OK in any case
+ * R: TCL_OK if [web::config safelog] is set to 1 actual result otherwise
  * ------------------------------------------------------------------------- */
 int logImpl(Tcl_Interp * interp, LogData * logData,
 	    char *levelStr, Tcl_Obj * msg)
 {
 
     LogLevel *logLevel = NULL;
+    int res;
 
     if ((logData == NULL) || (levelStr == NULL) || (msg == NULL))
 	return TCL_ERROR;
@@ -98,17 +99,21 @@ int logImpl(Tcl_Interp * interp, LogData * logData,
      * does level pass the filters --> send to dests
      * --------------------------------------------------------------- */
     if (doesPassFilters(logLevel, logData->listOfFilters, logData->filterSize) == TCL_OK)
-	sendMsgToDestList(interp, logData, logLevel, msg);
+      res = sendMsgToDestList(interp, logData, logLevel, msg);
 
     destroyLogLevel(logLevel, NULL);
 
-    return TCL_OK;
+    /* in case we log safely, always return TCL_OK */
+    if (logData->safeLog == 1)
+      return TCL_OK;
+
+    return res;
 }
 
 /* ----------------------------------------------------------------------------
  * sendMsgToDestList --
  * ------------------------------------------------------------------------- */
-void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
+int sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 		       LogLevel * logLevel, Tcl_Obj * msg)
 {
 
@@ -214,8 +219,9 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 		    /* ------------------------------------------------------------------
 		     * and send it to the handler
 		     * --------------------------------------------------------------- */
-		    logDest->plugIn->handler(interp, logDest->plugInData,
-					     Tcl_GetString(fmsg));
+		    if (logDest->plugIn->handler(interp, logDest->plugInData,
+						 Tcl_GetString(fmsg)) != TCL_OK)
+		      err++;
 
 		    Tcl_DecrRefCount(fmsg);
 		}
@@ -225,6 +231,9 @@ void sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
     if (emsg != NULL) {
 	Tcl_DecrRefCount(emsg);	/* need it no longer */
     }
+    if (err > 0)
+      return TCL_ERROR;
+    return TCL_OK;
 }
 
 

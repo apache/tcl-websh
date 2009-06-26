@@ -45,5 +45,30 @@ test logToCmd-1.2 {websh3_logToCmd: test log to command} {
     set res [web::log info2.info $curTim]
 } {testLogHandler -- T E S T -- ok}
 
+proc testLogHandler {msg} {
+    return Bar
+}
+
+test logToCmd-2.1 {logToCmd: test log to command error} {
+    web::logdest delete
+    web::loglevel delete
+    web::logdest add info2.-debug command testLogHandler
+    web::loglevel add info2.-debug
+    set res [web::log info2.info Foo]
+    proc testLogHandler {msg other} {
+	return "$msg $other"
+    }
+    set msg ""
+    web::config safelog 0
+    set c [catch {web::log info2.info Zoo} msg]
+    web::config safelog 1
+    proc testLogHandler {msg} {
+	return "$msg $other"
+    }
+    set c2 [catch {web::log info2.info Quo} omsg]
+    set r2 [web::log info2.info Mup]
+    set msg "$c - $c2 - $res - $msg - $r2"
+} {1 - 0 - Bar - wrong # args: should be "testLogHandler msg other" - can't read "other": no such variable}
+
 # cleanup
 ::tcltest::cleanupTests

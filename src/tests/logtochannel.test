@@ -56,5 +56,31 @@ test logToChannel-1.1 {websh3_weblog: use file} {
     set res
 } {Ok}
 
+test logToChannel-2.1 {closed channel} {
+    web::logdest delete
+    web::loglevel delete
+    set fileName "tochannel-2.1-[pid].dat"
+    set fh [open $fileName "a"]
+    web::logdest add *.-debug channel -unbuffered $fh
+    web::loglevel add *.-debug
+    web::log debug "Hi there"
+    flush $fh
+    close $fh
+    set msg ""
+    web::config safelog 0
+    set c [catch {web::log debug "Bye there"} msg]
+    web::config safelog 1
+    set c2 [catch {web::log debug "Safe Bye"} msg]
+    set res [web::log debug "Safe Bye 2"]
+    web::readfile $fileName log
+    file delete $fileName
+    regsub -all {.*debug: } $log "" log
+    regsub -all {\".*\"} $msg {"channel"} msg
+    regsub -all {\".*\"} $res {"channel"} res
+    set res "$c - $c2 - $log$msg\n$res"
+} {1 - 0 - Hi there
+can not find channel named "channel"
+can not find channel named "channel"}
+
 # cleanup
 ::tcltest::cleanupTests
