@@ -92,7 +92,7 @@ proc apachetest::start { options code } {
     global tcl_platform
     if {[string equal $tcl_platform(platform) "windows"]} {
 	exec taskkill /f /pid $serverpid
-	set forcekill "taskkill /f /pid $serverpid"
+	set forcekill "exec taskkill /f /pid $serverpid"
     } else {
 	exec kill $serverpid
 	set forcekill "exec kill -9 $serverpid"
