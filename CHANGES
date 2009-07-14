@@ -9,6 +9,8 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Improved/streamlined Tcl_InitStubs handling
+
 - Added [web::config safelog] configuration to allow web::log to properly
   throw errors if I/O fails (if safelog is set to 0). Default is 1 to ensure
   backward compatibility.

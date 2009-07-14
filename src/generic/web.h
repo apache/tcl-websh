@@ -33,6 +33,7 @@
 #include "modwebsh.h"
 
 int __declspec(dllexport) Websh_Init(Tcl_Interp * interp);
+int __declspec(dllexport) ModWebsh_Init(Tcl_Interp * interp);
 
 int Script_Init(Tcl_Interp * interp);
 

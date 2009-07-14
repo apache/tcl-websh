@@ -132,3 +132,29 @@ int __declspec(dllexport) Websh_Init(Tcl_Interp * interp)
     return Tcl_PkgProvide(interp, WEBSH, VERSION);
 
 }
+
+
+/* -------------------------------------------------------------------------
+ * ModWebsh_Init --
+ * Init log Plugin and stubs for mod_websh main interpreter 
+ * ------------------------------------------------------------------------- */
+int __declspec(dllexport) ModWebsh_Init(Tcl_Interp * interp)
+{
+
+    if (interp == NULL)
+      return TCL_ERROR;
+
+    /* ---------------------------------------------------------------------
+     * stubs
+     * --------------------------------------------------------------------- */
+    Tcl_InitStubs(interp, "8.2", 0);
+
+    /* ---------------------------------------------------------------------
+     * register Log Module in here
+     * --------------------------------------------------------------------- */
+    if (log_Init(interp) == TCL_ERROR) {
+      return TCL_ERROR;
+    }
+
+    return TCL_OK;
+}

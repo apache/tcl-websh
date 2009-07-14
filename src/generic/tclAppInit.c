@@ -126,11 +126,9 @@ int main(argc, argv)
 
 int Tcl_AppInit(Tcl_Interp *interp) {
 
-#ifdef USE_TCL_STUBS
-    if (Tcl_InitStubs(interp,"8.2.0",0) == NULL) {
+    if (Tcl_InitStubs(interp,"8.2",0) == NULL) {
 	return TCL_ERROR;
     }
-#endif
 
     if (Tcl_Init(interp) == TCL_ERROR) {
 	return TCL_ERROR;

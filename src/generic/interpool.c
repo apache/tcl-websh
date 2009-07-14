@@ -606,17 +606,15 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
     if (mainInterp == NULL)
 	return NULL;
 
+    if (Tcl_InitStubs(mainInterp,"8.2",0) == NULL) {
+      Tcl_DeleteInterp(mainInterp);
+      return NULL;
+    }
+
     /* just to be sure the memory command is imported if 
        the corresponding Tcl features it */
 #ifdef TCL_MEM_DEBUG
     Tcl_InitMemory(mainInterp);
-#endif
-
-#ifdef USE_TCL_STUBS
-    if (Tcl_InitStubs(mainInterp,"8.2.0",0) == NULL) {
-	Tcl_DeleteInterp(mainInterp);
-	return NULL;
-    }
 #endif
 
     apFuncs = createApFuncs();
@@ -632,8 +630,8 @@ Tcl_Interp *createMainInterp(websh_server_conf * conf)
 	return NULL;
     }
 
-    /* register Log Module in here */
-    if (log_Init(mainInterp) == TCL_ERROR) {
+    /* Websh Library Init */
+    if (ModWebsh_Init(mainInterp) == TCL_ERROR) {
 	Tcl_DeleteInterp(mainInterp);
 	return NULL;
     }
