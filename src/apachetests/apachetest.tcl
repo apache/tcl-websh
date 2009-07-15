@@ -43,6 +43,7 @@ namespace eval apachetest {
 # make sure we can connect to the server
 proc apachetest::connect { } {
 
+    global port
     global waiting
     set waiting 10
 
@@ -50,7 +51,7 @@ proc apachetest::connect { } {
 
     while {$waiting > 9} {
 	if { ! [catch {
-	    set sk [socket localhost 8081]
+	    set sk [socket localhost $port]
 	} err]} {
 	    close $sk
 	    after cancel $connect
@@ -282,6 +283,7 @@ proc apachetest::determinemodules { binname } {
 
 proc apachetest::makeconf { outfile {extra ""} } {
     global env
+    global port
     variable binname
     variable templatefile
     set CWD [pwd]

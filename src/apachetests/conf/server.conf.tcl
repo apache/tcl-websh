@@ -13,7 +13,7 @@ MaxRequestsPerChild 0
 
 $LOADMODULES
 
-Listen 8081
+Listen $port
 
 ServerName localhost
 

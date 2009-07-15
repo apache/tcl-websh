@@ -2,6 +2,9 @@
 # the next line restarts using tclsh \
 exec tclsh "$0" "$@"
 
+# set the port apache should bind to for the tests
+set port 8081
+
 source apachetest.tcl
 
 global env

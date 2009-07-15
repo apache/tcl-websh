@@ -9,7 +9,7 @@
 # $Id$
 
 set host localhost
-set port 8081
+# port is set globally already
 
 set urlbase "http://$host:$port/"
 
