@@ -804,6 +804,7 @@ ApFuncs *createApFuncs() {
   apFuncs->Web_InterpClassCfg = Web_InterpClassCfg_AP;
   apFuncs->Web_MainEval = Web_MainEval_AP;
   apFuncs->Web_ConfigPath = Web_ConfigPath_AP;
+  apFuncs->ModWebsh_Init = ModWebsh_Init_AP;
   return apFuncs;
 }
 

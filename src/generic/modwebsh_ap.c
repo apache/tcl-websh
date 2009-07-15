@@ -500,3 +500,15 @@ int Web_ConfigPath_AP(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
   }
   return TCL_OK;
 }
+
+/* ----------------------------------------------------------------------------
+ * ModWebsh_Init_AP -- init call backs to mod_websh (InitStubs)
+ * ------------------------------------------------------------------------- */
+
+int ModWebsh_Init_AP(Tcl_Interp * interp) {
+
+  if (Tcl_InitStubs(interp, "8.2", 0) != NULL)
+    return TCL_OK;
+  return TCL_ERROR;
+  
+}

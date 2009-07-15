@@ -32,6 +32,7 @@ typedef struct
   int (*Web_InterpClassCfg) (ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
   int (*Web_MainEval) (ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
   int (*Web_ConfigPath) (Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+  int (*ModWebsh_Init) (Tcl_Interp *interp);
 }
 ApFuncs;
 

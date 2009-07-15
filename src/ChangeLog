@@ -3,6 +3,11 @@
 	  src/apachetests/README, src/apachetests/conf/server.conf.tcl,
 	  src/apachetests/test/mod_websh.test;
 	- Port to run Apache tests on is now configurable in runtests.tcl
+	* modwebsh_cgi.c, modwebsh_cgi.h, modwebsh_ap.c, modwebsh.h,
+	  web.c, interpool.c:
+	- Init mod_websh call backs (Tcl_StubsInit) from libwebsh.so
+	  (ModWebsh_Init calls modwebsh_createcmd, which calls 
+	  ModWebsh_Init_AP if necessary)
 
 2009-07-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/tclAppInit.c, src/generic/interpool.c:

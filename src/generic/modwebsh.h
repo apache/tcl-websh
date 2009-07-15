@@ -71,5 +71,7 @@ int requestFillRequestValues_AP(Tcl_Interp *interp, RequestData *requestData);
 
 int Web_ConfigPath_AP(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
 
+int ModWebsh_Init_AP(Tcl_Interp *interp);
+
 
 #endif

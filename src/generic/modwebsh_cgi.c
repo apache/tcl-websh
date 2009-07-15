@@ -203,9 +203,10 @@ int Web_ConfigPath(Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[]) {
  * ------------------------------------------------------------------------- */
 int modwebsh_createcmd(Tcl_Interp * interp)
 {
-    if (NULL != Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL)) {
-      /* no need to do that if we're in mod_websh mode */
-      return TCL_OK;
+    ApFuncs *apFuncs = Tcl_GetAssocData(interp, WEB_APFUNCS_ASSOC_DATA, NULL);
+    if (apFuncs != NULL) {
+      /* no need to create commands, but make sure call backs work */
+      return apFuncs->ModWebsh_Init(interp);
     }
 
     Tcl_CreateObjCommand(interp, "web::initializer",

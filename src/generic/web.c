@@ -156,5 +156,11 @@ int __declspec(dllexport) ModWebsh_Init(Tcl_Interp * interp)
       return TCL_ERROR;
     }
 
+    /* ---------------------------------------------------------------------
+     * init callbacks
+     * --------------------------------------------------------------------- */
+    if (modwebsh_createcmd(interp) == TCL_ERROR)
+      return TCL_ERROR;
+
     return TCL_OK;
 }
