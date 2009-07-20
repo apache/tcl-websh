@@ -128,7 +128,7 @@ TCL_INCLUDES = "$(TCL_PREFIX)/include"
 TCL_DEFS = /DTHREAD_SAFE=1             
 TCL_LIBS = kernel32.lib user32.lib advapi32.lib ws2_32.lib odbc32.lib 
 TCL_STUB_LIB_SPEC = "$(TCL_PREFIX)/lib/tclstub$(TCL_VERSION).lib"
-TCL_LIB_SPEC = $(TCL_STUB_LIB_SPEC) "$(TCL_PREFIX)/lib/tcl$(TCL_VERSION).lib"
+TCL_LIB_SPEC = "$(TCL_PREFIX)/lib/tcl$(TCL_VERSION).lib"
 TCLSH_PROG = "$(TCL_PREFIX)\bin\tclsh$(TCL_VERSION)"
 
 # Apache stuff
