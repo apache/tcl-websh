@@ -1,3 +1,47 @@
+2006-09-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/tests/*.test:
+	- Make tests run repeatedly in same interp (i.e. close all
+	  file handles properly, cleanup some leftovers etc.)
+
+2009-07-28 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/dispatch.c:
+	- Added Tcl_DecrRefCount on cmdName on error to prevent
+	  memory leak when hook in dispatch fails.
+	- Fixed memory leak in dispatch
+	* src/generic/crypt.c:
+	- Properly increment ref count of initial vlaue of encryptChain
+	  and decryptChain in cryptData
+	- Earlier increment ref count of cmd to be eval'd (just to be sure)
+	* src/generic/logutl.c:
+	- Increment ref count of fsmg in formatMessage already
+	* src/generic/htmlify.c:
+	- Increment ref count of result in webHtmlify
+	- Fix memory leak in HANDLE_UNICODE_ENTITY macro (webDeHtmlify)
+	* src/generic/checksum.c:
+	- Earlier increment ref count of return object in crcAsciify
+	* src/generic/conv.c:
+	- Decrement ref count on result of webHtmlify
+	- Incr and decr of ref count of tmp objects in Web_DeHtmlify and
+	  Web_Html_RemoveComments
+	- Increment ref count of Tcl objs in convData struct
+	* src/generic/request.c:
+	- Proper ref count of initial objs in requestData
+	- proper handling of upLoadFileSize and cmdUrlTimestamp in
+	  resetRequestData (in unused code, but for consistency)
+	* src/generic/modwebsh_ap.c:
+	- Proper ref count of webInterp->dtor in Web_Finalizer_AP
+	* src/generic/nca_d.c:
+	- Proper ref count of new empty string when encrypting empty string
+	* src/generic/url.c:
+	- Proper initial ref count of urlData->defaultscheme
+	- Fixed memory leak in cmdurl in certain special cases
+	* src/generic/log.c:
+	- Prevent memory leak when DEBUG is defined (properly discard temp
+	  obj created to log line number)
+	* src/generic/paramlist.c:
+	- Fixed memory leak in paramListAsListObj (static query param handling)
+	- Fixed memory leak in [web::param -names] when called with wrong args
+	
 2006-07-20 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/win/Makefile:
 	- Removed duplicate reference to Tcl stub lib

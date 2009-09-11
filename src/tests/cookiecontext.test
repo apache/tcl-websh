@@ -28,6 +28,7 @@ test cookiecontext-1.1 {create a cookie-context} {
     if {[info exists text]} {unset text}
 
     web::response -select #text
+    web::response -reset
     web::response -set Generator "cookiecontext-1.1"
     web::cookiecontext cctx -path "/some/app" -expires "today" -channel #text
     cctx::new myTestCookie
@@ -61,6 +62,7 @@ test cookiecontext-1.1a {create a cookie-context expiry tomorrow} {
     if {[info exists text1a]} {unset text1a}
 
     web::response -select #text1a
+    web::response -reset
     web::response -set Generator "cookiecontext-1.1a"
     web::cookiecontext cctx -path "/some/app" -expires "24 hours" -channel #text1a
     cctx::new myTestCookie
@@ -94,6 +96,7 @@ test cookiecontext-1.1a1 {create a cookie-context expiry default} {
     if {[info exists text1a1]} {unset text1a1}
 
     web::response -select #text1a1
+    web::response -reset
     web::response -set Generator "cookiecontext-1.1a1"
     web::cookiecontext cctx -path "/some/app" -channel #text1a1
     cctx::new myTestCookie
@@ -127,6 +130,7 @@ test cookiecontext-1.1b {create a cookie-context no expiry} {
     if {[info exists text1b]} {unset text1b}
 
     web::response -select #text1b
+    web::response -reset
     web::response -set Generator "cookiecontext-1.1b"
     web::cookiecontext cctx -path "/some/app" -expires "" -channel #text1b
     cctx::new myTestCookie
@@ -146,9 +150,13 @@ Websh"
 # test to remove (i.e. forget) a state
 # ----------------------------------------------------------------------------
 
+if {[info exists avar1]} {
+    unset avar1
+}
 test cookiecontext-1.2 {remove cookie-context} {
 
     web::response -select #avar1
+    web::response -reset
     web::response -set Generator "cookiecontext-1.2"
 
     web::cookiecontext ccontext -expires today
@@ -168,11 +176,15 @@ Generator: cookiecontext-1.2\u0D
 \u0D
 Websh"
 
+if {[info exists cctx1_3]} {
+    unset cctx1_3
+}
 test cookiecontext-1.3 {create a cookie-context} {
 
     if {[info exists text]} { unset text }
 
     web::response -select #cctx1_3
+    web::response -reset
     web::response -set Generator "cookiecontext-1.3"
     web::cookiecontext cctx -path "/some/app13" \
 	-expires "Wed, 15-Mar-2000 00:00:00 MET" -channel #cctx1_3 \
@@ -189,8 +201,12 @@ Generator: cookiecontext-1.3\u0D
 \u0D
 Websh"
 
+if {[info exists cctx1_4]} {
+    unset cctx1_4
+}
 test cookiecontext-1.4 {create an uncrypted cookie-context} {
     web::response -select \#cctx1_4
+    web::response -reset
     web::cookiecontext c -crypt 0 -expires "Wed, 15-Mar-2000 00:00:00 MET"
     web::response -set Generator "cookiecontext-1.4"
     c::init cname
@@ -206,13 +222,31 @@ Generator: cookiecontext-1.4\u0D
 \u0D
 show me the cookie"
 
+if {[info exists cctx1_5]} {
+    unset cctx1_5
+}
+test cookiecontext-1.5 {send cookie too late} {
+    web::response -select \#cctx1_5
+    web::response -reset
+    web::cookiecontext c -crypt 0 -expires "Wed, 15-Mar-2000 00:00:00 MET"
+    web::response -set Generator "cookiecontext-1.4"
+    web::put "show me the cookie"
+    set r [catch {
+	c::init cname
+	c::cset foo bar
+	c::cset im tired
+	c::cset 1=2 false
+	c::commit
+    } msg]
+    set res "$r: $msg"
+} {1: cookie commit too late (header already sent)}
+
 test cookie-1.0 {check cookie handling with strange format} {
     web::request -set HTTP_COOKIE "x=a; y=b=c; z=cset+test+1"
     web::cookiecontext testC -crypt 0
     testC::load z
     testC::cget test 0
 } {1}
-
 
 # -----------------------------------------------------------------------------
 # cleanup

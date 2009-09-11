@@ -108,6 +108,9 @@ web::put end
 } {test
 0123456789end_forend}
 
+foreach var [info vars eval2_*] {
+    unset $var
+}
 test putx-2.4 {special syntax} {
     web::response -select #eval2_4
     web::response -sendheader 0
@@ -129,6 +132,9 @@ test putx-2.6 {escaped paren} {
     set eval2_6
 } "{ bla }"
 
+foreach var [info vars putx3_*] {
+    unset $var
+}
 test putx-3.0 {<? ?> syntax} {
     web::response -select #putx3_0
     web::response -sendheader 0
@@ -348,6 +354,9 @@ test put-1.5 {websh3 put: write to a file with implicit channel creation} {
     string compare $msg ""
 } {0}
 
+foreach var {output2_0 puts_3_0 web_output_test_3_1} {
+    if {[info exists $var]} {unset $var}
+}
 test put-2.0 {websh3_puts: writing to a global variable} {
     web::response -select #output2_0
     web::response -unset Generator
@@ -440,6 +449,9 @@ test output-4.2 {httpresponse} {
     web::response -set httpresponse
 } {}
 
+foreach var [info vars output4_*] {
+    unset $var
+}
 test output-4.3 {reset a httpresponse} {
     web::response -select #output4_3
     web::response -unset Generator
@@ -593,6 +605,9 @@ test output-5.3 {default channel name} {
 } {stdout}
 
 
+if {[info exists stdout]} {
+    unset stdout
+}
 test output-6.1 {variable vs. channel names} {
     web::response -select \#stdout
     web::response -sendheader 0

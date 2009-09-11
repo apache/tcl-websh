@@ -44,11 +44,11 @@ test tempfile-1.0a {web::tempfile dir prefix} {unixOnly} {
 	set fh [open $tmp w]
 	if {[file exists $tmp]} {
 	    set msg ok
-	    close $fh
 	    ## Websh will try to remove file at end
 	} else {
 	    set msg "filename $tmp not on file system"
 	}
+	close $fh
     } else {
 	set msg "filename $tmp does not satisfy specs"
     }
@@ -62,11 +62,11 @@ test tempfile-1.0b {web::tempfile dir prefix} {pcOnly} {
 	set fh [open $tmp w]
 	if {[file exists $tmp]} {
 	    set msg ok
-	    close $fh
 	    ## Websh will try to remove file at end
 	} else {
 	    set msg "filename $tmp not on file system"
 	}
+	close $fh
     } else {
 	set msg "filename $tmp does not satisfy specs"
     }

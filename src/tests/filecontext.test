@@ -84,6 +84,9 @@ test filecontext-1.4 {option -attachto} {
     set res
 } {1}
 
+foreach fc [info commands fc1*] {
+    rename $fc {}
+}
 test filecontext-1.5 {option -idgen} {
 
     web::filecounter fc1 -filename [web::tempfile] -seed 99

@@ -81,6 +81,8 @@ test messages-2.1 {web::send and receive} {
     set in "$icmd-$text-$iflag"
     set out "$ocmd-$res-$oflag"
 
+    close $fileId
+
     set res [string compare $in $out]
 } {0}
 
@@ -124,6 +126,8 @@ test messages-2.1c {web::send and receive unicode} {
     web::recv $fileId ocmd res oflag
 
     set out "$ocmd-$res-$oflag"
+
+    close $fileId
 
     set res [string compare $in $out]
 } {0}

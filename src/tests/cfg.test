@@ -100,6 +100,10 @@ test cfg-4.2 {change filepermissions} {
     lappend res [web::config filepermissions]
 } {0644 0600 0604 0604 0644 0600 0644}
 
+foreach fc [info commands foo?] {
+    rename $fc {}
+}
+
 test cfg-4.3 {filecounter file permissions} {unixOnly} {
     catch {
 	set umask [exec umask]

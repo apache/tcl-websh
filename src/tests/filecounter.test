@@ -26,6 +26,9 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 
 set filename [web::tempfile]
 
+foreach fc [info commands handle*] {
+    rename $fc {}
+}
 test filecounter-1.0 {web::filecounter create a filecounter} {
     web::filecounter handle1 -filename $filename -min 0 -max 3 -seed 2 -incr 1
 
@@ -98,6 +101,9 @@ test filecounter-2.9 {use invalid param/switch} {
     set msg
 } {bad option "-false": must be -filename, -seed, -min, -max, -incr, -perms, or -wrap}
 
+foreach fc [info commands fc2_*] {
+    rename $fc {}
+}
 test filecounter-2.10 {backwards} {
     web::filecounter fc2_10 -filename [web::tempfile] -seed 10000 -incr -1000
     set res [fc2_10 nextval]
@@ -120,6 +126,9 @@ test filecounter-2.11 {forwards} {
     set res
 } {0-1000-2000-3000-4000-5000}
 
+foreach fc [info commands cur] {
+    rename $fc {}
+}
 test filecounter-3.0 {getval} {
     web::filecounter cur -filename [web::tempfile] -seed 0 -incr 1 -max 1000
     set res [cur nextval]
@@ -139,6 +148,9 @@ test filecounter-3.1 {wrong option} {
 
 set multifile [web::tempfile]
 
+foreach fc [info commands {c[12]}] {
+    rename $fc {}
+}
 test filecounter-3.2 {getval seed} {
     web::filecounter c1 -filename $multifile -seed 0 -incr 1 -max 1000
     set res [c1 getval]
