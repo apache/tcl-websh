@@ -58,9 +58,11 @@ int crypt_Init(Tcl_Interp * interp)
      * ----------------------------------------------------------------------- */
     tmp = Tcl_NewStringObj(WEB_ENCRYPTDEFAULT, -1);
     cryptData->encryptChain = Tcl_NewListObj(1, &tmp);
+    Tcl_IncrRefCount(cryptData->encryptChain);
 
     tmp = Tcl_NewStringObj(WEB_DECRYPTDEFAULT, -1);
     cryptData->decryptChain = Tcl_NewListObj(1, &tmp);
+    Tcl_IncrRefCount(cryptData->decryptChain);
 
     /* --------------------------------------------------------------------------
      * done
@@ -180,10 +182,12 @@ int doencrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal)
 	Tcl_Obj *cmd = NULL;
 
 	if (i < lobjc) {
-	    if (lobjv[i] != NULL)
-		cmd = Tcl_DuplicateObj(lobjv[i]);
-	    else
-		cmd = NULL;
+	  if (lobjv[i] != NULL) {
+	    cmd = Tcl_DuplicateObj(lobjv[i]);
+	    Tcl_IncrRefCount(cmd);
+	  } else {
+	    cmd = NULL;
+	  }
 	}
 	else {
 	    if (!internal) {
@@ -191,6 +195,7 @@ int doencrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal)
 		return TCL_OK;
 	    }
 	    cmd = Tcl_NewListObj(0, NULL);
+	    Tcl_IncrRefCount(cmd);
 	    Tcl_ListObjAppendElement(interp, cmd,
 				     Tcl_NewStringObj("web::list2uri", -1));
 	}
@@ -202,7 +207,6 @@ int doencrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal)
 		return TCL_ERROR;
 	    }
 
-	    Tcl_IncrRefCount(cmd);
 	    res = Tcl_EvalObjEx(interp, cmd, TCL_EVAL_DIRECT);
 	    Tcl_DecrRefCount(cmd);
 
@@ -275,10 +279,12 @@ int dodecrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal)
 	Tcl_Obj *cmd = NULL;
 
 	if (i < lobjc) {
-	    if (lobjv[i] != NULL)
-		cmd = Tcl_DuplicateObj(lobjv[i]);
-	    else
-		cmd = NULL;
+	  if (lobjv[i] != NULL) {
+	    cmd = Tcl_DuplicateObj(lobjv[i]);
+	    Tcl_IncrRefCount(cmd);
+	  } else {
+	    cmd = NULL;
+	  }
 	}
 	else {
 	    if (!internal) {
@@ -286,6 +292,7 @@ int dodecrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal)
 		return TCL_OK;
 	    }
 	    cmd = Tcl_NewListObj(0, NULL);
+	    Tcl_IncrRefCount(cmd);
 	    Tcl_ListObjAppendElement(interp, cmd,
 				     Tcl_NewStringObj("web::uri2list", -1));
 	}
@@ -297,7 +304,6 @@ int dodecrypt(Tcl_Interp * interp, Tcl_Obj * in, int internal)
 		return TCL_ERROR;
 	    }
 
-	    Tcl_IncrRefCount(cmd);
 	    res = Tcl_EvalObjEx(interp, cmd, TCL_EVAL_DIRECT);
 	    Tcl_DecrRefCount(cmd);
 

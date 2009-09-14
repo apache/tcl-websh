@@ -101,6 +101,7 @@ int Web_Finalizer_AP(ClientData clientData,
 
 	    /* first time: make Tcl_Obj */
 	    webInterp->dtor = Tcl_NewListObj(1, &objv[1]);
+	    Tcl_IncrRefCount(webInterp->dtor);
 	}
 	else {
 

@@ -660,18 +660,22 @@ int Web_CmdUrl(ClientData clientData,
 	    char *scheme = NULL;
 	    if( urlData->requestData != NULL ) {
 		schemeObj = paramListGetObjectByString(interp, urlData->requestData->request, "HTTPS");
-		if (schemeObj != NULL)
-		    scheme = Tcl_GetString(schemeObj);
+		if (schemeObj != NULL) {
+		  Tcl_IncrRefCount(schemeObj);
+		  scheme = Tcl_GetString(schemeObj);
+		}
 	    }
 	    /* scheme detection: HTTPS variable can be upper case too 
 	       (e.g. on Sunone) */
 	    if (scheme != NULL && !STRCASECMP(scheme, "on")) {
-		Tcl_AppendObjToObj(res, Tcl_NewStringObj(WEB_SECURE_SCHEME, -1));
+	        Tcl_AppendToObj(res, WEB_SECURE_SCHEME, -1);
 		Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
 	    } else {
-		Tcl_AppendObjToObj(res, Tcl_NewStringObj(WEB_DEFAULT_SCHEME, -1));
+		Tcl_AppendToObj(res,WEB_DEFAULT_SCHEME, -1);
 		Tcl_AppendToObj(res, WEBURL_SCHEME_SEP, -1);
 	    }
+	    if (schemeObj != NULL)
+	      Tcl_DecrRefCount(schemeObj);
 	}
     }
 
@@ -688,6 +692,8 @@ int Web_CmdUrl(ClientData clientData,
 	    char *colon = hostname;
 	    size_t pos = 0;
 	    size_t len = strlen(hostname);
+	    Tcl_IncrRefCount(host);
+
 	    for (; pos < len; pos++) {
 	      if (*colon++ == ':') {
 		break;
@@ -698,11 +704,11 @@ int Web_CmdUrl(ClientData clientData,
 	    if (pos < len) {
 	      /* only insert up to colon */
 	      Tcl_AppendToObj(res, hostname, pos);
-	      Tcl_DecrRefCount(host);
 	    } else {
 	      Tcl_AppendObjToObj(res, host);
 	      /* reset colon */
 	    }
+	    Tcl_DecrRefCount(host);
 	}
     }
 
@@ -735,6 +741,8 @@ int Web_CmdUrl(ClientData clientData,
 	    char *colon = hostname;
 	    size_t pos = 0;
 	    size_t len = strlen(hostname);
+	    Tcl_IncrRefCount(host);
+
 	    for (; pos < len; pos++) {
 	      if (*colon++ == ':') {
 		break;
@@ -746,6 +754,7 @@ int Web_CmdUrl(ClientData clientData,
 	      port = Tcl_NewStringObj(colon, -1);
 	      Tcl_IncrRefCount(port);
 	    }
+	    Tcl_DecrRefCount(host);
 	  }
 	}
 
@@ -772,7 +781,9 @@ int Web_CmdUrl(ClientData clientData,
 	Tcl_Obj *scriptname = NULL;
 	WEB_URL_GETFROMREQDATA(scriptname, "SCRIPT_NAME", 0);
 	if (scriptname != NULL) {
+	    Tcl_IncrRefCount(scriptname);
 	    Tcl_AppendObjToObj(res, scriptname);
+	    Tcl_DecrRefCount(scriptname);
 	}
     }
 
@@ -780,7 +791,9 @@ int Web_CmdUrl(ClientData clientData,
 	Tcl_Obj *pathinfo = NULL;
 	WEB_URL_GETFROMREQDATA(pathinfo, "PATH_INFO", 0);
 	if (pathinfo != NULL) {
+	    Tcl_IncrRefCount(pathinfo);
 	    Tcl_AppendObjToObj(res, pathinfo);
+	    Tcl_DecrRefCount(pathinfo);
 	}
     }
 
@@ -893,16 +906,16 @@ int Web_CmdUrlCfg(ClientData clientData,
 		if (tmpObj != NULL) {
 		    Tcl_DecrRefCount(urlData->defaultscheme);
 		    urlData->defaultscheme = Tcl_DuplicateObj(tmpObj);
+		    Tcl_IncrRefCount(urlData->defaultscheme);
 		}
 		return TCL_OK;
 	    } else {
 		Tcl_SetObjResult(interp,
 				 Tcl_NewStringObj(WEB_DEFAULT_SCHEME, -1));
 		if (tmpObj != NULL) {
-		    if (!strcmp(Tcl_GetString(tmpObj), "")) {
-			urlData->defaultscheme = NULL;
-		    } else {
-			urlData->defaultscheme = Tcl_DuplicateObj(tmpObj);
+		    if (strcmp(Tcl_GetString(tmpObj), "")) {
+		        urlData->defaultscheme = Tcl_DuplicateObj(tmpObj);
+			Tcl_IncrRefCount(urlData->defaultscheme);
 		    }
 		}
 		return TCL_OK;

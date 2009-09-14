@@ -59,6 +59,7 @@ Tcl_Obj *webHtmlify(ConvData * convData, Tcl_Obj * in, int useNumeric)
 	return NULL;
 
     res = Tcl_NewObj();
+    Tcl_IncrRefCount(res);
 
     /* ------------------------------------------------------------------------
      * loop over input string
@@ -214,6 +215,7 @@ Tcl_Obj *webHtmlify(ConvData * convData, Tcl_Obj * in, int useNumeric)
   first ++; \
    \
   entity = Tcl_NewUnicodeObj(&(unic[first]),end-first); \
+  Tcl_IncrRefCount(entity); \
   if( Tcl_GetIntFromObj(NULL,entity,&tInt) == TCL_ERROR ) { \
     /* no valid number, we write the string instead */ \
     Tcl_AppendUnicodeToObj(out,&(unic[begin]),end-begin); \
@@ -231,6 +233,7 @@ Tcl_Obj *webHtmlify(ConvData * convData, Tcl_Obj * in, int useNumeric)
       Tcl_AppendUnicodeToObj(out,&tmp,1); \
     } \
   } \
+  Tcl_DecrRefCount(entity); \
 }
 
 #define HANDLE_KEY_ENTITY(convData, unic, length, out, begin, first, end, err) { \

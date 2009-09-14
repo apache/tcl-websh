@@ -87,6 +87,7 @@ Tcl_Obj *crcAsciify(unsigned short crc)
     unsigned char byte = 0;
 
     tmp = Tcl_NewObj();
+    Tcl_IncrRefCount(tmp);
 
     byte = WEB_HIG_BYTE(crc);
 
@@ -193,8 +194,6 @@ int crcAdd(Tcl_Obj * in)
 
     if (tmp2 == NULL)
 	return TCL_ERROR;
-
-    Tcl_IncrRefCount(tmp2);
 
     Tcl_AppendObjToObj(in, tmp2);
 

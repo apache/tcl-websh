@@ -9,6 +9,10 @@ Please refer to src/ChangeLog for a detailed log of changes
 Trunk
 -----
 
+- Fixed some memory leaks and improved refcount handling in general
+
+- Improved test suite to be able to run repeatedly
+
 - Improved/streamlined Tcl_InitStubs handling
 
 - Added [web::config safelog] configuration to allow web::log to properly

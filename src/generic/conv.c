@@ -150,6 +150,7 @@ int Web_Htmlify(ClientData clientData,
     }
 
     Tcl_SetObjResult(interp, res);
+    Tcl_DecrRefCount(res);
     return TCL_OK;
 }
 
@@ -179,8 +180,10 @@ int Web_DeHtmlify(ClientData clientData,
      * handle HTML
      * ----------------------------------------------------------------------- */
     res1 = Tcl_NewObj();
+    Tcl_IncrRefCount(res1);
     webDeHtmlify(convData, objv[1], res1);
     Tcl_SetObjResult(interp, res1);
+    Tcl_DecrRefCount(res1);
     return TCL_OK;
 }
 
@@ -206,6 +209,7 @@ int Web_Html_RemoveComments(ClientData clientData,
     WebAssertObjc(objc != 2, 1, "string");
 
     res = Tcl_NewObj();
+    Tcl_IncrRefCount(res);
     removeHtmlComments(interp, objv[1], res);
 
     /* ------------------------------------------------------------------------
@@ -213,6 +217,7 @@ int Web_Html_RemoveComments(ClientData clientData,
      * --------------------------------------------------------------------- */
     Tcl_SetObjResult(interp, res);
 
+    Tcl_DecrRefCount(res);
     return TCL_OK;
 }
 
@@ -257,17 +262,24 @@ void destroyConvData(ClientData clientData, Tcl_Interp * interp)
 int convDataAddValue(ConvData * convData, char *entity, int num)
 {
 
+    Tcl_Obj * numObj = NULL;
+
     if ((convData == NULL) || (entity == NULL))
 	return TCL_ERROR;
 
     /* html-entity -> iso lookup (just add once) */
+    numObj = Tcl_NewIntObj(num);
+    Tcl_IncrRefCount(numObj);
     if (appendToHashTable(convData->etu, entity,
-			  (ClientData) Tcl_NewIntObj(num)) == TCL_ERROR)
-	return TCL_ERROR;
+			  (ClientData) numObj) == TCL_ERROR) {
+      Tcl_DecrRefCount(numObj);
+      return TCL_ERROR;
+    }
 
     /* iso -> html-entity lookup (last wins) */
     WebDecrRefCountIfNotNull(convData->ute[num]);
     convData->ute[num] = Tcl_NewStringObj(entity, -1);
+    Tcl_IncrRefCount(convData->ute[num]);
 
     return TCL_OK;
 }
@@ -330,6 +342,8 @@ ConvData *createConvData()
     convDataAddValue(convData, "nbsp", 32);	/* not 160 */
     /* convData->unicodeToEntity[160] = allocAndSet("nbsp"); */
     convData->ute[160] = Tcl_NewStringObj("nbsp", -1);
+    Tcl_IncrRefCount(convData->ute[160]);
+
     convDataAddValue(convData, "iexcl", 161);
     convDataAddValue(convData, "cent", 162);
     convDataAddValue(convData, "pound", 163);

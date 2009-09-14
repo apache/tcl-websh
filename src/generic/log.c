@@ -303,6 +303,8 @@ char * insertIntoDestList(LogData *logData, LogDest *logDest) {
   LogDest ** logDests = logData->listOfDests;
   for (i = 0; i < logData->destSize; i++) {
     if (logDests[i] == NULL) {
+      if (logDest == NULL)
+	return NULL;
       logDests[i] = logDest;
       return createLogName(LOG_DEST_PREFIX, i);
     }
@@ -337,6 +339,8 @@ char * insertIntoFilterList(LogData *logData, LogLevel *logLevel) {
   LogLevel ** logLevels = logData->listOfFilters;
   for (i = 0; i < logData->filterSize; i++) {
     if (logLevels[i] == NULL) {
+      if (logLevel == NULL)
+	return NULL;
       logLevels[i] = logLevel;
       return createLogName(LOG_FILTER_PREFIX, i);
     }
@@ -656,7 +660,11 @@ int Web_LogDest(ClientData clientData,
 	      LogDest ** logDests = logData->listOfDests;
 	      for (i = 0; i < logData->destSize; i++) {
 		if (logDests[i] != NULL) {
-		  Tcl_AppendElement(interp, createLogName(LOG_DEST_PREFIX, i));
+		  char *name = createLogName(LOG_DEST_PREFIX, i);
+		  if  (name != NULL) {
+		    Tcl_AppendElement(interp, name);
+		    Tcl_Free(name);
+		  }
 		}
 	      }
 	    }
@@ -675,19 +683,20 @@ int Web_LogDest(ClientData clientData,
 	      LogDest ** logDests = logData->listOfDests;
 	      for (i = 0; i < logData->destSize; i++) {
 		if (logDests[i] != NULL) {
-
+		  char * name = createLogName(LOG_DEST_PREFIX, i);
 		    if (namesIsFirst == TCL_ERROR)
 			Tcl_AppendResult(interp, "\n", NULL);
 		    else
 			namesIsFirst = TCL_ERROR;
 		    logDest = logDests[i];
 		    Tcl_AppendResult(interp,
-				     createLogName(LOG_DEST_PREFIX, i), " ",
+				     name, " ",
 				     logDest->filter->facility, ".",
 				     getSeverityName(logDest->filter->
 						     minSeverity), "-",
 				     getSeverityName(logDest->filter->
 						     maxSeverity), NULL);
+		    Tcl_Free(name);
 		}
 	      }
 	    }
@@ -849,7 +858,11 @@ int Web_LogFilter(ClientData clientData,
 	      LogLevel **logLevels = logData->listOfFilters;
 	      for (i = 0; i < logData->filterSize; i++) {
 		if (logLevels[i] != NULL) {
-		  Tcl_AppendElement(interp, createLogName(LOG_FILTER_PREFIX, i));
+		  char * name = createLogName(LOG_FILTER_PREFIX, i);
+		  if (name != NULL) {
+		    Tcl_AppendElement(interp, name);
+		    Tcl_Free(name);
+		  }
 		}
 	      }
 	    }
@@ -869,19 +882,20 @@ int Web_LogFilter(ClientData clientData,
 	      LogLevel ** logLevels = logData->listOfFilters;
 	      for (i = 0; i < logData->filterSize; i++) {
 		if (logLevels[i] != NULL) {
-
+		  char * name = createLogName(LOG_FILTER_PREFIX, i);
 		    if (namesIsFirst == TCL_ERROR)
 			Tcl_AppendResult(interp, "\n", NULL);
 		    else
 			namesIsFirst = TCL_ERROR;
 		    logLevel = logLevels[i];
 		    Tcl_AppendResult(interp,
-				     createLogName(LOG_FILTER_PREFIX, i), " ",
+				     name, " ",
 				     logLevel->facility, ".",
 				     getSeverityName(logLevel->minSeverity),
 				     "-",
 				     getSeverityName(logLevel->maxSeverity),
 				     NULL);
+		    Tcl_Free(name);
 		}
 	      }
 	    }
@@ -1025,6 +1039,9 @@ void __declspec(dllexport) LOG_MSG(Tcl_Interp * interp, int flag, char *filename
 
     Tcl_Obj *errobj = NULL;
     Tcl_Obj *resobj = NULL;
+#ifdef DEBUG
+    Tcl_Obj *debugobj = NULL;
+#endif
     char *msgpart = NULL;
 
     va_list ap;
@@ -1039,8 +1056,10 @@ void __declspec(dllexport) LOG_MSG(Tcl_Interp * interp, int flag, char *filename
 	Tcl_AppendToObj(errobj, "interp = null", -1);
 
 #ifdef DEBUG
+    debugobj = Tcl_NewIntObj(linenr);
+    Tcl_IncrRefCount(debugobj);
     Tcl_AppendStringsToObj(errobj, "File:", filename,
-			   ", Line:", Tcl_GetString(Tcl_NewIntObj(linenr)),
+			   ", Line:", Tcl_GetString(debugobj),
 			   ", ", (char *) NULL);
 #endif
 
@@ -1079,4 +1098,7 @@ void __declspec(dllexport) LOG_MSG(Tcl_Interp * interp, int flag, char *filename
 
     Tcl_DecrRefCount(errobj);
     Tcl_DecrRefCount(resobj);	/* ok, ref count was incremented before */
+#ifdef DEBUG
+    Tcl_DecrRefCount(debugobj);
+#endif
 }

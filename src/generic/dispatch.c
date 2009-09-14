@@ -192,6 +192,8 @@ int Web_Dispatch(ClientData clientData,
 	if ((content_type != NULL) && (content_length != NULL)) {
 
 	    Tcl_Obj *tmp = NULL;
+	    Tcl_IncrRefCount(content_type);
+	    Tcl_IncrRefCount(content_length);
 
 	    tmp = requestGetDefaultChannelName(interp);
 
@@ -202,6 +204,8 @@ int Web_Dispatch(ClientData clientData,
 
 	    Tcl_DecrRefCount(tmp);
 	}
+	WebDecrRefCountIfNotNull(content_type);
+	WebDecrRefCountIfNotNull(content_length);
     }
 
     /* ==========================================================================
@@ -372,6 +376,7 @@ int Web_Dispatch(ClientData clientData,
 			    "web::dispatch", WEBLOG_ERROR,
 			    "error evaluating hook \"", Tcl_GetString(hook),
 			    "\"", NULL);
+		    WebDecrRefCountIfNotNull(cmdName);
 		    return TCL_ERROR;
 		}
 	    }

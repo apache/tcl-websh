@@ -163,6 +163,7 @@ int __declspec(dllexport) paramListAdd(ParamList * hash, char *key, Tcl_Obj * va
 	    return TCL_ERROR;
 
 	new = Tcl_DuplicateObj(existing);
+	Tcl_IncrRefCount(new);
 	Tcl_DecrRefCount(existing);
 
 	iRes = Tcl_ListObjAppendElement(NULL, new, value);
@@ -226,12 +227,19 @@ Tcl_Obj *paramListAsListObj(ParamList * hash)
 	if (key == NULL)
 	    break;
 
+	Tcl_IncrRefCount(key);
 	val = (Tcl_Obj *) valueOfCurrent(&iterator);
-	if (val == NULL)
-	    break;
+	if (val == NULL) {
+	  Tcl_DecrRefCount(key);
+	  break;
+	}
 
-	if (Tcl_ListObjLength(NULL, val, &valLen) == TCL_ERROR)
-	    break;
+	Tcl_IncrRefCount(val);
+	if (Tcl_ListObjLength(NULL, val, &valLen) == TCL_ERROR) {
+	  Tcl_DecrRefCount(key);
+	  Tcl_DecrRefCount(val);
+	  break;
+	}
 
 	for (i = 0; i < valLen; i++) {
 
@@ -243,6 +251,8 @@ Tcl_Obj *paramListAsListObj(ParamList * hash)
 	    if (Tcl_ListObjAppendElement(NULL, res, ele) == TCL_ERROR)
 		break;
 	}
+	Tcl_DecrRefCount(key);
+	Tcl_DecrRefCount(val);
     }
 
     return res;
@@ -313,6 +323,7 @@ Tcl_Obj *paramListNamesAll(ParamList * hash)
     res = Tcl_NewObj();
     if (res == NULL)
 	return NULL;
+    Tcl_IncrRefCount(res);
 
     while (nextFromHashIterator(&iterator) != TCL_ERROR) {
 
@@ -436,9 +447,14 @@ int paramGet(ParamList * paramList,
 	    }
 	case PARAM_NAMES:{
 		Tcl_Obj *obj = paramListNamesAll(paramList);
-		WebAssertObjc(objc != 2, 2, NULL);
+		if (objc != 2) { 
+		  Tcl_WrongNumArgs(interp, 2, objv, NULL);
+		  Tcl_DecrRefCount(obj);
+		  return TCL_ERROR;
+		}
 		if (obj) {
 		    Tcl_SetObjResult(interp, obj);
+		    Tcl_DecrRefCount(obj);
 		}
 		else {
 		    Tcl_ResetResult(interp);

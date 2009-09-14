@@ -184,7 +184,6 @@ int sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 						      logDest->format,
 						      logDest->maxCharInMsg,
 						      emsg);
-				    Tcl_IncrRefCount(fmsg);
 				}
 			    }
 			}
@@ -192,7 +191,6 @@ int sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 			    /* already evaluated. format */
 			    fmsg = formatMessage(logLevel, logDest->format,
 						 logDest->maxCharInMsg, emsg);
-			    Tcl_IncrRefCount(fmsg);
 			}
 
 		    }
@@ -203,7 +201,6 @@ int sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 			 * ------------------------------------------------------------- */
 			fmsg = formatMessage(logLevel, logDest->format,
 					     logDest->maxCharInMsg, msg);
-			Tcl_IncrRefCount(fmsg);
 		    }
 
 		    /* ------------------------------------------------------------------
@@ -213,7 +210,6 @@ int sendMsgToDestList(Tcl_Interp * interp, LogData * logData,
 
 			fmsg = formatMessage(logLevel, logDest->format,
 					     logDest->maxCharInMsg, msg);
-			Tcl_IncrRefCount(fmsg);
 		    }
 
 		    /* ------------------------------------------------------------------
@@ -425,6 +421,7 @@ Tcl_Obj *formatMessage(LogLevel * level, char *fmt,
      * create
      * ----------------------------------------------------------------------- */
     fmsg = Tcl_NewObj();
+    Tcl_IncrRefCount(fmsg);
 
     /* --------------------------------------------------------------------------
      * time part of log string

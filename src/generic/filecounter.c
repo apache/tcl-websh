@@ -239,13 +239,13 @@ int filecounter(ClientData clientData, Tcl_Interp * interp,
     result = Tcl_NewStringObj(seqnogen->handleName, -1);
     Tcl_CreateObjCommand(interp, seqnogen->handleName,
 			 (Tcl_ObjCmdProc *) Web_Filecounter,
-			 (ClientData) seqnogen, (Tcl_CmdDeleteProc *) NULL);
+			 (ClientData) seqnogen, (Tcl_CmdDeleteProc *) destroySeqNoGenerator);
 
     /* ----------------------------------------------------------------------
      * register private data with interp under the name of the handle
      * ------------------------------------------------------------------- */
     Tcl_SetAssocData(interp, seqnogen->handleName,
-		     (Tcl_InterpDeleteProc *) destroySeqNoGenerator,
+		     (Tcl_InterpDeleteProc *) NULL,
 		     (ClientData) seqnogen);
 
     Tcl_SetObjResult(interp, result);
@@ -319,8 +319,7 @@ int deleteSeqNoGenerator(SeqNoGenerator * seqnogen)
     return TCL_OK;
 }
 
-int destroySeqNoGenerator(ClientData clientData, Tcl_Interp * interp)
-{
+int destroySeqNoGenerator(ClientData clientData) {
     return deleteSeqNoGenerator((SeqNoGenerator *) clientData);
 }
 

@@ -54,7 +54,7 @@ SeqNoGenerator *createSeqNoGenerator(RequestData * requestData,
 				     Tcl_Obj * mask, Tcl_Obj * wrap);
 
 int deleteSeqNoGenerator(SeqNoGenerator * seqnogen);
-int destroySeqNoGenerator(ClientData clientData, Tcl_Interp * interp);
+int destroySeqNoGenerator(ClientData clientData);
 int nextSeqNo(Tcl_Interp * interp, SeqNoGenerator * seqnogen, int *seqno, int next);
 
 /* --------------------------------------------------------------------------

@@ -281,8 +281,11 @@ Tcl_Obj *encryptNcaD(Tcl_Interp * interp, ClientData clientData, Tcl_Obj * in)
     if (keyLen < 1)
 	return NULL;
 
-    if (Tcl_GetCharLength(in) < 1)
-	return Tcl_NewObj();
+    if (Tcl_GetCharLength(in) < 1) {
+      Tcl_Obj *empty = Tcl_NewObj();
+      Tcl_IncrRefCount(empty);
+      return empty;
+    }
 
     if (crcAdd(in) != TCL_OK)
 	return NULL;

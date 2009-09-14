@@ -279,18 +279,26 @@ int Web_Response(ClientData clientData, Tcl_Interp * interp,
 		    Tcl_IncrRefCount(tmp);
 		    tname = Tcl_GetString(tmp);
 
-		    destroyResponseObj((ClientData) responseObj, interp);
 		    if (responseObj == outData->defaultResponseObj)
 			outData->defaultResponseObj = NULL;
-		    responseObj = NULL;
+		    destroyResponseObj((ClientData) responseObj, interp);
 
 		    /* if we reset the default response object, we have to recreate it 
 		     * with our special createDefaultResponseObj function ...
 		     */
 
-		    if (isDefaultResponseObj(interp, tname))
+		    if (isDefaultResponseObj(interp, tname)) {
 			responseObj = createDefaultResponseObj(interp);
-		    else
+			/* add it to Hash Table */
+			if (appendToHashTable(outData->responseObjHash,
+					  Tcl_GetString(responseObj->name),
+					      (ClientData) responseObj) != TCL_OK) {
+			  Tcl_SetResult(interp,
+					"could not reset default response object",
+					TCL_STATIC);
+			  return TCL_ERROR;
+			}
+		    } else
 			responseObj = getResponseObj(interp, outData, tname);
 
 		    Tcl_DecrRefCount(tmp);

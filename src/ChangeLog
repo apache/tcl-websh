@@ -5,6 +5,42 @@
 	* doc/quickref.xml:
 	- Improved documentation of web::tempfile
 	- Fixed typo in web::match
+	* src/generic/checksum.c:
+	- Better location for Tcl_IncrRefCount (in crcAsciify)
+	* src/generic/conv.c, src/generic/crypt.c:
+	- Proper refcount handling of (temp) objects.
+	- Properly decrement refcount of result from webHtmlify
+	* src/generic/dispatch.c:
+	- Prevent memory leak of cmd when hook fails in web::cmdurl
+	- Proper refcount handling of (temp) objects.
+	* src/generic/filecounter.c, src/generic/filecounter.h:
+	- Prevent memory leak when filecounter is deleted (cleanup)
+	* src/generic/htmlify.c:
+	- Proper handling of (temp) objects
+	- Return incremented refcount for webHtmlify
+	* src/generic/log.c:
+	- Closed memory leak when returning names of loglevels and legdests
+	- Proper refcount Handling of logging in DEBUG mode
+	* src/generic/logutl.c:
+	- Properly increment refcount of return value in formatMessage
+	* src/generic/modwebsh_ap.c:
+	- Properly increment refcount on webInterp->dtor in Web_Finalizer_AP
+	* src/generic/nca_d.c:
+	- Always return Tcl_Obj with incremented refcount in encryptNcaD
+	* src/generic/paramlist.c:
+	- Proper refcount handling of (temp) objects.
+	* src/generic/request.c:
+	- Proper increment of refcount in requestData struct
+	* src/generic/url.c:
+	- Closed memory leak in web::cmdurl when using scheme in urlformat
+	- Proper refcount handling of urlData fields
+	* src/generic/varchannel.c:
+	- Closed memory leak in varchannelInputProc and varchannelOutputProc
+	  (previously leaked object returned by Web_GetOrCreateGlobalVar)
+	* src/generic/webout.c:
+	- Closed memory leak when resetting default response obj
+	  (previously leaked defaultResponseObj, because it was not added to
+	  the response object hashin the hash)
 
 2006-09-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/*.test:

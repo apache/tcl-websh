@@ -78,15 +78,21 @@ int varchannelInputProc(ClientData clientData,
 	if (bufSize < remains) {
 	    strncpy(buf, &(str[varChannel->readCursor]), bufSize);
 	    varChannel->readCursor += bufSize;
+	    if (isNew)
+	      Tcl_DecrRefCount(var);
 	    return bufSize;
 	}
 	else {
 	    strncpy(buf, &(str[varChannel->readCursor]), remains);
 	    varChannel->readCursor += remains;
+	    if (isNew)
+	      Tcl_DecrRefCount(var);
 	    return remains;
 	}
     }
 
+    if (isNew)
+      Tcl_DecrRefCount(var);
     return 0;
 }
 
@@ -122,8 +128,10 @@ int varchannelOutputProc(ClientData clientData,
 				   varChannel->varName, &isNew);
     if (var == NULL)
 	return -1;
-    if (isNew)
+    if (isNew) {
 	varChannel->readCursor = 0;
+	Tcl_DecrRefCount(var);
+    }
 
     /* the conversion
      *
@@ -333,6 +341,8 @@ Tcl_Channel Web_GetVarChannel(Tcl_Interp * interp, char *name, int *mode)
     var = Web_GetOrCreateGlobalVar(varChannel->interp,
 				   varChannel->varName, &isNew);
 
+    if (isNew)
+      Tcl_DecrRefCount(var);
     /* --------------------------------------------------------------------------
      * create channel
      * ----------------------------------------------------------------------- */
