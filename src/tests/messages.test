@@ -21,6 +21,9 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
     namespace import ::tcltest::*
 }
 
+web::request -reset
+web::tempfile -remove
+
 # -----------------------------------------------------------------------------
 # errors
 # -----------------------------------------------------------------------------

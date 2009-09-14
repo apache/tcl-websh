@@ -25,6 +25,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # -----------------------------------------------------------------------------
 web::config cmdparam cmd
 web::config timeparam t
+web::config cmdurltimestamp 1
 
 # -----------------------------------------------------------------------------
 # util

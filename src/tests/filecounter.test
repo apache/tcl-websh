@@ -24,6 +24,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 # creation and 'normal' usage
 # -----------------------------------------------------------------------------
 
+web::tempfile -remove
 set filename [web::tempfile]
 
 foreach fc [info commands handle*] {

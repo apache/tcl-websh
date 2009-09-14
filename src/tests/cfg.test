@@ -20,6 +20,8 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
     namespace import ::tcltest::*
 }
 
+web::config cmdurltimestamp 1
+
 # -----------------------------------------------------------------------------
 # errors
 # -----------------------------------------------------------------------------
@@ -155,7 +157,7 @@ A small text file\u0d
     set res {}
     foreach perms {0600 0602 0660 0640 0666 0400} {
 	web::config filepermissions $perms
-	web::formvar -unset
+	web::request -reset
 	web::dispatch -querystring "" -cmd "" -postdata \#data end "multipart/form-data; boundary=xxxx"
 	set currfile [lindex [web::formvar file] 0]
 	lappend res [file attributes $currfile -permissions]

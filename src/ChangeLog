@@ -1,3 +1,8 @@
+2006-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/tests/*.test:
+	- Further improvments when rnning tests repetedly
+	  (to track down memory cunsumption issues)
+
 2006-09-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/*.test:
 	- Make tests run repeatedly in same interp (i.e. close all
