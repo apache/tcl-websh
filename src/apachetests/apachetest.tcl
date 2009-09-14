@@ -116,11 +116,11 @@ proc apachetest::start { options code } {
 
 # startserver - start the server with 'options'.
 
-proc apachetest::startserver { options } {
+proc apachetest::startserver {{options ""}} {
     variable binname
     if { [catch {
-	eval exec $binname -X -f \
-	    "[file join [pwd] server.conf]" $options
+	eval exec [list $binname] -X -f \
+	    "[file join [pwd] conf server.conf]" $options
     } err] } {
 	puts $err
     }
