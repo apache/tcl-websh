@@ -1,7 +1,10 @@
 2006-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/*.test:
-	- Further improvments when rnning tests repetedly
+	- Further improvments when running tests repeatedly
 	  (to track down memory cunsumption issues)
+	* doc/quickref.xml:
+	- Improved documentation of web::tempfile
+	- Fixed typo in web::match
 
 2006-09-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/*.test:

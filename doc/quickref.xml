@@ -3326,7 +3326,7 @@ proc web::interpmap {filename} {
       </para>
       <para>
 
-	web::match treats v1 as a list. Thus, <emphasis>web::match
+	web::match treats listToBeSearched as a list. Thus, <emphasis>web::match
 	  &quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
 	<emphasis>ok</emphasis>.
 
@@ -3341,13 +3341,30 @@ proc web::interpmap {filename} {
 	</cmdsynopsis>
 	Options are <option>-path <replaceable>path</replaceable></option>, 
 	<option>-prefix <replaceable>prefix</replaceable></option>, and <option>-remove</option>.
-	Returns a unique name of a temporary file. The maximum of
-	guaranteed unique names per application is system dependent.
-	This command just returns the name of a file. It is the
+	<cmdsynopsis><command>web::tempfile</command>
+	  <arg choice="opt">-path
+	  <replaceable>path</replaceable>
+	  </arg>
+	  <arg choice="opt">-prefix
+	  <replaceable>prefix</replaceable>
+	  </arg>
+	</cmdsynopsis>
+	Returns a unique name of a temporary file in the default
+	temp directory or the directory given with 
+	<replaceable>path</replaceable>. 
+	The name can be prefixed with <replaceable>prefix</replaceable>.
+	The maximum of guaranteed unique names per application is system
+	dependent. This command just returns the name of a file. It is the
 	programmers job to handle the file, for example to open
 	it. Note that Websh keeps an internal list of all file
-	names generated with <command>web::tempfile</command> and will attempt to delete
-	all files when the interpreter dies.
+	names generated with <command>web::tempfile</command> and will 
+	attempt to delete all files when the interpreter dies.
+	<cmdsynopsis><command>web::tempfile</command>
+	  <arg choice="req">-remove</arg>
+	</cmdsynopsis>
+      The <option>-remove</option> option attemps to clean up all temporary 
+      files previously created using <command>web::tempfile</command> and 
+      resets the internal list of these file names.
       </para>
     </section>
   </section>
