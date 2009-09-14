@@ -35,6 +35,13 @@
     <category rdf:resource="http://projects.apache.org/category/httpd-module" />
     <release>
       <Version>
+        <name>Websh 3.6.0b5</name>
+        <created>2009-09-14</created>
+        <revision>3.6.0b5</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
         <name>Websh 3.6.0b4</name>
         <created>2006-03-05</created>
         <revision>3.6.0b4</revision>

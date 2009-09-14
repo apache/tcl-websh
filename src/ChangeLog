@@ -1,4 +1,8 @@
 2006-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* <various sources>:
+	Changed version to 3.6.0b5
+
+2006-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/*.test:
 	- Further improvments when running tests repeatedly
 	  (to track down memory cunsumption issues)

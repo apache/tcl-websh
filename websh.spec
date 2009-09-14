@@ -3,7 +3,7 @@
 
 Summary: Tcl scripting for the web, both a CGI and Apache module.
 Name: websh
-Version: 3.6.0b4
+Version: 3.6.0b5
 Release: 1
 Copyright: Freely distributable and usable
 Group: System Environment/Daemons
@@ -42,9 +42,9 @@ make clean
 %files
 %defattr(-,root,root)
 %doc doc
-/usr/bin/websh3.6.0b4
-/usr/lib/httpd/modules/mod_websh3.6.0b4.so
-/usr/lib/libwebsh3.6.0b4.so
+/usr/bin/websh3.6.0b5
+/usr/lib/httpd/modules/mod_websh3.6.0b5.so
+/usr/lib/libwebsh3.6.0b5.so
 /usr/share/websh3.6/conf/htmlhandler.ws3
 /usr/share/websh3.6/conf/httpd.conf
 /usr/share/websh3.6/conf/otherhandler.ws3

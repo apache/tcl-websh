@@ -6,8 +6,18 @@ for different versions.
 Please refer to src/ChangeLog for a detailed log of changes
 
 
-Trunk
------
+Known Issues
+------------
+
+- On Windows, when running mod_websh against Apache 1.3.41,
+  [web::config server_root] returns garbage (won't be fixed)
+
+- On Windows, mod_websh sometimes crashes with Tcl 8.5 and Tcl8.6
+  in Apache 2.0 or greater.
+
+
+Websh 3.6.0b5 (2009-09-14)
+--------------------------
 
 - Fixed some memory leaks and improved refcount handling in general
 
