@@ -1,8 +1,8 @@
-2006-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+2009-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* <various sources>:
 	Changed version to 3.6.0b5
 
-2006-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+2009-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/*.test:
 	- Further improvments when running tests repeatedly
 	  (to track down memory cunsumption issues)
@@ -46,7 +46,7 @@
 	  (previously leaked defaultResponseObj, because it was not added to
 	  the response object hashin the hash)
 
-2006-09-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+2009-09-11 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/tests/*.test:
 	- Make tests run repeatedly in same interp (i.e. close all
 	  file handles properly, cleanup some leftovers etc.)
@@ -90,7 +90,7 @@
 	- Fixed memory leak in paramListAsListObj (static query param handling)
 	- Fixed memory leak in [web::param -names] when called with wrong args
 	
-2006-07-20 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+2009-07-20 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/win/Makefile:
 	- Removed duplicate reference to Tcl stub lib
 
