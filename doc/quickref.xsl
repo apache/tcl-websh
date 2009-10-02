@@ -65,7 +65,6 @@
 
   <xsl:template match="/article/section/title" mode="titlepage.mode"
     priority="2">
-    <hr/>
     <xsl:call-template name="section.title"/>
   </xsl:template>
 

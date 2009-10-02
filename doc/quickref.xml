@@ -68,7 +68,7 @@ $Id$
   <section id="configuration">
     <title>Configuration</title>
     <section id="web::config">
-      <title>web::config</title>
+      <title><command>web::config</command></title>
       <cmdsynopsis>
 	<command>web::config</command>
 	<arg choice="req"><replaceable>key</replaceable></arg>
@@ -80,8 +80,8 @@ $Id$
 	<option><replaceable>key</replaceable></option> is returned. Note that
         unlike the <command>set</command> command 
 	<command>web::config</command> always returns the value 
-        for the given key <emphasis>before</emphasis> the new value is set. This allows to keep
-        the old value and set it back later.
+        for the given key <emphasis>before</emphasis> the new value is set.
+	This allows to keep the old value and set it back later.
       </para>
       <variablelist>
 	<varlistentry>
@@ -89,8 +89,8 @@ $Id$
 	    <optional><option><replaceable>size</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      Sets the maximum number of bytes that will be saved, when files are uploaded in a multipart form.
-	      Default: 0.
+	      Sets or gets the maximum number of bytes that will be saved, when
+	      files are uploaded in a multipart form. Default: 0.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -98,8 +98,9 @@ $Id$
 	  <term><option>cmdparam</option> <optional><option><replaceable>name</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      Name of the command  parameter in
-	      the URL used to dispatch to <command>web::command</command> using <command>web::dispatch</command>. Default: &quot;cmd&quot;.
+	      Sets or gets name of the command  parameter in
+	      the URL used to dispatch to <command>web::command</command>
+	      using <command>web::dispatch</command>. Default: &quot;cmd&quot;.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -107,7 +108,7 @@ $Id$
 	  <term><option>timeparam</option> <optional><option><replaceable>name</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      Name of the timestamp parameter in the URL. Default:
+	      Sets or gets name of the timestamp parameter in the URL. Default:
 	      &quot;t&quot;.
 	    </para>
 	  </listitem>
@@ -134,7 +135,9 @@ $Id$
 	  <term><option>safelog</option> <optional><option>0|1</option></optional></term>
 	  <listitem>
 	    <para>
-	      Makes web::log &quot;safe&quot; if set to 1 (i.e. it never throws an error even if corresponding I/O to file, channel or command etc. fails). Default: 1 (on).
+	      Makes <command>web::log</command> &quot;safe&quot; if set to 1
+	      (i.e. it never throws an error even if corresponding I/O to
+	      file, channel or command etc. fails). Default: 1 (on).
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -143,7 +146,7 @@ $Id$
 	    <optional><option>brace|tag</option></optional></term>
 	  <listitem>
 	    <para>
-	      Sets the markup characters for sections to be eval'd in
+	      Sets or gets the markup characters for sections to be eval'd in
 	      <command>web::putx</command> and <command>web::putxfile</command>
               commands to either curly braces ({ ... }) or special tags (&lt;?
 	      ... ?&gt;). Default: &quot;brace&quot;.
@@ -154,8 +157,9 @@ $Id$
 	  <term><option>encryptchain</option> <optional><option><replaceable>list</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      Defines which commands should be tried, in sequence, to
-	      encrypt a message. Default: &quot;web::encryptd&quot;.
+	      Sets or gets the list of commands that should be tried, in 
+	      sequence, to encrypt a message. 
+	      Default: &quot;web::encryptd&quot;.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -163,8 +167,9 @@ $Id$
 	  <term><option>decryptchain</option> <optional><option><replaceable>list</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      Defines which commands should be tried, in sequence, to
-	      decrypt a message. Default: &quot;web::decryptd&quot;.
+	      Sets or gets the list of commands that should be tried, in 
+	      sequence, to decrypt a message. 
+	      Default: &quot;web::decryptd&quot;.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -172,17 +177,19 @@ $Id$
 	  <term><option>filepermissions</option> <optional><option><replaceable>permissions</replaceable></option></optional></term>
 	  <listitem>
 	    <para>
-	      Defines the file permissions of files that Websh creates. 
-This affects the creation of log files, filecounters, session files, 
-and temporary files created when files are uploaded in multipart forms (see
-<command>web::formvar</command>). Default is 0644.
+	      Sets or gets the file permissions of files that Websh creates.
+	      This affects the creation of log files, filecounters, session
+	      files, and temporary files created when files are uploaded in
+	      multipart forms (see <command>web::formvar</command>). Default:
+	      0644.
 	    </para>
 	  </listitem>
 	</varlistentry>
       </variablelist>
 
       <para>
-The following special subcommand is used to reset all configuration options to their default values:
+      The following special subcommand is used to reset all configuration
+      options to their default values:
       </para>
       <variablelist>
 	<varlistentry>
@@ -196,7 +203,8 @@ The following special subcommand is used to reset all configuration options to t
       </variablelist>
 
       <para>
-The following two subcommands are read-only and just return their predefined values:
+      The following two subcommands are read-only and just return their
+      predefined values:
       </para>
       <variablelist>
 	<varlistentry>
@@ -218,7 +226,9 @@ The following two subcommands are read-only and just return their predefined val
       </variablelist>
 
       <para>
-The following subcommands are also read-only. They return the current request environment within mod_websh (and if applicable in CGI mode):
+      The following subcommands are also read-only. They return the
+      current request environment within mod_websh (and if applicable
+      in CGI mode):
       </para>
       <variablelist>
 	<varlistentry>
@@ -249,14 +259,15 @@ The following subcommands are also read-only. They return the current request en
 	  <term><option>interpclass</option></term>
 	  <listitem>
 	    <para>
-	      Returns the interpclass the current request was mapped to (see <command>web::interpmap</command> command).
+	      Returns the interpclass the current request was mapped to
+	      (see <command>web::interpmap</command> command).
 	    </para>
 	  </listitem>
 	</varlistentry>
       </variablelist>
 
     <example>
-      <title>web::config</title>
+      <title><command>web::config</command></title>
       <programlisting>
 % web::config decryptchain
 web::encryptd
@@ -288,7 +299,7 @@ brace
       Commands are defined with <command>web::command</command>.
     </para>
     <section id="web::command">
-      <title>web::command</title>
+      <title><command>web::command</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::command</command>
@@ -336,7 +347,7 @@ web::dispatch</programlisting>
       </para>
     </section>
     <section id="web::getcommand">
-      <title>web::getcommand</title>
+      <title><command>web::getcommand</command></title>
       <para>
 
 
@@ -352,7 +363,7 @@ web::dispatch</programlisting>
       </para>
     </section>
     <section id="web::cmdurl">
-      <title>web::cmdurl</title>
+      <title><command>web::cmdurl</command></title>
       <para>
 
 
@@ -388,7 +399,7 @@ web::dispatch</programlisting>
 	    <term><option>-notimestamp</option></term>
 	    <listitem>
 	      <para>
-		do not add a timestamp to the URL.
+		Tells Websh not to add a timestamp to URLs.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -396,8 +407,8 @@ web::dispatch</programlisting>
 	    <term><option>-urlformat</option> <option><replaceable>list</replaceable></option></term>
 	    <listitem>
 	      <para>
-		specify what items will be used to format just this
-		URL.  Default is: <command>{scriptname pathinfo
+		Specifies which items will be used to format just this
+		URL.  Default: <command>{scriptname pathinfo
 		  querystring}</command>.
 	      </para>
 	      <para>
@@ -411,7 +422,7 @@ web::dispatch</programlisting>
 		    <term><option>scheme</option></term>
 		    <listitem>
 		      <para>
-			include the protocol, only &quot;http&quot;
+			Includes the protocol, only &quot;http&quot;
 			and &quot;https&quot; are currently supported.
 		      </para>
 		    </listitem>
@@ -420,7 +431,7 @@ web::dispatch</programlisting>
 		    <term><option>host</option></term>
 		    <listitem>
 		      <para>
-			include the host name,
+			Includes the host name,
 			e.g. &quot;websh.com&quot;.
 		      </para>
 		    </listitem>
@@ -429,7 +440,7 @@ web::dispatch</programlisting>
 		    <term><option>port</option></term>
 		    <listitem>
 		      <para>
-			include the port,
+			Includes the port,
 			e.g. &quot;80&quot;</para><para> Trying to set
 			this item without host will throw an error.
 		      </para>
@@ -439,7 +450,7 @@ web::dispatch</programlisting>
 		    <term><option>scriptname</option></term>
 		    <listitem>
 		      <para>
-			include scriptname,
+			Includes scriptname,
 			e.g. &quot;/cgi-bin/orderbooks&quot;.
 		      </para>
 		    </listitem>
@@ -448,7 +459,7 @@ web::dispatch</programlisting>
 		    <term><option>pathinfo</option></term>
 		    <listitem>
 		      <para>
-			include pathinfo,
+			Includes pathinfo,
 			e.g. &quot;/merchants/shop1&quot;.
 		      </para>
 		    </listitem>
@@ -457,27 +468,28 @@ web::dispatch</programlisting>
 		    <term><option>querystring</option></term>
 		    <listitem>
 		      <para>
-			include the querystring,
+			Includes the querystring,
 			e.g. &quot;select=download&quot;.
 		      </para>
 		    </listitem>
 		  </varlistentry>
 		</variablelist>
-		<note>
-		  <para>
-		    Note that there are two more commands that control
-		    the output of <command>web::cmdurl</command>:
-		    <command>web::config</command> <option>cmdparam</option> and
-		    <command>web::config</command> <option>timeparam</option>.
-		  </para>
-		</note>
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
       </para>
+       <para>
+         <note>
+	    Note that there are two more commands that control
+	    the output of <command>web::cmdurl</command>:
+	    <command>web::config</command> <option>cmdparam</option>
+	    and
+	    <command>web::config</command> <option>timeparam</option>.
+	 </note>
+       </para>
       <example>
-	<title>web::cmdurl</title>
+	<title><command>web::cmdurl</command></title>
 	<programlisting>
 % web::cmdurl -notimestamp -urlformat [list scheme host scriptname pathinfo querystring] &quot;test&quot;
 http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
@@ -485,7 +497,7 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
       </example>
     </section>
     <section id="web::cmdurlcfg">
-      <title>web::cmdurlcfg</title>
+      <title><command>web::cmdurlcfg</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::cmdurlcfg</command>
@@ -515,10 +527,12 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	<option>value</option> is omitted, the current value is
 	returned.  Otherwise, the <option>value</option> is stored.
 
-	Configuration for web::cmdurl.  This command serves two purposes:
+	Configuration for <command>web::cmdurl</command>.
+	This command serves two purposes:
 	<orderedlist>
-	  <listitem><para>management of static parameters</para></listitem>
-	  <listitem><para>configuration for <command>web::cmdurl</command></para></listitem>
+	  <listitem><para>Management of static parameters</para></listitem>
+	  <listitem><para>Configuration for
+	   <command>web::cmdurl</command></para></listitem>
 	</orderedlist>
 	By "static parameters", we mean those which are set for every
 	page, instead of set on a per-page basis.
@@ -541,7 +555,7 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	      <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		add the static parameter <option>key</option>.
+		Adds the static parameter <option>key</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -549,7 +563,7 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><command>web::cmdurlcfg</command> -names</term>
 	    <listitem>
 	      <para>
-		returns a list of all known static parameters.
+		Returns a list of all known static parameters.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -573,8 +587,8 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><option>-scheme</option> <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		protocol to be used. Defaults to the scheme used to
-		access the page, which is overridden if the user
+		Sets or gets protocol to be used. Defaults to the scheme used
+		to access the page, which is overridden if the user
 		sets a value.
 	      </para>
 	    </listitem>
@@ -583,7 +597,8 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><option>-host</option> <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		server name to be used. Default: taken from request.
+		Sets or gets server name to be used. Default: taken from 
+		request.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -591,8 +606,8 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><option>-port</option></term>
 	    <listitem>
 	      <para>
-		port number to be used. Default: taken from request, 80 if 
-		not available.
+		Sets or gets port number to be used. Default: taken from 
+		request, 80 if not available.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -600,7 +615,8 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><option>-scriptname</option></term>
 	    <listitem>
 	      <para>
-		name of CGI executable. Default: taken from request.
+		Sets or gets name of CGI executable. Default: taken from 
+		request.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -608,8 +624,8 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><option>-pathinfo</option></term>
 	    <listitem>
 	      <para>
-		path info (path after scriptname). Default: taken from
-		request.
+		Sets or gets path info (path after scriptname). Default: 
+		taken from request.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -617,7 +633,7 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	    <term><option>-urlformat</option> <option><replaceable>list</replaceable></option></term>
 	    <listitem>
 	      <para>
-		changes the urlformat permanently. See
+		Sets or gets the urlformat permanently. See
 		<command>web::cmdurl</command> for the description of
 		this option.
 	      </para>
@@ -625,24 +641,27 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 	  </varlistentry>
 	</variablelist>
 
-	In all these cases, &quot;web::cmdurlcfg -option
-	<option>value</option>&quot; sets the value of the given
+	In all these cases, &quot;<command>web::cmdurlcfg -option
+	<option>value</option></command>&quot; sets the value of the given
 	option and returns the value that was used before the change,
-	while &quot;web::cmdurlcfg -option&quot; returns the current
-	value.  If no value has been set using web::cmdurlcfg, but is
+	while &quot;<command>web::cmdurlcfg -option</command>&quot; returns
+	the current value.  If no value has been set using
+	<command>web::cmdurlcfg</command>, but is
 	requested for the URL generation, the value from the request
 	will be used.  This value, however, can not be retrieved using
-	web::cmdurlcfg.
+	<command>web::cmdurlcfg</command>.
 
 	<variablelist>
 	  <varlistentry>
 	    <term><option>-reset</option></term>
 	    <listitem>
 	      <para>
-		will reset the <command>web::cmdurlcfg</command> configuration.
-		Note however, that static parameters will not be reset by this option. To get
-		rid of static parameters configured with the <command>-set</command> option,
-		use <command>-unset</command> with (for a specific parameter) or without (for all parameters) key.
+		Resets the <command>web::cmdurlcfg</command> configuration.
+		Note however, that static parameters will not be reset by this
+		option. To get rid of static parameters configured with the
+		<command>-set</command> option,	use <command>-unset</command>
+		with (for a specific parameter) or without (for all parameters)
+		key.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -650,18 +669,18 @@ http://websh.com/bin/returnmail/member?XDZuRD2rnsfHjFH
 
       </para>
       <para>
-	<emphasis>Note</emphasis> that setting a value to an empty string is the same as using
-	<command>-unset</command>.
+	<emphasis>Note</emphasis> that setting a value to an empty string
+	is the same as using <command>-unset</command>.
       </para>
       <para>
-	<emphasis>Also note</emphasis>: <command>web::cmdurl</command> compares every key
-	from the static parameters against
+	<emphasis>Also note</emphasis>: <command>web::cmdurl</command>
+	compares every key from the static parameters against
 	the keys from the command line. The static parameter is only
 	used if there is no such parameter on the command line.
 
       </para>
       <example>
-	<title>web::cmdurl and web::cmdurlcfg</title>
+	<title><command>web::cmdurl</command> and <command>web::cmdurlcfg</command></title>
 	<programlisting>
 % web::cmdurl &quot;&quot;
 ?XDqPtk34XvyPh41gUBo
@@ -694,7 +713,7 @@ cmd
       </example>
     </section>
     <section id="web::dispatch">
-      <title>web::dispatch</title>
+      <title><command>web::dispatch</command></title>
       <para>
 
 
@@ -716,7 +735,7 @@ cmd
 	    <term><option>-cmd</option> <option><replaceable>cmdName</replaceable></option></term>
 	    <listitem>
 	      <para>
-		switch into command <option>cmdName</option>. If
+		Switches to command <option>cmdName</option>. If
 		<option>cmdName</option> is an empty string, no
 		command is called. By default,
 		<option>cmdName</option> is taken from the
@@ -729,7 +748,7 @@ cmd
 	      <option><replaceable>string</replaceable></option></term>
 	    <listitem>
 	      <para>
-		parse <option>string</option> as the querystring. If
+		Parses <option>string</option> as the querystring. If
 		<option>string</option> is an empty string,
 		querystring parsing is turned off. By default,
 		querystring is taken from the request data (CGI
@@ -741,7 +760,7 @@ cmd
 	    <term><option>-postdata</option> <option>&quot;&quot;</option></term>
 	    <listitem>
 	      <para>
-                do not parse any post data.
+                Do not parse any post data.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -753,19 +772,23 @@ cmd
 	    </term>
 	    <listitem>
 	      <para>
-		parse channel <option>channelName</option> (or variable named <option>channelName</option> if <option>#</option> is given) as POST data input with
-		length <option>content_length</option> and type <option>content_type</option>.
-		<option>content_type</option> can be <literal
+		Parse channel <option>channelName</option> (or variable
+		named <option>channelName</option> if <option>#</option> is
+		given) as POST data input with length
+		<option>content_length</option> and type
+		<option>content_type</option>. <option>content_type</option>
+		can be <literal
 		  remap="tt">application/x-www-form-urlencoded</literal>
 		or <literal remap="tt">multipart/form-data;
 		  boundary=xxx</literal>.
-In the case of multipat form data,
+		In the case of multipat form data,
 		<option>content-type</option> must specify the
 		boundary as well. By default, POST data is taken from
 		the request data.</para><para> Default for
 		<option>content_type</option> is <literal
 		  remap="tt">application/x-www-form-urlencoded</literal>.
-                Default for <option>content_length</option> is to read a channel up to EOF or the full content of the variable.
+                Default for <option>content_length</option> is to read a
+		channel up to EOF or the full content of the variable.
 	      </para>
 	      <para>
 		Use the keyword <literal remap="tt">end</literal> for
@@ -784,11 +807,12 @@ In the case of multipat form data,
 	    <listitem>
 	      <para>
 		Track a parameter: register it as &quot;static&quot;
-		for the generation of URLs with web::cmdurl. Thus,
+		for the generation of URLs with
+		<command>web::cmdurl</command>. Thus,
 		each parameter with the key in
 		<option>paramKeyList</option> will be repeated in
-		every URL generated with web::cmdurl. See the
-		documentation of <command>web::cmdurl</command> for
+		every URL generated with <command>web::cmdurl</command>.
+		See the documentation of <command>web::cmdurl</command> for
 		details.
 	      </para>
 	    </listitem>
@@ -797,11 +821,13 @@ In the case of multipat form data,
 	    <term><option>-hook</option> <option><replaceable>code</replaceable></option></term>
 	    <listitem>
 	      <para>
-		Causes web::dispatch to eval <option>code</option>
+		Causes <command>web::dispatch</command> to eval
+		<option>code</option>
 		just before the command (from any source) is
 		evaluated. When <option>code</option> is evaluated,
 		the full request information has been parsed.  That
-		is, web::param, web::formvar etc. will have up-to-date
+		is, <command>web::param</command>,
+		<command>web::formvar</command> etc. will have up-to-date
 		information when <option>code</option> is evaluated.
 	      </para>
 	    </listitem>
@@ -809,13 +835,13 @@ In the case of multipat form data,
 	</variablelist>
 
 	<emphasis>Note</emphasis>: If no command is passed to
-	web::dispatch either in the querystring or with the
-	<option>-cmd</option> option, web::dispatch will call the
-	command &quot;default&quot;.
+	<command>web::dispatch</command> either in the querystring or with the
+	<option>-cmd</option> option, <command>web::dispatch</command> will
+	call the command &quot;default&quot;.
 
       </para>
       <example>
-	<title>web::command and web::dispatch</title>
+	<title><command>web::command</command> and <command>web::dispatch</command></title>
 	<programlisting>
 % set tst {puts &quot;On the hook&quot;}
 puts &quot;On the hook&quot;
@@ -840,8 +866,8 @@ d
       <para>
 	Websh session management consits of two parts:
 	<itemizedlist>
-	  <listitem><para>session id tracking</para></listitem>
-	  <listitem><para>session context management</para></listitem>
+	  <listitem><para>Session id tracking</para></listitem>
+	  <listitem><para>Session context management</para></listitem>
 	</itemizedlist>
       </para>
       <para>
@@ -904,7 +930,7 @@ d
   <section id="request_data_handling">
     <title>Request data handling</title>
     <section id="web::request">
-      <title>web::request</title>
+      <title><command>web::request</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -927,7 +953,8 @@ d
       </para>
       <para>
 
-	web::request is an accessor to request specific information: either CGI related (stand alone
+	<command>web::request</command> is an accessor to request
+	specific information: either CGI related (stand alone
         Websh) or Apache related (mod_websh).
 
 	<variablelist>
@@ -935,7 +962,7 @@ d
 	    <term><command>web::request</command> <option>-names</option></term>
 	    <listitem>
 	      <para>
-		returns a list of all known keys.
+		Returns a list of all known keys.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -944,7 +971,7 @@ d
 	      <optional><option><replaceable>default</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		returns the value for <option>key</option>. Can be a
+		Returns the value for <option>key</option>. Can be a
 		list. In case that <option>key</option> does not
 		exist, return <option>default</option>, if it is
 		given, or an empty string.
@@ -956,7 +983,7 @@ d
 	      <option>-count</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		returns number of items in list for
+		Returns number of items in list for
 		<option>key</option>; returns 0 if
 		<option>key</option> does not exist.
 	      </para>
@@ -967,7 +994,7 @@ d
 	      <option>-set</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		does the same as <command>web::request</command>
+		Does the same as <command>web::request</command>
 		<option>key</option>.
 	      </para>
 	    </listitem>
@@ -980,7 +1007,7 @@ d
 	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		adds the parameter <option>key</option> to the
+		Adds the parameter <option>key</option> to the
 		<command>web::request</command> data. Any existing parameters 
                 with <option>key</option> are overwritten.
 	      </para>
@@ -994,9 +1021,9 @@ d
 	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		append parameters with the same <option>key</option>
-		to the web::request data. In this case the existing
-		<option>value</option> is not overwritten.
+		Appends parameters with the same <option>key</option>
+		to the <command>web::request</command> data. In this case 
+		the existing <option>value</option> is not overwritten.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1005,7 +1032,7 @@ d
 	      <option>-unset</option></term>
 	    <listitem>
 	      <para>
-		deletes all parameters from the web::request data.
+		Deletes all parameters from the <command>web::request</command> data.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1014,7 +1041,7 @@ d
 	      <option>-unset</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		deletes a parameter from the web::request data.
+		Deletes a parameter from the <command>web::request</command> data.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1023,11 +1050,13 @@ d
 	      <option>-reset</option></term>
 	    <listitem>
 	      <para>
-		deletes all parameters from the web::request data
-		(like 'web::request -unset'), removes all static
-		parameters (like 'web::cmdurlcfg -unset'), all form
-		variables (like 'web::formvar -unset'), all query
-		string parameters (like 'web::param -unset'), and all
+		Deletes all parameters from the <command>web::request</command>
+		data (like '<command>web::request -unset</command>'), 
+		removes all static parameters (like 
+		'<command>web::cmdurlcfg -unset</command>'), all form
+		variables (like '<command>web::formvar -unset</command>'),
+		all query string parameters (like
+		'<command>web::param -unset</command>'), and all
 		temporary files created by HTTP form upload.
 	      </para>
 	    </listitem>
@@ -1037,8 +1066,9 @@ d
 	      <option>-channel</option></term>
 	    <listitem>
 	      <para>
-		returns the preset default channel for the current request.
-                (Note that this is not necessarily the currently selected channel.)
+		Returns the preset default channel for the current request.
+                (Note that this is not necessarily the currently selected
+		channel.)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1051,8 +1081,9 @@ d
 	    <term><command>web::request</command> <option>AUTH_USER</option></term>
 	    <listitem>
 	      <para>
-		returns the username provided by the user when Basic Auth is requested and Apache 
-		does not handle it (i.e. if Apache does not provide REMOTE_USER).
+		Returns the username provided by the user when Basic Auth is
+		requested and Apache does not handle it (i.e. if Apache does
+		not provide REMOTE_USER).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1060,8 +1091,9 @@ d
 	    <term><command>web::request</command> <option>AUTH_PW</option></term>
 	    <listitem>
 	      <para>
-		returns the password provided by the user when Basic Auth is requested and Apache 
-		does not handle it (i.e. if Apache does not provide REMOTE_USER).
+		Returns the password provided by the user when Basic Auth is
+		requested and Apache does not handle it (i.e. if Apache does
+		not provide REMOTE_USER).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1071,7 +1103,7 @@ d
         completely bypasses Apache's auth mechanisms.
 
         <example>
-	  <title>web::request AUTH_USER and web::request AUTH_PW</title>
+	  <title><command>web::request AUTH_USER</command> and <command>web::request AUTH_PW</command></title>
       	  <programlisting>
 # returns 1 if user/pass provided is websh/websh
 proc isAuthenticated {} {
@@ -1113,16 +1145,16 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	  </programlisting>
         </example>
 
-        <emphasis>Important security consideration:</emphasis> This configuration 
-        will also expose the authentication information to Websh when Apache does
-        handle the authentication. Although Websh hides the information in that 
-        case, it is always available in the CGI environment. Use this configuration
-        carefully!
+        <emphasis>Important security consideration:</emphasis> This
+	configuration will also expose the authentication information to
+	Websh when Apache does handle the authentication. Although Websh
+	hides the information in that case, it is always available in the
+	CGI environment. Use this configuration carefully!
 
       </para>
     </section>
     <section id="web::param">
-      <title>web::param</title>
+      <title><command>web::param</command></title>
       <para>
 
 
@@ -1140,20 +1172,20 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 
       </para>
       <para>
-	web::param is an accessor to state information from the
-	querystring.  Suppose the querystring is &quot;lang=EN&quot;.
-	After web::dispatch has parsed the querystring,
+	<command>web::param</command> is an accessor to state information
+	from the querystring.  Suppose the querystring is &quot;lang=EN&quot;.
+	After <command>web::dispatch</command> has parsed the querystring,
 	<command>web::param</command> <option>lang</option> will
 	report <literal remap="tt">EN</literal>.  Additionaly,
-	web::param can manage this data and add, append, and delete
-	parameters as needed.
+	<command>web::param</command> can manage this data and add, append,
+	and delete parameters as needed.
 
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::param</command> <option>-names</option></term>
 	    <listitem>
 	      <para>
-		returns a list of all known keys.
+		Returns a list of all known keys.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1162,7 +1194,7 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	      <optional><option><replaceable>default</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		returns the value for <option>key</option>. Can be a
+		Returns the value for <option>key</option>. Can be a
 		list. In case that <option>key</option> does not
 		exist, return <option>default</option>, if it is
 		given, or an empty string.
@@ -1174,7 +1206,7 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	      <option>-count</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		returns number of items in list of
+		Returns number of items in list of
 		<option>key</option>.
 	      </para>
 	    </listitem>
@@ -1184,8 +1216,8 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	      <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		does the same as '<command>web::param</command>
-		<option>key</option>'.
+		Does the same as <command>web::param</command>
+		<option>key</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1196,9 +1228,9 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		add the parameter <option>key</option> to the
-		web::param data.  Any existing parameters with
-		<option>key</option> are overwritten.
+		Adds the parameter <option>key</option> to the
+		<command>web::param</command> data.  Any existing 
+		parameters with	<option>key</option> are overwritten.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1210,9 +1242,10 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		append parameters with the same <option>key</option>
-		to the web::param data.  In this case the existing
-		<option>value</option> is not overwritten.
+		Appends parameters with the same <option>key</option>
+		to the <command>web::param</command> data.  
+		In this case the existing <option>value</option> is not
+		overwritten.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1220,7 +1253,8 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	    <term><command>web::param</command> <option>-unset</option></term>
 	    <listitem>
 	      <para>
-		deletes all parameters from the web::param data.
+		Deletes all parameters from the <command>web::param</command>
+		data.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1229,7 +1263,8 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	      <option>-unset</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		delete a parameter from the web::param data.
+		Deletes a parameter from the <command>web::param</command>
+		data.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1238,7 +1273,7 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
       </para>
     </section>
     <section id="web::formvar">
-      <title>web::formvar</title>
+      <title><command>web::formvar</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -1270,11 +1305,12 @@ SetEnvIf Authorization "^(Basic .+)$" AUTH_BASIC=$1
 	element contains the mime type of the file.
       </para>
       <para>
-Note that the temporary files are created with the permissions configured by
-<command>web::config filepermissions</command>, which defaults to 0644.
+        Note that the temporary files are created with the permissions
+	configured by <command>web::config filepermissions</command>,
+	which defaults to 0644.
       </para>
       <example>
-	<title>web::param</title>
+	<title><command>web::param</command></title>
       	<programlisting>
 % web::request CONTENT_LENGTH
 % web::dispatch -querystring &quot;cmd=default&amp;t=100&quot; -postdata &quot;&quot; -cmd &quot;&quot;
@@ -1303,7 +1339,7 @@ t cmd k
       <command>web::response</command>.
     </para>
     <section id="web::response">
-      <title>web::response</title>
+      <title><command>web::response</command></title>
       <para>
 
 
@@ -1340,7 +1376,7 @@ t cmd k
 	    <term><command>web::response</command></term>
 	    <listitem>
 	      <para>
-		returns the name of the currently selected response object.
+		Returns the name of the currently selected response object.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1351,10 +1387,12 @@ t cmd k
 	    </term>
 	    <listitem>
 	      <para>
-		selects <option><replaceable>channelName</replaceable></option> as new response
-		object. If the <option><replaceable>channelName</replaceable></option> is
+		Selects <option><replaceable>channelName</replaceable></option>
+		as new response	object. If the
+		<option><replaceable>channelName</replaceable></option> is
 		prepended by a <option>#</option>, it refers to a global 
-                variable named <option><replaceable>channelName</replaceable></option>.
+                variable named
+		<option><replaceable>channelName</replaceable></option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1364,7 +1402,7 @@ t cmd k
 	      <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		sets property <option>key</option> to
+		Sets property <option>key</option> to
 		<option>value</option>, or returns current value if
 		<option>value</option> is omitted.  The
 		<option>keys</option> are names of HTTP header fields
@@ -1373,7 +1411,7 @@ t cmd k
 		value of the field (like Content-Type) and their
 		values (like text/html).</para><para>
 		Example:</para><para> <literal
-		  remap="tt">web::response -set Content-Type text/plain</literal>.
+		  remap="tt"><command>web::response</command> -set Content-Type text/plain</literal>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1382,7 +1420,7 @@ t cmd k
 	      <option>-names</option></term>
 	    <listitem>
 	      <para>
-		returns the list of known keys.
+		Returns the list of known keys.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1391,7 +1429,7 @@ t cmd k
 	      <option>-count</option> <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		returns number of items in list of <option>key</option>.
+		Returns number of items in list of <option>key</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1401,7 +1439,7 @@ t cmd k
 	      <optional><option><replaceable>key</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		delete the value of <option>key</option>, if
+		Deletes the value of <option>key</option>, if
 		<option>key</option> is given, or all keys.
 	      </para>
 	    </listitem>
@@ -1412,7 +1450,7 @@ t cmd k
 	      <optional><option>boolean</option></optional></term>
 	    <listitem>
 	      <para>
-		Sets the sendheader flag which indicates and controls
+		Sets or gets the sendheader flag which indicates and controls
 		whether the HTTP headers have been or should be sent.
 		It is initially set to 1 and set to 0 after the first
 		call of <command>web::put</command> or
@@ -1428,7 +1466,7 @@ t cmd k
 	      <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		Sets the HTTP response like &quot;HTTP/1.0 200
+		Sets or gets the HTTP response like &quot;HTTP/1.0 200
 		OK&quot; for the given (or default) channel. If no
 		<option>value</option> given, returns the the current
 		HTTP response set. In the case of the Apache module
@@ -1444,7 +1482,7 @@ t cmd k
 		in the response as follows:
 	      </para>
 	      <para> <literal
-		  remap="tt">web::response -set Status &quot;400 Bad Request&quot;</literal>.
+		  remap="tt"><command>web::response</command> -set Status &quot;400 Bad Request&quot;</literal>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1453,7 +1491,7 @@ t cmd k
 	      <option>-bytessent</option></term>
 	    <listitem>
 	      <para>
-		returns the number of bytes that have already been sent to this
+		Returns the number of bytes that have already been sent to this
 		channel.
 	      </para>
 	    </listitem>
@@ -1463,7 +1501,7 @@ t cmd k
 	      <option>-reset</option></term>
 	    <listitem>
 	      <para>
-		resets the 'sendheader' flag for the channel to true,
+		Resets the 'sendheader' flag for the channel to true,
 		the HTTP response to the default &quot;HTTP/?? 200
 		OK&quot;, removes any HTTP headers set, and resets the
 		names of the query string parameters for the timestamp
@@ -1477,13 +1515,14 @@ t cmd k
 	      <option>-resetall</option></term>
 	    <listitem>
 	      <para>
-		performs a 'web::response -reset' on all registered channels.
+		Performs a <command>web::response -reset</command> on all
+		registered channels.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 	<example>
-	  <title>web::response</title>
+	  <title><command>web::response</command></title>
 	  <programlisting>
 % web::response
 stdout
@@ -1511,7 +1550,7 @@ Hello, world
       </para>
     </section>
     <section id="web::put">
-      <title>web::put</title>
+      <title><command>web::put</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -1522,7 +1561,7 @@ Hello, world
 	  </arg>
 	  <arg choice="req"><replaceable>text</replaceable></arg>
 	</cmdsynopsis>
-	Send output to a Tcl channel. No newline is added to
+	Sends output to a Tcl channel. No newline is added to
 	output. If
 	<optional><option><replaceable>channel</replaceable></option></optional>
 	is ommitted, output is sent to the current default
@@ -1536,7 +1575,7 @@ Hello, world
       </para>
     </section>
     <section id="web::putx">
-      <title>web::putx</title>
+      <title><command>web::putx</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -1551,12 +1590,15 @@ Hello, world
 	Writes <option>text</option> to the specified channel. Code in
 	curly brackets is eval'd, unless the brackets are escaped by
 	&quot;\&quot;. These markup characters '{...}' can be changed
-	to '&lt;? ... ?&gt;' with 'web::config putxmarkup tag'. The optional hash (&quot;#&quot;) denotes that output should be sent to a global variable named <option><replaceable>channel</replaceable></option> instead of a Tcl channel.
-
+	to '&lt;? ... ?&gt;' with 
+	'<command>web::config putxmarkup tag</command>'. The optional hash
+	(&quot;#&quot;) denotes that output should be sent to a global
+	variable named <option><replaceable>channel</replaceable></option>
+	instead of a Tcl channel.
       </para>
     </section>
     <section id="web::putxfile">
-      <title>web::putxfile</title>
+      <title><command>web::putxfile</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -1574,7 +1616,10 @@ Hello, world
 	Returns 0 on success, 1 otherwise. If an error occurs, an
 	error message is written to <option>msg</option>. If only two
 	arguments are passed, then <option>channel</option> takes
-	precedence. The optional hash (&quot;#&quot;) denotes that output should be sent to a global variable named <option><replaceable>channel</replaceable></option> instead of a Tcl channel.
+	precedence. The optional hash (&quot;#&quot;) denotes that output
+	should be sent to a global variable named
+	<option><replaceable>channel</replaceable></option> instead
+	of a Tcl channel.
       </para>
     </section>
   </section>
@@ -1589,8 +1634,9 @@ Hello, world
       determines whether it should handle a message, or not, using the
       levels configured with <command>web::loglevel</command>. Then,
       Websh determines which message is to be sent where, using the
-      the additional filters and destinations configured with <command>web::logdest</command>.
-      There is no logging per default. Setting levels with <command>web::loglevel</command> is mandatory.
+      the additional filters and destinations configured with
+      <command>web::logdest</command>.  There is no logging per default.
+      Setting levels with <command>web::loglevel</command> is mandatory.
     </para>
     <para>
       A filter consists of a tag and a level, separated by a
@@ -1606,7 +1652,7 @@ Hello, world
       </itemizedlist>
     </para>
     <section id="web::logdest">
-      <title>web::logdest</title>
+      <title><command>web::logdest</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -1617,7 +1663,8 @@ Hello, world
 	</cmdsynopsis>
 
 	Subcommands are: <option>add</option>,
-	<option>delete</option>, <option>names</option>, and <option>levels</option>.  
+	<option>delete</option>, <option>names</option>, and
+	<option>levels</option>.  
       </para>
 	<variablelist>
 	  <varlistentry>
@@ -1646,15 +1693,15 @@ Hello, world
       </para>
       <para>
 
-	Default format is <literal>&quot;%x %X [\$p] \$f.\$l: \$m\n&quot;</literal>
+	Default format: <literal>&quot;%x %X [\$p] \$f.\$l: \$m\n&quot;</literal>
       </para>
       <para>
 	Known plug-ins are: <option>file</option>,
 	<option>syslog</option> (Unix only), <option>command</option>,
 	<option>channel</option>, and
 	<option>apache</option> (mod_websh only).
-	<emphasis>Note</emphasis>: plugins may have indiviudal options
-	(<option>-unbuffered</option>), see documentation below.
+	<emphasis>Note</emphasis>: plug-ins may have indiviudal options
+	(such as <option>-unbuffered</option>), see documentation below.
       </para>
       <para>
 	<programlisting>
@@ -1668,9 +1715,12 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	      <optional><option><replaceable>name</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		remove destination <option>name</option> from list, or remove all
-		destinations if <option>name</option> is omitted.
-		(The special case <literal remap="tt">-requests</literal> to delete all destinations except the one defined from within <command>web::initializer</command> code is only used internally.)
+		Removes destination <option>name</option> from list, or 
+		removes all destinations if <option>name</option> is omitted.
+		(The special case <literal remap="tt">-requests</literal>
+		to delete all destinations except the one defined from
+		within <command>web::initializer</command> code is only
+		used internally.)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1679,7 +1729,7 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	      <option><replaceable>names</replaceable></option></term>
 	    <listitem>
 	      <para>
-		return a list of all destination ids that have been set.
+		Returns a list of all destination ids that have been set.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1688,14 +1738,15 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	      <option><replaceable>levels</replaceable></option></term>
 	    <listitem>
 	      <para>
-		list all destination ids and their actual log levels in a readable format
+		Lists all destination ids and their actual log levels in a
+		readable format
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
     </section>
     <section id="web::loglevel">
-      <title>web::loglevel</title>
+      <title><command>web::loglevel</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -1708,7 +1759,10 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	<option>delete</option>, <option>names</option>,
 	and <option>levels</option>.
 
-        Levels defined using <command>web::loglevel</command> act as a filter for log messages sent by Websh. Only messages that pass at least one level defined using this command are passed to the log destinations configured using <command>web::logdest</command>
+        Levels defined using <command>web::loglevel</command> act as a
+	filter for log messages sent by Websh. Only messages that pass
+	at least one level defined using this command are passed to the
+	log destinations configured using <command>web::logdest</command>
       </para>
       <para>
 	<variablelist>
@@ -1717,7 +1771,7 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	      <option>add</option> <option><replaceable>level</replaceable></option></term>
 	    <listitem>
 	      <para>
-		add a level to the list.
+		Adds a level to the list.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1727,9 +1781,12 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	      <optional><option><replaceable>name</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		remove level <option>name</option> from list, or remove all
+		Removes level <option>name</option> from list, or removes all
 		levels if <option>name</option> is omitted.
-		(The special case <literal remap="tt">-requests</literal> to delete all levels except the one defined from within <command>web::initializer</command> code is only used internally.)
+		(The special case <literal remap="tt">-requests</literal>
+		to delete all levels except the one defined from within
+		<command>web::initializer</command> code is only used
+		internally.)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1738,7 +1795,7 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	      <option><replaceable>names</replaceable></option></term>
 	    <listitem>
 	      <para>
-		return a list of all level ids that have been set.
+		Returns a list of all level ids that have been set.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1747,7 +1804,8 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	      <option><replaceable>levels</replaceable></option></term>
 	    <listitem>
 	      <para>
-		list all level ids and their actual log levels in a readable format
+		Lists all level ids and their actual log levels in a
+		readable format.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1756,7 +1814,7 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
       </para>
     </section>
     <section id="web::log">
-      <title>web::log</title>
+      <title><command>web::log</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -1764,7 +1822,7 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	  <arg choice="req"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 
-	Issue a log message.  It is possible, should the user so
+	Issues a log message.  It is possible, should the user so
 	desire, to have the <command>web::log</command> run
 	<command>subst</command> on its arguments.  This behaviour is
 	turned off by default, and can be turned on by doing:
@@ -1788,10 +1846,15 @@ web::logdest add -maxchar 25 -format &quot;%x %X \$l \$m\n&quot; *.-debug comman
 	  Option is: <option>-unbuffered</option>
 	</para>
 	<para>
-Log messages are sent to the file <option>filename</option>, which is opened in append mode at the time of this call and stays open until this destination is deleted. This is either at the end of the request (mod_websh) or when the interpreter is deleted.
+	Log messages are sent to the file <option>filename</option>,
+	which is opened in append mode at the time of this call and
+	stays open until this destination is deleted. This is either
+	at the end of the request (mod_websh) or when the interpreter
+	is deleted.
 	</para>
 	<para>
-The file opened using the permissions configured with <command>web::config filepermissions</command>. Default is 0644.
+	The file opened using the permissions configured with
+	<command>web::config filepermissions</command>. Default: 0644.
 	</para>
       </section>
       <section id="syslog">
@@ -1822,7 +1885,8 @@ The file opened using the permissions configured with <command>web::config filep
 	  </cmdsynopsis>
 	</para>
 	<para>
-The log message is sent to a Tcl command taking the message as an argument. E.g.
+	The log message is sent to a Tcl command taking the message
+	as an argument. E.g.
 	  <programlisting>
 % proc logCommand {msg} {
       puts "---- here comes the message ----"
@@ -1834,9 +1898,9 @@ The log message is sent to a Tcl command taking the message as an argument. E.g.
 loglevel0
 % web::logdest add *.-debug command logCommand
 logdest0
-% web::log debug " a log message"
+% web::log debug "a log message"
 ---- here comes the message ----
-10/28/05 13:44:26 [20596] user.debug:  a log message
+10/28/05 13:44:26 [20596] user.debug: a log message
 ----- that was the message -----
 %	  </programlisting>
 	</para>
@@ -1856,7 +1920,7 @@ logdest0
 	  Option is: <option>-unbuffered</option>
 	</para>
 	<para>
-	Write the message to the Tcl channel <option>channel</option>.
+	Writes the message to the Tcl channel <option>channel</option>.
 	</para>
 
       </section>
@@ -1870,13 +1934,13 @@ logdest0
 	  <arg choice="plain">apache</arg>
 	</cmdsynopsis>
 	<para>
-	  Sends the message to the Apache ErrorLog file. Available in mod_websh only.
+	  Sends the message to the Apache ErrorLog file. Available within
+	  mod_websh only.
 	</para>
       </section>
       <section>
-	<title></title>
 	<example>
-	  <title>web::log</title>
+	  <title><command>web::log</command>, <command>web::loglevel</command>, and <command>web::logdest</command></title>
 	  <programlisting>
 % web::loglevel add *.-debug
 loglevel0
@@ -1901,7 +1965,7 @@ logdest0
   <section id="context_handling">
     <title>Context handling</title>
     <section id="web::context">
-      <title>web::context</title>
+      <title><command>web::context</command></title>
       <para>
 	Creation
 	<cmdsynopsis>
@@ -1931,7 +1995,7 @@ logdest0
 	      <option><replaceable>key</replaceable></option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		store <option>value</option>.
+		Set <option>key</option> to <option>value</option>.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1942,7 +2006,7 @@ logdest0
 	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		append <option>value</option> to existing value for
+		Appends <option>value</option> to existing value for
 		<option>key</option>.
 	      </para>
 	    </listitem>
@@ -1954,7 +2018,7 @@ logdest0
 	      <optional><option><replaceable>...</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		append <option>value</option> to existing list of
+		Appends <option>value</option> to existing list of
 		values for <option>key</option>.
 	      </para>
 	    </listitem>
@@ -1965,8 +2029,8 @@ logdest0
 	      <optional><option><replaceable>default</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		access the value for key <option>key</option>, or
-		return <option>default</option> if
+		Accesses the value for key <option>key</option>, or
+		returns <option>default</option> if
 		<option>key</option> does not exist in the context. If
 		<option>default</option> is omitted, an empty string
 		is returned if <option>key</option> is unknown.
@@ -1978,7 +2042,7 @@ logdest0
 	      <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		returns true (1) if <option>key</option> exists in
+		Returns true (1) if <option>key</option> exists in
 		context, false (0) otherwise.
 	      </para>
 	    </listitem>
@@ -1988,7 +2052,7 @@ logdest0
 	      <option><replaceable>key</replaceable></option></term>
 	    <listitem>
 	      <para>
-		remove <option>key</option> from context.
+		Removes <option>key</option> from context.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -1998,7 +2062,7 @@ logdest0
 	      <option><replaceable>arg</replaceable></option></term>
 	    <listitem>
 	      <para>
-		array manipulation as known from the Tcl command
+		Array manipulation as known from the Tcl command
 		<emphasis>array</emphasis>.
 	      </para>
 	    </listitem>
@@ -2008,7 +2072,7 @@ logdest0
 	      <optional><option><replaceable>pattern</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		lists existing keys of context matching
+		Lists existing keys of context matching
 		<option>pattern</option>.
 	      </para>
 	    </listitem>
@@ -2017,7 +2081,8 @@ logdest0
 	    <term><command><replaceable>name</replaceable>::delete</command></term>
 	    <listitem>
 	      <para>
-		delete the context (same as <command>namespace delete <replaceable>name</replaceable></command>)
+		Deletes the context (same as <command>namespace delete
+		<replaceable>name</replaceable></command>)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2025,14 +2090,14 @@ logdest0
 	    <term><command><replaceable>name</replaceable>::dump</command></term>
 	    <listitem>
 	      <para>
-		serialize context.
+		Serializes context in a &quot;source&quot;-able format.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 	</variablelist>
 
 	<example>
-	  <title>web::context</title>
+	  <title><command>web::context</command></title>
 	  <programlisting>
 % web::context sc
 % sc::cset lang FR
@@ -2045,7 +2110,7 @@ FR
       </para>
     </section>
     <section id="web::filecontext">
-      <title>web::filecontext</title>
+      <title><command>web::filecontext</command></title>
       <para>
 
 	Creation:
@@ -2094,8 +2159,8 @@ FR
 	    </term>
 	    <listitem>
 	      <para>
-		load an existing session context with id
-		<option>id</option>, or create a new one, if
+		Loads an existing session context with id
+		<option>id</option>, or creates a new one, if
 		possible. Automation depends on the settings of the
 		actual context manager settings, see
 		below.</para><para> If you specify an
@@ -2110,7 +2175,7 @@ FR
 	      <optional><option><replaceable>id</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		create a new session context. Automation depends on
+		Creates a new session context. Automation depends on
 		the settings of the actual context manager settings,
 		see below.
 	      </para>
@@ -2120,7 +2185,7 @@ FR
 	    <term><command><replaceable>name</replaceable>::commit</command></term>
 	    <listitem>
 	      <para>
-		make session context persistent.
+		Makes session context persistent.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2128,7 +2193,7 @@ FR
 	    <term><command><replaceable>name</replaceable>::id</command></term>
 	    <listitem>
 	      <para>
-		return id of session.
+		Returns id of session.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2136,7 +2201,7 @@ FR
 	    <term><command><replaceable>name</replaceable>::invalidate</command></term>
 	    <listitem>
 	      <para>
-		delete session in memory and on file system.
+		Deletes session in memory and on file system.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2150,7 +2215,7 @@ FR
 	  <arg choice="req"><replaceable>perm</replaceable></arg>
 	</cmdsynopsis>
 
-	set the file permissions of the session context files
+	Sets the file permissions of the session context files
 	<option>perm</option> is an unix-like octal value like 0644.
 	If not specified, files are created with the permissions defined
 	in <command>web::config filepermissions</command>,
@@ -2164,7 +2229,7 @@ FR
 	    </term>
 	    <listitem>
 	      <para>
-		specify where to store session context files and how
+		Specifies where to store session context files and how
 		to name them. Suppose that the session id is 99.
 		<emphasis>-path [file join .. data s%d.dat]</emphasis>
 		would then cause filecontext to save the session
@@ -2179,8 +2244,8 @@ FR
 	      <option>boolean</option></term>
 	    <listitem>
 	      <para>
-		Flag to turn crypting of session context on and off.
-		Default is on.
+		Sets crypting of session context on or off.
+		Default: on.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2193,7 +2258,7 @@ FR
 		Sets command <option>idgen</option> to find a new
 		session id. See doc of
 		<command>web::filecounter</command> below for an
-		implementation provided with Websh.
+		implementation provided by Websh.
 	      </para>
 	      <para>
 		<option>idgen</option> is used in case that no
@@ -2209,16 +2274,21 @@ FR
 	    </term>
 	    <listitem>
 	      <para>
-		the next using the querystring (this is one reason why
-		the querystring is encrypted). After web::dispatch has
-		parsed the querystring, web::param will report the
-		current session id, if any. <emphasis>Note</emphasis>
+		Causes <command><replaceable>name</replaceable>::init</command>
+		to initialize with the id given in the querystring parameter
+		<option>idparam</option>. (This is one important reason why
+		the querystring should be encrypted). After
+		<command>web::dispatch</command> has
+		parsed the querystring, <command>web::param</command>
+		will report the	current session id in 
+		<option>idparam</option>, if any. <emphasis>Note</emphasis>
 		that you can maintain several sessions in parallel,
 		and attach every session to its own
 		<option>idparam</option>.
 	      </para>
 	      <para>
-		Using <emphasis>web::dispatch -track</emphasis>
+		Using
+		<emphasis><command>web::dispatch -track</command></emphasis>
 		further automates the passing of session ids from
 		request to request.
 	      </para>
@@ -2234,7 +2304,7 @@ FR
       </para>
     </section>
     <section id="web::cookiecontext">
-      <title>web::cookiecontext</title>
+      <title><command>web::cookiecontext</command></title>
       <para>
 
 	Creation:
@@ -2277,7 +2347,7 @@ FR
 	      <optional><option><replaceable>id</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		load an existing session context (cookie must have
+		Loads an existing session context (cookie must have
 		been sent by the client).
 	      </para>
 	    </listitem>
@@ -2287,7 +2357,7 @@ FR
 	      <optional><option><replaceable>id</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		create a new session context.
+		Creates a new session context.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2295,7 +2365,7 @@ FR
 	    <term><command><replaceable>name</replaceable>::commit</command></term>
 	    <listitem>
 	      <para>
-		send a cookie.
+		Sends a cookie (if no output to the page has been sent yet).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2303,7 +2373,7 @@ FR
 	    <term><command><replaceable>name</replaceable>::id</command></term>
 	    <listitem>
 	      <para>
-		return id of session.
+		Returns id of session.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2311,7 +2381,7 @@ FR
 	    <term><command><replaceable>name</replaceable>::invalidate</command></term>
 	    <listitem>
 	      <para>
-		delete session in memory and on client side.
+		Deletes session in memory and on client side.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2326,7 +2396,7 @@ FR
 	      <option><replaceable>time</replaceable></option></term>
 	    <listitem>
 	      <para>
-		set the expiration date of the cookie. Possible values
+		Sets the expiration date of the cookie. Possible values
 		for <option>time</option> are
 		<emphasis>seconds</emphasis> (time in seconds since
 		1970-01-01) or <emphasis>date-string</emphasis> (any
@@ -2349,7 +2419,7 @@ FR
 	      <option><replaceable>path</replaceable></option></term>
 	    <listitem>
 	      <para>
-		set the <option>path</option> property of the cookie.
+		Sets the <option>path</option> property of the cookie.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2359,7 +2429,7 @@ FR
 	      <option><replaceable>domain</replaceable></option></term>
 	    <listitem>
 	      <para>
-		set the <option>domain</option> property of the cookie.
+		Sets the <option>domain</option> property of the cookie.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2369,7 +2439,7 @@ FR
 	      <option>-secure</option> <option>boolean</option></term>
 	    <listitem>
 	      <para>
-		set the <option>secure</option> property of the cookie.
+		Sets the <option>secure</option> property of the cookie.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2379,8 +2449,8 @@ FR
 	      <option>boolean</option></term>
 	    <listitem>
 	      <para>
-		Flag to turn crypting of cookie context on and off.
-		Default is on.
+		Sets crypting of cookie context on or off.
+		Default: on.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2390,7 +2460,7 @@ FR
 	      <option><replaceable>channelName</replaceable></option></term>
 	    <listitem>
 	      <para>
-		The response object to send the cookie to (see also
+		Sets the response object to send the cookie to (see also
 		<command>web::response</command>).
 	      </para>
 	    </listitem>
@@ -2409,7 +2479,7 @@ FR
       </para>
     </section>
     <section id="web::filecounter">
-      <title>web::filecounter</title>
+      <title><command>web::filecounter</command></title>
       <para>
 
 	This is a numeric sequence-number generator which stores its
@@ -2439,7 +2509,7 @@ FR
 	    <listitem>
 	      <para>
 		Uses <option>filename</option> to store the current
-		value (no default)
+		value (no default).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2448,7 +2518,7 @@ FR
 	    <listitem>
 	      <para>
 		Uses this value as a minimum at start and after wrap,
-		if wrap is true (default is 0).
+		if wrap is true. Default: 0.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2456,7 +2526,7 @@ FR
 	    <term><option>-max</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		Uses this value as a maximum, if wrap is true (default is 2147483647).
+		Uses this value as a maximum, if wrap is true. Default: 2147483647.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2464,8 +2534,8 @@ FR
 	    <term><option>-seed</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		If persistent file does not yet exists, use this value
-		as a starting point (default is 0).
+		Usea this value	as a starting point if persistent file does
+		not exist yet. Default: 0.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2473,8 +2543,8 @@ FR
 	    <term><option>-incr</option> <option><replaceable>value</replaceable></option></term>
 	    <listitem>
 	      <para>
-		Uses this value as an increment for each 'nextval'
-		(default is 1).
+		Uses this value as an increment for each 'nextval'.
+		Default: 1.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2484,7 +2554,7 @@ FR
 	    <listitem>
 	      <para>
 		Sets the permissions on the newly created files.
-		(Default is configured in <command>web::config filepermissions</command>, which defaults to 0644.)
+		Default is configured in <command>web::config filepermissions</command>, which defaults to 0644.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2494,7 +2564,7 @@ FR
 	    <listitem>
 	      <para>
 		Indicates whether this counter should wrap around its
-		values (from min to max) (default is false).
+		values (back to min from max). Default: false.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2508,7 +2578,8 @@ FR
 	    <term><option><replaceable>name</replaceable></option> config</term>
 	    <listitem>
 	      <para>
-		Return a flat list of key value pairs with the filecounter's configuration.
+		Returns a flat list of key value pairs with the 
+		filecounter's configuration.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2516,7 +2587,7 @@ FR
 	    <term><option><replaceable>name</replaceable></option> nextval</term>
 	    <listitem>
 	      <para>
-		Return the next value.
+		Returns the next value.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2524,9 +2595,9 @@ FR
 	    <term><option><replaceable>name</replaceable></option> curval</term>
 	    <listitem>
 	      <para>
-		Return the current value, that is, the value that the
-		last call to &quot;nextval&quot; or &quot;getval&quot; reported (as opposed
-		to the current value in the file).
+		Returns the current value, that is, the value that the
+		last call to &quot;nextval&quot; or &quot;getval&quot;
+		reported (as opposed to the current value in the file).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2534,7 +2605,8 @@ FR
 	    <term><option><replaceable>name</replaceable></option> getval</term>
 	    <listitem>
 	      <para>
-		Return the current value in the file. (Do not increment file as in &quot;nextval&quot;.)
+		Returns the current value in the file. (Does not increment
+		file as in &quot;nextval&quot;.)
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2542,7 +2614,7 @@ FR
 
       </para>
       <example>
-	<title>web::filecounter</title>
+	<title><command>web::filecounter</command></title>
 	<programlisting>
 % web::filecounter fc1 -filename test.dat
 fc1
@@ -2589,24 +2661,25 @@ file othertest.dat handle fc3 seed 1 min 1 max 10 incr 2 perms 0644 wrap true cu
   <section id="file_handling_and_file_IO">
     <title>File handling and file I/O</title>
     <section id="web::include">
-      <title>web::include</title>
+      <title><command>web::include</command></title>
       <para>
 
 	<cmdsynopsis>
-	  <command>web_include</command>
+	  <command>web::include</command>
 	  <arg choice="req"><replaceable>fileName</replaceable></arg>
 	  <arg choice="opt"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 
 	If the file <option>fileName</option> exists, it is sourced (must be a
-	script). Otherwise if the library fileName+&quot;shared lib extension&quot;
-	exists, it is loaded (must be a shared library). Returns 0 on success,
-	1 otherwise. If an error occurs, an error message is written to <option>msg</option>.
+	script). Otherwise if the library fileName+&quot;shared lib 
+	extension&quot;	exists, it is loaded (must be a shared library).
+	Returns 0 on success, 1 otherwise. If an error occurs, an error
+	message is written to <option>msg</option>.
 
       </para>
     </section>
     <section id="web::readfile">
-      <title>web::readfile</title>
+      <title><command>web::readfile</command></title>
       <para>
 
 
@@ -2615,7 +2688,7 @@ file othertest.dat handle fc3 seed 1 min 1 max 10 incr 2 perms 0644 wrap true cu
 	  <arg choice="req"><replaceable>varName</replaceable></arg> <arg choice="req"><replaceable>msg</replaceable></arg>
 	</cmdsynopsis>
 
-	<option>file</option> is read and written to
+	Reads <option>file</option> and writes it to
 	<option>varName</option>. Returns 0 on success, 1
 	otherwise. If an error occurs, an error message is written to
 	the variable <option>msg</option>.
@@ -2623,7 +2696,7 @@ file othertest.dat handle fc3 seed 1 min 1 max 10 incr 2 perms 0644 wrap true cu
       </para>
     </section>
     <section id="web::lockfile_and_web::unlockfile">
-      <title>web::lockfile and web::unlockfile</title>
+      <title><command>web::lockfile</command> and <command>web::unlockfile</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::lockfile</command> <arg choice="req"><replaceable>fh</replaceable></arg>
@@ -2632,11 +2705,14 @@ file othertest.dat handle fc3 seed 1 min 1 max 10 incr 2 perms 0644 wrap true cu
 	  <command>web::unlockfile</command> <arg choice="req"><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
-	Interface to lockf(). lockf() works best on local filesystems.
-	Please read the documentation of lockf on your system to learn
-	about the problems and limitations of file locking. Note that
-	web::lockfile also performs a seek() and resets the file
-	cursor to the beginning of the file.
+	Interfaces <function>lockf()</function>. <function>lockf()</function>
+	works best on local filesystems.
+	Please read the documentation of <function>lockf()</function> on your
+	system to learn	about the problems and limitations of file locking.
+	Note that
+	<command>web::lockfile</command> also performs a 
+	<function>seek()</function> and
+	resets the file	cursor to the beginning of the file.
 
 	<emphasis>Note</emphasis> that the file needs to be open for
 	writing.
@@ -2644,7 +2720,7 @@ file othertest.dat handle fc3 seed 1 min 1 max 10 incr 2 perms 0644 wrap true cu
       </para>
     </section>
     <section id="web::truncatefile">
-      <title>web::truncatefile</title>
+      <title><command>web::truncatefile</command></title>
       <para>
 
 
@@ -2653,13 +2729,13 @@ file othertest.dat handle fc3 seed 1 min 1 max 10 incr 2 perms 0644 wrap true cu
 	  <arg choice="req"><replaceable>fh</replaceable></arg>
 	</cmdsynopsis>
 
-	Interface to truncate(). Truncates a file based on the file
-	handle, while Tcl's file commands are based on file
+	Interfaces <function>truncate()</function>. Truncates a file based on 
+	the file handle, while Tcl's file commands are based on file
 	names. This is used to truncate a file while holding the lock.
 
       </para>
       <example>
-	<title>web::lockfile</title>
+	<title><command>web::lockfile</command></title>
 	<programlisting>
 set fh [open [web::tempfile] w]
 web::lockfile $fh
@@ -2672,16 +2748,16 @@ close $fh	</programlisting>
   <section id="data_encryption">
     <title>Data encryption</title>
     <para>
-      Encrypt (<command>web::encrypt</command>) and decrypt
+      Encrypts (<command>web::encrypt</command>) and decrypts
       (<command>web::decrypt</command>) data. By default, the
-      built-in, weak encryption is used. encryption is extensible by
-      plug-Ins.  The encryption module tries all plug-Ins from a list
-      until the first plug-In was able to en-/decrypt the input.  See
+      built-in, weak encryption is used. Encryption is extensible by
+      plug-ins.  The encryption module tries all plug-ins from a list
+      until the first plug-in was able to en-/decrypt the input.  See
       <command>web::config</command> for the configuration of the
-      plug-Ins to be used.
+      plug-ins to be used.
     </para>
     <section id="web::encrypt">
-      <title>web::encrypt</title>
+      <title><command>web::encrypt</command></title>
       <para>
 
 
@@ -2693,7 +2769,7 @@ close $fh	</programlisting>
       </para>
     </section>
     <section id="web::decrypt">
-      <title>web::decrypt</title>
+      <title><command>web::decrypt</command></title>
       <para>
 
 
@@ -2704,7 +2780,7 @@ close $fh	</programlisting>
 	Returns decrypted data.
 
 	<example>
-	  <title>web::encrypt</title>
+	  <title><command>web::encrypt</command></title>
 	  <programlisting>
 % web::encrypt &quot;Hello, world!&quot;
 XDIVAhkgkxRjcfA7UTwpD7
@@ -2721,11 +2797,11 @@ Hello, world!
       </para>
     </section>
     <section id="web::encryptd">
-      <title>web::encryptd</title>
+      <title><command>web::encryptd</command></title>
       <para>
 
-	By default, Websh uses this plug-In for weak data
-	encryption for encryption (<command>web::encryptd</command>)
+	By default, Websh uses this plug-in for (very) weak data
+	encryption (<command>web::encryptd</command>)
 	and decryption (<command>web::decryptd</command>).  The
 	encryption key is managed with
 	<command>web::crpytdkey</command>.
@@ -2742,7 +2818,7 @@ Hello, world!
       </para>
     </section>
     <section id="web::decryptd">
-      <title>web::decryptd</title>
+      <title><command>web::decryptd</command></title>
       <para>
 
 
@@ -2755,7 +2831,7 @@ Hello, world!
       </para>
     </section>
     <section id="web::cryptdkey">
-      <title>web::cryptdkey</title>
+      <title><command>web::cryptdkey</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -2763,7 +2839,7 @@ Hello, world!
 	  <arg choice="opt"><replaceable>key</replaceable></arg>
 	</cmdsynopsis>
 
-	Sets the new key for encryption. If no argument is given,
+	Sets a new key for encryption. If no argument is given,
 	resets to the default key. This command does not return the
 	currently active key, in difference to other configuration
 	commands of Websh.
@@ -2777,31 +2853,33 @@ Hello, world!
       </para>
       <para>
 	The encryption plug-in is required to implement the interface
-	described below (note that to activate your plugin, use <command>web::config encryptchain</command> and <command>web::config decryptchain</command> respectively):
+	described below (note that to activate your plug-in, use
+	<command>web::config encryptchain</command> and
+	<command>web::config decryptchain</command> respectively):
 	<itemizedlist>
 	  <listitem>
 	    <para>
 	      <command>web::yourencrypt</command> accepts one argument
-	      web::yourencrypt takes a string as input and generates a
-	      string which must be URI compliant.
+	      <command>web::yourencrypt</command> takes a string as
+	      input and generates a string which must be URI compliant.
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para>
 	      <command>web::yourdecrypt</command> accepts one argument
-	      web::yourdecrypt takes a string as input and returns a
-	      string.
+	      <command>web::yourdecrypt</command> takes a string as input
+	      and returns a string.
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para>symmetry: <emphasis><command>$in ==
+	    <para>Symmetry: <emphasis><command>$in ==
 		  [web::yourdecrypt [web::yourencrypt
 		  $in]]</command></emphasis>
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para>
-	      error messaging: <emphasis>TCL_OK</emphasis> for
+	      Error messaging: <emphasis>TCL_OK</emphasis> for
 	      success. <emphasis>TCL_ERROR</emphasis> for any error
 	      during en-/decryption. <emphasis>TCL_CONTINUE</emphasis>
 	      for unknown encryption type (pass on to next method).
@@ -2814,7 +2892,7 @@ Hello, world!
   <section id="uri-html-_en-decoding">
     <title>Uri-/html- en-/decoding</title>
     <section id="web::htmlify">
-      <title>web::htmlify</title>
+      <title><command>web::htmlify</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::htmlify</command>
@@ -2826,12 +2904,15 @@ Hello, world!
 	Options: <option>-numeric</option>.
       </para>
       <para>
-	Return HTML-compliant <option>text</option> with HTML
-	encoded entities in mnemonic form (e.g. &amp;auml;) or in numeric form (e.g. &amp;#228;) if the option <option>-numeric</option> is specified. Multibyte characters are encoded as &amp;#&lt;numeric&gt;;.
+	Returns HTML-compliant <option>text</option> with HTML
+	encoded entities in mnemonic form (e.g. &amp;auml;) or in numeric
+	form (e.g. &amp;#228;) if the option <option>-numeric</option>
+	is specified. Multibyte characters are encoded as 
+	&amp;#&lt;numeric&gt;;.
       </para>
     </section>
     <section id="web::dehtmlify">
-      <title>web::dehtmlify</title>
+      <title><command>web::dehtmlify</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::dehtmlify</command>
@@ -2839,11 +2920,14 @@ Hello, world!
 	</cmdsynopsis>
       </para>
       <para>
-	Remove all HTML-tags from <option>text</option> and translates all HTML entities to their corresponding characters (also handles encoded multibyte characters encoded with &amp;#&lt;numeric&gt;;).
+	Removes all HTML-tags from <option>text</option> and translates
+	all HTML entities to their corresponding characters (also
+	handles encoded multibyte characters encoded with
+	&amp;#&lt;numeric&gt;;).
       </para>
     </section>
     <section id="web::uriencode">
-      <title>web::uriencode</title>
+      <title><command>web::uriencode</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::uriencode</command>
@@ -2851,21 +2935,21 @@ Hello, world!
       </cmdsynopsis>
       </para>
       <para>
-	Return URI-compliant <option>text</option>.
+	Returns URI-compliant <option>text</option>.
       </para>
     </section>
     <section id="web::uridecode">
-      <title>web::uridecode</title>
+      <title><command>web::uridecode</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::uridecode</command>
 	  <arg choice="req"><replaceable>text</replaceable></arg>
       </cmdsynopsis>
       </para>
-      <para>Decode URI-compliant <option>text</option>.
+      <para>Decodes URI-compliant <option>text</option>.
       </para>
       <example>
-	<title>web::htmlify</title>
+	<title><command>web::htmlify</command></title>
 	<programlisting>
 % web::htmlify &lt;
 &amp;lt;
@@ -2884,10 +2968,10 @@ Hello, world!
   <section id="inter-process_and_-system_communication">
     <title>Inter-process/-system communication</title>
     <para>
-      Send to and receive from sockets.
+      Sends to and receives from sockets.
     </para>
     <section id="web::send">
-      <title>web::send</title>
+      <title><command>web::send</command></title>
       <para>
 
 
@@ -2899,7 +2983,7 @@ Hello, world!
 	  <arg choice="opt"><replaceable>flags</replaceable></arg>
 	</cmdsynopsis>
 
-	Send the command
+	Sends the command
 	<option><replaceable>cmdNr</replaceable></option> and the
 	message <option><replaceable>message</replaceable></option> to
 	channel
@@ -2918,7 +3002,7 @@ Hello, world!
       </para>
     </section>
     <section id="web::recv">
-      <title>web::recv</title>
+      <title><command>web::recv</command></title>
       <para>
 
 
@@ -2933,13 +3017,13 @@ Hello, world!
 	Receives a message from <option>channelName</option>. The
 	other arguments are the names of the corresponding variables
 	which will contain the message.  The flags are returned
-	numeric. (To handle these flags, use the web::msgflag
-	function).
+	numeric. (To handle these flags, use the 
+	<command>web::msgflag</command>	function).
 
       </para>
     </section>
     <section id="web::msgflag">
-      <title>web::msgflag</title>
+      <title><command>web::msgflag</command></title>
       <para>
 
 	<cmdsynopsis>
@@ -2948,14 +3032,14 @@ Hello, world!
 	  <arg choice="opt"><replaceable>testflags</replaceable></arg>
 	</cmdsynopsis>
 
-	Set or test flags.
+	Sets or tests flags.
 
 	<variablelist>
 	  <varlistentry>
 	    <term><command>web::msgflag</command></term>
 	    <listitem>
 	      <para>
-		returns a list of all known message flags.
+		Returns a list of all known message flags.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -2964,7 +3048,7 @@ Hello, world!
 	      <option><replaceable>flags</replaceable></option></term>
 	    <listitem>
 	      <para>
-		returns the integer representation of the flags listed
+		Returns the integer representation of the flags listed
 		in <option>flags</option>.
 	      </para>
 	    </listitem>
@@ -2975,7 +3059,7 @@ Hello, world!
 	      <option><replaceable>testflags</replaceable></option></term>
 	    <listitem>
 	      <para>
-		returns 1, if the flags in <option>testflags</option>
+		Returns 1, if the flags in <option>testflags</option>
 		are set in <option>flags</option>.
 	      </para>
 	    </listitem>
@@ -2992,12 +3076,13 @@ Hello, world!
     <para>
       Note that these commands are implemented as dummies in the CGI
       version of Websh only. They don't do anything except for
-      web::initializer and web::finalizer, which just evaluate the
+      <command>web::initializer</command> and 
+      <command>web::finalizer</command>, which just evaluate the
       code provided in the argument.
     </para>
 
     <section id="web::initializer">
-      <title>web::initializer</title>
+      <title><command>web::initializer</command></title>
       <para>
 
 
@@ -3010,15 +3095,22 @@ Hello, world!
 	<command>source</command> several modules which each call
 	their initialization code.
 
-Also note that this code eval'd when it is first requested and read in its normal script sequence, and not prior to any other code in the script.
+	Also note that this code eval'd when it is first requested and
+	read in its normal script sequence, and not prior to any other
+	code in the script.
       </para>
       <para>
-Calling <command>web::loglevel</command> and <command>web::logdest</command> in any <command>web::initializer</command> will tag these log levels and destinations as not to be deleted, after the request ends. This log condifguration will therefore also be available in the finalizer code, which is only eval'd after
-the last request in the interpreter has been cleaned up.
+      Calling <command>web::loglevel</command> and
+      <command>web::logdest</command> in any 
+      <command>web::initializer</command> will tag these log levels
+      and destinations as not to be deleted, after the request ends.
+      This log condifguration will therefore also be available in
+      the finalizer code, which is only eval'd after the last request
+      in the interpreter has been cleaned up.
       </para>
 
 	<example>
-	  <title>logging in web::initializer</title>
+	  <title>logging in <command>web::initializer</command></title>
 	  <programlisting>
 &gt; cat test.ws3
 web::initializer {
@@ -3054,14 +3146,14 @@ Note that in the above example the lifetime of the interpreter class is set to 3
 
     </section>
     <section id="web::finalizer">
-      <title>web::finalizer</title>
+      <title><command>web::finalizer</command></title>
       <para>
 
 	<cmdsynopsis>
 	  <command>web::finalizer</command> <arg choice="req"><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
-	Register code to be exectuted when the interpreter for this
+	Registers code to be exectuted when the interpreter for this
 	Websh script is deleted. <command>web::finalize</command>
 	will then call each <option>code</option> block that has been
 	registered, starting with the most recently added
@@ -3070,7 +3162,7 @@ Note that in the above example the lifetime of the interpreter class is set to 3
       </para>
     </section>
     <section id="web::finalize">
-      <title>web::finalize</title>
+      <title><command>web::finalize</command></title>
       <para>
 
 
@@ -3078,7 +3170,7 @@ Note that in the above example the lifetime of the interpreter class is set to 3
 	  <command>web::finalize</command>
 	</cmdsynopsis>
 
-	Execute finalizer code that has been registerd using
+	Executes finalizer code that has been registered using
 	<command>web::finalizer</command>, starting with the most
 	recently added <option>code</option>.  Note that this command
 	is executed automatically and does not have to be called
@@ -3086,7 +3178,7 @@ Note that in the above example the lifetime of the interpreter class is set to 3
 	interpreter is deleted:
 
 	<example>
-	  <title>web::finalize hook</title>
+	  <title><command>web::finalize</command> hook</title>
 	  <programlisting>
 rename web::finalize web::finalize.orig
 proc web::myFinalize {} {
@@ -3099,7 +3191,7 @@ proc web::myFinalize {} {
       </para>
     </section>
     <section id="web::maineval">
-      <title>web::maineval</title>
+      <title><command>web::maineval</command></title>
       <para>
 
 
@@ -3107,7 +3199,7 @@ proc web::myFinalize {} {
 	  <command>web::maineval</command> <arg choice="req"><replaceable>code</replaceable></arg>
 	</cmdsynopsis>
 
-	Execute code in the &quot;main&quot; interpreter of mod_websh. (Note
+	Executes code in the &quot;main&quot; interpreter of mod_websh. (Note
 	that this is synchronized, i.e. the main interpreter is locked for
 	exclusive access by the current thread within the process. However,
 	running Apache in a prefork setting sets up a main interpreter per
@@ -3117,7 +3209,7 @@ proc web::myFinalize {} {
       </para>
     </section>
     <section id="web::interpclasscfg">
-      <title>web::interpclasscfg</title>
+      <title><command>web::interpclasscfg</command></title>
       <para>
 
 
@@ -3131,7 +3223,7 @@ proc web::myFinalize {} {
 	Properties are: <option>maxrequests</option>,
 	<option>maxttl</option>, <option>maxidletime</option>
 
-	Set or accesses properties of the interpreter class
+	Sets or accesses properties of the interpreter class
 	<option>classid</option>.
 
 	<variablelist>
@@ -3144,7 +3236,7 @@ proc web::myFinalize {} {
 	    </term>
 	    <listitem>
 	      <para>
-		gets or sets the maximum number of requests
+		Sets or gets the maximum number of requests
 		interpreters of this class should handle. If
 		<option>value</option> is 0, handle an unlimited
 		number of requests. Default: 1.
@@ -3158,7 +3250,7 @@ proc web::myFinalize {} {
 	      <optional><option><replaceable>value</replaceable></option></optional></term>
 	    <listitem>
 	      <para>
-		gets or sets the maximum number of seconds
+		Sets or gets the maximum number of seconds
 		interpreters of this class should live. If
 		<option>value</option> is 0, it lives
 		forever. Default: 0.
@@ -3172,7 +3264,7 @@ proc web::myFinalize {} {
 	    </term>
 	    <listitem>
 	      <para>
-		gets or sets the maximum number of seconds
+		Sets or gets the maximum number of seconds
 		interpreters of this class should live beeing idle. If
 		<option>value</option> is 0, no idle timeout is
 		assumed. Default: 0.
@@ -3184,7 +3276,7 @@ proc web::myFinalize {} {
       </para>
     </section>
     <section id="web::interpcfg">
-      <title>web::interpcfg</title>
+      <title><command>web::interpcfg</command></title>
       <para>
 
 
@@ -3205,7 +3297,7 @@ proc web::myFinalize {} {
 		<term><command>web::interpcfg</command></term>
 		<listitem>
 		  <para>
-		    returns <option>classid</option> of current
+		    Returns <option>classid</option> of current
 		    interpreter.
 		  </para>
 		</listitem>
@@ -3215,7 +3307,7 @@ proc web::myFinalize {} {
 		  <option>numreq</option></term>
 		<listitem>
 		  <para>
-		    gets the number of requests handled by this
+		    Returns the number of requests handled by this
 		    interpreter.
 		  </para>
 		</listitem>
@@ -3226,7 +3318,7 @@ proc web::myFinalize {} {
 		  <optional><option>boolean</option></optional></term>
 		<listitem>
 		  <para>
-		    gets or sets the flag indicating this interpreter
+		    Sets or gets the flag indicating this interpreter
 		    should be removed after handling the current request.
 		  </para>
 		</listitem>
@@ -3236,7 +3328,7 @@ proc web::myFinalize {} {
 		  <option>starttime</option></term>
 		<listitem>
 		  <para>
-		    returns the time in seconds since the epoch, this
+		    Returns the time in seconds since the epoch, this
 		    interpreter was started.
 		  </para>
 		</listitem>
@@ -3246,7 +3338,7 @@ proc web::myFinalize {} {
 		  <option>lastusedtime</option></term>
 		<listitem>
 		  <para>
-		    returns the time in seconds since the epoch, this
+		    Returns the time in seconds since the epoch, this
 		    interpreter was last used (starttime in case of first
 		    request).
 		  </para>
@@ -3257,7 +3349,7 @@ proc web::myFinalize {} {
       </para>
     </section>
     <section id="web::interpmap">
-      <title>web::interpmap</title>
+      <title><command>web::interpmap</command></title>
       <para>
 
 
@@ -3280,7 +3372,7 @@ proc web::myFinalize {} {
 	class.
 
         <example>
-          <title>web::interpmap</title>
+          <title><command>web::interpmap</command></title>
           <programlisting>
 proc web::interpmap {filename} {
     if {[string match "/path/to/myApp" $filename]} {
@@ -3296,9 +3388,9 @@ proc web::interpmap {filename} {
 }	  </programlisting>
 	</example>
 
-        The default implementation of web::interpmap is
+        The default implementation of <command>web::interpmap</command> is
 	<programlisting>proc web::interpmap {filename} {return $filename}</programlisting>
-        which sets up a separate interpreter class for every requested URL
+        This sets up a separate interpreter class for every requested URL
 	and takes the file itself as script.
       </para>
 
@@ -3308,7 +3400,7 @@ proc web::interpmap {filename} {
   <section id="misc_commands">
     <title>Miscellaneous commands</title>
     <section id="web::match">
-      <title>web::match</title>
+      <title><command>web::match</command></title>
       <para>
 
 
@@ -3320,20 +3412,21 @@ proc web::interpmap {filename} {
 	</cmdsynopsis>
 
 	In case <option><replaceable>searchFor</replaceable></option> exists in
-	<option><replaceable>listToBeSearched</replaceable></option>, web::match returns
+	<option><replaceable>listToBeSearched</replaceable></option>,
+	<command>web::match</command> returns
 	<option><replaceable>result</replaceable></option>, otherwise an empty string.
 
       </para>
       <para>
 
-	web::match treats listToBeSearched as a list. Thus, <emphasis>web::match
-	  &quot;ok&quot; {tv dvd vcr} dvd</emphasis> will return
-	<emphasis>ok</emphasis>.
+	<command>web::match</command> treats listToBeSearched as a list. 
+	Thus, <emphasis><command>web::match &quot;ok&quot; {tv dvd vcr} dvd</command></emphasis> 
+	will return <emphasis>ok</emphasis>.
 
       </para>
     </section>
     <section id="web::tempfile">
-      <title>web::tempfile</title>
+      <title><command>web::tempfile</command></title>
       <para>
 	<cmdsynopsis>
 	  <command>web::tempfile</command>
@@ -3362,7 +3455,7 @@ proc web::interpmap {filename} {
 	<cmdsynopsis><command>web::tempfile</command>
 	  <arg choice="req">-remove</arg>
 	</cmdsynopsis>
-      The <option>-remove</option> option attemps to clean up all temporary 
+      Attempts to clean up all temporary 
       files previously created using <command>web::tempfile</command> and 
       resets the internal list of these file names.
       </para>

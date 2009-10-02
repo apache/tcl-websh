@@ -1,3 +1,10 @@
+2009-10-02 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* doc/quickref.xml, doc/quickref.xsl:
+	- Some reformatting (mark all commands as commands,
+	  removed redundant <hr> tag in xsl)
+	- Typos fixed, consistency improved
+	- Some minor clarifications added
+	
 2009-09-14 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* <various sources>:
 	Changed version to 3.6.0b5
