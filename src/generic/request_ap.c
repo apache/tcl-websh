@@ -13,6 +13,7 @@
  *
  */
 
+#include <ctype.h>
 #include "tcl.h"
 #include "hashutl.h"
 #include "webutl.h"
@@ -99,7 +100,6 @@ int requestFillRequestValues_AP(Tcl_Interp * interp, RequestData * requestData)
        otherwise don't set them for security reasons */
     if (!remote_user) {
 
-      int ret = 0;
       const char *pw = NULL;
       const char *user = NULL;
       const char *auth_line;
