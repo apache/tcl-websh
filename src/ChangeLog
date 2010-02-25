@@ -1,3 +1,9 @@
+2010-02-25 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/logutl.c, src/generic/request_ap.c:
+	- Make -Wall happy (removed unused variables, properly
+	  initialize return variable that was not always set in logImpl
+	  (Thanks to Mikhail Teterin for the hint and patch)
+	
 2009-10-02 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* doc/quickref.xml, doc/quickref.xsl:
 	- Some reformatting (mark all commands as commands,
