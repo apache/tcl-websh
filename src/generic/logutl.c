@@ -86,7 +86,7 @@ int logImpl(Tcl_Interp * interp, LogData * logData,
 {
 
     LogLevel *logLevel = NULL;
-    int res;
+    int res = TCL_OK;
 
     if ((logData == NULL) || (levelStr == NULL) || (msg == NULL))
 	return TCL_ERROR;
