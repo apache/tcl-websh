@@ -194,7 +194,7 @@ int Web_DecryptD(ClientData clientData,
     keyBytes = Tcl_GetByteArrayFromObj(key, &keyLen);
 
     if (keyLen < 1) {
-	LOG_MSG(interp, WRITE_LOG | SET_RESULT,
+	LOG_MSG(interp, SET_RESULT,
 		__FILE__, __LINE__,
 		"web::decryptd", WEBLOG_ERROR, "too short key", NULL);
 	return TCL_ERROR;
@@ -219,7 +219,7 @@ int Web_DecryptD(ClientData clientData,
 	tmp = decryptNcaD(key, objv[1]);
 
 	if (tmp == NULL) {
-	    LOG_MSG(interp, WRITE_LOG,
+	    LOG_MSG(interp, SET_RESULT,
 		    __FILE__, __LINE__,
 		    "web::decryptd", WEBLOG_DEBUG, "internal error", NULL);
 	    return TCL_ERROR;
@@ -231,7 +231,9 @@ int Web_DecryptD(ClientData clientData,
 	out = crcCheck(tmp);	/* rturns NULL in case of error */
 
 	if (out == NULL) {
-	    LOG_MSG(interp, WRITE_LOG | SET_RESULT,
+	  /* just set interp result, but don't actually log: will be logged by
+	     caller */
+	    LOG_MSG(interp, SET_RESULT,
 		    __FILE__, __LINE__,
 		    "web::decryptd", WEBLOG_ERROR, "checksum mismatch", NULL);
 

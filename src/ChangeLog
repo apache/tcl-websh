@@ -1,3 +1,7 @@
+2010-05-03 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/nca_d.c:
+	- removed redundant log in web::decryptd (handeled by caller)
+	
 2010-02-25 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/logutl.c, src/generic/request_ap.c:
 	- Make -Wall happy (removed unused variables, properly
