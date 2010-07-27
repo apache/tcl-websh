@@ -6,6 +6,7 @@
 ServerRoot "$CWD"
 
 PidFile "$CWD/logs/httpd.pid"
+LockFile "$CWD/logs/accept.lock"
 
 Timeout 300
 
