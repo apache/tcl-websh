@@ -19,6 +19,12 @@ Known Issues
 Trunk
 -----
 
+- Improved configure.in and Makefile.in for Unix builds
+
+- Remove redundant log in web::decryptd
+
+- Made -Wall happy when compiling on Unix (removed unused vars etc.)
+
 - Some reformatting, typo fixes and consistency improvements in quickref
 
 

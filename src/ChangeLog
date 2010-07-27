@@ -1,3 +1,17 @@
+2010-07-27 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* doap_websh.rdf:
+	- Fixed typo in description
+	* src/apachetests/conf/server.conf.tcl:
+	- Added LockFile config (to make sure directory exists)
+	* src/unix/Makefile.in, src/unix/configure.in:
+	- Also transfer CFLAGS_WARNING from tclConfig.sh
+	* src/unix/Makefile.in:
+	- Fixed redefinition warnings when including 
+	  TCL_DEFS for Apache > 2 and Tcl >= 8.6
+	- Fixed apachetests for Darwin (LIBRARY_PATH variable)
+	* src/generic/messages.c:
+	- Changed variable definition to avoid strange casting warnings
+
 2010-05-03 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/nca_d.c:
 	- removed redundant log in web::decryptd (handeled by caller)

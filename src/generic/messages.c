@@ -114,7 +114,7 @@ int Web_Recv(ClientData clientData,
 {
 
     int mode = 0;
-    char *data = NULL;
+    void *data = NULL;
     TCLCONST char *res = NULL;
     int cmdcode = 0;
     int flags = 0;
@@ -145,15 +145,15 @@ int Web_Recv(ClientData clientData,
 	return TCL_ERROR;
     }
 
-    if (receive_msg(tc, &cmdcode, &flags, &size, (void **) &data) == -1) {
+    if (receive_msg(tc, &cmdcode, &flags, &size, &data) == -1) {
 	if (data)
 	    Tcl_Free((char *) data);
 	Tcl_PosixError(interp);
 	return TCL_ERROR;
     }
 
-    res = Tcl_SetVar(interp, Tcl_GetString(objv[3]), data, TCL_LEAVE_ERR_MSG);
-    Tcl_Free(data);
+    res = Tcl_SetVar(interp, Tcl_GetString(objv[3]), (char *) data, TCL_LEAVE_ERR_MSG);
+    Tcl_Free((char *) data);
     if (res == NULL)
 	return TCL_ERROR;
 

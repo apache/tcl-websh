@@ -94,6 +94,7 @@ CC = @CC@
 CFLAGS_DEBUG = @CFLAGS_DEBUG@
 CFLAGS_DEFAULT = @CFLAGS_DEFAULT@
 CFLAGS_OPTIMIZE = @CFLAGS_OPTIMIZE@
+CFLAGS_WARNING = @CFLAGS_WARNING@
 CLEANFILES = @CLEANFILES@
 EXEEXT = @EXEEXT@
 LDFLAGS_DEFAULT = @LDFLAGS_DEFAULT@
@@ -107,8 +108,10 @@ SHLIB_LD = @SHLIB_LD@
 Platform=$(shell uname -s)
 ifeq ($(Platform),Darwin)
 SHLIB_LD_CURRENT = $(CC) -bundle -bundle_loader $(HTTPD_BIN) $(LDFLAGS)
+LDLIBPATHVAR = DYLD_LIBRARY_PATH
 else
 SHLIB_LD_CURRENT = $(SHLIB_LD) $(TCL_LD_FLAGS)
+LDLIBPATHVAR = LD_LIBRARY_PATH
 endif
 SHLIB_LDFLAGS = @SHLIB_LDFLAGS@
 SHLIB_LD_LIBS = @SHLIB_LD_LIBS@
@@ -145,7 +148,10 @@ LDFLAGS = $(LDFLAGS_DEFAULT)
 
 INCLUDES = @TCL_INCLUDES@ $(HTTPD_INCLUDES)
 
-EXTRA_CFLAGS = $(TCL_DEFS) $(PROTO_FLAGS) $(SECURITY_FLAGS) \
+# remove PACKAGE stuff: will cause warnings for Apache >2 and Tcl >=8.5
+FIXED_TCL_DEFS = $(filter-out -DPACKAGE_NAME=% -DPACKAGE_TARNAME=% -DPACKAGE_VERSION=% -DPACKAGE_STRING=% -DPACKAGE_BUGREPORT=% 8.% 9.%, $(TCL_DEFS))
+
+EXTRA_CFLAGS = $(FIXED_TCL_DEFS) $(PROTO_FLAGS) $(SECURITY_FLAGS) \
 	$(MEM_DEBUG_FLAGS) $(KEYSYM_FLAGS) $(NO_DEPRECATED_FLAGS) \
 	$(TCL_EXTRA_CFLAGS)
 
@@ -190,8 +196,8 @@ distdoc: ../../doc/quickref.xml ../../doc/quickref.xsl
 # =============================================================================
 
 test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
-	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
-	export LD_LIBRARY_PATH; \
+	@$(LDLIBPATHVAR)="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
+	export $(LDLIBPATHVAR); \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
 	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
 	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION); export WEB_BIN; \
@@ -201,8 +207,8 @@ test: websh$(VERSION) $(web_LIB_FILE) $(web_OBJECTS)
 	$(TOP_DIR)/unix/websh$(VERSION) webtest.ws3
 
 test.pure: websh$(VERSION).pure $(web_LIB_FILE) $(web_OBJECTS)
-	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
-	export LD_LIBRARY_PATH; \
+	@$(LDLIBPATHVAR)="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
+	export $(LDLIBPATHVAR); \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
 	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
 	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION).pure; export WEB_BIN; \
@@ -212,8 +218,8 @@ test.pure: websh$(VERSION).pure $(web_LIB_FILE) $(web_OBJECTS)
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).pure
 
 test.cov: websh$(VERSION).cov $(web_LIB_FILE) $(web_OBJECTS)
-	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
-	export LD_LIBRARY_PATH; \
+	@$(LDLIBPATHVAR)="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
+	export $(LDLIBPATHVAR); \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
 	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
 	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION).cov; export WEB_BIN; \
@@ -223,8 +229,8 @@ test.cov: websh$(VERSION).cov $(web_LIB_FILE) $(web_OBJECTS)
 	(echo source webtest.ws3) | ../unix/websh$(VERSION).cov
 
 apachetest: mod_websh.so websh
-	@LD_LIBRARY_PATH="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
-	export LD_LIBRARY_PATH; \
+	@$(LDLIBPATHVAR)="$(strip $(TCL_PACKAGE_PATH)):$(TOP_DIR)/unix:$(LD_LIBRARY_PATH)"; \
+	export $(LDLIBPATHVAR); \
 	TCL_LIBRARY="$(TCL_SRC_DIR)/library"; export TCL_LIBRARY; \
 	WEB_LIBRARY=$(TOP_DIR)/unix/$(web_LIB_FILE); export WEB_LIBRARY; \
 	WEB_BIN=$(TOP_DIR)/unix/websh$(VERSION); export WEB_BIN; \
