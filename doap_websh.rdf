@@ -24,7 +24,7 @@
     <homepage rdf:resource="http://tcl.apache.org/websh" />
     <asfext:pmc rdf:resource="http://tcl.apache.org" />
     <shortdesc>Websh is a rapid development environment for building powerful, fast, and reliable web applications in Tcl</shortdesc>
-    <description>Websh is a rapid development environment for building powerful, fast, and reliable web applications in Tcl. Websh is versatile and handles everything from HTML generation to data-base driven one-to-one page customization. Websh can be run CGI environments and as Apache module.
+    <description>Websh is a rapid development environment for building powerful, fast, and reliable web applications in Tcl. Websh is versatile and handles everything from HTML generation to data-base driven one-to-one page customization. Websh can be run in CGI environments and as Apache module.
 </description>
     <bug-database rdf:resource="http://issues.apache.org/bugzilla/buglist.cgi?product=WebSH" />
     <mailing-list rdf:resource="http://tcl.apache.org/websh/subscribe.ws3" />
