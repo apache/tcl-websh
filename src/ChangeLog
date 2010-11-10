@@ -1,3 +1,9 @@
+2010-11-10 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/dispatch.c:
+	- Ignore charset in application/x-www-form-urlencoded rather than
+	  fail to parse body (should be % encoded anyway, so the charset,
+	  which is sent by JavaScript for example shouldn't change the body)
+
 2010-07-27 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* doap_websh.rdf:
 	- Fixed typo in description

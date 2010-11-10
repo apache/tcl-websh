@@ -19,6 +19,8 @@ Known Issues
 Trunk
 -----
 
+- Parse x-www-form-urlencoded forms also if charset is given
+
 - Improved configure.in and Makefile.in for Unix builds
 
 - Remove redundant log in web::decryptd
