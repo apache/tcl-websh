@@ -44,7 +44,7 @@ $Id$
       </para>
       <para>
 	In addition to the examples given here, you might find <ulink
-	  url="http://tcl.apache.org/websh/examples.ws3">http://tcl.apache.org/websh/examples.ws3</ulink>
+	  url="http://tcl.apache.org/websh/examples/">http://tcl.apache.org/websh/examples/</ulink>
 	a useful source of information.
       </para>
     </section>
@@ -920,7 +920,7 @@ d
 	<title>Examples</title>
 	<para>
 	See <ulink
-	  url="http://tcl.apache.org/websh/examples.ws3">http://tcl.apache.org/websh/examples.ws3</ulink>
+	  url="http://tcl.apache.org/websh/examples/">http://tcl.apache.org/websh/examples/</ulink>
 	for several sample application demonstrating Websh's
 	session management facilities.
         </para>
