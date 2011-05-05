@@ -19,6 +19,8 @@ Known Issues
 Trunk
 -----
 
+- Improved apachetests to deal with included conf files
+
 - Parse x-www-form-urlencoded forms also if charset is given
 
 - Improved configure.in and Makefile.in for Unix builds

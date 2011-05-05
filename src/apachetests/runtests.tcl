@@ -41,10 +41,10 @@ apachetest::setbinname $env(HTTPD_BIN)
 
 apachetest::makeconf conf/server.conf {
 
-LoadModule websh_module $env(MOD_WEBSH)
+LoadModule websh_module \"$env(MOD_WEBSH)\"
 AddHandler websh .ws3
 
-WebshConfig [file join [pwd] conf websh.conf]
+WebshConfig \"[file join [pwd] conf websh.conf]\"
 
 }
 

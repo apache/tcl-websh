@@ -1,3 +1,15 @@
+2011-05-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/apachetests/apachetest.tcl, src/apachetests/runtests.tcl:
+	- Get around some double quote issues for the server conf file
+	- Also parse included conf files for modules to load
+	
+2011-04-26 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* doap_websh.rdf:
+	- Adapt to new paths of static web site
+	* doc/quickref.xml:
+	- Fixed links to examples
+	- Consistent lowercase files
+	
 2010-11-10 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/dispatch.c:
 	- Ignore charset in application/x-www-form-urlencoded rather than

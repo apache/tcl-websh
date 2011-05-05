@@ -213,21 +213,34 @@ proc apachetest::getloadmodules { conffile needtoget } {
     close $fl
     set loadline [list]
     # get server root
-    if {![regexp -line "^.*?ServerRoot\\s+(.+?)\"?\\s\$" $confdata match serverroot]} {
+    if {![regexp -line "^.*?ServerRoot\\s+\"?(.+?)\"?\\s\$" $confdata match serverroot]} {
 	error "ServerRoot not found in configuration"
     }
+
+    # try to also parse included conf files (to be sure we get all modules)
+    foreach {include path} [regexp -all -inline -line "^.*?Include\\s+\"?(.+?)\"?\$"\
+	    $confdata] {
+
+	# Some Debian setups enable modules like this:
+	# # Include module configuration:
+	# Include mods-enabled/*.load
+	# Include mods-enabled/*.conf
+	set ifiles [glob -nocomplain [file join $serverroot $path]]
+
+	foreach ifile $ifiles {
+	    set fl [open $ifile r]
+	    append confdata [read $fl]
+	    close $fl
+	}
+    }
+
     foreach mod $needtoget {
 	set found 0
 	foreach m $mod {
-	    if {[regexp -line "^.*?LoadModule\\s+$m\\s+(.+)\$"\
+	    if {[regexp -line "^.*?LoadModule\\s+$m\\s+\"?(.+?)\"?\$"\
 		    $confdata match line]} {
 		set found 1
-		if {[string match "\"*" $serverroot]} {
-		    # Windows path with spaces
-		    lappend loadline "LoadModule $m [file join $serverroot $line]\""
-		} else {
-		    lappend loadline "LoadModule $m [file join $serverroot $line]"
-		}
+		lappend loadline "LoadModule $m \"[file join $serverroot $line]\""
 		break
 	    }
 	}
