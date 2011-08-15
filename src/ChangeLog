@@ -1,3 +1,8 @@
+2011-08-15 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/generic/modwebsh_ap.c:
+	- fixed Web_InterpCfg_AP and Web_InterpClassCfg_AP: NULL terminate
+	  param lists (Thanks to Mark Johnston for the report and patch)
+	
 2011-05-05 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/apachetests/apachetest.tcl, src/apachetests/runtests.tcl:
 	- Get around some double quote issues for the server conf file

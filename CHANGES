@@ -19,6 +19,9 @@ Known Issues
 Trunk
 -----
 
+- Fixed Web_InterpCfg_AP and Web_InterpClassCfg_AP in modwebsh_ap.c
+  (potential segfault for invalid parameters)
+
 - Improved apachetests to deal with included conf files
 
 - Parse x-www-form-urlencoded forms also if charset is given

@@ -197,10 +197,17 @@ int Web_InterpCfg_AP(ClientData clientData,
 	"numrequests",
 	"starttime",
 	"lastusedtime",
-	"retire"
+	"retire",
+	NULL
     };
+
     enum params
-    { INTERP_REQUESTS, INTERP_START, INTERP_LASTUSED, INTERP_RETIRE };
+    {
+      INTERP_REQUESTS,
+      INTERP_START,
+      INTERP_LASTUSED,
+      INTERP_RETIRE
+    };
 
     WebInterp *webInterp = (WebInterp *) clientData;
 
@@ -281,10 +288,18 @@ int Web_InterpClassCfg_AP(ClientData clientData,
     WebInterpClass *webInterpClass = NULL;
     int index;
 
-    static TCLCONST char *classParams[] = { "maxttl", 
-					    "maxidletime", "maxrequests" };
+    static TCLCONST char *classParams[] = {
+      "maxttl", 
+      "maxidletime",
+      "maxrequests",
+      NULL
+    };
     enum params
-    { CLASS_TTL, CLASS_IDLETIME, CLASS_REQUESTS };
+    {
+      CLASS_TTL,
+      CLASS_IDLETIME,
+      CLASS_REQUESTS
+    };
 
     websh_server_conf *conf = (websh_server_conf *) clientData;
 
