@@ -1,3 +1,9 @@
+2011-09-13 Brunner Ronnie <ronnie.brunner@netcetera.ch>
+	* src/unix/configure.in, src/unix/Makefile.in:
+	- added --with-apr and --with-apu to allow more flexibility 
+	  with configure (e.g. to compile w/o manual tweaking for 
+	  paths under OSX Lion)
+
 2011-08-15 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/generic/modwebsh_ap.c:
 	- fixed Web_InterpCfg_AP and Web_InterpClassCfg_AP: NULL terminate

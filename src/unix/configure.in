@@ -192,7 +192,7 @@ AC_SUBST(HTTPD_BIN)
 # --with-apr and --with-apr-util
 #--------------------------------------------------------------------
 # needed for Apache httpd 2.2.4 (and others) if Apache httpd is configured
-# with --with-apr and/or --with-apr-util -> header files are missing in 
+# with --with-apr and/or --with-apu -> header files are missing in 
 # installation of httpd
 
 AC_ARG_WITH(aprinclude, [  --with-aprinclude       directory containing apr header files.], with_aprinclude=${withval}, with_aprinclude=NA)
@@ -225,6 +225,44 @@ if test x"${with_apuinclude}" != xNA ; then
 else
   APU_INCLUDES=
   AC_SUBST(APU_INCLUDES)
+fi
+
+if test "`uname -s`" = "Darwin" ; then
+ shlibext=dylib
+else
+ shlibext=so
+fi
+ 
+AC_ARG_WITH(apr, [  --with-apr              directory containing apr library.], with_apr=${withval}, with_apr=NA)
+
+if test x"${with_apr}" != xNA ; then
+  AC_MSG_CHECKING(for apache runtime (apr) library)
+  if test -f "${with_apr}/libapr-1.${shlibext}" ; then
+      echo "found ${with_apr}"
+      APR_LIB=" -L\"${with_apr}\" -lapr-1"
+      AC_SUBST(APR_LIB)
+  else
+      AC_MSG_ERROR([${with_apr}: directory does not contain apr library libapr-1.${shlibext}])
+  fi
+else
+  APR_LIB=
+  AC_SUBST(APR_LIB)
+fi
+
+AC_ARG_WITH(apu, [  --with-apu              directory containing apr util library.], with_apu=${withval}, with_apu=NA)
+
+if test x"${with_apu}" != xNA ; then
+  AC_MSG_CHECKING(for apache runtime utils (apu) library)
+  if test -f "${with_apu}/libaprutil-1.${shlibext}" ; then
+      echo "found ${with_apu}"
+      APU_LIB=" -L\"${with_apu}\" -laprutil-1"
+      AC_SUBST(APU_LIB)
+  else
+      AC_MSG_ERROR([${with_apu}: directory does not contain apu library libaprutil-1.${shlibext}])
+  fi
+else
+  APU_LIB=
+  AC_SUBST(APU_LIB)
 fi
 
 #--------------------------------------------------------------------

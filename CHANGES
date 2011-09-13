@@ -19,6 +19,9 @@ Known Issues
 Trunk
 -----
 
+- Added --with-apr and --with-apu to allow more flexible configuration
+  with configure
+
 - Fixed Web_InterpCfg_AP and Web_InterpClassCfg_AP in modwebsh_ap.c
   (potential segfault for invalid parameters)
 
