@@ -101,7 +101,7 @@ cfgdir = $(INSTALL_PREFIX)/conf
 
 # compiler, linker, and other binaries
 CC = cl
-CCLD = link
+CCLD = $(CC)
 INSTALL = xcopy /y
 
 
@@ -118,9 +118,9 @@ OBJEXT = obj
 
 EXEC_CFLAGS = /D"_CONSOLE"
 !IF "$(DEBUG)" == "1"
-SHLIB_CFLAGS = /DLL
+SHLIB_CFLAGS = /LDd /MDd /Gy
 !ELSE
-SHLIB_CFLAGS = /DLL
+SHLIB_CFLAGS = /LD /MD /Gy
 !ENDIF
 
 # TCL stuff
@@ -159,11 +159,11 @@ EXTRA_CFLAGS = $(TCL_DEFS)
 
 !IF "$(DEBUG)" == "0"
 CFLAGS = $(CFLAGS_DEFAULT) $(CFLAGS_OPTIMIZE) $(EXTRA_CFLAGS) $(INCLUDES)
-LD_CFLAGS = 
+LD_CFLAGS =  $(CFLAGS_DEFAULT) $(CFLAGS_OPTIMIZE)
 DEFAULT_MSVCRT=msvcrt.lib
 !ELSE
 CFLAGS = $(CFLAGS_DEFAULT) $(CFLAGS_DEBUG) $(EXTRA_CFLAGS) $(INCLUDES)
-LD_CFLAGS = /DEBUG
+LD_CFLAGS = $(CFLAGS_DEFAULT)
 DEFAULT_MSVCRT=msvcrtd.lib
 !ENDIF
 
@@ -221,22 +221,22 @@ websh.exe: websh$(VERSION).exe websh$(VERSION).dll
 mod_websh.so: mod_websh$(VERSION).so websh$(VERSION).dll
 
 websh$(VERSION).exe: tclAppInit.$(OBJEXT) websh$(VERSION).dll
-	$(CCLD) $(LD_CFLAGS) \
+	$(CCLD) $(LD_CFLAGS) $(EXEC_CFLAGS) \
 	tclAppInit.$(OBJEXT) websh$(VERSION).lib \
-	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) \
-	/out:websh$(VERSION).exe \
-	/nodefaultlib:$(DEFAULT_MSVCRT)
+	$(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) $(TCL_LIBS) -o websh$(VERSION).exe \
+	/link /nodefaultlib:$(DEFAULT_MSVCRT)
 
 mod_websh$(VERSION).so: $(web_OBJECTS_ap) websh$(VERSION).dll
-	$(CCLD) $(LD_CFLAGS) $(SHLIB_CFLAGS) /out:mod_websh$(VERSION).so \
+	$(CCLD) $(LD_CFLAGS) $(SHLIB_CFLAGS) -o mod_websh$(VERSION).so \
 	$(web_OBJECTS_ap) websh$(VERSION).lib $(TCL_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(HTTPD_LIBS) $(TCL_LIBS) \
-	/nodefaultlib:$(DEFAULT_MSVCRT) /subsystem:windows
+	/link /dll /nodefaultlib:msvcrt.lib /subsystem:windows
 
 websh$(VERSION).dll: $(web_OBJECTS)
-        $(CCLD) $(LD_CFLAGS) $(SHLIB_CFLAGS) /out:websh$(VERSION).dll \
+        $(CCLD) $(LD_CFLAGS) $(SHLIB_CFLAGS) -o websh$(VERSION).dll \
 	$(web_OBJECTS) $(TCL_LIB_SPEC) $(TCL_STUB_LIB_SPEC) \
-	$(TCL_LIBS) /nodefaultlib:$(DEFAULT_MSVCRT) /subsystem:windows
+	$(TCL_LIBS) /link /dll \
+	/nodefaultlib:$(DEFAULT_MSVCRT) /subsystem:windows
 
 test: websh.exe
 	set TCL_LIBRARY="$(TCL_PREFIX)/lib"
