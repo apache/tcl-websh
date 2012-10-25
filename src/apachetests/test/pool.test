@@ -6,26 +6,29 @@ set testfilename1 "pool.ws3"
 set testfilename2 "pool2.ws3"
 
 ::tcltest::test pool-1.1 {interp pool test} {
-    apachetest::start {} {
-	set page [ ::http::geturl "${urlbase}$testfilename1" ]
-	set page [ ::http::geturl "${urlbase}$testfilename1" ]
-	set page [ ::http::geturl "${urlbase}$testfilename1" ]
-    }
+    set page [ ::http::geturl "${urlbase}$testfilename1" ]
+    set page [ ::http::geturl "${urlbase}$testfilename1" ]
+    set page [ ::http::geturl "${urlbase}$testfilename1" ]
     set match [::http::data $page]
     set match
 } {Counter is 1}
 
+
 ::tcltest::test pool-1.2 {interp pool test} {
+    set match0 "no response"
     set match1 "no response"
     set match2 "no response"
     set match3 "no response"
     set match4 "no response"
-    apachetest::start {} {
+    catch {
+	set page [ ::http::geturl "${urlbase}$testfilename2?cmd=max&n=10&retire=1" ]
+	set page [ ::http::geturl "${urlbase}$testfilename2?cmd=max&n=10&retire=1" ]
+	set match0 [::http::data $page]
 	set page [ ::http::geturl "${urlbase}$testfilename2" ]
 	set page [ ::http::geturl "${urlbase}$testfilename2" ]
 	set page [ ::http::geturl "${urlbase}$testfilename2" ]
 	set match1 [::http::data $page]
-	set page [ ::http::geturl "${urlbase}$testfilename2?cmd=max" ]
+	set page [ ::http::geturl "${urlbase}$testfilename2?cmd=max&n=7" ]
 	set match2 [::http::data $page]
 	set page [ ::http::geturl "${urlbase}$testfilename2" ]
 	set match3 [::http::data $page]
@@ -34,9 +37,10 @@ set testfilename2 "pool2.ws3"
 	set page [ ::http::geturl "${urlbase}$testfilename2" ]
 	set match4 [::http::data $page]
     }
-    set res "\n  $match1\n  $match2\n  $match3\n  $match4"
-} {
-  Counter is 2-3, maxrequests is 10
-  Counter is 3-4, reset maxrequests to 7
-  Counter is 4-5, maxrequests is 7
-  Counter is 0-1, maxrequests is 7}
+    set res "$match0\n$match1\n$match2\n$match3\n$match4"
+} {Retire interpreter
+Counter is 0-1, reset maxrequests to 10
+Counter is 2-3, maxrequests is 10
+Counter is 3-4, reset maxrequests to 7
+Counter is 4-5, maxrequests is 7
+Counter is 0-1, maxrequests is 7}

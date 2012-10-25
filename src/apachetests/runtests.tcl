@@ -2,7 +2,8 @@
 # the next line restarts using tclsh \
 exec tclsh "$0" "$@"
 
-# set the port apache should bind to for the tests
+# set host and port apache should bind to for the tests
+set host localhost
 set port 8081
 
 source apachetest.tcl
@@ -19,6 +20,9 @@ if {![info exists env(HTTPD_BIN)] || ![string length $env(HTTPD_BIN)]} {
 	    # direct call (just binary on command line)
 	    set env(HTTPD_BIN) [lindex $argv 0]
 	}
+	# fix commandline for startserver
+	set argv [lreplace $argv 0 0]
+	incr argc -1
     } elseif {[file exists httpd]} {
 	set env(HTTPD_BIN) [file join [pwd] httpd]
     } else {
@@ -50,15 +54,38 @@ WebshConfig \"[file join [pwd] conf websh.conf]\"
 
 apachetest::makewebshconf conf/websh.conf
 
+# do we only need to start the server?
+if {[lindex $argv 0] == "startserver"} {
+    apachetest::startserver
+    exit
+}
+
+# we run the full suite
+
 # we do this to keep tcltest happy - it reads argv...
-set commandline [lindex $argv 1]
 set argv {}
 
-switch -exact $commandline {
-    startserver {
-	apachetest::startserver
-    }
-    default {
-	source [file join test mod_websh.test]
+# needed by tests
+set urlbase "http://$host:$port/"
+
+package require tcltest
+package require http
+
+# Test stanzas are created by giving the test a name and a
+# description.  The code is then executed, and the results
+# compared with the desired result, which is placed after the
+# block of code.  See man tcltest for more information.
+
+# start server only once for all tests (put in foreach to start a 
+# server per test file)
+
+apachetest::start {} {
+    foreach file [glob -nocomplain test/*.test] {
+	puts "Running test file $file"
+	if {[catch {source $file} msg]} {
+	    puts "Running test file $file failed: $msg"
+	}
     }
 }
+
+::tcltest::cleanupTests

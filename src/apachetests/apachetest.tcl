@@ -108,16 +108,27 @@ proc apachetest::start { options code } {
     }
 
     global tcl_platform
+    global kerr 
+    set kerr 0
     if {[string equal $tcl_platform(platform) "windows"]} {
-	exec taskkill /f /pid $serverpid
-	set forcekill "exec taskkill /f /pid $serverpid"
+	if {[catch {exec taskkill /f /pid $serverpid} msg]} {
+	    puts stderr "Couldn't stop Apache: $msg"
+	    incr kerr
+	}
+	set forcekill "catch {exec taskkill /f /pid $serverpid} msg"
     } else {
-	exec kill $serverpid
-	set forcekill "exec kill -9 $serverpid"
+	if {[catch {exec kill $serverpid}]} {
+	    puts stderr "Couldn't stop Apache: $msg"
+	    incr kerr
+	}
+	set forcekill "catch {exec kill -9 $serverpid} msg"
     }
     set kill9 [after 2500 "
 	puts stderr \"Can't kill process, trying with kill -9\";
-	$forcekill
+	if {\[$forcekill\]} {
+	    puts stderr \"Couldn't stop Apache: \$msg\"
+	    incr kerr
+	}
     "]
     global waiting
     set waiting 1
@@ -127,7 +138,9 @@ proc apachetest::start { options code } {
 	vwait waiting
     }
     after cancel $kill9
-    puts "Apache stopped"
+    if {!$kerr} {
+	puts "Apache stopped"
+    }
     catch {file delete logs/httpd.pid}
 }
 

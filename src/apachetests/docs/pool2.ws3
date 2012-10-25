@@ -20,7 +20,11 @@ web::initializer {
 	} else {
 	    set counter 1
 	}
-	web::interpclasscfg $classid maxrequests 7
+	web::interpclasscfg $classid maxrequests [web::param n 7]
+	if {[web::param retire 0]} {
+	    web::put "Retire interpreter\n"
+	    web::interpcfg retire 1
+	}
 	web::put "Counter is [web::interpcfg numreq]-$counter, reset maxrequests to [web::interpclasscfg $classid maxrequests]"
     }
 }

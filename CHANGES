@@ -19,6 +19,9 @@ Known Issues
 Trunk
 -----
 
+- Apache tests can now run with httpd 2.4 and are cleaned up to run
+  repeadedly if needed. Also server is only started once by default
+
 - Added --with-apr and --with-apu to allow more flexible configuration
   with configure
 

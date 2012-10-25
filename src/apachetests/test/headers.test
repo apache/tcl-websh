@@ -4,29 +4,27 @@
 
 set testfilename1 "headers.ws3"
 
-apachetest::start {} {
+::tcltest::test header-1.1 {websh header test} {
+    ### fixme: this can't work, because state doesn't handle
+    ### multiple headers correctly anyway ...
+    #set page [ ::http::geturl "${urlbase}$testfilename1" ]
 
-    ::tcltest::test header-1.1 {websh header test} {
-	### fixme: this can't work, because state doesn't handle
-	### multiple headers correctly anyway ...
-	#set page [ ::http::geturl "${urlbase}$testfilename1" ]
-
-	# other approach (connect directly)
-	set s [socket $host $port]
-	puts $s "GET /$testfilename1 HTTP/1.0"
-	puts $s ""
-	flush $s
-	set page ""
-	set count 0
-	while {![eof $s]} {
-	    set line [gets $s]
-	    if {![regexp "^(Server|Generator|Date|Content-Length): .*" $line]} {
-		append page $line\n
-	    }
+    # other approach (connect directly)
+    set s [socket $host $port]
+    puts $s "GET /$testfilename1 HTTP/1.0"
+    puts $s ""
+    flush $s
+    set page ""
+    set count 0
+    while {![eof $s]} {
+	set line [gets $s]
+	if {![regexp "^(Server|Generator|Date|Content-Length): .*" $line]} {
+	    append page $line\n
 	}
-	close $s
-	set page
-    } {HTTP/1.1 200 OK
+    }
+    close $s
+    set page
+} {HTTP/1.1 200 OK
 Foo: bar
 Foo: bla
 Foo: que
@@ -39,13 +37,11 @@ Content-Type: text/html
 hi world
 }
 
-    ::tcltest::test header-1.1 {websh Basic auth header test (pass through Authorization)} {
-	set auth [list Authorization {Basic d2Vic2g6cGFzcw==}]
-	set page [::http::geturl "${urlbase}$testfilename1?cmd=auth" -headers $auth]
-	set match [::http::data $page]
-	set auth [list Authorization {Basic d2Vic2g6cGFzczp3b3Jk}]
-	set page [::http::geturl "${urlbase}$testfilename1?cmd=auth" -headers $auth]
-	append match ! [::http::data $page]
-    } {websh*pass!websh*pass:word}
-
-}
+::tcltest::test header-1.1 {websh Basic auth header test (pass through Authorization)} {
+    set auth [list Authorization {Basic d2Vic2g6cGFzcw==}]
+    set page [::http::geturl "${urlbase}$testfilename1?cmd=auth" -headers $auth]
+    set match [::http::data $page]
+    set auth [list Authorization {Basic d2Vic2g6cGFzczp3b3Jk}]
+    set page [::http::geturl "${urlbase}$testfilename1?cmd=auth" -headers $auth]
+    append match ! [::http::data $page]
+} {websh*pass!websh*pass:word}

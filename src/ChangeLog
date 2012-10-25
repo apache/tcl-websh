@@ -1,3 +1,23 @@
+2012-10-25 Brunner Ronnie <ronnie.brunner@netcetera.com>
+	* src/apachetests/apachetest.tcl, src/apachetests/conf/server.conf.tcl:
+	- make tests run with Apache httpd 2.4 (tested against 2.4.3)
+	* src/apachetests/apachetest.tcl:
+	- better handling of killing the web server after/between tests
+	* src/apachetests/test/pool.test:
+	- better output of pool-1.3 whe Apache craches
+	* src/generic/logutl.c:
+	- changed thread id output of logging in pointer format to hex
+	  (old cast didn't work on 64 bit platforms) now same format as 
+	  in thread::id from the Threads package
+	* src/apachetests/test/mod_websh.test:
+	- removed: integrated into runtests.tcl
+	* src/apachetests/runtests.tcl:
+	- integrated test/mod_websh.test, minor fixes
+	* src/apachetests/test/*.test, src/apachetests/docs/pool2.ws3:
+	- removed call to apachetest::start so that starting server is
+	  the callers responsibility (more flexible)
+	- now work if called repeaatedly on the same running server
+	
 2011-09-13 Brunner Ronnie <ronnie.brunner@netcetera.ch>
 	* src/unix/configure.in, src/unix/Makefile.in:
 	- added --with-apr and --with-apu to allow more flexibility 
