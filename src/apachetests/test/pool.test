@@ -16,6 +16,10 @@ set testfilename2 "pool2.ws3"
 } {Counter is 1}
 
 ::tcltest::test pool-1.2 {interp pool test} {
+    set match1 "no response"
+    set match2 "no response"
+    set match3 "no response"
+    set match4 "no response"
     apachetest::start {} {
 	set page [ ::http::geturl "${urlbase}$testfilename2" ]
 	set page [ ::http::geturl "${urlbase}$testfilename2" ]
