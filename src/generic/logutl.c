@@ -472,7 +472,7 @@ Tcl_Obj *formatMessage(LogLevel * level, char *fmt,
 		    break;
 		case 't':
 #ifdef TCL_THREADS
-		    sprintf(tmpStr, "%d", (int) Tcl_GetCurrentThread());
+		    sprintf(tmpStr, "%p", Tcl_GetCurrentThread());
 		    Tcl_AppendToObj(fmsg, tmpStr, -1);
 #else
 		    /* no thread id */

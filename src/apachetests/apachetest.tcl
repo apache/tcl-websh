@@ -33,6 +33,23 @@ namespace eval apachetest {
 	mod_authz_user           authz_user_module
 	mod_authz_groupfile authz_groupfile_module
     }
+
+    ## Apache 2.4 also requires mod_unixd
+    array set module_assoc_24 {
+	mod_authn_core           authn_core_module
+	mod_authz_core           authz_core_module
+	mod_access_compat        access_compat_module
+	mod_unixd                unixd_module
+	mod_log_config           {config_log_module log_config_module}
+	mod_mime                       mime_module
+	mod_negotiation         negotiation_module
+	mod_dir                         dir_module
+	mod_authz_host           authz_host_module
+	mod_auth_basic           auth_basic_module
+	mod_authn_file           authn_file_module
+	mod_authz_user           authz_user_module
+	mod_authz_groupfile authz_groupfile_module
+    }
     # name of the apache binary, such as /usr/sbin/httpd
     variable binname ""
     # this file should be in the same directory this script is.
@@ -111,7 +128,7 @@ proc apachetest::start { options code } {
     }
     after cancel $kill9
     puts "Apache stopped"
-    catch {file delete httpd.pid}
+    catch {file delete logs/httpd.pid}
 }
 
 # startserver - start the server with 'options'.
@@ -256,7 +273,9 @@ proc apachetest::getloadmodules { conffile needtoget } {
 proc apachetest::determinemodules { binname } {
     variable module_assoc
     variable module_assoc_22
+    variable module_assoc_24
     variable modules
+    variable version
 
     set ver ""
     catch {exec $binname -v} ver
@@ -266,8 +285,13 @@ proc apachetest::determinemodules { binname } {
 
     if {[regexp {Apache/1\.3\.} $ver] || [regexp {Apache/2\.0\.} $ver]} {
 	array set modules [array get module_assoc]
+	set version 20
+    } elseif {[regexp {Apache/2\.4\.} $ver]} {
+	array set modules [array get module_assoc_24]
+	set version 24
     } else {
 	array set modules [array get module_assoc_22]
+	set version 22
     }
     set compiledin [lsort [getcompiledin $binname]]
     set conffile [gethttpdconf $binname]
@@ -299,6 +323,7 @@ proc apachetest::makeconf { outfile {extra ""} } {
     global port
     variable binname
     variable templatefile
+    variable version
     set CWD [pwd]
 
     # create directory for log files and lock etc.
@@ -306,6 +331,13 @@ proc apachetest::makeconf { outfile {extra ""} } {
 
     # replace with determinemodules
     set LOADMODULES [determinemodules $binname]
+
+    if {$version < 24} {
+	set LockFile "LockFile \"$CWD/logs/accept.lock\"\n"
+    } else {
+	# Apache 2.4. does not have a LockFile configuration anymore
+	set LockFile ""
+    }
 
     set fl [open [file join . $templatefile] r]
     set template [read $fl]

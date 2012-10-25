@@ -6,8 +6,7 @@
 ServerRoot "$CWD"
 
 PidFile "$CWD/logs/httpd.pid"
-LockFile "$CWD/logs/accept.lock"
-
+$LockFile
 Timeout 300
 
 MaxRequestsPerChild 0
