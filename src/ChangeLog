@@ -1,3 +1,7 @@
+2013-02-07 Ronnie Brunner <ronnie.brunner@netcetera.com>
+	* src/generic/interpool.c, src/generic/logtosyslog.c, src/generic/url.c:
+	- Fix compilation with -W on FreeBSD (thanks to Pietro Cerutti)
+	
 2012-10-25 Brunner Ronnie <ronnie.brunner@netcetera.com>
 	* src/apachetests/apachetest.tcl, src/apachetests/conf/server.conf.tcl:
 	- make tests run with Apache httpd 2.4 (tested against 2.4.3)

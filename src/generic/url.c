@@ -61,7 +61,10 @@ enum urlElement
     PORT,
     SCRIPTNAME,
     PATHINFO,
-    QUERYSTRING
+    QUERYSTRING,
+    URLCFGRESET,
+    URLCFGURLFORMAT,
+    URLCFGEND 
 };
 
 
@@ -362,7 +365,7 @@ Tcl_Obj *createQueryList(Tcl_Interp * interp, Tcl_Obj * cmd, Tcl_Obj * plist,
     Tcl_Obj *tmp = NULL;
     int errCnt = 0;
 
-    if ((urlData == NULL))
+    if (urlData == NULL)
 	return NULL;
 
     errCnt = 0;
@@ -838,11 +841,6 @@ int Web_CmdUrl(ClientData clientData,
 int Web_CmdUrlCfg(ClientData clientData,
 		  Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
-
-
-#define URLCFGRESET (enum urlElement)QUERYSTRING+1
-#define URLCFGURLFORMAT (enum urlElement)QUERYSTRING+2
-#define URLCFGEND (enum urlElement)QUERYSTRING+3
 
     UrlData *urlData = NULL;
     /* note: this could be dynamic, but 20 is enough ... */

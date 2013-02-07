@@ -113,7 +113,7 @@ int logToSyslog(Tcl_Interp * interp, ClientData clientData, char *msg)
     /* ----------------------------------------------------------------------
      * gonna call syslogName msg
      * ------------------------------------------------------------------- */
-    syslog((int) (*logToSyslogData), msg);
+    syslog((int) (*logToSyslogData), "%s", msg);
 
     return TCL_OK;
 }

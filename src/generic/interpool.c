@@ -569,11 +569,11 @@ int initPool(websh_server_conf * conf)
 	    TCL_ERROR) {
 	    errno = 0;
 #ifndef APACHE2
-	    ap_log_printf(conf->server,
+	    ap_log_printf(conf->server, "%s",
 			  Tcl_GetStringResult(conf->mainInterp));
 #else /* APACHE2 */
 	    ap_log_error(APLOG_MARK, APLOG_NOERRNO | APLOG_ERR, 0,
-			 conf->server, Tcl_GetStringResult(conf->mainInterp));
+			 conf->server, "%s", Tcl_GetStringResult(conf->mainInterp));
 #endif /* APACHE2 */
 	    return 0;
 	}
