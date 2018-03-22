@@ -19,6 +19,9 @@ Known Issues
 Trunk
 -----
 
+- Removed a few assigned but unused variables to allow newer compilers
+  to successfully compile with -Wall and -Werror
+
 - Apache tests can now run with httpd 2.4 and are cleaned up to run
   repeadedly if needed. Also server is only started once by default
 

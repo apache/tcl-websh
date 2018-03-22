@@ -1,3 +1,7 @@
+2018-03-22 Ronnie Brunner <ronnie.brunner@netcetera.com>
+	* src/generic/interpool.c, src/generic/log.c, src/generic/formdata.c, src/generic/nca_d.c:
+	- Fix compilation with -Wall and -Werror for newer compilers
+
 2013-02-07 Ronnie Brunner <ronnie.brunner@netcetera.com>
 	* src/generic/interpool.c, src/generic/logtosyslog.c, src/generic/url.c:
 	- Fix compilation with -W on FreeBSD (thanks to Pietro Cerutti)
