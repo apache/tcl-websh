@@ -175,7 +175,7 @@ int Web_DecryptD(ClientData clientData,
 {
 
     Tcl_Obj *key = NULL;
-    unsigned char *keyBytes = NULL;
+    //unsigned char *keyBytes = NULL;
     int keyLen = -1;
     char *str = NULL;
     int strLen = -1;
@@ -191,7 +191,7 @@ int Web_DecryptD(ClientData clientData,
     }
     WebAssertData(interp, clientData, "web::decryptd", TCL_ERROR);
     key = (Tcl_Obj *) clientData;
-    keyBytes = Tcl_GetByteArrayFromObj(key, &keyLen);
+    Tcl_GetByteArrayFromObj(key, &keyLen);
 
     if (keyLen < 1) {
 	LOG_MSG(interp, SET_RESULT,

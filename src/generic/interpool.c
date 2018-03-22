@@ -107,7 +107,6 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 			   long mtime, request_rec *r)
 {
 
-    int result = 0;
     LogPlugIn *logtoap = NULL;
     Tcl_Obj *code = NULL;
     ApFuncs *apFuncs = NULL;
@@ -134,15 +133,14 @@ WebInterp *createWebInterp(websh_server_conf * conf,
 #endif
 
     /* now register here all websh modules */
-    result = Tcl_Init(webInterp->interp);
-    /* checkme: test result */
+    Tcl_Init(webInterp->interp);
 
     apFuncs = Tcl_GetAssocData(conf->mainInterp, WEB_APFUNCS_ASSOC_DATA, NULL);
     if (apFuncs == NULL)
 	return NULL;
     Tcl_SetAssocData(webInterp->interp, WEB_APFUNCS_ASSOC_DATA, NULL, (ClientData *) apFuncs);
 
-    result = Websh_Init(webInterp->interp);
+    Websh_Init(webInterp->interp);
 
     /* also register the destrcutor, etc. functions, passing webInterp as
        client data */

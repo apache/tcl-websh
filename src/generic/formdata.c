@@ -272,7 +272,6 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
     Tcl_Obj *bdy = NULL;
     int isLast = TCL_ERROR;
     long upLoadFileSize = 0;
-    long bytesWritten = 0;
     long bytesSkipped = 0;
     Tcl_Obj *tmpFileName = NULL;
 
@@ -352,7 +351,6 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 		    return TCL_ERROR;
 		}
 
-		bytesWritten = 0;
 		bytesSkipped = 0;
 
 		tmpFileName = tempFileName(interp, requestData, NULL, NULL);
@@ -365,10 +363,9 @@ int mimeSplitMultipart(Tcl_Interp * interp, Tcl_Channel channel,
 		    return TCL_ERROR;
 		}
 
-		bytesWritten =
-		    readAndDumpBody(interp, channel, boundary, &isLast,
-				    tmpFileName, upLoadFileSize,
-				    requestData->filePermissions, &bytesSkipped);
+		readAndDumpBody(interp, channel, boundary, &isLast,
+				tmpFileName, upLoadFileSize,
+				requestData->filePermissions, &bytesSkipped);
 
 		if (fileNameLen > 0) {
 

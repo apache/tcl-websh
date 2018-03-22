@@ -34,7 +34,6 @@ int __declspec(dllexport) log_Init(Tcl_Interp * interp)
     LogPlugIn *logtochannel = NULL;
     LogPlugIn *logtocmd = NULL;
     LogPlugIn *logtosyslog = NULL;
-    int ires = 0;
 
     /* --------------------------------------------------------------------------
      * interpreter running ?
@@ -85,7 +84,7 @@ int __declspec(dllexport) log_Init(Tcl_Interp * interp)
     logtochannel->destructor = destroyLogToChannel;
     logtochannel->handler = logToChannel;
 
-    ires = registerLogPlugIn(interp, "channel", logtochannel);
+    registerLogPlugIn(interp, "channel", logtochannel);
 
     /* --------------------------------------------------------------------------
      * register log handler "file"
@@ -97,7 +96,7 @@ int __declspec(dllexport) log_Init(Tcl_Interp * interp)
     logtofile->destructor = destroyLogToFile;
     logtofile->handler = logToFile;
 
-    ires = registerLogPlugIn(interp, "file", logtofile);
+    registerLogPlugIn(interp, "file", logtofile);
 
     /* --------------------------------------------------------------------------
      * register log handler "command"
@@ -109,7 +108,7 @@ int __declspec(dllexport) log_Init(Tcl_Interp * interp)
     logtocmd->destructor = destroyLogToCmd;
     logtocmd->handler = logToCmd;
 
-    ires = registerLogPlugIn(interp, "command", logtocmd);
+    registerLogPlugIn(interp, "command", logtocmd);
 
     /* --------------------------------------------------------------------------
      * register log handler "syslog"
@@ -122,7 +121,7 @@ int __declspec(dllexport) log_Init(Tcl_Interp * interp)
     logtosyslog->destructor = destroyLogToSyslog;
     logtosyslog->handler = logToSyslog;
 
-    ires = registerLogPlugIn(interp, "syslog", logtosyslog);
+    registerLogPlugIn(interp, "syslog", logtosyslog);
 #endif
     /* --------------------------------------------------------------------------
      * done
